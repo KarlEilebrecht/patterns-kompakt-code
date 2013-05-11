@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<!--
+    This configuration file was written by the eclipse-cs plugin configuration editor
+-->
+<!--
+    Checkstyle-Configuration: checkstyle calamanari
+    Description: none
+-->
+<module name="Checker">
+  <property name="severity" value="warning"/>
+  <module name="TreeWalker">
+    <property name="tabWidth" value="4"/>
+    <module name="JavadocMethod">
+      <property name="suppressLoadErrors" value="true"/>
+    </module>
+    <module name="JavadocType"/>
+    <module name="JavadocVariable"/>
+    <module name="JavadocStyle">
+      <property name="checkFirstSentence" value="false"/>
+    </module>
+    <module name="ConstantName"/>
+    <module name="LocalFinalVariableName"/>
+    <module name="LocalVariableName"/>
+    <module name="MemberName"/>
+    <module name="MethodName"/>
+    <module name="PackageName"/>
+    <module name="ParameterName"/>
+    <module name="StaticVariableName"/>
+    <module name="TypeName"/>
+    <module name="AvoidStarImport"/>
+    <module name="IllegalImport"/>
+    <module name="RedundantImport"/>
+    <module name="UnusedImports">
+      <property name="processJavadoc" value="true"/>
+    </module>
+    <module name="LineLength">
+      <property name="max" value="125"/>
+    </module>
+    <module name="MethodLength"/>
+    <module name="ParameterNumber"/>
+    <module name="EmptyForIteratorPad"/>
+    <module name="MethodParamPad"/>
+    <module name="NoWhitespaceAfter">
+      <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
+    </module>
+    <module name="NoWhitespaceBefore"/>
+    <module name="OperatorWrap"/>
+    <module name="ParenPad"/>
+    <module name="TypecastParenPad"/>
+    <module name="WhitespaceAfter"/>
+    <module name="WhitespaceAround"/>
+    <module name="ModifierOrder"/>
+    <module name="RedundantModifier">
+      <metadata name="net.sf.eclipsecs.core.comment" value="matter of taste in interface declarations"/>
+      <property name="tokens" value="VARIABLE_DEF,ANNOTATION_FIELD_DEF,INTERFACE_DEF"/>
+    </module>
+    <module name="AvoidNestedBlocks"/>
+    <module name="EmptyBlock">
+      <metadata name="net.sf.eclipsecs.core.comment" value="Original rule requires a statement (comment not sufficient), this leads to weird code, when suppressions have to be suppressed"/>
+      <property name="option" value="text"/>
+    </module>
+    <module name="LeftCurly"/>
+    <module name="NeedBraces"/>
+    <module name="RightCurly">
+      <metadata name="net.sf.eclipsecs.core.comment" value="curly braces on next line preferred"/>
+      <property name="option" value="alone"/>
+      <property name="tokens" value="LITERAL_CATCH,LITERAL_FINALLY,LITERAL_ELSE"/>
+    </module>
+    <module name="AvoidInlineConditionals">
+      <metadata name="net.sf.eclipsecs.core.comment" value="inline conditions are ok as long as not nested"/>
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="EmptyStatement"/>
+    <module name="EqualsHashCode"/>
+    <module name="HiddenField">
+      <metadata name="net.sf.eclipsecs.core.comment" value="do not apply this rule to method parameters"/>
+      <property name="tokens" value="VARIABLE_DEF"/>
+    </module>
+    <module name="IllegalInstantiation"/>
+    <module name="InnerAssignment"/>
+    <module name="MagicNumber"/>
+    <module name="MissingSwitchDefault"/>
+    <module name="RedundantThrows">
+      <property name="allowUnchecked" value="true"/>
+      <property name="suppressLoadErrors" value="true"/>
+    </module>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+    <module name="DesignForExtension">
+      <metadata name="net.sf.eclipsecs.core.comment" value="debatable rule, disabled"/>
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="FinalClass"/>
+    <module name="HideUtilityClassConstructor"/>
+    <module name="InterfaceIsType"/>
+    <module name="VisibilityModifier">
+      <metadata name="net.sf.eclipsecs.core.comment" value="debatable for final public fields being used to avoid getters/setters"/>
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="ArrayTypeStyle"/>
+    <module name="FinalParameters">
+      <metadata name="net.sf.eclipsecs.core.comment" value="debatable rule, disabled"/>
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="TodoComment">
+      <property name="severity" value="ignore"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    <module name="UpperEll"/>
+    <module name="LineLength">
+      <property name="max" value="125"/>
+    </module>
+    <module name="LineLength">
+      <property name="max" value="125"/>
+    </module>
+    <module name="LineLength">
+      <property name="max" value="125"/>
+    </module>
+    <module name="JavadocStyle">
+      <property name="checkFirstSentence" value="false"/>
+    </module>
+    <module name="JavadocStyle">
+      <property name="checkFirstSentence" value="false"/>
+    </module>
+  </module>
+  <module name="JavadocPackage">
+    <metadata name="net.sf.eclipsecs.core.comment" value="this rule violates project header requirements"/>
+    <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
+  <module name="NewlineAtEndOfFile">
+    <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
+  <module name="Translation"/>
+  <module name="FileLength"/>
+  <module name="FileTabCharacter">
+    <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
+  <module name="RegexpSingleline">
+    <property name="severity" value="ignore"/>
+    <property name="format" value="\s+$"/>
+    <property name="message" value="Line has trailing spaces."/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
+  <module name="SuppressionFilter">
+    <property name="file" value="${basedir}/doc/checkstyle-suppressions.xml"/>
+  </module>
+</module>

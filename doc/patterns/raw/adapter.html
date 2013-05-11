@@ -1,0 +1,28 @@
+ord::0301
+<h2>Adapter</h2>
+
+<h5>Strukturmuster</h5>
+
+<h4>Adapter passt die Schnittstelle einer Klasse an eine von Clients erwartete Schnittstelle an.
+Das Adaptermuster lässt Klassen zusammenarbeiten, die andernfalls dazu nicht in der Lage wären.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::adapter_cn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel nutzt ein System (<i>TargetSystem</i>), das Personendaten anzeigt, mit einem anderen (</i>SourceSystem</i>) zusammen.
+
+img::adapter_cx.png
+<area shape="rect" coords="453,10,663,138" href="TargetSystemPersonView">
+<area shape="rect" coords="10,173,277,339" href="SourceSystemPersonView">
+<area shape="rect" coords="453,173,663,339" href="PersonViewAdapter">
+
+Das zweite System bietet zwar die richtigen Daten, aber in der falschen Form.<br />
+Die <i>Anpassung</i> an die von den Clients erwartete Schnittstelle übernimmt der <i>PersonViewAdapter</i>.
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF

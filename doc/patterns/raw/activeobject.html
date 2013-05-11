@@ -1,0 +1,42 @@
+ord::0404
+<h2>Active Object</h2>
+
+<h5>Verteilung</h5>
+
+<h4>Active Object entkoppelt einen Methodenaufruf von der Methodenausführung. 
+Client und Komponente werden in unterschiedlichen Threads ausgeführt und interagieren asynchron.</h4>
+
+<h3>Sequenzdiagramm</h3>
+
+img::active_object_dn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel hat ein Client die Möglichkeit historische Daten zu Personen abzufragen.<br />
+Die <i>HistoryQueryEngine</i> benötigt dazu ggf. einige Zeit, weil sie verschiedene Datenquellen abklappert.
+
+img::active_object_cx.png
+<area shape="rect" coords="10,483,289,557" href="HistoryQueryEngineMock">
+<area shape="rect" coords="189,161,375,294" href="QueryRequestFuture">
+<area shape="rect" coords="474,161,660,294" href="QueryRequest">
+<area shape="rect" coords="285,357,563,431" href="HistoryQueryScheduler">
+<area shape="rect" coords="262,10,586,84" href="HistoryQueryComponent">
+<area shape="rect" coords="381,483,660,557" href="AbstractHistoryQueryEngine">
+
+Der Client verwendet daher die Engine nicht direkt, sondern die <i>HistoryQueryComponent</i>, 
+die sofort ein <i>QueryRequestFuture</i> zurück gibt, nachdem parallel ein Abfrageauftrag geplant wurde.
+
+img::active_object_dx.png
+<area shape="rect" coords="139,10,268,703" href="HistoryQueryComponent">
+<area shape="rect" coords="334,10,430,703" href="QueryRequest">
+<area shape="rect" coords="440,10,544,703" href="QueryRequestFuture">
+<area shape="rect" coords="542,10,666,703" href="HistoryQueryEngineMock">
+<area shape="rect" coords="679,10,793,703" href="HistoryQueryScheduler">
+
+Das Future kann der Client solange pollen, bis ein Ergebnis vorliegt oder kein Interesse mehr besteht.
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::POSA4

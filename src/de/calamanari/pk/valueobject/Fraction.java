@@ -1,0 +1,465 @@
+/*
+ * Fraction - demonstrates a VALUE OBJECT.
+ * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
+ * Copyright 2013 Karl Eilebrecht
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package de.calamanari.pk.valueobject;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+
+/**
+ * Fraction demonstrates a VALUE OBJECT, fractions are immutable. When converted to BigDecimal, a scale of 20 will be
+ * used.
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ */
+public class Fraction implements Comparable<Fraction>, Serializable {
+
+    /**
+     * for serialization
+     */
+    private static final long serialVersionUID = -8085870257814104721L;
+
+    /**
+     * Maximum scaling: {@value}
+     */
+    private static final int MAX_SCALING = 20;
+
+    /**
+     * When creating fractions from double or big decimal we respect {@value #MAX_SCALING} decimals max This will be
+     * used for calculation.
+     */
+    private static final BigDecimal MAX_SCALED_VALUE = new BigDecimal("100000000000000000000");
+
+    /**
+     * When creating fractions from double or big decimal this will be the default denominator.
+     */
+    private static final BigInteger DEFAULT_DENOMINATOR = MAX_SCALED_VALUE.toBigInteger();
+
+    /**
+     * Nominator of fraction
+     */
+    private final BigInteger NUMERATOR;
+
+    /**
+     * Denominator of fraction
+     */
+    private final BigInteger DENOMINATOR;
+
+    /**
+     * String representation, used for equals and hashcode, will not change, since this is a VALUE OBJECT, this string
+     * contains the reduced form
+     */
+    private final String REDUCED_FRACTION_AS_STRING;
+
+    /**
+     * String representation
+     */
+    private final String FRACTION_AS_STRING;
+
+    /**
+     * Creates a fraction from two BigInteger values
+     * @param numerator fraction's numerator, NOT NULL
+     * @param denominator fraction's denominator, NOT NULL, NOT ZERO
+     * @param reduce if true, the result fraction will be reduced automatically
+     */
+    public Fraction(BigInteger numerator, BigInteger denominator, boolean reduce) {
+        if (numerator == null || denominator == null) {
+            throw new IllegalArgumentException("Arguments must not be null (given numerator=" + numerator
+                    + ", denominator=" + denominator + ")");
+        }
+        if (denominator.equals(BigInteger.ZERO)) {
+            throw new ArithmeticException("Denominator 0 (division by zero)");
+        }
+
+        if (denominator.signum() < 0) {
+            numerator = numerator.negate();
+            denominator = denominator.negate();
+        }
+        BigInteger[] numeratorAndDenominator = reduce(numerator, denominator);
+
+        if (reduce) {
+            numerator = numeratorAndDenominator[0];
+            denominator = numeratorAndDenominator[1];
+        }
+        this.NUMERATOR = numerator;
+        this.DENOMINATOR = denominator;
+        this.REDUCED_FRACTION_AS_STRING = "(" + numeratorAndDenominator[0] + "/" + numeratorAndDenominator[1] + ")";
+        this.FRACTION_AS_STRING = "(" + NUMERATOR + "/" + DENOMINATOR + ")";
+    }
+
+    /**
+     * Creates a fraction from two BigInteger values
+     * @param numerator fraction's numerator, NOT NULL
+     * @param denominator fraction's denominator, NOT NULL, NOT ZERO
+     */
+    public Fraction(BigInteger numerator, BigInteger denominator) {
+        this(numerator, denominator, false);
+    }
+
+    /**
+     * Creates a fraction from two Strings (integer values)
+     * @param numerator fraction's numerator, correctly formatted integer number, NOT NULL
+     * @param denominator fraction's denominator, correctly formatted integer number, NOT NULL, NOT ZERO
+     */
+    public Fraction(String numerator, String denominator) {
+        this(new BigInteger(numerator), new BigInteger(denominator));
+    }
+
+    /**
+     * Recreates the fraction from its string representation, see {@link #toString()} For convenience this constructor
+     * also accepts properly formatted integer and double values
+     * @param fraction stringified fraction, NOT NULL
+     */
+    public Fraction(String fraction) {
+        this(parseNumerator(fraction), parseDenominator(fraction), true);
+    }
+
+    /**
+     * Creates a fraction from two long values
+     * @param numerator fraction's numerator
+     * @param denominator fraction's denominator, NOT ZERO
+     */
+    public Fraction(long numerator, long denominator) {
+        this(new BigInteger("" + numerator), new BigInteger("" + denominator));
+    }
+
+    /**
+     * Creates a fraction from the given BigDecimal, preserving 20 decimals
+     * @param value NOT NULL
+     */
+    public Fraction(BigDecimal value) {
+
+        if (value == null) {
+            throw new IllegalArgumentException("Argument value must not be null");
+        }
+
+        BigInteger numerator = value.multiply(MAX_SCALED_VALUE).toBigInteger();
+        BigInteger denominator = DEFAULT_DENOMINATOR;
+
+        BigInteger[] numeratorAndDenominator = reduce(numerator, denominator);
+        this.REDUCED_FRACTION_AS_STRING = "(" + numeratorAndDenominator[0] + "/" + numeratorAndDenominator[1] + ")";
+        this.NUMERATOR = numeratorAndDenominator[0];
+        this.DENOMINATOR = numeratorAndDenominator[1];
+        this.FRACTION_AS_STRING = "(" + NUMERATOR + "/" + DENOMINATOR + ")";
+    }
+
+    /**
+     * Creates a fraction from the given double, preserving decimals as possible
+     * @param value number to be converted into a fraction
+     */
+    public Fraction(double value) {
+        this(new BigDecimal(value).setScale(MAX_SCALING, RoundingMode.HALF_EVEN));
+    }
+
+    /**
+     * Helper method to parse the numerator from stringified fraction
+     * @param fraction string representation of a {@link Fraction} 
+     * @return numerator
+     */
+    private static final BigInteger parseNumerator(String fraction) {
+        int start = fraction.indexOf('(') + 1;
+        if (start == 0) {
+            return (new BigDecimal(fraction)).multiply(MAX_SCALED_VALUE).toBigInteger();
+        }
+        int end = fraction.indexOf('/', start);
+        return new BigInteger(fraction.substring(start, end));
+    }
+
+    /**
+     * Helper method to parse the numerator from stringified fraction
+     * @param fraction string representation of a {@link Fraction}
+     * @return denominator
+     */
+    private static final BigInteger parseDenominator(String fraction) {
+        int start = fraction.indexOf('/') + 1;
+        if (start == 0) {
+            return DEFAULT_DENOMINATOR;
+        }
+
+        int end = fraction.indexOf(')');
+        return new BigInteger(fraction.substring(start, end));
+    }
+
+    /**
+     * Returns the numerator
+     * @return numerator
+     */
+    public BigInteger getNumerator() {
+        return this.NUMERATOR;
+    }
+
+    /**
+     * Returns the denominator
+     * @return denominator
+     */
+    public BigInteger getDenominator() {
+        return this.DENOMINATOR;
+    }
+
+    /**
+     * Returns a negative copy of this fraction
+     * @return fraction * -1
+     */
+    public Fraction negate() {
+        return new Fraction(NUMERATOR.negate(), DENOMINATOR);
+    }
+
+    /**
+     * Returns the inverse of this fraction
+     * @return (denomninator / numerator)
+     */
+    public Fraction getInverse() {
+        return new Fraction(this.DENOMINATOR, this.NUMERATOR);
+    }
+
+    /**
+     * Returns the sum of this fraction and the given one
+     * @param fraction value to be added
+     * @return sum fraction
+     */
+    public Fraction add(Fraction fraction) {
+        if (fraction == null) {
+            throw new IllegalArgumentException("Argument must not be null.");
+        }
+
+        Fraction result = this;
+        if (!fraction.NUMERATOR.equals(BigInteger.ZERO)) {
+            BigInteger numerator;
+            BigInteger denominator;
+
+            if (DENOMINATOR != fraction.DENOMINATOR) {
+                Fraction[] fractions = toCommonDenominator(this, fraction);
+                numerator = fractions[0].NUMERATOR.add(fractions[1].NUMERATOR);
+                denominator = fractions[0].DENOMINATOR;
+            }
+            else {
+                numerator = NUMERATOR.add(fraction.NUMERATOR);
+                denominator = DENOMINATOR;
+            }
+            if (numerator.equals(BigInteger.ZERO)) {
+                denominator = BigInteger.ONE;
+            }
+            result = (new Fraction(numerator, denominator)).reduce();
+        }
+        return result;
+    }
+
+    /**
+     * Returns this fraction minus the given one
+     * @param fraction value to be subtracted
+     * @return this - fraction
+     */
+    public Fraction subtract(Fraction fraction) {
+        return add(fraction.negate());
+    }
+
+    /**
+     * Returns the product of the two fraction
+     * @param fraction value to be multiplied with this fraction
+     * @return this * fraction
+     */
+    public Fraction multiply(Fraction fraction) {
+        if (fraction.REDUCED_FRACTION_AS_STRING.equals("(1/1)")) {
+            return this;
+        }
+        return (new Fraction(NUMERATOR.multiply(fraction.NUMERATOR), DENOMINATOR.multiply(fraction.DENOMINATOR)))
+                .reduce();
+    }
+
+    /**
+     * Returns the result of the division of this fraction by the given one
+     * @param fraction divisor
+     * @return this / fraction
+     */
+    public Fraction divide(Fraction fraction) {
+        if (fraction.REDUCED_FRACTION_AS_STRING.equals("(1/1)")) {
+            return this;
+        }
+        return (new Fraction(NUMERATOR.multiply(fraction.DENOMINATOR), DENOMINATOR.multiply(fraction.NUMERATOR)))
+                .reduce();
+    }
+
+    /**
+     * Determines the signum of this fraction
+     * @return -1, 0 or 1 for negative, zero or positive values
+     */
+    public int getSignum() {
+        return this.NUMERATOR.signum();
+    }
+
+    /**
+     * Returns a reduced version of this fraction using the greatest common divisor
+     * @return reduced fraction
+     */
+    public Fraction reduce() {
+        Fraction res = this;
+        BigInteger[] reduced = reduce(NUMERATOR, DENOMINATOR);
+        BigInteger numerator = reduced[0];
+        BigInteger denominator = reduced[1];
+        if (!NUMERATOR.equals(numerator) || !DENOMINATOR.equals(denominator)) {
+            res = new Fraction(numerator, denominator);
+        }
+        return res;
+    }
+
+    /**
+     * finds the greatest common divisor
+     * @param val1 first value
+     * @param val2 second value
+     * @return greatest common divisor
+     */
+    protected BigInteger gcd(BigInteger val1, BigInteger val2) {
+        val1 = val1.abs();
+        val2 = val2.abs();
+
+        do {
+            BigInteger r = val1.remainder(val2);
+            val1 = val2;
+            val2 = r;
+        } while (!val2.equals(BigInteger.ZERO));
+        return val1;
+    }
+
+    /**
+     * finds the smallest common multiple
+     * @param val1 first value
+     * @param val2 second value
+     * @return smallest common multiple
+     */
+    protected BigInteger scm(BigInteger val1, BigInteger val2) {
+
+        BigInteger res = val1.multiply(val2).divide(gcd(val1, val2));
+
+        if (res.equals(BigInteger.ZERO)) {
+            throw new ArithmeticException("Zero is no common multiple.");
+        }
+        return res;
+    }
+
+    /**
+     * Returns an array with the numerator and denominator after reduction (division by greatest common divisor)
+     * @param numerator fraction's numerator, NOT NULL
+     * @param denominator fraction's denominator, NOT NULL, NOT ZERO
+     * @return array with numerator and denominator
+     */
+    protected BigInteger[] reduce(BigInteger numerator, BigInteger denominator) {
+        if (!numerator.equals(BigInteger.ZERO)) {
+            BigInteger gcd = gcd(numerator, denominator);
+            if (gcd.compareTo(BigInteger.ONE) > 0) {
+                numerator = numerator.divide(gcd);
+                denominator = denominator.divide(gcd);
+            }
+        }
+        else {
+            denominator = BigInteger.ONE;
+        }
+        return new BigInteger[] { numerator, denominator };
+    }
+
+    /**
+     * Brings the two fractions on a common denominator (smallest common multiple) and returns the result
+     * @param fraction1 first fraction 
+     * @param fraction2 second fraction
+     * @return array of two fractions with the same denominator
+     */
+    public Fraction[] toCommonDenominator(Fraction fraction1, Fraction fraction2) {
+        if (fraction1 == null || fraction2 == null) {
+            throw new IllegalArgumentException("Arguments must not be null (given: fraction1=" + fraction1
+                    + ", fraction2=" + fraction2 + ")");
+        }
+        Fraction[] fractions = new Fraction[2];
+
+        fraction1 = fraction1.reduce();
+        fraction2 = fraction2.reduce();
+
+        BigInteger scm = scm(fraction1.DENOMINATOR, fraction2.DENOMINATOR);
+
+        BigInteger factor1 = scm.divide(fraction1.DENOMINATOR);
+        BigInteger factor2 = scm.divide(fraction2.DENOMINATOR);
+
+        fractions[0] = new Fraction(fraction1.NUMERATOR.multiply(factor1), scm);
+        fractions[1] = new Fraction(fraction2.NUMERATOR.multiply(factor2), scm);
+        return fractions;
+    }
+
+    /**
+     * Returns the BigDecimal value of this fraction, assuming a scale of 20, rounding mode will be half-even
+     * @return BigDecimal representation of this fraction
+     */
+    public BigDecimal getBigDecimalValue() {
+        BigDecimal bd = new BigDecimal(NUMERATOR);
+        return bd.divide(new BigDecimal(DENOMINATOR), MAX_SCALING, RoundingMode.HALF_EVEN);
+    }
+
+    /**
+     * Returns the corresponding double value with maximum precision
+     * @return double value
+     */
+    public double getDoubleValue() {
+        return getBigDecimalValue().doubleValue();
+    }
+
+    /**
+     * Two fractions are equal if their corresponding reduced fractions are equal
+     * @param obj another fraction
+     * @return true if both fractions represent the same value, otherwise false
+     */
+    @Override
+    public boolean equals(Object obj) {
+        boolean res = false;
+        if (obj instanceof Fraction) {
+            res = REDUCED_FRACTION_AS_STRING.equals(((Fraction) obj).REDUCED_FRACTION_AS_STRING);
+        }
+        return res;
+    }
+
+    @Override
+    public int hashCode() {
+        return REDUCED_FRACTION_AS_STRING.hashCode();
+    }
+
+    /**
+     * Returns the string representation of this fraction of the form '(numerator/denominator)', the returned string may
+     * be used with the corresponding constructor to recreate the fraction
+     * @return fraction as String
+     */
+    @Override
+    public String toString() {
+        return FRACTION_AS_STRING;
+    }
+
+    @Override
+    public int compareTo(Fraction o) {
+        int res = 0;
+        if (o == null) {
+            res = -1;
+        }
+        else if (DENOMINATOR.equals(o.DENOMINATOR)) {
+            res = this.NUMERATOR.compareTo(o.NUMERATOR);
+        }
+        else {
+            Fraction[] fractions = toCommonDenominator(this, o);
+            res = (fractions[0].NUMERATOR.compareTo(fractions[1].NUMERATOR));
+            if (res == 0) {
+                res = this.NUMERATOR.compareTo(o.NUMERATOR);
+            }
+        }
+        return res;
+    }
+
+}

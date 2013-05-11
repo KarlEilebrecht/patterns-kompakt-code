@@ -1,0 +1,33 @@
+ord::0605
+<h2>Optimistic Offline Lock</h2>
+
+<h5>Persistenz</h5>
+
+<h4>Konflikte zwischen konkurrierenden Business-Transaktionen beim Zugriff auf eine Datenquelle
+werden behandelt, indem die drohende Inkonsistenz zum Zeitpunkt des Updates entdeckt
+und die ausführende Transaktion abgebrochen wird (rollback).</h4>
+
+<h3>Beispiel</h3>
+
+Im Beispiel geht es um die Bearbeitung von Kundendatensätzen.
+
+img::optimistic_offline_lock_cx.png
+<area shape="rect" coords="220,10,437,89" href="DataManager">
+<area shape="rect" coords="220,147,437,226" href="Customer">
+
+Die folgende Abbildung zeigt zwei Clients, die konkurrierend die
+Daten zu Kunde 4711 bearbeiten.
+
+img::optimistic_offline_lock_dx.png
+<area shape="rect" coords="415,10,505,722" href="Customer">
+<area shape="rect" coords="310,10,400,722" href="Customer">
+<area shape="rect" coords="204,10,294,722" href="DataManager">
+
+Der erste Client <i>verliert</i>, weil der zweite Client zwischenzeitlich 
+erfolgreich seine Änderung abgeschlossen hat.
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::PEAA

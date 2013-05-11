@@ -1,0 +1,33 @@
+ord::0101
+<h2>Abstract Factory</h2>
+
+<h5>Erzeugungsmuster</h5>
+
+<h4>Es wird eine Schnittstelle bereitgestellt, um Familien verbundener oder abhängiger 
+Objekte zu erstellen, ohne die konkreten Klassen zu spezifizieren.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::abstract_factory_cn.png
+
+<h3>Beispiel</h3>
+
+Als Beispiel dient uns ein Szenario, in dem Daten entweder verschlüsselt oder unverschlüsselt abgelegt werden.
+
+img::abstract_factory_cx.png
+<area shape="rect" coords="840,380,1008,466" href="SecureFileDataWriter">
+<area shape="rect" coords="842,133,1010,219" href="SecureFileDataReader">
+<area shape="rect" coords="10,257,277,343" href="SecureFileDataManager">
+<area shape="rect" coords="633,380,801,466" href="PlainFileDataWriter">
+<area shape="rect" coords="635,133,803,219" href="PlainFileDataReader">
+<area shape="rect" coords="298,257,565,343" href="PlainFileDataManager">
+<area shape="rect" coords="738,256,906,342" href="AbstractDataWriter">
+<area shape="rect" coords="738,10,906,96" href="AbstractDataReader">
+<area shape="rect" coords="153,132,420,218" href="AbstractDataManager">
+
+Das Schreiben erledigen <i>DataWriter</i>, für das Lesen sind <i>DataReader</i> zuständig.
+
+<p />
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF,STEMA

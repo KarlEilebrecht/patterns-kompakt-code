@@ -1,0 +1,34 @@
+ord::0701
+<h2>Identity Field</h2>
+
+<h5>Datenbankschlüssel</h5>
+
+<h4>Eine Schlüsselklasse fasst die Spalten eines Datenbankschlüssels in einem
+Objekt zusammen. Damit wird die Identität zwischen Laufzeitobjekten (in-memory objects)
+und Datensätzen sichergestellt.</h4>
+
+<h3>Beispiel</h3>
+
+Das abstrakte Beispiel zeigt eine Entität (Tabelle T_ENTITY) 
+mit einem zweiteiligen Primärschlüssel (<code>PK_FIELD1</code> und <code>PK_FIELD2</code>).<br />
+Die zugehörige <i>Entity</i> refenziert einen <i>CompoundKey</i> in ihrem <i>IdentityField</i> <b>id</b>.
+
+img::identity_field_cx.png
+<area shape="rect" coords="10,215,126,285" href="DataManager">
+<area shape="rect" coords="264,216,380,286" href="Entity">
+<area shape="rect" coords="200,10,442,155" href="CompoundKey">
+
+Hier sehen sie den dynamischen Ablauf:
+
+img::identity_field_dx.png
+<area shape="rect" coords="585,10,675,708" href="CompoundKey">
+<area shape="rect" coords="374,10,464,708" href="CompoundKey">
+<area shape="rect" coords="505,10,555,708" href="Entity">
+<area shape="rect" coords="290,10,348,708" href="Entity">
+<area shape="rect" coords="153,10,243,708" href="DataManager">
+
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::PEAA

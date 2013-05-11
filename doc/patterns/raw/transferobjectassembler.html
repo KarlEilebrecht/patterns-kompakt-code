@@ -1,0 +1,47 @@
+ord::0403
+<h2>Transfer Object Assembler</h2>
+
+<h5>Verteilung</h5>
+
+<h4><a href="datatransferobject.html" style="text-decoration: none;">Transferobjekte</a>, die Daten mehrerer Geschäftsobjekte beinhalten, 
+werden serverseitig von einem Assembler zusammengestellt, um die Schnittstelle zum Client zu vereinfachen und die
+Performance zu erhöhen.</h4>
+
+<h3>Sequenzdiagramm</h3>
+
+img::transfer_object_assembler_dn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel kann ein Client Nicht-Zahler-Informationen abrufen. 
+
+img::transfer_object_assembler_cx.png
+<area shape="rect" coords="363,293,551,595" href="GeoBadPayerInfoDto">
+<area shape="rect" coords="363,192,551,256" href="CustomerDwhInfoEntity">
+<area shape="rect" coords="363,10,551,74" href="CustomerEntity">
+<area shape="rect" coords="363,97,551,161" href="AddressEntity">
+<area shape="rect" coords="10,293,299,389" href="CustomerService">
+<area shape="rect" coords="10,97,299,161" href="GeoBadPayerInfoDtoAssembler">
+
+
+Jeder Eintrag enthält Metadaten aus <i>CustomerEntity</i> und <i>AdressEntity</i> aber auch
+Daten aus dem DWH.<br />
+Der <i>GeoBadPayerInfoDtoAssembler</i> stellt die erforderlichen Daten
+vor der Übertragung zum Client zusammen.
+
+img::transfer_object_assembler_dx.png
+<area shape="rect" coords="1066,13,1173,901" href="GeoBadPayerInfoDto">
+<area shape="rect" coords="859,13,949,901" href="AddressEntity">
+<area shape="rect" coords="755,13,845,901" href="CustomerEntity">
+<area shape="rect" coords="621,13,737,901" href="CustomerDwhInfoEntity">
+<area shape="rect" coords="960,13,1050,901" href="Database">
+<area shape="rect" coords="405,13,560,901" href="GeoBadPayerInfoDtoAssembler">
+<area shape="rect" coords="212,13,302,901" href="CustomerService">
+
+Der Client bekommt konzentrierte Daten in Form von <i>GeoBadPayerInfoDto</i>s.
+
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::J2EE

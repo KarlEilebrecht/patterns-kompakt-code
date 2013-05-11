@@ -1,0 +1,31 @@
+ord::0306
+<h2>Model View Controller</h2>
+
+<h5>Strukturmuster</h5>
+
+<h4>Die Verantwortlichkeiten beim Aufbau von Benutzerschnittstellen 
+werden auf drei verschiedene Rollen verteilt, um die unterschiedliche 
+Präsentation derselben Information zu erleichtern.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::model_view_controller_cn.png
+
+<h3>Beispiel</h3>
+
+Das Beispiel zeigt eine kleine Team-Manager-Applikation für den örtlichen Sportclub.
+
+img::model_view_controller_cx.png
+<area shape="rect" coords="10,198,195,237" href="TeamView">
+<area shape="rect" coords="443,81,611,136" href="TeamModel.TeamModelObserver">
+<area shape="rect" coords="137,294,322,333" href="TeamModel">
+<area shape="rect" coords="265,199,450,238" href="TeamController">
+
+Die implementierte Variante wird <i>Passive View</i> genannt.
+
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::STEMA

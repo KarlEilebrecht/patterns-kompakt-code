@@ -1,0 +1,31 @@
+ord::0806
+<h2>Value Object</h2>
+
+<h5>Sonstige Patterns</h5>
+
+<h4>Die Vergleichsoperation einfacher Objekte wird durch eine neue ersetzt,
+die auf den Attributwerten und nicht auf der Objektidentität basiert.</h4>
+
+<h3>Beispiel</h3>
+
+Im Beispiel betreiben wir ein wenig Bruchrechnung, ganz so, wie Sie das noch aus der Schule kennen. <br />
+Ein Bruch wird dabei durch eine <i>Fraction</i>-Instanz repräsentiert. Mit diesen Instanzen können Clients rechnen.
+
+img::value_object_cx.png
+<area shape="rect" coords="10,10,227,263" href="Fraction">
+
+Das Ergebnis einer Kalkulation drückt sich in einer neuen <i>Fraction</i>-Instanz aus.
+
+img::value_object_dx.png
+<area shape="rect" coords="460,10,550,464" href="Fraction">
+<area shape="rect" coords="324,10,414,464" href="Fraction">
+<area shape="rect" coords="179,10,269,464" href="Fraction">
+
+<i>Fraction</i>-Instanzen sind <i>immutable</i>, ihre Attribute bzw. ihr Wert ändert sich nie.
+
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.<br />
+Beachten Sie, wie die Identität (<code>fraction1.equals(fraction2)</code>) definiert ist!
+
+ref::PEAA

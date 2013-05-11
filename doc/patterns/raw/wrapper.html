@@ -1,0 +1,34 @@
+ord::0501
+<h2>Wrapper</h2>
+
+<h5>Integration</h5>
+
+<h4>Ein Wrapper kapselt Funktionalität und Daten bestehender 
+(nicht objektorientierter) Systeme in portablen und wartbaren Schnittstellen.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::wrapper_cn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel erwarten unsere modernen Clients <i>CustomerInfo</i>-Instanzen, mit denen
+das Altsystem nicht dienen kann.
+
+img::wrapper_cx.png
+<area shape="rect" coords="452,546,704,612" href="OldSysHistoryMgrMock">
+<area shape="rect" coords="71,544,338,614" href="OldSysHistoryMgr">
+<area shape="rect" coords="16,436,283,524" href="OldSysCustomerMgr">
+<area shape="rect" coords="410,437,662,518" href="OldSysCustomerMgrMock">
+<area shape="rect" coords="254,127,546,228" href="LegacyCustomerInfoProvider">
+<area shape="rect" coords="10,272,211,382" href="LegacyCustomerInfo">
+<area shape="rect" coords="10,127,211,228" href="CustomerInfo">
+
+Das Wrapper-Pattern ermöglicht hier, die nötigen Informationen aus dem Altsystem
+den Clients in passender Form (<i>LegacyCustomerInfo</i>) bereitzustellen.
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF

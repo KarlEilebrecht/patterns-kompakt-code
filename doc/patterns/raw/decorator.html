@@ -1,0 +1,39 @@
+ord::0303
+<h2>Decorator</h2>
+
+<h5>Strukturmuster</h5>
+
+<h4>Decorator fügt einer Komponente dynamisch neue Funktionalität hinzu, ohne die Komponente selbst zu ändern.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::decorator_cn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel wird eine zufällig erscheinende Seriennummer (z.B. für Gutscheine) benötigt.<br />
+Doppelte müssen vermieden werden. Eine Tabelle mit allen bereits vergebenen Zahlen kommt
+nicht in Frage.
+
+img::decorator_cx.png
+<area shape="rect" coords="10,155,291,270" href="SimpleNumberSequence">
+<area shape="rect" coords="331,155,612,270" href="ShufflingSequenceDecorator">
+<area shape="rect" coords="233,10,394,100" href="NumberSequence">
+
+Zur Verfügung steht nur eine einfache Sequenz. Ein <i>ShufflingSequenceDecorator</i>
+wird quasi darüber gestülpt und stellt eine geeignet verwürfelte Zahl bereit.
+
+img::decorator_dx.png
+<area shape="rect" coords="719,14,809,368" href="util::OrbOfConfusion">
+<area shape="rect" coords="415,14,671,368" href="ShufflingSequenceDecorator">
+<area shape="rect" coords="117,14,379,368" href="SimpleNumberSequence">
+
+Für die bijektive Abbildung nutzt der Decorator intern die <a href="../javadoc/de/calamanari/pk/util/OrbOfConfusion.html" target="_blank"><i>Kugel der Verwirrung</i> (OrbOfConfusion)</a>. 
+
+img::decorator_orb_of_confusion.png
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> oder <code>Level.FINEST</code> im zugehörigen TestCase.
+
+ref::GOF

@@ -1,0 +1,29 @@
+ord::0202
+<h2>Command Processor</h2>
+
+<h5>Verhaltensmuster</h5>
+
+<h4>Command Processor trennt Ausführung und Management von <a href="command.html" style="text-decoration: none;">Command</a>-Objekten.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::command_processor_cn.png
+
+<h3>Beispiel</h3>
+
+Das Beispiel zeigt einen kleinen Textprozessor.
+
+img::command_processor_cx.png
+<area shape="rect" coords="505,171,755,269" href="command::AppendTextCommand">
+<area shape="rect" coords="206,171,456,269" href="command::DeleteTextCommand">
+<area shape="rect" coords="350,10,600,108" href="command::InputCommand">
+<area shape="rect" coords="10,10,260,108" href="InputCommandProcessor">
+
+Jede Texteingabe und jede Löschoperation entspricht einem <i>Command</i>, 
+das durch den <i>Command Processor</i> entgegengenommen und verwaltet wird.
+
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::POSA

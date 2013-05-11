@@ -1,0 +1,41 @@
+ord::0205
+<h2>Visitor</h2>
+
+<h5>Verhaltensmuster</h5>
+
+<h4>Visitor ermöglicht es, neue Operationen auf den Elementen 
+einer Struktur zu definieren, ohne die Elemente selbst anzupassen.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::visitor_cn.png
+
+<h3>Beispiel</h3>
+
+In unserem kleinen B2B-Geschäft haben wir es mit verschiedenen Firmen zu tun (unseren Kunden).<br>
+Dabei haben wir es häufig mit Unternehmensstrukturen (Holding, Firma, Abteilung etc.) zu tun.<br>
+Auf jeder Ebene werden ggf. Rabatte gewährt, wobei genau festgelegt ist, 
+welche kombiniert werden dürfen und welche nicht.
+
+img::visitor_cx.png
+<area shape="rect" coords="398,10,651,128" href="EnterpriseVisitor">
+<area shape="rect" coords="398,255,651,373" href="EffectiveDiscountVisitor">
+<area shape="rect" coords="10,494,263,621" href="CustomerOrder">
+<area shape="rect" coords="10,10,263,128" href="CustomerHolding">
+<area shape="rect" coords="10,333,263,451" href="CustomerDivision">
+<area shape="rect" coords="10,173,263,291" href="CustomerCompany">
+
+Visitor ermöglicht hier, den <i>konkreten</i> Rabatt zu bestimmen.
+
+img::visitor_dx.png
+<area shape="rect" coords="434,10,590,254" href="CustomerHolding">
+<area shape="rect" coords="186,10,342,254" href="EffectiveDiscountVisitor">
+
+Zur Ermittlung des Rabatts steigt der <i>Besucher</i> an der gewählten Stelle
+ein, fragt sich gewissermaßen durch, und rechnet den <i>konkreten</i> Rabatt aus.
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF,STEMA

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<FindBugsFilter>
+<Match>
+   <Class name="~.*(PoolThread|SimpleThreadPool|AbstractConsoleServer|ExternalProcessManager)" />
+<!--   <Method name="bar" /> -->
+   <Bug pattern="UW_UNCOND_WAIT,WA_NOT_IN_LOOP,TLW_TWO_LOCK_WAIT,SWL_SLEEP_WITH_LOCK_HELD" />
+</Match>
+</FindBugsFilter>

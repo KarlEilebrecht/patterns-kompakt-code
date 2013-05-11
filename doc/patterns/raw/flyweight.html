@@ -1,0 +1,33 @@
+ord::0307
+<h2>Flyweight</h2>
+
+<h5>Strukturmuster</h5>
+
+<h4>Um in einem System eine sehr große Anzahl feingranularer Objekte zu verwalten,
+wird die gemeinsame Nutzung von Instanzen (instance sharing) eingeführt.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::flyweight_cn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel werden Instanzen eines speziell initialisierten Zählers sehr häufig benötigt.
+
+img::flyweight_cx.png
+<area shape="rect" coords="384,429,651,504" href="UnsharedConcreteCounterFlyweight">
+<area shape="rect" coords="11,167,278,242" href="CounterFlyweightFactory">
+<area shape="rect" coords="385,10,652,59" href="CounterFlyweightCarryingItem">
+<area shape="rect" coords="385,166,652,241" href="CounterFlyweight">
+<area shape="rect" coords="384,298,651,373" href="ConcreteCounterFlyweight">
+
+Nachdem <i>intrinsic</i> und <i>extrinsic</i> state identifiziert wurden, ist es möglich, die
+Objekte konkurrierend zu verwenden und so die gleichzeitig im System vorhandene Anzahl
+Instanzen zu reduzieren.
+
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF,STEMA

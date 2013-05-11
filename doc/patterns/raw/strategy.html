@@ -1,0 +1,30 @@
+ord::0206
+<h2>Strategy</h2>
+
+<h5>Verhaltensmuster</h5>
+
+<h4>Strategy kapselt einen Algorithmus in einer Klasse.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::strategy_cn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel haben wir es mit Nachrichten zu tun, zu deren Absicherung ein
+Hashcode erstellt und beigefügt werden soll.
+
+img::strategy_cx.png
+<area shape="rect" coords="506,159,722,254" href="Sha1HashStrategy">
+<area shape="rect" coords="368,10,584,105" href="HashStrategy">
+<area shape="rect" coords="236,159,452,254" href="Crc32HashStrategy">
+<area shape="rect" coords="10,10,226,105" href="Context">
+
+Mehrere Hashstrategies erlauben die Auswahl unterschiedlicher Verfahren
+zur Hashcode-Generierung.
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF

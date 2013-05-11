@@ -1,0 +1,30 @@
+ord::0201
+<h2>Command</h2>
+
+<h5>Verhaltensmuster</h5>
+
+<h4>Command kapselt einen Befehl als ein Objekt.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::command_cn.png
+
+<h3>Beispiel</h3>
+
+Ein <i>Command</i> kapselt in unserem Beispiel eine Textmodifikation.
+
+img::command_cx.png
+<area shape="rect" coords="453,11,641,98" href="TextComponent">
+<area shape="rect" coords="129,10,317,97" href="InputCommand">
+<area shape="rect" coords="244,153,432,240" href="DeleteTextCommand">
+<area shape="rect" coords="10,153,198,240" href="AppendTextCommand">
+
+Jede Texteingabe und jede Löschoperation entspricht einem <i>Command</i>, wobei
+als Besonderheit eine <i>Undo()</i>-Operation ermöglicht, den Effekt rückgängig zu machen.
+
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF

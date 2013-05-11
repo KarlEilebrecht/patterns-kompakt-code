@@ -1,0 +1,39 @@
+ord::0207
+<h2>Template Method</h2>
+
+<h5>Verhaltensmuster</h5>
+
+<h4>Template Method definiert die Struktur eines Algorithmus, 
+wobei einzelne konkrete Schritte in Unterklassen verlagert werden.
+Das Muster erlaubt es, bestimmte Operationen eines Algorithmus zu überschreiben,
+ohne des Struktur zu ändern.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::template_method_cn.png
+
+<h3>Beispiel</h3>
+
+Zu sehen sind gleich zwei Beispiele.<br>
+Das einfachere Beispiel ist ein String-Codec, von dem es mehrere
+konkrete Ableitungen geben könnte.
+
+img::template_method_cx.png
+<area shape="rect" coords="315,10,600,199" href="util::AbstractConsoleServer">
+<area shape="rect" coords="315,239,600,408" href="util::AbstractThreadedSocketServer">
+<area shape="rect" coords="315,447,600,530" href="EchoServer">
+<area shape="rect" coords="10,170,248,267" href="ExampleTemplateMethodStringCodec">
+<area shape="rect" coords="11,10,249,124" href="AbstractTemplateMethodStringCodec">
+
+Etwas komplexer - aber auch interessanter - ist ein kleiner Echo-Server,
+der das Muster <i>Template Method</i> nutzt, um spezifische Schritte in
+konkrete Unterklassen zu verlagern.
+
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.<br>
+Die Ausgaben des automatisch im Hintergrund gestarteten Echo-Servers werden umgeleitet und gemeinsam
+mit den Ausgaben des TestCase in der Konsole angezeigt.
+
+ref::GOF

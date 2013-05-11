@@ -1,0 +1,46 @@
+ord::0302
+<h2>Bridge</h2>
+
+<h5>Strukturmuster</h5>
+
+<h4>Bridge entkoppelt eine Abstraktion von ihrer Implementierung, sodass beide unabhängig voneinander verändert werden können.
+Änderungen verschiedener Aspekte eines Systems werden voneinander unabhängig.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::bridge_cn.png
+
+<h3>Beispiel</h3>
+
+Das Beispiel zeigt ein System, dass über einen <i>PersonDataConnector</i> auf Personendaten eines Fremdsystems zugreifen kann.<br />
+
+img::bridge_cx.png
+<area shape="rect" coords="557,340,770,413" href="MultiGlomUdpPersonDataConnectorImp">
+<area shape="rect" coords="557,223,770,296" href="MultiGlomPersonDataConnectorImp">
+<area shape="rect" coords="328,340,541,413" href="HalCorpSecurePersonDataConnectorImp">
+<area shape="rect" coords="328,223,541,296" href="HalCorpPersonDataConnectorImp">
+<area shape="rect" coords="10,223,250,296" href="RwPersonDataConnector">
+<area shape="rect" coords="412,10,687,158" href="PersonDataConnectorImp">
+<area shape="rect" coords="10,10,250,158" href="PersonDataConnector">
+
+Dabei gibt es zwei Aspekte zu beachten:
+<ul>
+<li>Pro Quellsystem wird eine gewisse Kernfunktionalität für den Zugriff benötigt.</li>
+<li>Es soll mehrere Konnektoren geben, die Funktionen basierend auf den Kernfunktionen anbieten.<br />
+Der Standardkonnektor erlaubt einem Client nur zu lesen, ein <i>RwPersonDataConnector</i> erlaubt auch den schreibenden Zugriff.</li>
+</ul>
+<br />
+Die Bridge ermöglicht, diese Aspekte getrennt zu halten. Während ein Team für die Konnektoren zuständig ist, implementieren andere
+Teams bereits Implementierungen der Kernfunktionen für den Zugriff
+auf Systeme der Firmen <i>HalCorp</i> und <i>MultiGlom</i>.
+
+img::bridge_px.png
+
+Im Bild sehen sie die Installation bei <i>Foobar&amp;Sons</i>, die ein <i>HalCorp</i>-CRM-System einsetzen.
+
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF,SHTR

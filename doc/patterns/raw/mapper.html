@@ -1,0 +1,43 @@
+ord::0504
+<h2>Mapper</h2>
+
+<h5>Integration</h5>
+
+<h4>Ein Mapper bewegt Daten zwischen zwei Komponenten und hält sie dabei
+sowohl unabhängig voneinander als auch von sich selbst.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::mapper_cn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel sehen sie zwei Systeme (<i>firstsys</i> und <i>secondsys</i>), die beide
+Kundendaten kennen. Die Abbildung derselben Daten (Person und Addresse) ist jedoch jeweils anders gelöst.
+
+img::mapper_cx.png
+<area shape="rect" coords="529,384,635,445" href="Customer">
+<area shape="rect" coords="27,434,133,495" href="Address">
+<area shape="rect" coords="26,355,132,416" href="Person">
+<area shape="rect" coords="400,109,568,176" href="Session">
+<area shape="rect" coords="65,109,307,176" href="DataManager">
+<area shape="rect" coords="263,375,395,453" href="CustomerMapper">
+<area shape="rect" coords="263,245,395,323" href="AbstractMapper">
+
+Der <i>CustomerMapper</i> schiebt die Daten zwischen den beiden Welten hin und her.
+
+img::mapper_dx.png
+<area shape="rect" coords="426,29,516,770" href="Customer">
+<area shape="rect" coords="522,29,612,770" href="CustomerMapper">
+<area shape="rect" coords="617,29,707,770" href="Person">
+<area shape="rect" coords="712,29,802,770" href="Address">
+<area shape="rect" coords="260,29,350,770" href="DataManager">
+<area shape="rect" coords="163,29,253,770" href="Session">
+
+Das <i>Triggern</i> des Mappings übernimmt hier die <i>Session</i>.
+
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::PEAA

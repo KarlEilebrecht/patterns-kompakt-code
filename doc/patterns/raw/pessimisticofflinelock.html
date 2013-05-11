@@ -1,0 +1,32 @@
+ord::0606
+<h2>Pessimistic Offline Lock</h2>
+
+<h5>Persistenz</h5>
+
+<h4>Konflikte zwischen konkurrierenden Geschäftstransaktionen beim Zugriff auf eine Datenquelle werden behandelt,
+indem immer nur genau eine Business-Transaktion zur gleichen Zeit auf einen
+Datensatz zugreifen darf.</h4>
+
+<h3>Beispiel</h3>
+
+Im Beispiel geht es um die Bearbeitung von Kundendatensätzen.
+
+img::pessimistic_offline_lock_cx.png
+<area shape="rect" coords="223,176,463,290" href="LockManager.LockInfo">
+<area shape="rect" coords="223,10,463,124" href="LockManager">
+<area shape="rect" coords="223,343,463,457" href="Customer">
+
+Die folgende Abbildung zeigt zwei Clients, die konkurrierend die
+Daten zu Kunde 4711 bearbeiten.
+
+img::pessimistic_offline_lock_dx.png
+<area shape="rect" coords="300,10,390,482" href="LockManager">
+<area shape="rect" coords="172,10,262,482" href="Customer">
+
+Der zweite Client <i>bemerkt</i>, dass der Kundendatensatz bereits
+im Zugriff durch einen anderen Client ist und bricht seinen Versuch ab.
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::PEAA

@@ -1,0 +1,36 @@
+ord::0401
+<h2>Combined Method</h2>
+
+<h5>Verteilung</h5>
+
+<h4>Mehrere Methodenaufrufe werden in einer neuen 
+Methode des Komponenteninterfaces zusammengefasst,
+um Aufrufreihenfolgen, Transaktionssicherheit bzw. 
+Fehlerbehandlung besser gewährleisten zu können.</h4>
+
+<h3>Sequenzdiagramm</h3>
+
+img::combined_method_dn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel haben wir es mit einer <i>ProductManager</i>-Schnittstelle zu tun.<br />
+Produkte werden erzeugt und dann registriert.<br>
+Ursprünglich gab es nur einen Server, die gemeinsame Transaktionalität war gewährleistet.<br />
+Das hat sich zwischenzeitlich geändert.
+
+img::combined_method_px.png
+
+<i>Combined Method</i> erledigt hier Erzeugung und Registrierung aus Sicht des Clients als eine Operation.
+
+img::combined_method_dx.png
+<area shape="rect" coords="380,13,518,258" href="ProductManagerServer">
+<area shape="rect" coords="194,13,284,258" href="Product">
+
+Die Methode <i>combinedCreateAndRegisterProduct(...)</i> wird entweder vollständig erfolgreich ausgeführt oder gar nicht (keine halben Sachen).
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::POSA4

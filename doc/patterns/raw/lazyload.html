@@ -1,0 +1,41 @@
+ord::0603
+<h2>Lazy Load</h2>
+
+<h5>Persistenz</h5>
+
+<h4>Es wird ein Objekt geliefert, das noch nicht alle benötigten Daten enthält,
+aber weiß, wie diese zu beschaffen sind.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::lazy_load_cn.png
+
+<h3>Sequenzdiagramm</h3>
+
+img::lazy_load_dn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel laden Clients Rechnungen (<i>Invoice</i>-Instanzen).
+
+img::lazy_load_cx.png
+<area shape="rect" coords="519,35,630,63" href="Database">
+<area shape="rect" coords="189,10,427,95" href="PersistenceSession">
+<area shape="rect" coords="188,218,430,348" href="Invoice">
+
+Dabei werden zunächst nur <i>teilbefüllte</i> Instanzen geliefert.
+
+img::lazy_load_dx.png
+<area shape="rect" coords="406,10,496,422" href="Database">
+<area shape="rect" coords="519,10,609,422" href="Invoice">
+<area shape="rect" coords="235,10,353,422" href="PersistenceSession">
+
+Sobald der Client einen Getter eines noch nicht geladenen Details aufruft,
+werden die restlichen Daten der <i>Invoice</i>-Instanz befüllt.
+
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::PEAA

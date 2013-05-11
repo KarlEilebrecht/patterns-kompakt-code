@@ -1,0 +1,27 @@
+ord::0305
+<h2>Proxy</h2>
+
+<h5>Strukturmuster</h5>
+
+<h4>Proxy stellt einen Platzhalter für eine andere Komponente (Objekt) dar und kontrolliert den Zugang zum echten Objekt.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::proxy_cn.png
+
+<h3>Beispiel</h3>
+
+Das Beispiel zeigt einen <i>Security Proxy</i>.
+
+img::proxy_cx.png
+<area shape="rect" coords="10,128,287,221" href="SimpleDocumentManager">
+<area shape="rect" coords="421,128,698,221" href="DocumentManagerSecurityProxy">
+<area shape="rect" coords="221,10,498,81" href="DocumentManager">
+
+Nur nach vorheriger Kontrolle durch den <i>DocumentManagerSecurityProxy</i> werden dem Client Zugriffe auf den <i>SimpleDocumentManager</i> gestattet.
+<p />
+
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF,UNCLEBOB

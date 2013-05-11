@@ -1,0 +1,36 @@
+ord::0103
+<h2>Factory Method</h2>
+
+<h5>Erzeugungsmuster</h5>
+
+<h4>Es wird eine Schnittstelle für die Erzeugung von Objekten definiert.
+Die Entscheidung, welche konkrete Klasse zu instanziieren, zu konfigurieren
+und schließlich zurückzugeben ist, wird konkreten (Unter-)Klassen überlassen,
+die diese Schnittstelle implementieren.</h4>
+
+<h3>Klassendiagramm</h3>
+
+img::factory_method_cn.png
+
+<h3>Beispiel</h3>
+
+Im Beispiel betrachten wir eine Shop-Software, die sowohl von <i>Moron Store Worldwide</i> als 
+auch von <i>Mrs. Freakly</i> genutzt wird, die einen (sehr erfolgreichen) Tante-Emma-Laden in Chicago betreibt.<br>
+In beiden Fällen werden Gutscheine für die Kunden benötigt. 
+
+img::factory_method_cx.png
+<area shape="rect" coords="82,235,369,329" href="MoronStoreVoucherCreator">
+<area shape="rect" coords="467,235,661,329" href="MoronStoreVoucher">
+<area shape="rect" coords="10,379,297,473" href="FreakliesShopVoucherCreator">
+<area shape="rect" coords="523,379,717,473" href="FreakliesShopVoucher">
+<area shape="rect" coords="10,10,298,104" href="AbstractVoucherCreator">
+<area shape="rect" coords="511,10,717,172" href="AbstractVoucher">
+
+Da sich die Gutscheine und ihre Erzeugung recht stark unterscheiden, 
+wurde das <i>Factory Method</i>-pattern eingesetzt.
+
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu können, setzen Sie die Variable <code>LOG_LEVEL = Level.FINE</code> im zugehörigen TestCase.
+
+ref::GOF,STEMA

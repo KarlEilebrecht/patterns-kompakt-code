@@ -1,0 +1,35 @@
+Hallo!
+
+Schön, dass Sie sich entschieden haben, die Beispiele zu Patterns kompakt
+herunterzuladen. 
+
+Führen Sie folgende Schritte aus, um loszulegen:
+
+ 1. Installieren Sie Java 7 (JDK) und Eclipse (z.B. Indigo)
+ 2. Erstellen Sie ein Verzeichnis für Ihr Projekt, z.B. C:\pk
+ 3. Entpacken Sie pk-examples.zip nach C:\pk (Sie sollten anschließend einen Ordner C:\pk\src sehen).
+ 4. Starten Sie Eclipse
+ 5. Wählen Sie File->New->Project
+ 6. Wählen Sie Java->Java-Project
+
+    Project name: pkexamples
+    [ ] Use default location
+    Location: C:\pk
+
+ 7. Klicken Sie [Next>]
+ 8. Wählen Sie im nun erscheinenden Dialog "New Java Project" den Karteireiter "Libraries"
+ 9. Klicken Sie [Add Library]
+10. Wählen Sie "JUnit" und klicken Sie auf [Next>]
+11. Wählen Sie JUnit library version: [JUnit 4] und klicken Sie auf [Finish]
+12. Klicken Sie nochmals auf [Finish]
+
+Das Projekt ist nun bereit.
+
+Sie können nun src/de/calamanari/pk/AllTests.java im Baum selektieren und 
+im Kontextmenü [Run As] JUnit Test starten.
+
+Die Tests sollten alle durchlaufen.
+
+Viel Erfolg!
+
+Karl Eilebrecht
