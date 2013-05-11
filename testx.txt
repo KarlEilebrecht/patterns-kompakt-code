@@ -1,0 +1,5 @@
+bin
+build.xml
+doc
+src
+testx.txt
