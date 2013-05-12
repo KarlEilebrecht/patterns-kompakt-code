@@ -1,7 +1,7 @@
 package de.calamanari.other;
 
 public class FileLine implements CharSequence {
-    public String text;
+    public String text;//
 
     public FileLine(String rawLine) {
         if (rawLine == null) {
