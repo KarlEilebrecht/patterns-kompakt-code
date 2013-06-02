@@ -61,7 +61,7 @@ public final class CompoundKey implements Serializable {
      * Creates new compound keys from the given long values
      * @param keyFieldValues parts of the key
      */
-    public CompoundKey(long... keyFieldValues) {
+    public CompoundKey(long[] keyFieldValues) {
         this(MiscUtils.boxArray(keyFieldValues));
     }
 
