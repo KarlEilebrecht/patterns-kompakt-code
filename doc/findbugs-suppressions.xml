@@ -5,4 +5,9 @@
 <!--   <Method name="bar" /> -->
    <Bug pattern="UW_UNCOND_WAIT,WA_NOT_IN_LOOP,TLW_TWO_LOCK_WAIT,SWL_SLEEP_WITH_LOCK_HELD" />
 </Match>
+<Match>
+   <Class name="~.*(ThroughputLimiter)" />
+<!--   <Method name="bar" /> -->
+   <Bug pattern="RV_RETURN_VALUE_IGNORED" />
+</Match>
 </FindBugsFilter>
