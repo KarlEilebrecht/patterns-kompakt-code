@@ -121,7 +121,7 @@ public class ThroughputLimiterTest {
         final CountDownLatch startLatch = new CountDownLatch(1);
         final CountDownLatch finishedLatch = new CountDownLatch(numberOfThreads);
         
-        final ThroughputLimiter limiter = new ThroughputLimiter(60000, 10, TimeUnit.MICROSECONDS);
+        final ThroughputLimiter limiter = new ThroughputLimiter(50000, 1, TimeUnit.MILLISECONDS);
         
         limiter.registerThroughputListener(new ThroughputListener() {
             
@@ -199,7 +199,7 @@ public class ThroughputLimiterTest {
                 for (int i = 0; i < numberOfCalls; i++) {
                     boolean res = true;
                     if (limiter != null) {
-                        res = limiter.tryGetPermission(); //(1000, TimeUnit.MILLISECONDS);
+                        res = limiter.tryGetPermission();//1000, TimeUnit.MILLISECONDS);
                         //limiter.getPermission();
                         Thread.yield();
 //                        try {

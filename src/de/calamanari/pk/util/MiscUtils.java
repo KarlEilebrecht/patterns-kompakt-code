@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -49,12 +50,64 @@ public final class MiscUtils {
     public static final Logger LOGGER = Logger.getLogger(MiscUtils.class.getName());
 
     /**
+     * JVM start time in nanoseconds (estimated, for delta calculation)
+     */
+    private static final long STARTUP_NANO_TIME;
+    static {
+        long deltaNanosSinceJvmStart = (System.currentTimeMillis() - ManagementFactory.getRuntimeMXBean()
+                .getStartTime()) * 1_000_000;
+        STARTUP_NANO_TIME = System.nanoTime() - deltaNanosSinceJvmStart;
+    }
+
+    /**
+     * one million
+     */
+    public static final int MILLION = 1_000_000;
+
+    /**
+     * one billion
+     */
+    public static final int BILLION = 1_000_000_000;
+    
+    /**
      * Utility class
      */
     private MiscUtils() {
         // no instances
     }
-    
+
+    /**
+     * Nanoseconds since system startup
+     * <p>
+     * <ul>
+     * <li>The first call initializes the measurement. This is the only calculation involving <i>wall clock time</i> (
+     * <code>System.currentTimeMillis()</code>).<br>
+     * Thus it is a good idea to call this method once right after JVM start to avoid any problems with clock adjustments
+     * (i.g. daylight saving). </li>
+     * <li>The precision may vary on different platforms.</li>
+     * </ul>
+     * @return positive value denoting time in nanoseconds
+     */
+    public static long getSystemUptimeNanos() {
+        long nowNanos = System.nanoTime();
+        long startNanos = STARTUP_NANO_TIME;
+        long deltaNanos = 0;
+        if (startNanos > 0 && nowNanos < 0) {
+            startNanos = startNanos - Long.MAX_VALUE;
+            nowNanos = nowNanos - Long.MAX_VALUE;
+        }
+        if (startNanos <= 0) {
+            deltaNanos = startNanos - nowNanos;
+            if (deltaNanos < 0) {
+                deltaNanos = deltaNanos * (-1);
+            }
+        }
+        else {
+            deltaNanos = nowNanos - startNanos;
+        }
+        return deltaNanos;
+    }
+
     /**
      * Returns the user's home directory
      * @return current user's home directory
@@ -391,23 +444,6 @@ public final class MiscUtils {
         @SuppressWarnings({ "unchecked" })
         T[] res = (T[]) wrapperArray;
         return res;
-    }
-
-    /**
-     * Simple hash code implementation
-     * @param values objects to include in hashcode computation
-     * @return compound hash code
-     */
-    public static int computeHashCode(Object[] values) {
-        int hashcode = 11;
-        int multiplier = 23;
-        int numberOfValues = values.length;
-        hashcode = (hashcode * multiplier) + numberOfValues;
-        for (int i = 0; i < numberOfValues; i++) {
-            Object value = values[i];
-            hashcode = (hashcode * multiplier) + (value == null ? 0 : value.hashCode());
-        }
-        return hashcode;
     }
 
     /**

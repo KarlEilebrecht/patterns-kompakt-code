@@ -31,7 +31,7 @@
             files=".*(Test|Mock)\.java" 
             /> 
   <suppress checks="ParameterNumberCheck" 
-            files=".*(Database|Test|Mock|CustomerDwhInfoDto|CustomerDwhInfoEntity|GeoBadPayerInfoDto)\.java" 
+            files=".*(Database|Test|Mock|CustomerDwhInfoDto|CustomerDwhInfoEntity|GeoBadPayerInfoDto|ThroughputEvent)\.java" 
             /> 
   <suppress checks="MethodLengthCheck" 
             files=".*(LockManager|IndexerSlave)\.java" 

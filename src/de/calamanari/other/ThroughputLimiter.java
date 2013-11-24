@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
 
+
 /**
  * A {@link ThroughputLimiter} allows to limit and observe the number of events (i.e. executions or requests) in
  * a configurable time interval (floating), see also {@link #MAX_STORABLE_NANOS}.
@@ -181,33 +182,16 @@ public class ThroughputLimiter {
     private void updateOverloadState(long sysTimeNanos, boolean permissionAvailable) {
         LoadState state = null;
         if (!permissionAvailable) {
-            if ((state = overloadState.get()) == notOverloaded) {
-                LoadState newState = new LoadState(sysTimeNanos);
-                if (overloadState.compareAndSet(notOverloaded, newState)) {
-                    long lastReleaseTime = notOverloaded.previousReleaseTimeNanos.get();
-                    if (lastReleaseTime > sysTimeNanos) {
-                        lastReleaseTime = sysTimeNanos;
-                    }
-                    newState.previousReleaseTimeNanos.set(sysTimeNanos);
-                }
-            }
+            overloadState.compareAndSet(notOverloaded, new LoadState(sysTimeNanos));
         }
         else if ((state = overloadState.get()) != notOverloaded && overloadState.compareAndSet(state, notOverloaded)) {
             state.waitLatch.countDown();
-            long storedReleaseTime = notOverloaded.previousReleaseTimeNanos.get();
-            if (storedReleaseTime < 0 || sysTimeNanos > storedReleaseTime) {
-                if (notOverloaded.previousReleaseTimeNanos.compareAndSet(storedReleaseTime, sysTimeNanos)) {
-                    long startTime = state.overloadStartTimeNanos;
-                    long lastReleaseTime = state.previousReleaseTimeNanos.get();
-                    if (startTime < lastReleaseTime) {
-                        startTime = lastReleaseTime;
-                    }
-                    long estimatedOverloadTime = sysTimeNanos - startTime;
-                    if (estimatedOverloadTime > intervalNanos) {
-                        estimatedOverloadTime = intervalNanos;
-                    }
-                    overloadNanos.addAndGet(estimatedOverloadTime);
+            if (sysTimeNanos > state.overloadStartTimeNanos) {
+                long estimatedOverloadTime = sysTimeNanos - state.overloadStartTimeNanos;
+                if (estimatedOverloadTime > intervalNanos) {
+                    estimatedOverloadTime = intervalNanos;
                 }
+                overloadNanos.addAndGet(estimatedOverloadTime);
             }
         }
     }
@@ -849,12 +833,7 @@ public class ThroughputLimiter {
          * Threads use this latch to wait for the end of the overload state.
          */
         final CountDownLatch waitLatch = new CountDownLatch(1);
-        
-        /**
-         * release time or -1 if unknown
-         */
-        final AtomicLong previousReleaseTimeNanos = new AtomicLong(-1); 
-        
+
         /**
          * Creates new overload state using the given start time
          * @param startTimeNanos
@@ -862,6 +841,7 @@ public class ThroughputLimiter {
         public LoadState(long startTimeNanos) {
             this.overloadStartTimeNanos = startTimeNanos;
         }
+
     }
     
 }

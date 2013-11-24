@@ -20,6 +20,7 @@ package de.calamanari.pk.identityfield;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -54,7 +55,7 @@ public final class CompoundKey implements Serializable {
         Object[] copy = new Object[len];
         System.arraycopy(checkNotEmptyAndNoNulls(keyFieldValues), 0, copy, 0, len);
         this.keyFieldValues = copy;
-        this.hashCode = MiscUtils.computeHashCode(this.keyFieldValues);
+        this.hashCode = Objects.hashCode(this.keyFieldValues);
     }
 
     /**
