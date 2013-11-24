@@ -23,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
  * A {@link OverloadState} instance represents the overload state of the {@link ThroughputLimiter} 
  * including an overload start time and a latch (where requesters can wait for).
  */
-final class OverloadState {
+public final class OverloadState {
 
     /**
      * Dummy indicating {@link ThroughputLimiter} is currently not overloaded. 

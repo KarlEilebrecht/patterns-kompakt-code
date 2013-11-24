@@ -29,7 +29,7 @@ import de.calamanari.pk.util.MiscUtils;
  * notifies the registered listener.
  * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
  */
-final class ThroughputCheckerThread extends Thread {
+public final class ThroughputCheckerThread extends Thread {
 
     /**
      * life-cycle control true->false->true
