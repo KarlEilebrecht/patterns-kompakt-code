@@ -301,11 +301,9 @@ public final class ThroughputLimiter {
      * {@link ThroughputLimiter}'s limitation interval. This can affect the computations of the listener and may lead to
      * irritating numbers, such as the throughput per second.
      * <p>
-     * The listener's interval time should be aligned to the <i>full second</i>. Otherwise reported throughput per
-     * second may be reported too high or too low from time to time or even toggle between a way too high and a
-     * corresponding too low value. <br>
-     * However, you may still see unexpected high values for the throughput per second, if the occurrences of incoming
-     * events are not uniformly distributed across the measurement interval.
+     * The listener's interval time should be greater or equal to the limiter's interval and
+     * aligned to the <i>full second</i>. Otherwise reported throughput per second may be reported too high or too low 
+     * from time to time or even toggle between a way too high and a corresponding too low value. <br>
      * <p>
      * Example:<br>
      * Imagine 100 events allowed in a 5-seconds-interval and a listener configured with a 2-seconds-interval. One would
