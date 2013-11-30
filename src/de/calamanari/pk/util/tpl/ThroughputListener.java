@@ -20,7 +20,7 @@ package de.calamanari.pk.util.tpl;
 /**
  * Clients may register a {@link ThroughputListener} to observe a {@link ThroughputLimiter}.<br>
  * The listener will be called periodically in a separate thread.
- * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>>
  */
 public interface ThroughputListener {
 

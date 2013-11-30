@@ -24,7 +24,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * A {@link ThroughputEvent} contains some KPIs about a {@link ThroughputLimiter}'s current state.
- * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
  * 
  */
 public final class ThroughputEvent {

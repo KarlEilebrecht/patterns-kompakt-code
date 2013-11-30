@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * A {@link ThroughputLimiter} allows to limit and observe the number of events (i.e. executions or requests) in
  * a configurable time interval (floating), see also {@link #MAX_STORABLE_NANOS}.
- * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
  */
 public class ThroughputLimiter {
 
@@ -417,7 +417,7 @@ public class ThroughputLimiter {
 
     /**
      * A {@link ThroughputEvent} contains some KPIs about a {@link ThroughputLimiter}'s current state.
-     * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
+     * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
      *
      */
     public static class ThroughputEvent {
@@ -570,7 +570,7 @@ public class ThroughputLimiter {
     /**
      * Clients may register a {@link ThroughputListener} to monitor the system.<br>
      * The listener will be called periodically in a separate thread.
-     * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
+     * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
      */
     public static interface ThroughputListener {
 
@@ -596,7 +596,7 @@ public class ThroughputLimiter {
      * It is obviously impossible to notify the observer synchronously since there are possibly millions of
      * concurrent calls to a {@link ThroughputLimiter}. Thus the {@link ThroughputCheckerThread} periodically
      * computes the current state and notifies the registered listener. 
-     * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
+     * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
      */
     public static final class ThroughputCheckerThread extends Thread {
         

@@ -30,7 +30,7 @@ import de.calamanari.pk.util.MiscUtils;
 /**
  * A {@link ThroughputLimiter} allows to limit and observe the number of events (i.e. executions or requests) in a
  * configurable time interval (floating), see also {@link #MAX_STORABLE_NANOS}.
- * @author <a href="mailto:Karl.Eilebrecht@freenet.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
  */
 public final class ThroughputLimiter {
 
@@ -395,6 +395,23 @@ public final class ThroughputLimiter {
         return this.deniedCount.get();
     }
 
+    /**
+     * Returns the configured interval length in nanoseconds
+     * @return interval time in nanoseconds
+     */
+    public long getIntervalTimeNanos() {
+        return this.intervalNanos;
+    }
+    
+    /**
+     * Returns the maximum number of permissions to be granted during
+     * an interval (see {@link #getIntervalTimeNanos()}).
+     * @return allowed number of permissions per interval
+     */
+    public int getMaxNumberOfPermissions() {
+        return numberOfSlots;
+    }
+    
     @Override
     protected void finalize() throws Throwable {
         try {
