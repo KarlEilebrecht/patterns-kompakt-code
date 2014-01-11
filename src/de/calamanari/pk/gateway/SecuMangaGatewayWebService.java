@@ -1,7 +1,7 @@
 /*
  * SecuManga Gateway Web Service
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import javax.jws.soap.SOAPBinding;
 /**
  * Secu Manga Gateway Web Service is the server-side implementation of the web service, the server-part of GATEWAY.<br>
  * Here we delegate calls to the "native" SecuManga-API.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 @WebService(name = "SecuMangaWebService", serviceName = "SecuMangaService")
 @SOAPBinding(style = SOAPBinding.Style.RPC)

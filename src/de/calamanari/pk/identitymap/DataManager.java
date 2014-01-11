@@ -1,7 +1,7 @@
 /*
  * Data Manager - provides finder methods in this example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * But with different DAOs (for XML, Oracle, MySQL), which is the primary reason for implementing a DAO-layer, the
  * identity map lookup code inside the DAO would have to be duplicated (yuck! again).<br>
  * One solution to this dilemma could be an abstract DAO base class containing a generic identity map lookup procedure.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class DataManager {
 

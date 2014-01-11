@@ -1,7 +1,7 @@
 /*
  * Customer Order - demonstrates VISITOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * Customer Order - each order can carry a special discount. This discount can be added to a company or division
  * discount but it is not applicable to order items carrying a special promotion discount. Instead the higher discount
  * will be chosen.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerOrder {
 

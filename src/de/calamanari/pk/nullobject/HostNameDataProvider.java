@@ -1,7 +1,7 @@
 /*
  * Host Name Data Provider - supplementary class in this example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 /**
  * Host Name Data Provider - supplementary class in this example, uses NULL OBJECT to tell a caller about missing
  * HostNameData instances
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class HostNameDataProvider {
 

@@ -1,7 +1,7 @@
 /*
  * SecuManga Server Mock - mocks the system we provide a GATEWAY for.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * SecuManga is a fictional native encryption library a GATEWAY will be provided for in this demonstration.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 

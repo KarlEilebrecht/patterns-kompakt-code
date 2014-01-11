@@ -1,7 +1,7 @@
 /*
  * DerbyJarNotFoundException
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package de.calamanari.pk.util.db;
 /**
  * Exception to be thrown when the embedded Java-DB (Derby) could not be initialized because the related jar was not
  * available.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DerbyJarNotFoundException extends RuntimeException {
 
@@ -44,8 +44,6 @@ public class DerbyJarNotFoundException extends RuntimeException {
      */
     public DerbyJarNotFoundException(String message, Throwable cause) {
         super(message, cause);
-        // TODO Auto-generated constructor stub
     }
-
 
 }

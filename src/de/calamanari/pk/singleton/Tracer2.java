@@ -1,7 +1,7 @@
 /*
  * Tracer2
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import de.calamanari.pk.util.MiscUtils;
  * However, under certain circumstances avoiding synchronization the way shown in this example might have a measurable
  * performance advantage. <br>
  * Advice: don't implement this type of singleton just because it seems to be cool ...<br>
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class Tracer2 implements Serializable {
 

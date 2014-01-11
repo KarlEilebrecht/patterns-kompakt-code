@@ -1,7 +1,7 @@
 /*
  * Persistence Session - supplementary class for LAZY LOAD demonstration
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import de.calamanari.pk.util.MiscUtils;
 /**
  * Persistence Session - supplementary class for LAZY LOAD demonstration<br>
  * Placeholder for some kind of persistence management.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PersistenceSession {
 
@@ -106,7 +106,7 @@ public class PersistenceSession {
                         invoiceData[4], invoiceData[5]));
             }
         }
-        Collections.sort(res);
+        Collections.sort(res, Invoice.BY_ID_COMPARATOR);
         return res;
     }
 

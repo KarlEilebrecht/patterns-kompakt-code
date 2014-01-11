@@ -1,7 +1,7 @@
 /*
  * HalCorp Secure Person Data Connector Imp
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import de.calamanari.pk.bridge.Person;
 /**
  * HalCorp Person Data Connector Imp - a concrete member of the "bridged-out" hierarchy. In this example this is a
  * second connector of the fictional HalCorp company, which supports some kind of super secure transport :-).
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class HalCorpSecurePersonDataConnectorImp extends HalCorpPersonDataConnectorImp {
 

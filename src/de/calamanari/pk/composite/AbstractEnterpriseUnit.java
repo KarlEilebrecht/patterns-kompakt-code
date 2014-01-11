@@ -1,7 +1,7 @@
 /*
  * Abstract Enterprise Unit - the COMPOSITE implementing the component interface
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Abstract Enterprise Unit is the abstract base class of the COMPOSITE implementing the interface of the component
  * (EnterpriseNode).
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
 

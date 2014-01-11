@@ -1,7 +1,7 @@
 /*
  * Request - Supplementary class representing objects using a Universally Unique ID (UUID/GUID)
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package de.calamanari.pk.uuid;
 
 /**
  * Request - Supplementary class representing objects using a Universally Unique ID (UUID/GUID)
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Request implements Comparable<Request> {
 
@@ -104,7 +104,14 @@ public class Request implements Comparable<Request> {
 
     @Override
     public int compareTo(Request o) {
-        return this.id.compareTo(o.id);
+        int res = 0;
+        if (this != o) {
+            res = this.getClass().getName().compareTo(o.getClass().getName());
+            if (res == 0) {
+                res = this.id.compareTo(o.id);
+            }
+        }
+        return res;
     }
 
     @Override

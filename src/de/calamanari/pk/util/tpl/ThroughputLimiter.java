@@ -1,7 +1,7 @@
 /*
  * Throughput Limiter
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import de.calamanari.pk.util.MiscUtils;
 /**
  * A {@link ThroughputLimiter} allows to limit and observe the number of events (i.e. executions or requests) in a
  * configurable time interval (floating), see also {@link #MAX_STORABLE_NANOS}.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class ThroughputLimiter {
 

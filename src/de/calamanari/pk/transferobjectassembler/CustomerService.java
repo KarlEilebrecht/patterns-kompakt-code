@@ -1,7 +1,7 @@
 /*
  * Customer Service - customer data access component
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import de.calamanari.pk.util.MiscUtils;
  * In this example I was just too lazy :-) to implement real remoting here. <br>
  * Thus I decided to work with a network delay simulation.<br>
  * However, you can see a full-blown RMI-scenario in the DATA TRANSFER OBJECT example.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerService {
 
@@ -101,7 +101,7 @@ public class CustomerService {
                 result.add(dto);
             }
         }
-        Collections.sort(result);
+        Collections.sort(result, CustomerDwhInfoDto.BY_ID_COMPARATOR);
         return result;
     }
 

@@ -1,7 +1,7 @@
 /*
  * Fraction - demonstrates a VALUE OBJECT.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,47 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * Fraction demonstrates a VALUE OBJECT, fractions are immutable. When converted to BigDecimal, a scale of 20 will be
  * used.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Fraction implements Comparable<Fraction>, Serializable {
 
+    /**
+     * Null-safe comparator for views (null to the bottom). If the values of the two fractions
+     * are the same, this comparator orders them according to their numerators: 1/3, 2/6, 4/12<p>
+     * This <i>view behavior</i> must not be implemented in {@link Fraction#compareTo(Fraction)} due to the 
+     * <i><b>{@linkplain Comparable} interface contract</b></i> which requires <code>equals()</code> 
+     * and <code>compareTo()</code> to be implemented <i>consistently</i>. 
+     */
+    public static final Comparator<Fraction> VIEW_COMPARATOR = new Comparator<Fraction>() {
+
+        @Override
+        public int compare(Fraction o1, Fraction o2) {
+            int res = 0;
+            if (o1 != null || o2 != null) {
+                if (o1 == null) {
+                    res = 1;
+                }
+                else if (o2 == null) {
+                    res = -1;
+                }
+                else {
+                    res = o1.compareTo(o2);
+                    if (res == 0 && !o1.denominator.equals(o2.denominator)) {
+                        res = o1.numerator.compareTo(o2.numerator);
+                    }
+                }
+            }
+            return res;
+        }
+        
+    };
+    
     /**
      * for serialization
      */
@@ -53,23 +86,27 @@ public class Fraction implements Comparable<Fraction>, Serializable {
     /**
      * Nominator of fraction
      */
-    private final BigInteger NUMERATOR;
+    private final BigInteger numerator;
 
     /**
      * Denominator of fraction
      */
-    private final BigInteger DENOMINATOR;
+    private final BigInteger denominator;
 
     /**
-     * String representation, used for equals and hashcode, will not change, since this is a VALUE OBJECT, this string
-     * contains the reduced form
+     * Nominator of reduced fraction
      */
-    private final String REDUCED_FRACTION_AS_STRING;
+    private final BigInteger reducedNumerator;
 
+    /**
+     * Denominator of reduced fraction
+     */
+    private final BigInteger reducedDenominator;
+    
     /**
      * String representation
      */
-    private final String FRACTION_AS_STRING;
+    private final String fractionAsString;
 
     /**
      * Creates a fraction from two BigInteger values
@@ -96,10 +133,11 @@ public class Fraction implements Comparable<Fraction>, Serializable {
             numerator = numeratorAndDenominator[0];
             denominator = numeratorAndDenominator[1];
         }
-        this.NUMERATOR = numerator;
-        this.DENOMINATOR = denominator;
-        this.REDUCED_FRACTION_AS_STRING = "(" + numeratorAndDenominator[0] + "/" + numeratorAndDenominator[1] + ")";
-        this.FRACTION_AS_STRING = "(" + NUMERATOR + "/" + DENOMINATOR + ")";
+        this.numerator = numerator;
+        this.denominator = denominator;
+        this.reducedNumerator = numeratorAndDenominator[0];
+        this.reducedDenominator = numeratorAndDenominator[1];
+        this.fractionAsString = "(" + this.numerator + "/" + this.denominator + ")";
     }
 
     /**
@@ -139,23 +177,20 @@ public class Fraction implements Comparable<Fraction>, Serializable {
     }
 
     /**
+     * Supplementary constructor
+     * @param numeratorAndDemoninator
+     * @param reduce if true, the result fraction will be reduced automatically
+     */
+    private Fraction(BigInteger[] numeratorAndDemoninator, boolean reduce) {
+        this(numeratorAndDemoninator[0], numeratorAndDemoninator[1], reduce);
+    }
+    
+    /**
      * Creates a fraction from the given BigDecimal, preserving 20 decimals
      * @param value NOT NULL
      */
     public Fraction(BigDecimal value) {
-
-        if (value == null) {
-            throw new IllegalArgumentException("Argument value must not be null");
-        }
-
-        BigInteger numerator = value.multiply(MAX_SCALED_VALUE).toBigInteger();
-        BigInteger denominator = DEFAULT_DENOMINATOR;
-
-        BigInteger[] numeratorAndDenominator = reduce(numerator, denominator);
-        this.REDUCED_FRACTION_AS_STRING = "(" + numeratorAndDenominator[0] + "/" + numeratorAndDenominator[1] + ")";
-        this.NUMERATOR = numeratorAndDenominator[0];
-        this.DENOMINATOR = numeratorAndDenominator[1];
-        this.FRACTION_AS_STRING = "(" + NUMERATOR + "/" + DENOMINATOR + ")";
+        this(convertBigDecimalToBigIntegers(value), true);
     }
 
     /**
@@ -196,11 +231,25 @@ public class Fraction implements Comparable<Fraction>, Serializable {
     }
 
     /**
+     * Returns a two-values array, used during construction
+     * @param value big decimal value
+     * @return array[2] of big integer
+     */
+    private static final BigInteger[] convertBigDecimalToBigIntegers(BigDecimal value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Argument value must not be null");
+        }
+        BigInteger numerator = value.multiply(MAX_SCALED_VALUE).toBigInteger();
+        BigInteger denominator = DEFAULT_DENOMINATOR;
+        return new BigInteger[]{numerator, denominator};
+    }
+    
+    /**
      * Returns the numerator
      * @return numerator
      */
     public BigInteger getNumerator() {
-        return this.NUMERATOR;
+        return this.numerator;
     }
 
     /**
@@ -208,7 +257,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @return denominator
      */
     public BigInteger getDenominator() {
-        return this.DENOMINATOR;
+        return this.denominator;
     }
 
     /**
@@ -216,7 +265,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @return fraction * -1
      */
     public Fraction negate() {
-        return new Fraction(NUMERATOR.negate(), DENOMINATOR);
+        return new Fraction(this.numerator.negate(), this.denominator);
     }
 
     /**
@@ -224,7 +273,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @return (denomninator / numerator)
      */
     public Fraction getInverse() {
-        return new Fraction(this.DENOMINATOR, this.NUMERATOR);
+        return new Fraction(this.denominator, this.numerator);
     }
 
     /**
@@ -238,18 +287,18 @@ public class Fraction implements Comparable<Fraction>, Serializable {
         }
 
         Fraction result = this;
-        if (!fraction.NUMERATOR.equals(BigInteger.ZERO)) {
+        if (!fraction.numerator.equals(BigInteger.ZERO)) {
             BigInteger numerator;
             BigInteger denominator;
 
-            if (DENOMINATOR != fraction.DENOMINATOR) {
+            if (this.denominator != fraction.denominator) {
                 Fraction[] fractions = toCommonDenominator(this, fraction);
-                numerator = fractions[0].NUMERATOR.add(fractions[1].NUMERATOR);
-                denominator = fractions[0].DENOMINATOR;
+                numerator = fractions[0].numerator.add(fractions[1].numerator);
+                denominator = fractions[0].denominator;
             }
             else {
-                numerator = NUMERATOR.add(fraction.NUMERATOR);
-                denominator = DENOMINATOR;
+                numerator = this.numerator.add(fraction.numerator);
+                denominator = this.denominator;
             }
             if (numerator.equals(BigInteger.ZERO)) {
                 denominator = BigInteger.ONE;
@@ -269,15 +318,23 @@ public class Fraction implements Comparable<Fraction>, Serializable {
     }
 
     /**
+     * Determines if the value of this fractions represents the value (1/1)
+     * @return true, if this fraction is equal to <code>1</code>
+     */
+    public boolean isOne() {
+        return this.reducedDenominator.equals(BigInteger.ONE) && this.reducedNumerator.equals(BigInteger.ONE);
+    }
+    
+    /**
      * Returns the product of the two fraction
      * @param fraction value to be multiplied with this fraction
      * @return this * fraction
      */
     public Fraction multiply(Fraction fraction) {
-        if (fraction.REDUCED_FRACTION_AS_STRING.equals("(1/1)")) {
+        if (fraction.isOne()) {
             return this;
         }
-        return (new Fraction(NUMERATOR.multiply(fraction.NUMERATOR), DENOMINATOR.multiply(fraction.DENOMINATOR)))
+        return (new Fraction(this.numerator.multiply(fraction.numerator), this.denominator.multiply(fraction.denominator)))
                 .reduce();
     }
 
@@ -287,10 +344,10 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @return this / fraction
      */
     public Fraction divide(Fraction fraction) {
-        if (fraction.REDUCED_FRACTION_AS_STRING.equals("(1/1)")) {
+        if (fraction.isOne()) {
             return this;
         }
-        return (new Fraction(NUMERATOR.multiply(fraction.DENOMINATOR), DENOMINATOR.multiply(fraction.NUMERATOR)))
+        return (new Fraction(this.numerator.multiply(fraction.denominator), this.denominator.multiply(fraction.numerator)))
                 .reduce();
     }
 
@@ -299,20 +356,17 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @return -1, 0 or 1 for negative, zero or positive values
      */
     public int getSignum() {
-        return this.NUMERATOR.signum();
+        return this.numerator.signum();
     }
 
     /**
-     * Returns a reduced version of this fraction using the greatest common divisor
+     * Returns a reduced version of this fraction
      * @return reduced fraction
      */
     public Fraction reduce() {
         Fraction res = this;
-        BigInteger[] reduced = reduce(NUMERATOR, DENOMINATOR);
-        BigInteger numerator = reduced[0];
-        BigInteger denominator = reduced[1];
-        if (!NUMERATOR.equals(numerator) || !DENOMINATOR.equals(denominator)) {
-            res = new Fraction(numerator, denominator);
+        if (!this.numerator.equals(this.reducedNumerator)) {
+            res = new Fraction(this.reducedNumerator, this.reducedDenominator);
         }
         return res;
     }
@@ -323,7 +377,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @param val2 second value
      * @return greatest common divisor
      */
-    protected BigInteger gcd(BigInteger val1, BigInteger val2) {
+    protected static final BigInteger gcd(BigInteger val1, BigInteger val2) {
         val1 = val1.abs();
         val2 = val2.abs();
 
@@ -341,7 +395,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @param val2 second value
      * @return smallest common multiple
      */
-    protected BigInteger scm(BigInteger val1, BigInteger val2) {
+    protected static final BigInteger scm(BigInteger val1, BigInteger val2) {
 
         BigInteger res = val1.multiply(val2).divide(gcd(val1, val2));
 
@@ -357,7 +411,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @param denominator fraction's denominator, NOT NULL, NOT ZERO
      * @return array with numerator and denominator
      */
-    protected BigInteger[] reduce(BigInteger numerator, BigInteger denominator) {
+    protected static final BigInteger[] reduce(BigInteger numerator, BigInteger denominator) {
         if (!numerator.equals(BigInteger.ZERO)) {
             BigInteger gcd = gcd(numerator, denominator);
             if (gcd.compareTo(BigInteger.ONE) > 0) {
@@ -384,16 +438,13 @@ public class Fraction implements Comparable<Fraction>, Serializable {
         }
         Fraction[] fractions = new Fraction[2];
 
-        fraction1 = fraction1.reduce();
-        fraction2 = fraction2.reduce();
+        BigInteger scm = scm(fraction1.reducedDenominator, fraction2.reducedDenominator);
 
-        BigInteger scm = scm(fraction1.DENOMINATOR, fraction2.DENOMINATOR);
+        BigInteger factor1 = scm.divide(fraction1.reducedDenominator);
+        BigInteger factor2 = scm.divide(fraction2.reducedDenominator);
 
-        BigInteger factor1 = scm.divide(fraction1.DENOMINATOR);
-        BigInteger factor2 = scm.divide(fraction2.DENOMINATOR);
-
-        fractions[0] = new Fraction(fraction1.NUMERATOR.multiply(factor1), scm);
-        fractions[1] = new Fraction(fraction2.NUMERATOR.multiply(factor2), scm);
+        fractions[0] = new Fraction(fraction1.reducedNumerator.multiply(factor1), scm);
+        fractions[1] = new Fraction(fraction2.reducedNumerator.multiply(factor2), scm);
         return fractions;
     }
 
@@ -402,8 +453,8 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @return BigDecimal representation of this fraction
      */
     public BigDecimal getBigDecimalValue() {
-        BigDecimal bd = new BigDecimal(NUMERATOR);
-        return bd.divide(new BigDecimal(DENOMINATOR), MAX_SCALING, RoundingMode.HALF_EVEN);
+        BigDecimal bd = new BigDecimal(this.reducedNumerator);
+        return bd.divide(new BigDecimal(this.reducedDenominator), MAX_SCALING, RoundingMode.HALF_EVEN);
     }
 
     /**
@@ -423,14 +474,15 @@ public class Fraction implements Comparable<Fraction>, Serializable {
     public boolean equals(Object obj) {
         boolean res = false;
         if (obj instanceof Fraction) {
-            res = REDUCED_FRACTION_AS_STRING.equals(((Fraction) obj).REDUCED_FRACTION_AS_STRING);
+            Fraction other = (Fraction)obj;
+            res = (this.reducedDenominator.equals(other.reducedDenominator) && this.reducedNumerator.equals(other.reducedNumerator));
         }
         return res;
     }
 
     @Override
     public int hashCode() {
-        return REDUCED_FRACTION_AS_STRING.hashCode();
+        return Objects.hash(this.reducedNumerator, this.reducedDenominator);
     }
 
     /**
@@ -440,24 +492,19 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      */
     @Override
     public String toString() {
-        return FRACTION_AS_STRING;
+        return this.fractionAsString;
     }
 
     @Override
-    public int compareTo(Fraction o) {
+    public int compareTo(Fraction other) {
         int res = 0;
-        if (o == null) {
-            res = -1;
+        if (this.denominator.equals(other.denominator)) {
+            res = this.numerator.compareTo(other.numerator);
         }
-        else if (DENOMINATOR.equals(o.DENOMINATOR)) {
-            res = this.NUMERATOR.compareTo(o.NUMERATOR);
-        }
-        else {
-            Fraction[] fractions = toCommonDenominator(this, o);
-            res = (fractions[0].NUMERATOR.compareTo(fractions[1].NUMERATOR));
-            if (res == 0) {
-                res = this.NUMERATOR.compareTo(o.NUMERATOR);
-            }
+        else if (!this.reducedNumerator.equals(other.reducedNumerator) || 
+                !this.reducedDenominator.equals(other.reducedDenominator)) {
+            Fraction[] fractions = toCommonDenominator(this, other);
+            res = fractions[0].numerator.compareTo(fractions[1].numerator);
         }
         return res;
     }

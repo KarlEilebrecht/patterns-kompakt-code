@@ -1,7 +1,7 @@
 /*
  * Money - a MONEY demo implementation
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.util.Currency;
  * Please be aware that this implementation has absolutely nothing to do with high performance or optimized memory
  * consumption. :-) <br>
  * You'll find full fledged and well tested Money libraries in the web.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Money implements Serializable, Comparable<Money> {
 

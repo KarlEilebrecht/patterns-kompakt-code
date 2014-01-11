@@ -1,7 +1,7 @@
 /*
  * Value Object Test - demonstrates VALUE OBJECT pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import de.calamanari.pk.valueobject.Fraction;
 
 /**
  * Value Object Test - demonstrates VALUE OBJECT pattern.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ValueObjectTest {
 
@@ -114,10 +114,11 @@ public class ValueObjectTest {
         // BUT BEWARE: if no modification takes place, we can/should return the SAME object instance
         assertSame(fraction3, fraction3.add(fraction5));
 
-        // fractions are comparable
+        // fractions are comparable by value ...
         Fraction[] fractions = new Fraction[] { fraction1, fraction2, fraction3, fraction4, fraction5 };
         assertEquals("[(4/4), (2/2), (1/3), (25/5), (0/1)]", Arrays.asList(fractions).toString());
-        Arrays.sort(fractions);
+        // ... but see the comment at the VIEW_COMPARATOR implementation
+        Arrays.sort(fractions, Fraction.VIEW_COMPARATOR);
         assertEquals("[(0/1), (1/3), (2/2), (4/4), (25/5)]", Arrays.asList(fractions).toString());
 
         LOGGER.info("Test Value Object successful! Elapsed time: "

@@ -1,7 +1,7 @@
 /*
  * Session - supplementary class for MAPPER demonstration
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * According to Martin Fowler the mapper can't be invoked directly by either of the two components it is connected to,
  * because they both don't even know of the mapper.<br>
  * One solution is a third party <i>driving</i> the mapper. In this example a session is responsible for this task.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Session {
 

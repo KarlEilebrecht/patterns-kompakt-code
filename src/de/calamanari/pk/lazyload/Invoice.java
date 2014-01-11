@@ -1,7 +1,7 @@
 /*
  * Invoice - supplementary class to demonstrate LAZY LOAD
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package de.calamanari.pk.lazyload;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -26,10 +27,22 @@ import java.util.logging.Logger;
  * Invoice - supplementary class to demonstrate LAZY LOAD pattern.<br>
  * Each invoice has a number of fields, but only the invoiceId and the amountClaimed will be loaded by default. Other
  * fields will be loaded on demand.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class Invoice implements Comparable<Invoice>, Serializable {
+public class Invoice implements Serializable {
 
+    /**
+     * Compares the ids, for sorting
+     */
+    public static final Comparator<Invoice> BY_ID_COMPARATOR = new Comparator<Invoice>() {
+
+        @Override
+        public int compare(Invoice o1, Invoice o2) {
+            return o1.getInvoiceId().compareTo(o2.getInvoiceId());
+        }
+        
+    };
+    
     /**
      * logger
      */
@@ -211,17 +224,6 @@ public class Invoice implements Comparable<Invoice>, Serializable {
         LOGGER.fine(this.getClass().getSimpleName() + ".getCity() called.");
         ensureInstanceCompletelyLoaded();
         return city;
-    }
-
-    /**
-     * This method only compares the IDs for bringing invoices into a natural order.<br>
-     * Two different invoice-instances (i.e. clones) with the same ID assigned will return 0 
-     * while {@link #equals(Object)} will return false.
-     * {@inheritDoc} 
-     */
-    @Override
-    public int compareTo(Invoice o) {
-        return this.invoiceId.compareTo(o.invoiceId);
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * OldSys History Manager
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 /**
  * OldSys History Manager - part of the fictional legacy system, we want to create a WRAPPER for. <br>
  * This class provides access to historical data about a customer.<br>
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OldSysHistoryMgr {
 

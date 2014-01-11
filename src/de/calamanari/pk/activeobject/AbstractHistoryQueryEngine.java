@@ -1,7 +1,7 @@
 /*
  * Abstract History Query Engine - demonstrates ACTIVE OBJECT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.List;
  * Abstract History Query Engine - some engine that performs synchronous queries which take some time. A limitation
  * (provider contract) shall be that only a maximum number of parallel requests are allowed to reduce load on the
  * assumed backend system.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractHistoryQueryEngine {
 

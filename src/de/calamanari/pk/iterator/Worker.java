@@ -1,7 +1,7 @@
 /*
  * Worker
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import java.util.Set;
 
 /**
  * Worker represents the concrete AGGREGATE which can return an ITERATOR.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class Worker extends AbstractWorker implements Comparable<Worker> {
+public class Worker extends AbstractWorker {
 
     /**
      * Subordinates of this worker
@@ -59,16 +59,6 @@ public class Worker extends AbstractWorker implements Comparable<Worker> {
     @Override
     public WorkerIterator createSubordinatesIterator() {
         return new WorkerIterator(this.subordinates);
-    }
-
-    /**
-     * This method only compares the names for bringing workers into a natural order.<br>
-     * Two different workers with the same name assigned will return 0 while {@link #equals(Object)} will return false.
-     * {@inheritDoc} 
-     */
-    @Override
-    public int compareTo(Worker o) {
-        return this.getName().compareTo(o.getName());
     }
 
 }

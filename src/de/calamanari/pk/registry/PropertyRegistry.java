@@ -1,7 +1,7 @@
 /*
  * Property Registry - demonstrates REGISTRY pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 /**
  * Property Registry - a simple registry: safe to be accessed concurrently with minimum synchronization, providing the
  * ability to be refreshed at any time.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class PropertyRegistry {
 

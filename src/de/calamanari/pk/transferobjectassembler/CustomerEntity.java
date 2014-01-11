@@ -1,7 +1,7 @@
 /*
  * Customer Entity - one of the business entities in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@ import java.util.logging.Logger;
 
 /**
  * Customer Entity - one of the business entities in this example.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class CustomerEntity implements Comparable<CustomerEntity> {
-
+public class CustomerEntity {
+    
     /**
      * logger
      */
@@ -235,22 +235,6 @@ public class CustomerEntity implements Comparable<CustomerEntity> {
         return this.getClass().getSimpleName() + "({customerId=" + customerId + ", title=" + title + ", lastName="
                 + lastName + ", firstName=" + firstName + ", phone=" + phone + ", email=" + email + ", promotionOptIn="
                 + promotionOptIn + "})";
-    }
-
-    
-    /**
-     * This method only compares the IDs for bringing customer entities into a natural order.<br>
-     * Two different instances (i.e. clones) with the same ID assigned will return 0 
-     * while {@link #equals(Object)} will return false.
-     * {@inheritDoc} 
-     */
-    @Override
-    public int compareTo(CustomerEntity o) {
-        int res = -1;
-        if (o != null) {
-            res = this.customerId.compareTo(o.customerId);
-        }
-        return res;
     }
 
 }

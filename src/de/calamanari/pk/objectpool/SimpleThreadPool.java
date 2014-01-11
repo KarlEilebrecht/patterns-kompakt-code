@@ -1,7 +1,7 @@
 /*
  * Simple Thread Pool 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * should be preferred(!), this simple thread pool is still a good example of an object pool maintaining expensive
  * objects (the threads), to be handed out to a caller for exclusive use and to be returned afterwards to the pool for
  * later reuse.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SimpleThreadPool {
 

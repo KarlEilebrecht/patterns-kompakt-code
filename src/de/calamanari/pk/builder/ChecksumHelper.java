@@ -1,7 +1,7 @@
 /*
  * Checksum Helper - the DIRECTOR in this BUILDER example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * Checksum Helper - the DIRECTOR in this BUILDER example.<br>
  * Instances of this class create a checksum out of a given object array using a BUILDER.<br>
  * These helper instances are not safe to be used concurrently by multiple threads.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ChecksumHelper {
 

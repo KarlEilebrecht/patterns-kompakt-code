@@ -1,7 +1,7 @@
 /*
  * Palindrome Check Master - demonstrates MASTER SLAVE
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import de.calamanari.pk.util.itfa.ItfaConfiguration;
 /**
  * Palindrome Check Master - the MASTER in this MASTER SLAVE example, divides the task into subtasks waits for the
  * slaves to complete the sub-tasks and returns the result.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PalindromeCheckMaster {
 

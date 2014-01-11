@@ -1,7 +1,7 @@
 /*
  * Indexed Text File Accessor 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import de.calamanari.pk.util.MiscUtils;
  * Indexed Text File Accessor creates an index for a given file and allows to jump to specific characters or lines.<br>
  * This is intended for reading large text files which won't be modified after index creation.<br>
  * An instance is safe to be used concurrently by multiple threads.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class IndexedTextFileAccessor {
 

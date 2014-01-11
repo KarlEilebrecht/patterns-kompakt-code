@@ -1,7 +1,7 @@
 /*
  * Abstract console server
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 /**
  * This abstract class can be sub-classed to easily create simple servers running on the console.<br>
  * Several TEMPLATE METHODs allow to define the concrete logic and to control the behavior in subclasses.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractConsoleServer {
 

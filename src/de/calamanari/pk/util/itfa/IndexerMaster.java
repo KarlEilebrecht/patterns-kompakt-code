@@ -1,7 +1,7 @@
 /*
  * Indexer Master
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import de.calamanari.pk.util.pfis.ParallelFileInputStream;
  * Indexer Master<br>
  * Indexing is implemented using the MASTER-SLAVE pattern. The master cuts the work into peaces the slaves perform the
  * indexing. Finally the master collects the results and sets up the full index.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 final class IndexerMaster {
 

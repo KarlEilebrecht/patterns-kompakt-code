@@ -1,7 +1,7 @@
 /*
  * Abstract Worker
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,27 @@
  */
 package de.calamanari.pk.iterator;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
  * Abstract Worker (a COMPOSITE-interface) represents the AGGREGATE (abstract base class), an iterator will be created
  * for.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractWorker {
 
+    /**
+     * Default comparator, only compares the names for bringing workers into a natural order.
+     */
+    public static final Comparator<AbstractWorker> BY_NAME_COMPARATOR = new Comparator<AbstractWorker>() {
+        
+        @Override
+        public int compare(AbstractWorker o1, AbstractWorker o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+    
     /**
      * Name of worker
      */

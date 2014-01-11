@@ -1,7 +1,7 @@
 /*
  * Product Manager - demonstrates COMBINED METHOD
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.rmi.RemoteException;
  * :-) <br>
  * A new COMBINED METHOD was introduced to combine the two steps into one transactional step to avoid inconsistencies in
  * case of error.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface ProductManager extends Remote {
 

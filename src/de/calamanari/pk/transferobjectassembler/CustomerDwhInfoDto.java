@@ -1,7 +1,7 @@
 /*
  * Customer Dwh Info DTO - one of the data transfer objects in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,40 @@ package de.calamanari.pk.transferobjectassembler;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Logger;
 
 /**
  * Customer Dwh Info DTO - one of the data transfer objects in this example.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class CustomerDwhInfoDto implements Comparable<CustomerDwhInfoDto>, Serializable {
+public class CustomerDwhInfoDto implements Serializable {
 
+    /**
+     * Default comparator (by id), null-safe, nulls to the bottom
+     */
+    public static final Comparator<CustomerDwhInfoDto> BY_ID_COMPARATOR = new Comparator<CustomerDwhInfoDto>() {
+
+        @Override
+        public int compare(CustomerDwhInfoDto o1, CustomerDwhInfoDto o2) {
+            int res = 0;
+            if (o1 != null || o2 != null) {
+                if (o1 == null) {
+                    res = 1;
+                }
+                else if (o2 == null) {
+                    res = -1;
+                }
+                else {
+                    res = o1.getCustomerId().compareTo(o2.getCustomerId());
+                }
+            }
+            return res;
+        }
+        
+    };
+    
     /**
      * logger
      */
@@ -248,15 +273,6 @@ public class CustomerDwhInfoDto implements Comparable<CustomerDwhInfoDto>, Seria
                 + (firstOrderDate == null ? null : "'" + sdf.format(firstOrderDate) + "'") + ", lastOrderDate="
                 + (lastOrderDate == null ? null : "'" + sdf.format(lastOrderDate) + "'") + ", dueInvoice=" + dueInvoice
                 + ", fraudSuspicion=" + fraudSuspicion + ", badPayer=" + badPayer + "})";
-    }
-
-    @Override
-    public int compareTo(CustomerDwhInfoDto o) {
-        int res = -1;
-        if (o != null) {
-            res = this.customerId.compareTo(o.customerId);
-        }
-        return res;
     }
 
 }

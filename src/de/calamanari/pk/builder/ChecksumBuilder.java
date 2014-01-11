@@ -1,7 +1,7 @@
 /*
  * Checksum Builder - interface for checksum BUILDERs.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package de.calamanari.pk.builder;
  * Checksum Builder - interface for checksum BUILDERs.<br>
  * The PRODUCTs of these checksum builders are Checksum instances.<br>
  * If not otherwise stated, concrete instances are NOT safe to be used concurrently by multiple threads.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface ChecksumBuilder {
 

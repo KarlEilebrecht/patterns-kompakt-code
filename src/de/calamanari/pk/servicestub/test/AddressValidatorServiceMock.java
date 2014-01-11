@@ -1,7 +1,7 @@
 /*
  * Address Validator Service Mock - SERVICE STUB (aka Mock) for AddressValidator Service 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
- * Copyright 2013 Karl Eilebrecht
+ * Copyright 2014 Karl Eilebrecht
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import de.calamanari.pk.servicestub.adrchk.AddressValidatorService;
  * This is a very simple mock, always returning a predefined result, more sophisticated mocks create matching results
  * for different input sets. <br>
  * Mock frameworks (like http://code.google.com/p/mockito/) simplify mocking.
- * @author <a href="mailto:Karl.Eilebrecht(a/t)web.de">Karl Eilebrecht</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AddressValidatorServiceMock implements AddressValidatorService {
 
