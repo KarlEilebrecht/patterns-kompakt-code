@@ -32,6 +32,8 @@ import de.calamanari.pk.lazyload.Invoice;
 import de.calamanari.pk.lazyload.PersistenceSession;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Lazy Load Test - demonstrates LAZY LOAD pattern.
@@ -108,7 +110,9 @@ public class LazyLoadTest {
             debtorCities.add(invoice.getCity());
         }
 
-        assertEquals("[Pumpkin Lake, Lost Hills, Shocking, Seven Oaks, Bundy Bay]", debtorCities.toString());
+        List<String> orderedDebtorCities = new ArrayList<>(debtorCities);
+        Collections.sort(orderedDebtorCities);
+        assertEquals("[Bundy Bay, Lost Hills, Pumpkin Lake, Seven Oaks, Shocking]", orderedDebtorCities.toString());
 
         // Hint: change the finder-call to
         // PersistenceManager.findAllInvoices(false);
