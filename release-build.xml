@@ -1,0 +1,21 @@
+<!DOCTYPE project>
+<project name="patterns kompakt" default="dist" basedir=".">
+    <description>
+        source zip build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="dist" location="doc"/>
+
+
+  <target name="dist"
+        description="generate the distribution" >
+    <zip destfile="${dist}/pk-examples.zip"
+         basedir="."
+    	 includes="src/main, src/main/**, src/test, src/test/**, doc/liesmich.txt, doc/eclipse-code-formatter.xml, doc/checkstyle-settings.xml, doc/checkstyle-suppressions.xml, doc/findbugs-suppressions.xml"
+         excludes="src/main/de/calamanari/other, src/main/de/calamanari/other/**, src/test/de/calamanari/other, src/test/de/calamanari/other/**"
+    />
+  
+  </target>
+
+</project>

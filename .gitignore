@@ -1,5 +1,7 @@
-doc/javadoc/
 doc/patterns/*.html
 doc/patterns/patterns.htm
 doc/pk-examples.zip
 bin/
+/nbproject/private/
+/build/
+/dist/
