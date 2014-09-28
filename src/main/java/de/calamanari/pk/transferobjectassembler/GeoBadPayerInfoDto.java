@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Geo Bad Payer Info Dto - data transfer object to be assembled
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,15 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
 
 /**
- * Geo Bad Payer Info Dto - data transfer object to be assembled, contains information to be collected from different
- * business entities.<br>
+ * Geo Bad Payer Info Dto - data transfer object to be assembled, contains information to be collected from different business entities.<br>
  * In our fictional scenario a list of bad payers related to their location has to be displayed.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class GeoBadPayerInfoDto implements Serializable {
@@ -92,6 +94,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Creates new data transfer object from the given data
+     * 
      * @param customerId identifier
      * @param title person's title
      * @param lastName person's last name
@@ -102,8 +105,8 @@ public class GeoBadPayerInfoDto implements Serializable {
      * @param customerType type of customer
      * @param dueInvoice flag to indicate unpaid bill
      */
-    public GeoBadPayerInfoDto(String customerId, String title, String lastName, String firstName, String zipCode,
-            String city, String country, String customerType, boolean dueInvoice) {
+    public GeoBadPayerInfoDto(String customerId, String title, String lastName, String firstName, String zipCode, String city, String country,
+            String customerType, boolean dueInvoice) {
         this.customerId = customerId;
         this.title = title;
         this.lastName = lastName;
@@ -117,6 +120,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns the customerId
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -125,6 +129,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the customerId
+     * 
      * @param customerId identifier
      */
     public void setCustomerId(String customerId) {
@@ -133,6 +138,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns customer title
+     * 
      * @return title of customer
      */
     public String getTitle() {
@@ -141,6 +147,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the customer's title
+     * 
      * @param title person's title
      */
     public void setTitle(String title) {
@@ -149,6 +156,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns the last name of customer
+     * 
      * @return lastName
      */
     public String getLastName() {
@@ -157,6 +165,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the customer's last name
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -165,6 +174,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns the customer's first name
+     * 
      * @return firstName
      */
     public String getFirstName() {
@@ -173,6 +183,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the customer's first name
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -181,6 +192,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns the zipcode
+     * 
      * @return zipCode
      */
     public String getZipCode() {
@@ -189,6 +201,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the zipCode
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -197,6 +210,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns the city name
+     * 
      * @return city
      */
     public String getCity() {
@@ -205,6 +219,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the city name
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -213,6 +228,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns the country name
+     * 
      * @return country
      */
     public String getCountry() {
@@ -221,6 +237,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the country
+     * 
      * @param country address field
      */
     public void setCountry(String country) {
@@ -229,6 +246,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns the type of customer (classification)
+     * 
      * @return customerType
      */
     public String getCustomerType() {
@@ -237,6 +255,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the customer type
+     * 
      * @param customerType type of customer
      */
     public void setCustomerType(String customerType) {
@@ -245,6 +264,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Returns whether this customer has an open invoice
+     * 
      * @return true whether there is an open invoice
      */
     public boolean isDueInvoice() {
@@ -253,6 +273,7 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     /**
      * Sets the due invoice flag
+     * 
      * @param dueInvoice true indicates an open invoice not payed yet
      */
     public void setDueInvoice(boolean dueInvoice) {
@@ -261,9 +282,8 @@ public class GeoBadPayerInfoDto implements Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", title=" + title + ", lastName="
-                + lastName + ", firstName=" + firstName + ", zipCode=" + zipCode + ", city=" + city + ", country="
-                + country + ", customerType=" + customerType + ", dueInvoice=" + dueInvoice + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", title=" + title + ", lastName=" + lastName + ", firstName=" + firstName
+                + ", zipCode=" + zipCode + ", city=" + city + ", country=" + country + ", customerType=" + customerType + ", dueInvoice=" + dueInvoice + "})";
     }
 
 }

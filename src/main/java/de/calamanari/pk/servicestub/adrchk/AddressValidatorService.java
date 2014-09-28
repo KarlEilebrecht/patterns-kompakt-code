@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address Validator Service - a service interface
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,17 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.servicestub.adrchk;
 
 /**
- * Address Validator Service - interface of a service our component needs and that will not be available when testing
- * our component.
+ * Address Validator Service - interface of a service our component needs and that will not be available when testing our component.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface AddressValidatorService {
 
     /**
      * This service method validates the given address
+     * 
      * @param street address field
      * @param zipCode address field
      * @param city address field

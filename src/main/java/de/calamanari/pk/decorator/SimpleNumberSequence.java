@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Simple Number sequence is a concrete component to be decorated applying the DECORATOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.decorator;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 /**
  * Simple Number sequence is a concrete component to be decorated applying the DECORATOR pattern<br>
  * This implementation is thread-safe.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SimpleNumberSequence implements NumberSequence {
@@ -45,6 +48,7 @@ public class SimpleNumberSequence implements NumberSequence {
 
     /**
      * Creates new sequence of the given name
+     * 
      * @param sequenceName name of sequence
      */
     public SimpleNumberSequence(String sequenceName) {

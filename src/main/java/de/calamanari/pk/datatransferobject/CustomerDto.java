@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer DTO - the DATA TRANSFER OBJECT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
+
 package de.calamanari.pk.datatransferobject;
 
 import java.io.Serializable;
@@ -25,6 +28,7 @@ import de.calamanari.pk.util.LogUtils;
 
 /**
  * Customer DTO - the DATA TRANSFER OBJECT
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerDto implements Customer, Serializable {
@@ -154,8 +158,8 @@ public class CustomerDto implements Customer, Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", lastName=" + lastName
-                + ", firstName=" + firstName + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", lastName=" + lastName + ", firstName=" + firstName + ", street=" + street
+                + ", zipCode=" + zipCode + ", city=" + city + "})";
     }
 
 }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Target system person view
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,40 +16,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.adapter;
 
 /**
  * Target system person view is an interface in the target system, which has to be provided for integration.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface TargetSystemPersonView {
 
     /**
      * Returns the person's id
+     * 
      * @return identifier
      */
     public String getId();
 
     /**
      * Returns the persons full name
+     * 
      * @return name
      */
     public String getName();
 
     /**
      * Returns a description of this person's details
+     * 
      * @return person description
      */
     public String getDescription();
 
     /**
      * Determines whether this record is valid.
+     * 
      * @return true if record is valid, otherwise false
      */
     public boolean isValid();
 
     /**
      * Sets the validity state of this record and returns the whether the operation was successful.
+     * 
      * @param valid new validity state
      * @return true if operation was successful, otherwise false
      */

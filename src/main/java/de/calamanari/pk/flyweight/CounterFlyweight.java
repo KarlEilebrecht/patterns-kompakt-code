@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Counter Flyweight - demonstrates a FLYWEIGHT.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,16 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.flyweight;
 
 /**
  * Counter Flyweight - interface all concrete FLYWEIGHTs in this example must implement.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface CounterFlyweight {
 
     /**
      * The flyweight's method to do some operation, here we count something
+     * 
      * @param extrinsicState data or context to operate on
      * @return result of flyweight's operation
      */

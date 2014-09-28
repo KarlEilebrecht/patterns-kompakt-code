@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Service Stub test - demonstrates SERVICE STUB (aka MOCK) pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.servicestub;
 
 import static org.junit.Assert.assertEquals;
@@ -26,14 +28,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.servicestub.Account;
-import de.calamanari.pk.servicestub.AccountManager;
-import de.calamanari.pk.servicestub.AccountValidationException;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Service Stub test - demonstrates SERVICE STUB (aka MOCK) pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ServiceStubTest {
@@ -92,8 +92,8 @@ public class ServiceStubTest {
 
         // positive test
         account = accountManager.createAccount("Jack", "Miller", "4711, Angry Road", "827382", "Strange Town");
-        assertEquals("Account({accountId='ID_1', firstName='Jack', lastName='Miller', street='4711, Angry Road', "
-                + "zipCode='827382', city='Strange Town'})", account.toString());
+        assertEquals("Account({accountId='ID_1', firstName='Jack', lastName='Miller', street='4711, Angry Road', " + "zipCode='827382', city='Strange Town'})",
+                account.toString());
 
         // negative test
         serviceStub.setValidationResult(false);
@@ -107,8 +107,7 @@ public class ServiceStubTest {
         assertTrue(caughtEx instanceof AccountValidationException);
         assertEquals("Could not create account, invalid address.", caughtEx.getMessage());
 
-        LOGGER.info("Test service stub successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test service stub successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

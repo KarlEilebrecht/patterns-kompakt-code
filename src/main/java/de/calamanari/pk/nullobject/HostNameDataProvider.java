@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Host Name Data Provider - supplementary class in this example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,14 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.nullobject;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
- * Host Name Data Provider - supplementary class in this example, uses NULL OBJECT to tell a caller about missing
- * HostNameData instances
+ * Host Name Data Provider - supplementary class in this example, uses NULL OBJECT to tell a caller about missing HostNameData instances
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class HostNameDataProvider {
@@ -40,8 +42,8 @@ public final class HostNameDataProvider {
     /**
      * Data to be returned by the provider
      */
-    private static final HostNameData EXISTING_DATA = new ConcreteHostNameData("TEST", Arrays.asList(new String[] {
-            "XENOS", "TREADSTONE", "ANDROMEDA", "GALAXY1" }));
+    private static final HostNameData EXISTING_DATA = new ConcreteHostNameData("TEST", Arrays.asList(new String[] { "XENOS", "TREADSTONE", "ANDROMEDA",
+            "GALAXY1" }));
 
     /**
      * Utility class
@@ -49,10 +51,11 @@ public final class HostNameDataProvider {
     private HostNameDataProvider() {
         // no instances
     }
-    
+
     /**
      * Client can retrieve the data by key<br>
      * A NULL OBJECT will be returned to indicate that there was no entry for the given key
+     * 
      * @param key identifier
      * @return HostNameData instance or {@link HostNameDataNullObject#INSTANCE}, never null
      */

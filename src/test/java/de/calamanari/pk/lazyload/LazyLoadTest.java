@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Lazy Load Test - demonstrates LAZY LOAD  pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.lazyload;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,15 +32,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.lazyload.Invoice;
-import de.calamanari.pk.lazyload.PersistenceSession;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Lazy Load Test - demonstrates LAZY LOAD pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class LazyLoadTest {
@@ -65,8 +66,7 @@ public class LazyLoadTest {
         PersistenceSession.addInvoice("INV-007", "900.13", "Kalimba Luna", "Wonderway 713", "44323", "Lost Hills");
         PersistenceSession.addInvoice("INV-008", "781.55", "Ken Yashimoda", "Old Mill 33", "32156", "Bundy Bay");
         PersistenceSession.addInvoice("INV-009", "332.64", "Ronald Doe", "Road to hell 87", "72632", "Shocking");
-        PersistenceSession.addInvoice("INV-010", "9875.7", "Micky van Splatter", "Helloween Road 23", "64354",
-                "Pumpkin Lake");
+        PersistenceSession.addInvoice("INV-010", "9875.7", "Micky van Splatter", "Helloween Road 23", "64354", "Pumpkin Lake");
 
     }
 
@@ -89,8 +89,7 @@ public class LazyLoadTest {
         assertEquals("Invoice({invoiceId=INV-001, amountClaimed=154.23, debtorName=Charly Brown, street=Dogstreet 12, "
                 + "zipCode=64354, city=Pumpkin Lake, dataComplete=true, detached=false})", invoice.toString());
 
-        LOGGER.info("Test Lazy Load successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Lazy Load successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -118,8 +117,7 @@ public class LazyLoadTest {
         // PersistenceManager.findAllInvoices(false);
         // and compare runtimes!
 
-        LOGGER.info("Test Lazy Load Show Ripple Effect successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Lazy Load Show Ripple Effect successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -152,8 +150,8 @@ public class LazyLoadTest {
         }
         assertEquals("Session closed!", (caughtEx == null ? "" : caughtEx.getMessage()));
 
-        LOGGER.info("Test Lazy Load Show Closed Session Effect successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Lazy Load Show Closed Session Effect successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
+                + " s");
 
     }
 
@@ -183,13 +181,14 @@ public class LazyLoadTest {
         }
         assertEquals("Cannot load data, entity detached!", (caughtEx == null ? "" : caughtEx.getMessage()));
 
-        LOGGER.info("Test Lazy Load Show Lost Session Effect successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Lazy Load Show Lost Session Effect successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
+                + " s");
 
     }
 
     /**
      * Simulates crossing the session boundary
+     * 
      * @param persistenceSession
      */
     private static void crossSessionBoundary(PersistenceSession persistenceSession) {

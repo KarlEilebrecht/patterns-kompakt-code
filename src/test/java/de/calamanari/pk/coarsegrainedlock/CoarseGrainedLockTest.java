@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Coarse Grained Lock Test - demonstrates COARSE GRAINED LOCK pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.coarsegrainedlock;
 
 import static org.junit.Assert.assertEquals;
@@ -32,15 +34,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.coarsegrainedlock.Address;
-import de.calamanari.pk.coarsegrainedlock.Customer;
-import de.calamanari.pk.coarsegrainedlock.InMemoryLockManager;
-import de.calamanari.pk.coarsegrainedlock.Order;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Coarse Grained Lock Test - demonstrates COARSE GRAINED LOCK pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CoarseGrainedLockTest {
@@ -58,8 +57,7 @@ public class CoarseGrainedLockTest {
     /**
      * allow stress test only in info mode and if number of processors > 1 :-)
      */
-    private static final boolean STRESS_TEST = (LOG_LEVEL == Level.INFO)
-            && (Runtime.getRuntime().availableProcessors() > 1);
+    private static final boolean STRESS_TEST = (LOG_LEVEL == Level.INFO) && (Runtime.getRuntime().availableProcessors() > 1);
 
     /**
      * for thread coordination
@@ -130,15 +128,12 @@ public class CoarseGrainedLockTest {
 
         assertTrue(InMemoryLockManager.getLockInfo("4711") == null);
 
-        assertEquals(
-                "Address({id='8877', customerId='4711', street='19, Lucky Road', zipCode='286736', city='Lemon Village'})",
-                addressDb.get("8877").toString());
-
-        assertEquals("Order({id='8877', customerId='4711', orderData='POLKIJUHZGT77653FF'})", orderDb.get("9966")
+        assertEquals("Address({id='8877', customerId='4711', street='19, Lucky Road', zipCode='286736', city='Lemon Village'})", addressDb.get("8877")
                 .toString());
 
-        LOGGER.info("Test Coarse Grained Lock successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        assertEquals("Order({id='8877', customerId='4711', orderData='POLKIJUHZGT77653FF'})", orderDb.get("9966").toString());
+
+        LOGGER.info("Test Coarse Grained Lock successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
     @Test
@@ -180,8 +175,7 @@ public class CoarseGrainedLockTest {
 
             assertEquals(10000, valueHolder[0]);
 
-            LOGGER.info("Test Lock Stress successful! Elapsed time: "
-                    + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+            LOGGER.info("Test Lock Stress successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         }
     }
@@ -218,8 +212,7 @@ public class CoarseGrainedLockTest {
                     lockSuccess = InMemoryLockManager.acquireWriteLock("4711", "User_1");
                     assertTrue(lockSuccess);
 
-                    address = new Address(address.getId(), address.getCustomerId(), "19, Lucky Road",
-                            address.getZipCode(), address.getCity());
+                    address = new Address(address.getId(), address.getCustomerId(), "19, Lucky Road", address.getZipCode(), address.getCity());
                     addressDb.put("8877", address);
 
                     MiscUtils.sleepIgnoreException(2000);
@@ -325,8 +318,7 @@ public class CoarseGrainedLockTest {
 
                 assertTrue(lockFailed);
 
-                LOGGER.fine("User_4 failed to get read lock! - Existing Lock found: "
-                        + InMemoryLockManager.getLockInfo("4711"));
+                LOGGER.fine("User_4 failed to get read lock! - Existing Lock found: " + InMemoryLockManager.getLockInfo("4711"));
 
                 countDown.countDown();
             }

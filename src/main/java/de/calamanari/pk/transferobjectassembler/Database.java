@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Database - static placeholder for any kind of persistence in this example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.text.SimpleDateFormat;
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * Database - static placeholder for any kind of persistence in this example
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class Database {
@@ -55,9 +58,10 @@ public final class Database {
     private Database() {
         // no instances
     }
-    
+
     /**
      * For testing this allows to feed the "database"
+     * 
      * @param customerId identifier
      * @param title person's title
      * @param lastName person's last name
@@ -79,10 +83,9 @@ public final class Database {
      * @param fraudSuspicion flag to indicate that we suspect illegal activities
      * @param badPayer flag to indicate a customer who pays late or only after reminding
      */
-    public static void addTestData(String customerId, String title, String lastName, String firstName, String phone,
-            String email, boolean promotionOptIn, String addressId, String street, String zipCode, String city,
-            String country, String salutation, String customerType, int scorePoints, String firstOrderDateISO,
-            String lastOrderDateISO, boolean dueInvoice, boolean fraudSuspicion, boolean badPayer) {
+    public static void addTestData(String customerId, String title, String lastName, String firstName, String phone, String email, boolean promotionOptIn,
+            String addressId, String street, String zipCode, String city, String country, String salutation, String customerType, int scorePoints,
+            String firstOrderDateISO, String lastOrderDateISO, boolean dueInvoice, boolean fraudSuspicion, boolean badPayer) {
 
         Date firstOrderDate = null;
         Date lastOrderDate = null;
@@ -96,14 +99,13 @@ public final class Database {
             throw new RuntimeException(ex);
         }
 
-        CustomerEntity customer = new CustomerEntity(customerId, title, lastName, firstName, phone, email,
-                promotionOptIn);
+        CustomerEntity customer = new CustomerEntity(customerId, title, lastName, firstName, phone, email, promotionOptIn);
         CUSTOMERS.put(customerId, customer);
         AddressEntity address = new AddressEntity(addressId, customerId, street, zipCode, city, country, salutation);
         ADDRESSES.put(customerId, address);
 
-        CustomerDwhInfoEntity customerDwhInfo = new CustomerDwhInfoEntity(customerId, customerType, scorePoints,
-                firstOrderDate, lastOrderDate, dueInvoice, fraudSuspicion, badPayer);
+        CustomerDwhInfoEntity customerDwhInfo = new CustomerDwhInfoEntity(customerId, customerType, scorePoints, firstOrderDate, lastOrderDate, dueInvoice,
+                fraudSuspicion, badPayer);
         CUSTOMER_DWH_INFOS.put(customerId, customerDwhInfo);
     }
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Log Utilities
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.util.logging.ConsoleHandler;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 
 /**
  * Some utility methods related to java logging.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class LogUtils {
@@ -34,9 +37,10 @@ public final class LogUtils {
     private LogUtils() {
         // no instances
     }
-    
+
     /**
      * Adjust the console handler's log level, especially useful in some IDEs.
+     * 
      * @param level required level
      */
     public static void setConsoleHandlerLogLevel(Level level) {
@@ -58,6 +62,7 @@ public final class LogUtils {
 
     /**
      * Sets the log level related to multiple loggers.
+     * 
      * @param level new level to set
      * @param loggers one or more loggers
      */
@@ -69,6 +74,7 @@ public final class LogUtils {
 
     /**
      * Sets the log level related to multiple classes assuming the class name as the related logger's name.
+     * 
      * @param level new level to set
      * @param classes one or more classes
      */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Master Slave Test - demonstrates MASTER SLAVE pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.masterslave;
 
 import static org.junit.Assert.assertEquals;
@@ -35,10 +37,6 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.masterslave.PalindromeCheckFuture;
-import de.calamanari.pk.masterslave.PalindromeCheckMaster;
-import de.calamanari.pk.masterslave.PalindromeCheckResult;
-import de.calamanari.pk.masterslave.PalindromeCheckSlaveTask;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
@@ -46,6 +44,7 @@ import de.calamanari.pk.util.itfa.ItfaConfiguration;
 
 /**
  * Master Slave Test - demonstrates MASTER SLAVE pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MasterSlaveTest {
@@ -63,8 +62,7 @@ public class MasterSlaveTest {
     /**
      * Allowed characters including some German umlauts which will need two bytes encoded using UTF-8
      */
-    private static final char[] CHARACTERS = "\u00C4\u00D6\u00DCABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789"
-            .toCharArray();
+    private static final char[] CHARACTERS = "\u00C4\u00D6\u00DCABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789".toCharArray();
 
     /**
      * Number of available characters
@@ -92,22 +90,21 @@ public class MasterSlaveTest {
     private static final int SLAVE_PARTITION_SIZE = 10_000;
 
     /**
-     * Setting for the maxium number of character index entries to be created by the underlying
-     * {@link IndexedTextFileAccessor}, see also {@link ItfaConfiguration}.
+     * Setting for the maxium number of character index entries to be created by the underlying {@link IndexedTextFileAccessor}, see also
+     * {@link ItfaConfiguration}.
      */
     private static final int MAX_NUMBER_OF_CHAR_INDEX_ENTRIES = 20_000;
 
     /**
      * the MASTER
      */
-    private PalindromeCheckMaster palindromeCheckMaster = new PalindromeCheckMaster(NUMBER_OF_SLAVES,
-            SLAVE_PARTITION_SIZE, MAX_NUMBER_OF_CHAR_INDEX_ENTRIES);
+    private PalindromeCheckMaster palindromeCheckMaster = new PalindromeCheckMaster(NUMBER_OF_SLAVES, SLAVE_PARTITION_SIZE, MAX_NUMBER_OF_CHAR_INDEX_ENTRIES);
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, MasterSlaveTest.class, PalindromeCheckMaster.class,
-                PalindromeCheckSlaveTask.class, PalindromeCheckFuture.class, PalindromeCheckResult.class);
+        LogUtils.setLogLevel(LOG_LEVEL, MasterSlaveTest.class, PalindromeCheckMaster.class, PalindromeCheckSlaveTask.class, PalindromeCheckFuture.class,
+                PalindromeCheckResult.class);
     }
 
     @Test
@@ -170,8 +167,7 @@ public class MasterSlaveTest {
 
         assertEquals(PalindromeCheckResult.CONFIRMED, checkResult);
 
-        LOGGER.info("Test Master Slave Palindrome successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Master Slave Palindrome successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         testFile.delete();
 
@@ -191,16 +187,15 @@ public class MasterSlaveTest {
 
         assertEquals(PalindromeCheckResult.createFailedResult(errorPositionLeft, errorPositionRight), checkResult);
 
-        LOGGER.info("Test Master Slave Non Palindrome successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Master Slave Non Palindrome successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         testFile.delete();
 
     }
 
     /**
-     * Creates a test file for palindrome check with optional error positions. Without error positions a palindrome will
-     * be created.
+     * Creates a test file for palindrome check with optional error positions. Without error positions a palindrome will be created.
+     * 
      * @param size the size (in characters) of the sample to be created
      * @param errorPositions all error positions must be in the first half of the palindrome, may be null
      * @return test file
@@ -214,8 +209,7 @@ public class MasterSlaveTest {
 
         int numberOfErrorPositions = errorPositions.length;
         File res = null;
-        res = new File(MiscUtils.getHomeDirectory(), "palindrome_test_" + CHARSET_NAME + "_" + size + "_err="
-                + numberOfErrorPositions + ".txt");
+        res = new File(MiscUtils.getHomeDirectory(), "palindrome_test_" + CHARSET_NAME + "_" + size + "_err=" + numberOfErrorPositions + ".txt");
 
         LOGGER.info("Creating palindrome test file " + res + " ...");
 
@@ -229,8 +223,7 @@ public class MasterSlaveTest {
 
         int partitionSize = subPartitionSize * numberOfThreads;
 
-        try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(res), 1000000),
-                CHARSET_NAME)) {
+        try (Writer writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(res), 1000000), CHARSET_NAME)) {
 
             if (partitionSize < halfSize) {
                 partitionSize = halfSize;
@@ -239,8 +232,7 @@ public class MasterSlaveTest {
             int remaining = halfSize;
             int startIdx = 0;
 
-            createPalindromeHalf(writer, executorService, remaining, startIdx, partitionSize, subPartitionSize,
-                    numberOfThreads, errorPositions);
+            createPalindromeHalf(writer, executorService, remaining, startIdx, partitionSize, subPartitionSize, numberOfThreads, errorPositions);
 
             // if the size is an odd number, add a center character
             if (size % 2 > 0) {
@@ -250,8 +242,7 @@ public class MasterSlaveTest {
             remaining = halfSize;
             startIdx = halfSize - 1;
 
-            createPalindromeHalf(writer, executorService, remaining, startIdx, partitionSize, subPartitionSize,
-                    numberOfThreads, null);
+            createPalindromeHalf(writer, executorService, remaining, startIdx, partitionSize, subPartitionSize, numberOfThreads, null);
 
         }
         finally {
@@ -269,6 +260,7 @@ public class MasterSlaveTest {
 
     /**
      * Creates one half of the test palindrome
+     * 
      * @param writer
      * @param executorService
      * @param remaining
@@ -279,8 +271,8 @@ public class MasterSlaveTest {
      * @param errorPositions
      * @throws Exception
      */
-    private void createPalindromeHalf(Writer writer, ExecutorService executorService, int remaining, int startIdx,
-            int partitionSize, int subPartitionSize, int numberOfThreads, int[] errorPositions) throws Exception {
+    private void createPalindromeHalf(Writer writer, ExecutorService executorService, int remaining, int startIdx, int partitionSize, int subPartitionSize,
+            int numberOfThreads, int[] errorPositions) throws Exception {
         int direction = startIdx == 0 ? 1 : -1;
         while (remaining > 0) {
             int currentPartitionSize = (remaining >= partitionSize ? partitionSize : remaining);
@@ -301,8 +293,7 @@ public class MasterSlaveTest {
                     latch = new CountDownLatch(Math.min(numberOfThreads, numberOfSubPartitions));
                 }
                 int currentSubPartitionSize = (subRemaining >= subPartitionSize ? subPartitionSize : subRemaining);
-                PalindromeCreatorSlave slave = new PalindromeCreatorSlave(startIdx, startIdx
-                        + (direction * currentSubPartitionSize), errorPositions, latch);
+                PalindromeCreatorSlave slave = new PalindromeCreatorSlave(startIdx, startIdx + (direction * currentSubPartitionSize), errorPositions, latch);
                 slaveList.add(slave);
                 executorService.execute(slave);
                 startIdx = startIdx + (direction * currentSubPartitionSize);

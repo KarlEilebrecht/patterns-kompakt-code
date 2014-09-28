@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Example Template Method String Codec
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.templatemethod;
 
 import java.util.logging.Logger;
@@ -23,6 +25,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Example Template Method String Codec - concrete Codec, demonstrates TEMPLATE METHOD pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ExampleTemplateMethodStringCodec extends AbstractTemplateMethodStringCodec {

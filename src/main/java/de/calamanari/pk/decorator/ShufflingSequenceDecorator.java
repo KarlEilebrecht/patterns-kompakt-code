@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Shuffling sequence decorator is decorating part of the DECORATOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.decorator;
 
 import java.util.logging.Logger;
@@ -22,8 +24,8 @@ import java.util.logging.Logger;
 import de.calamanari.pk.util.OrbOfConfusion;
 
 /**
- * Shuffling sequence decorator decorates a number sequence, scrambles the ids (bijectively) and adds further
- * operations.
+ * Shuffling sequence decorator decorates a number sequence, scrambles the ids (bijectively) and adds further operations.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ShufflingSequenceDecorator implements NumberSequence {
@@ -45,6 +47,7 @@ public class ShufflingSequenceDecorator implements NumberSequence {
 
     /**
      * Creates a decorator for the given sequence
+     * 
      * @param sequenceToBeDecorated source sequence
      * @param upperSequenceBound max sequence value + 1
      */
@@ -70,6 +73,7 @@ public class ShufflingSequenceDecorator implements NumberSequence {
 
     /**
      * Behavior exclusively added by the decorator to return a shuffled value
+     * 
      * @param rawId id to be transformed
      * @return transformed id
      */

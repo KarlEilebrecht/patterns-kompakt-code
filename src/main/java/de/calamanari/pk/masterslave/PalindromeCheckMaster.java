@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Palindrome Check Master - demonstrates MASTER SLAVE
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.masterslave;
 
 import java.io.File;
@@ -31,8 +33,9 @@ import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 import de.calamanari.pk.util.itfa.ItfaConfiguration;
 
 /**
- * Palindrome Check Master - the MASTER in this MASTER SLAVE example, divides the task into subtasks waits for the
- * slaves to complete the sub-tasks and returns the result.
+ * Palindrome Check Master - the MASTER in this MASTER SLAVE example, divides the task into subtasks waits for the slaves to complete the sub-tasks and returns
+ * the result.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PalindromeCheckMaster {
@@ -46,7 +49,7 @@ public class PalindromeCheckMaster {
      * simulated load
      */
     private static final long OTHER_TASK_DELAY_MILLIS = 1000;
-    
+
     /**
      * Size of the partitions a slave will work on
      */
@@ -64,6 +67,7 @@ public class PalindromeCheckMaster {
 
     /**
      * Creates the master with some configuration information
+     * 
      * @param numberOfSlaves number of parallel workers
      * @param partitionSize the size (characters) of a partition (pair) a slave will work in
      * @param maxNumberOfCharIndexEntries positive index size, see {@link ItfaConfiguration#maxNumberOfCharIndexEntries}
@@ -87,6 +91,7 @@ public class PalindromeCheckMaster {
 
     /**
      * Perform a palindrome test on the given text file.
+     * 
      * @param file source file with text to be checked
      * @param charsetName character set, i.e. "UTF-8"
      * @return check result
@@ -94,15 +99,12 @@ public class PalindromeCheckMaster {
      * @throws InterruptedException on any interruption
      * @throws ExecutionException on any error during execution
      */
-    public PalindromeCheckResult performPalindromeFileTest(File file, String charsetName) throws IOException,
-            InterruptedException, ExecutionException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".performPalindromeFileTest({file=" + file + ", charsetName="
-                + charsetName + "}) called");
+    public PalindromeCheckResult performPalindromeFileTest(File file, String charsetName) throws IOException, InterruptedException, ExecutionException {
+        LOGGER.fine(this.getClass().getSimpleName() + ".performPalindromeFileTest({file=" + file + ", charsetName=" + charsetName + "}) called");
         PalindromeCheckResult res = PalindromeCheckResult.UNKNOWN;
 
         LOGGER.info("Scanning input file (create index) ... ");
-        IndexedTextFileAccessor textFileAccessor = new IndexedTextFileAccessor(file, charsetName,
-                checkMasterIndexerConfiguration);
+        IndexedTextFileAccessor textFileAccessor = new IndexedTextFileAccessor(file, charsetName, checkMasterIndexerConfiguration);
 
         if (textFileAccessor.getNumberOfCharacters() < 2) {
             LOGGER.info("Skipped partitioning (nothing to do). ");
@@ -128,6 +130,7 @@ public class PalindromeCheckMaster {
 
     /**
      * This method frequently polls for the master result (until we know whether the input was a palindrome or not).
+     * 
      * @param future allows polling
      */
     private void waitForSlavesToComplete(PalindromeCheckFuture future) {
@@ -139,8 +142,7 @@ public class PalindromeCheckMaster {
             LOGGER.fine("MASTER polls for result ...");
             done = future.isDone();
             if (!done) {
-                LOGGER.info("" + nf.format(future.getProgressPerc())
-                        + "% completed, MASTER is still waiting for SLAVE-results ...");
+                LOGGER.info("" + nf.format(future.getProgressPerc()) + "% completed, MASTER is still waiting for SLAVE-results ...");
                 doOtherStuff();
             }
         } while (!done);
@@ -149,6 +151,7 @@ public class PalindromeCheckMaster {
     /**
      * This method divides the task into smaller sub-tasks by creating data partitions.<br>
      * Afterwards it starts the slave executions using the {@link #executor}.
+     * 
      * @param textFileAccessor indexed source file accessor
      * @return future to allow the master to combine the total result
      */
@@ -185,16 +188,15 @@ public class PalindromeCheckMaster {
         for (int i = 0; i < numberOfFullPartitions; i++) {
             long startOfLeftPartition = ((long) i) * partitionSize;
             long startOfRightPartition = numberOfCharacters - startOfLeftPartition - partitionSize;
-            PalindromeCheckSlaveTask task = new PalindromeCheckSlaveTask(textFileAccessor, startOfLeftPartition,
-                    startOfRightPartition, partitionSize, future);
+            PalindromeCheckSlaveTask task = new PalindromeCheckSlaveTask(textFileAccessor, startOfLeftPartition, startOfRightPartition, partitionSize, future);
             executor.execute(task);
         }
 
         if (remainderPartitionSize > 0) {
             long startOfLeftPartition = halfLen - remainderPartitionSize;
             long startOfRightPartition = numberOfCharacters - startOfLeftPartition - remainderPartitionSize;
-            PalindromeCheckSlaveTask task = new PalindromeCheckSlaveTask(textFileAccessor, startOfLeftPartition,
-                    startOfRightPartition, remainderPartitionSize, future);
+            PalindromeCheckSlaveTask task = new PalindromeCheckSlaveTask(textFileAccessor, startOfLeftPartition, startOfRightPartition, remainderPartitionSize,
+                    future);
             executor.execute(task);
         }
         return future;

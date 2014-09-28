@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Component - supplementary interface in the DEPENDECY INJECTION example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,23 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 /**
- * Component - supplementary interface in the DEPENDECY INJECTION example, interface to be implemented by Components of
- * our framework.
+ * Component - supplementary interface in the DEPENDECY INJECTION example, interface to be implemented by Components of our framework.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface Component {
 
     /**
      * Returns the component's data
+     * 
      * @return data
      */
     public String getData();
 
     /**
      * Sets the component's data
+     * 
      * @param data component data
      */
     public void setData(String data);

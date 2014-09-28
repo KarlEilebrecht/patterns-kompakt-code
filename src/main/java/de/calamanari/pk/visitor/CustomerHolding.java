@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Company - demonstrates VISITOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,14 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 import java.util.logging.Logger;
 
 /**
- * Customer Holding - part of customer structure, there can be a holding discount which applies to all orders from any
- * company related to this holding. This (additional) discount shall be an appeal for other companies from the same
- * holding to become our customers.
+ * Customer Holding - part of customer structure, there can be a holding discount which applies to all orders from any company related to this holding. This
+ * (additional) discount shall be an appeal for other companies from the same holding to become our customers.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerHolding {
@@ -44,6 +46,7 @@ public class CustomerHolding {
 
     /**
      * Creates new holding
+     * 
      * @param name holding's name
      * @param discountPerc discount percentage for the holding
      */
@@ -54,6 +57,7 @@ public class CustomerHolding {
 
     /**
      * Returns holding name
+     * 
      * @return name of holding
      */
     public String getName() {
@@ -62,6 +66,7 @@ public class CustomerHolding {
 
     /**
      * Sets the holding name
+     * 
      * @param name holding's name
      */
     public void setName(String name) {
@@ -70,6 +75,7 @@ public class CustomerHolding {
 
     /**
      * Returns the discount percentage value, to be applied to all orders placed by companies related to this holding.
+     * 
      * @return discount
      */
     public double getHoldingDiscountPerc() {
@@ -78,6 +84,7 @@ public class CustomerHolding {
 
     /**
      * Sets the discount percentage value, to be applied to all orders placed by companies related to this holding.
+     * 
      * @param discountPerc discount percentage for the holding
      */
     public void setHoldingDiscountPerc(double discountPerc) {
@@ -86,6 +93,7 @@ public class CustomerHolding {
 
     /**
      * Method to accept enterprise visitor
+     * 
      * @param visitor current visitor
      */
     public void accept(EnterpriseVisitor visitor) {

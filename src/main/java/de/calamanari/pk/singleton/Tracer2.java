@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Tracer2
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.singleton;
 
 import java.io.BufferedWriter;
@@ -31,16 +33,15 @@ import de.calamanari.pk.util.MiscUtils;
 /**
  * Tracer2 - a more sophisticated thread-safe SINGLETON implementation<br>
  * <b>Discussion: </b> <br>
- * It is highly questionable whether the fewer synchronization effect justifies the much more complex (harder to read)
- * implementation.<br>
- * For example error handling gets really weird, since the point where errors can occur (here: file access problem
- * during class initialization) is surprising. This implicitly moves responsibility to the caller.<br>
- * Furthermore the cause of a problem may be blurred terribly - or what do <i>you</i> think, if you find a
- * <code>{@linkplain NoClassDefFoundError}</code> in your log file? :-) <br>
+ * It is highly questionable whether the fewer synchronization effect justifies the much more complex (harder to read) implementation.<br>
+ * For example error handling gets really weird, since the point where errors can occur (here: file access problem during class initialization) is surprising.
+ * This implicitly moves responsibility to the caller.<br>
+ * Furthermore the cause of a problem may be blurred terribly - or what do <i>you</i> think, if you find a <code>{@linkplain NoClassDefFoundError}</code> in
+ * your log file? :-) <br>
  * Thus usually I'd vote for singletons leveraging locks or even old-fashioned synchronization. <br>
- * However, under certain circumstances avoiding synchronization the way shown in this example might have a measurable
- * performance advantage. <br>
+ * However, under certain circumstances avoiding synchronization the way shown in this example might have a measurable performance advantage. <br>
  * Advice: don't implement this type of singleton just because it seems to be cool ...<br>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class Tracer2 implements Serializable {
@@ -94,6 +95,7 @@ public final class Tracer2 implements Serializable {
 
     /**
      * Method to retrieve the only instance of Tracer2 - the SINGLETON instance
+     * 
      * @return the tracer2 instance
      */
     public static final Tracer2 getInstance() {
@@ -105,6 +107,7 @@ public final class Tracer2 implements Serializable {
 
     /**
      * Nobody but the getInstance()-method will be able to create a Tracer2 instance
+     * 
      * @param outputFile destination for tracer
      */
     private Tracer2(File outputFile) {
@@ -120,6 +123,7 @@ public final class Tracer2 implements Serializable {
 
     /**
      * The task the SINGLETON performs, in this case write messages to a file
+     * 
      * @param message some textual information
      */
     public void trace(String message) {
@@ -143,6 +147,7 @@ public final class Tracer2 implements Serializable {
 
     /**
      * shuts down the Tracer2
+     * 
      * @param deleteLogFile if true, immediately delete the created log file
      */
     public static void shutdown(boolean deleteLogFile) {
@@ -151,6 +156,7 @@ public final class Tracer2 implements Serializable {
 
     /**
      * at last close the internal writer and the underlying file
+     * 
      * @param deleteLogFile if true, immediately delete the created log file
      */
     protected void closeFile(boolean deleteLogFile) {
@@ -174,8 +180,9 @@ public final class Tracer2 implements Serializable {
     }
 
     /**
-     * No, of course, we cannot serialize/deserialize the instance correctly which would cause a duplication, but we can
-     * return the official instance during deserialization.
+     * No, of course, we cannot serialize/deserialize the instance correctly which would cause a duplication, but we can return the official instance during
+     * deserialization.
+     * 
      * @return {@link #getInstance()}
      */
     public Object readResolve() {

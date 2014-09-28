@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Dwh Info Entity - one of the business entities in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 /**
  * Customer Dwh Info Entity - one of the business entities in this example.<br>
  * This entity gives us a lot of information collected or derived in our company's data warehouse
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerDwhInfoEntity {
@@ -84,6 +87,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Creates new data warehouse info entity from the given data
+     * 
      * @param customerId identifier
      * @param customerType type of customer
      * @param scorePoints value from scoring
@@ -93,8 +97,8 @@ public class CustomerDwhInfoEntity {
      * @param fraudSuspicion flag to indicate that we suspect illegal activities
      * @param badPayer flag to indicate a customer who pays late or only after reminding
      */
-    public CustomerDwhInfoEntity(String customerId, String customerType, int scorePoints, Date firstOrderDate,
-            Date lastOrderDate, boolean dueInvoice, boolean fraudSuspicion, boolean badPayer) {
+    public CustomerDwhInfoEntity(String customerId, String customerType, int scorePoints, Date firstOrderDate, Date lastOrderDate, boolean dueInvoice,
+            boolean fraudSuspicion, boolean badPayer) {
         this.customerId = customerId;
         this.customerType = customerType;
         this.scorePoints = scorePoints;
@@ -107,6 +111,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns the customer ID
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -115,6 +120,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the customer ID
+     * 
      * @param customerId identifier
      */
     public void setCustomerId(String customerId) {
@@ -123,6 +129,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns the type of customer (classification)
+     * 
      * @return customerType
      */
     public String getCustomerType() {
@@ -131,6 +138,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the customer type
+     * 
      * @param customerType type of customer
      */
     public void setCustomerType(String customerType) {
@@ -139,6 +147,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns the score points for this customer
+     * 
      * @return scorePoints
      */
     public int getScorePoints() {
@@ -147,6 +156,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the score points
+     * 
      * @param scorePoints value from scoring process
      */
     public void setScorePoints(int scorePoints) {
@@ -155,6 +165,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns the date of first order placed by this customer
+     * 
      * @return firstOrderDate
      */
     public Date getFirstOrderDate() {
@@ -163,6 +174,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the date of first order placed by this customer
+     * 
      * @param firstOrderDate date of first order
      */
     public void setFirstOrderDate(Date firstOrderDate) {
@@ -171,6 +183,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns the date of least recent order placed by this customer
+     * 
      * @return lastOrderDate
      */
     public Date getLastOrderDate() {
@@ -179,6 +192,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the date of least recent order placed by this customer
+     * 
      * @param lastOrderDate date of least recent order
      */
     public void setLastOrderDate(Date lastOrderDate) {
@@ -187,6 +201,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns whether this customer has an open invoice
+     * 
      * @return true whether there is an open invoice
      */
     public boolean isDueInvoice() {
@@ -195,6 +210,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the due invoice flag
+     * 
      * @param dueInvoice true indicates an open invoice not payed yet
      */
     public void setDueInvoice(boolean dueInvoice) {
@@ -204,6 +220,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns whether this customer could be a fraud
+     * 
      * @return fraudSuspicion
      */
     public boolean isFraudSuspicion() {
@@ -212,6 +229,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the fraud suspicion flag
+     * 
      * @param fraudSuspicion flag to indicate that we suspect illegal activities
      */
     public void setFraudSuspicion(boolean fraudSuspicion) {
@@ -220,6 +238,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns whether this customer is a bad payer
+     * 
      * @return badPayer flag
      */
     public boolean isBadPayer() {
@@ -228,6 +247,7 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Sets the bad payer flag
+     * 
      * @param badPayer flag to indicate a customer who pays late or only after reminding
      */
     public void setBadPayer(boolean badPayer) {
@@ -236,16 +256,17 @@ public class CustomerDwhInfoEntity {
 
     /**
      * Returns a data transfer object with the data from this entity
+     * 
      * @return data transfer object
      */
     public CustomerDwhInfoDto toDto() {
 
-        return new CustomerDwhInfoDto(customerId, customerType, scorePoints, firstOrderDate, lastOrderDate, dueInvoice,
-                fraudSuspicion, badPayer);
+        return new CustomerDwhInfoDto(customerId, customerType, scorePoints, firstOrderDate, lastOrderDate, dueInvoice, fraudSuspicion, badPayer);
     }
 
     /**
      * Updates this entity from the given data transfer object
+     * 
      * @param dto data transfer object to copy data from into this object
      */
     public void fromDto(CustomerDwhInfoDto dto) {
@@ -263,11 +284,10 @@ public class CustomerDwhInfoEntity {
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", customerType=" + customerType
-                + ", scorePoints=" + scorePoints + ", firstOrderDate="
-                + (firstOrderDate == null ? null : "'" + sdf.format(firstOrderDate) + "'") + ", lastOrderDate="
-                + (lastOrderDate == null ? null : "'" + sdf.format(lastOrderDate) + "'") + ", dueInvoice=" + dueInvoice
-                + ", fraudSuspicion=" + fraudSuspicion + ", badPayer=" + badPayer + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", customerType=" + customerType + ", scorePoints=" + scorePoints
+                + ", firstOrderDate=" + (firstOrderDate == null ? null : "'" + sdf.format(firstOrderDate) + "'") + ", lastOrderDate="
+                + (lastOrderDate == null ? null : "'" + sdf.format(lastOrderDate) + "'") + ", dueInvoice=" + dueInvoice + ", fraudSuspicion=" + fraudSuspicion
+                + ", badPayer=" + badPayer + "})";
     }
 
 }

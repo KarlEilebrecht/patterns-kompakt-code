@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Parallel File Input Stream Test
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import static org.junit.Assert.assertEquals;
@@ -28,13 +30,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.util.LogUtils;
-import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.pfis.BufferType;
 import de.calamanari.pk.util.pfis.ParallelFileInputStream;
 
 /**
  * Parallel File Input Stream Test - tests for ParallelFileInputStream
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ParallelFileInputStreamTest {
@@ -151,86 +152,88 @@ public class ParallelFileInputStreamTest {
 
     /**
      * Test with the given input file and the specified buffer size
+     * 
      * @param inputFile
      * @param bufferSize
      */
     private void testInternal(File inputFile, int bufferSize, BufferType bufferType) throws Exception {
-        ParallelFileInputStream mis = ParallelFileInputStream.createInputStream(inputFile, bufferSize, bufferType);
+        try (ParallelFileInputStream mis = ParallelFileInputStream.createInputStream(inputFile, bufferSize, bufferType)) {
 
-        long len = inputFile.length();
+            long len = inputFile.length();
 
-        int bMis = 0;
-        int count = 0;
-        while ((bMis = mis.read()) != -1) {
-            assertEquals(count, bMis);
-            count++;
-        }
-        assertEquals(len, count);
-
-        mis.repositionFileStream(0);
-        bMis = 0;
-        count = 0;
-        while ((bMis = mis.read()) != -1) {
-            assertEquals(count, bMis);
-            count++;
-        }
-        assertEquals(len, count);
-
-        if (len >= 10 && bufferSize >= 10) {
-            mis.repositionFileStream(0);
-            byte[] buf = new byte[10];
-
-            count = 0;
-            int haveRead = 0;
-            while ((haveRead = mis.read(buf)) > 0) {
-                for (int i = 0; i < haveRead; i++) {
-                    assertEquals((count + i), buf[i]);
-                }
-                count = count + haveRead;
+            int bMis = 0;
+            int count = 0;
+            while ((bMis = mis.read()) != -1) {
+                assertEquals(count, bMis);
+                count++;
             }
             assertEquals(len, count);
 
             mis.repositionFileStream(0);
-
+            bMis = 0;
             count = 0;
-            for (int i = 0; i < 10; i++) {
-                mis.read();
-                count++;
-            }
-            mis.mark(1000);
             while ((bMis = mis.read()) != -1) {
                 assertEquals(count, bMis);
                 count++;
             }
-            mis.reset();
-            count = 10;
-            while ((bMis = mis.read()) != -1) {
-                assertEquals(count, bMis);
-                count++;
-            }
+            assertEquals(len, count);
 
-            mis.repositionFileStream(0);
-            mis.skip(10);
-            count = 10;
-            while ((bMis = mis.read()) != -1) {
-                assertEquals(count, bMis);
-                count++;
+            if (len >= 10 && bufferSize >= 10) {
+                mis.repositionFileStream(0);
+                byte[] buf = new byte[10];
+
+                count = 0;
+                int haveRead = 0;
+                while ((haveRead = mis.read(buf)) > 0) {
+                    for (int i = 0; i < haveRead; i++) {
+                        assertEquals((count + i), buf[i]);
+                    }
+                    count = count + haveRead;
+                }
+                assertEquals(len, count);
+
+                mis.repositionFileStream(0);
+
+                count = 0;
+                for (int i = 0; i < 10; i++) {
+                    mis.read();
+                    count++;
+                }
+                mis.mark(1000);
+                while ((bMis = mis.read()) != -1) {
+                    assertEquals(count, bMis);
+                    count++;
+                }
+                mis.reset();
+                count = 10;
+                while ((bMis = mis.read()) != -1) {
+                    assertEquals(count, bMis);
+                    count++;
+                }
+
+                mis.repositionFileStream(0);
+                mis.skip(10);
+                count = 10;
+                while ((bMis = mis.read()) != -1) {
+                    assertEquals(count, bMis);
+                    count++;
+                }
             }
         }
-        mis.close();
     }
 
     /**
      * Creates a file of the given size, each written byte equals the sequence number (starting with 0)
+     * 
      * @param size 0..255
      */
     private static File createBytesFile(int size) throws Exception {
         File res = new File(MiscUtils.getHomeDirectory(), "testBytes" + size);
-        FileOutputStream fos = new FileOutputStream(res);
-        for (int i = 0; i < size; i++) {
-            fos.write(i);
+        try (FileOutputStream fos = new FileOutputStream(res)) {
+            for (int i = 0; i < size; i++) {
+                fos.write(i);
+            }
         }
-        fos.close();
         return res;
     }
 

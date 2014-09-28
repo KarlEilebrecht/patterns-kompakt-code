@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Macro plugin Runtime
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin;
 
 /**
  * Macro Plugin Runtime Interface must be implemented by each plugin, it defines the methods for calling macros.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface MacroPluginRuntime {
@@ -26,12 +29,14 @@ public interface MacroPluginRuntime {
     /**
      * Allows to inject a reference to the framework when initializing the plugin.<br>
      * This is called SETTER-INJECTION (M. Fowler)
+     * 
      * @param frameworkReference reference to framework for plugin
      */
     public void setFrameworkReference(MacroPluginFramework frameworkReference);
 
     /**
      * Executes the specified macro and returns the result.
+     * 
      * @param macroName name of macro
      * @param args some optional arguments NOT NULL
      * @return string result or null

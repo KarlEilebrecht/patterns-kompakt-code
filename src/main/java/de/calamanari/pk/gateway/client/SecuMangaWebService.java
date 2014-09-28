@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * SecuManga Web Service
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.gateway.client;
 
 import javax.jws.WebMethod;
@@ -33,6 +35,7 @@ public interface SecuMangaWebService {
 
     /**
      * scramble text
+     * 
      * @param arg0 text
      * @return returns java.lang.String
      */
@@ -42,6 +45,7 @@ public interface SecuMangaWebService {
 
     /**
      * unscramble text
+     * 
      * @param arg0 text
      * @return returns java.lang.String
      */

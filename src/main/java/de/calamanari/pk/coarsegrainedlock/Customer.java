@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer - entity in COARSE GRAINED LOCK example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.coarsegrainedlock;
 
 /**
  * Customer - entity in COARSE GRAINED LOCK example
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Customer {
@@ -40,6 +43,7 @@ public class Customer {
 
     /**
      * Creates customer
+     * 
      * @param customerId identifier
      * @param firstName person's first name
      * @param lastName person's last name
@@ -52,6 +56,7 @@ public class Customer {
 
     /**
      * Returns id of customer
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -60,6 +65,7 @@ public class Customer {
 
     /**
      * Returns the customer's last name
+     * 
      * @return last name of customer
      */
     public String getLastName() {
@@ -68,6 +74,7 @@ public class Customer {
 
     /**
      * Sets the last name of customer
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -76,6 +83,7 @@ public class Customer {
 
     /**
      * Returns the first name of the customer
+     * 
      * @return firstName
      */
     public String getFirstName() {
@@ -84,6 +92,7 @@ public class Customer {
 
     /**
      * Sets the first name of the customer
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -92,8 +101,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({customerId='" + customerId + "', lastName='" + lastName
-                + "', firstName='" + firstName + "'})";
+        return this.getClass().getSimpleName() + "({customerId='" + customerId + "', lastName='" + lastName + "', firstName='" + firstName + "'})";
     }
 
 }

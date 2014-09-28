@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Plain file data writer - CONCRETE PRODUCT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.abstractfactory;
 
 import java.io.File;
@@ -24,6 +26,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Plain file data writer, a CONCRETE PRODUCT of CONCRETE FACTORY
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PlainFileDataWriter extends AbstractDataWriter {
@@ -40,6 +43,7 @@ public class PlainFileDataWriter extends AbstractDataWriter {
 
     /**
      * Creates new writer
+     * 
      * @param file destination NOT NULL
      */
     public PlainFileDataWriter(File file) {

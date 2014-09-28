@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Charset Utilities
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.nio.ByteBuffer;
@@ -29,19 +31,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * This utility class provides support to work with characters of different character sets especially related to the
- * encoded byte-length of their characters.
+ * This utility class provides support to work with characters of different character sets especially related to the encoded byte-length of their characters.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class CharsetUtils {
 
     /**
-     * A CSV-list of {@linkplain Charset}s where the encoded <i>byte-length</i> of each character is independent from
-     * the preceding characters, and thus the byte position can be calculated by summing up the byte-length of any
-     * preceding character.<br>
-     * For certain {@linkplain Charset}s this is in general <i>not</i> the case because they use control sequences to
-     * switch to different character subsets. {@linkplain Charset}s using BOMs are <i>semi-agnostic</i>, the BOM must be
-     * handled properly.<br>
+     * A CSV-list of {@linkplain Charset}s where the encoded <i>byte-length</i> of each character is independent from the preceding characters, and thus the
+     * byte position can be calculated by summing up the byte-length of any preceding character.<br>
+     * For certain {@linkplain Charset}s this is in general <i>not</i> the case because they use control sequences to switch to different character subsets.
+     * {@linkplain Charset}s using BOMs are <i>semi-agnostic</i>, the BOM must be handled properly.<br>
      * This list might be incomplete.
      * <p>
      * <code>
@@ -63,8 +63,7 @@ public final class CharsetUtils {
             + "x-ibm943, x-ibm943c, x-ibm948, x-ibm950, x-ibm964, x-iscii91, x-iso-8859-11, x-jis0208, x-johab, "
             + "x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, "
             + "x-maciceland, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms950-hkscs, "
-            + "x-ms950-hkscs-xp, x-mswin-936, x-pck, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-windows-874, "
-            + "x-windows-949, x-windows-950";
+            + "x-ms950-hkscs-xp, x-mswin-936, x-pck, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-windows-874, " + "x-windows-949, x-windows-950";
 
     /**
      * List of context-agnostic {@linkplain Charset}s, see {@link #CONTEXT_AGNOSTIC_CHARSET_NAMES}.
@@ -91,12 +90,12 @@ public final class CharsetUtils {
     /**
      * character code for line break
      */
-    public static final int LINE_BREAK_CODE = (int) '\n';
+    public static final int LINE_BREAK_CODE = '\n';
 
     /**
      * character code for carriage return
      */
-    public static final int CARRIAGE_RETURN_CODE = (int) '\r';
+    public static final int CARRIAGE_RETURN_CODE = '\r';
 
     /**
      * minumum surrogate character code: {@value}
@@ -107,29 +106,29 @@ public final class CharsetUtils {
      * maxumum surrogate character code: {@value}
      */
     public static final int MAX_SURROGATE_CODE = 57343;
-    
+
     /**
      * minimum high surrogate chararacter code: {@value}
      */
     public static final int MIN_HIGH_SURROGATE_CODE = 56320;
-    
+
     /**
      * maximum bytes for buffering a character
      */
     private static final int CHARACTER_BUFFER_BYTES = 20;
-    
+
     /**
      * Utility class
      */
     private CharsetUtils() {
         // no instances
     }
-    
+
     /**
-     * Surrogates are special characters that cannot occur alone (when encoded) and thus will never be read alone. They
-     * occur as pairs.<br>
+     * Surrogates are special characters that cannot occur alone (when encoded) and thus will never be read alone. They occur as pairs.<br>
      * Fortunately the pair-size (number of encoded bytes) is constant.<br>
      * This method detects this pair-length.
+     * 
      * @param charset character set
      * @return number of bytes
      */
@@ -158,13 +157,14 @@ public final class CharsetUtils {
     /**
      * Creates a character length lookup for the given character set.<br>
      * Internally a static cache is used for performance reasons.
+     * 
      * @param charsetName name of character set
      * @return byte array with length per code for all 65536 char-values
      */
     public static final byte[] createCharLengthLookup(String charsetName) {
         byte[] charLengthLookup = CHAR_LENGTH_LOOKUP_REGISTRY.get(charsetName);
         if (charLengthLookup == null) {
-            charLengthLookup = new byte[(int) Character.MAX_VALUE + 1];
+            charLengthLookup = new byte[Character.MAX_VALUE + 1];
             CharBuffer charBuffer = CharBuffer.allocate(1);
             ByteBuffer byteBuffer = ByteBuffer.allocate(CHARACTER_BUFFER_BYTES);
             Charset charset = Charset.forName(charsetName);

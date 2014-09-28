@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Sequence block
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.sequenceblock;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 
 /**
  * The sequence block holds a chunk of sequence numbers (a unique range)
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SequenceBlock {
@@ -48,15 +51,14 @@ public class SequenceBlock {
 
     /**
      * Creates new Sequence block
+     * 
      * @param startOfBlock this positive long value will be the first value to be returned by {@link #getNextId()}
-     * @param endOfBlock (exclusive) this positive long value ( (endOfBlock -1) will be last valid value to be returned
-     *            by {@link #getNextId()}
+     * @param endOfBlock (exclusive) this positive long value ( (endOfBlock -1) will be last valid value to be returned by {@link #getNextId()}
      */
     public SequenceBlock(long startOfBlock, long endOfBlock) {
         if (startOfBlock < 0 || endOfBlock <= startOfBlock) {
-            throw new IllegalArgumentException(
-                    "Unable to create sequence block with negative or conflicting arguments (initialValue: "
-                            + startOfBlock + ", maxValue: " + endOfBlock + ").");
+            throw new IllegalArgumentException("Unable to create sequence block with negative or conflicting arguments (initialValue: " + startOfBlock
+                    + ", maxValue: " + endOfBlock + ").");
         }
         LOGGER.fine(this.getClass().getSimpleName() + " created (" + startOfBlock + " <= val < " + endOfBlock + " ).");
         this.startOfBlock = startOfBlock;
@@ -67,6 +69,7 @@ public class SequenceBlock {
     /**
      * Returns the next value or -1 if sequence is exhausted<br>
      * This method is safe to be used concurrently by multiple threads.
+     * 
      * @return next long id or -1 to indicate exhausted block
      */
     public long getNextId() {
@@ -80,6 +83,7 @@ public class SequenceBlock {
 
     /**
      * returns true if this block is currently exhausted
+     * 
      * @return true if block is exhausted
      */
     public boolean isExhausted() {
@@ -97,8 +101,8 @@ public class SequenceBlock {
         if (remaining == 0) {
             debugLast = "" + (endOfBlock - 1);
         }
-        return SequenceBlock.class.getSimpleName() + "(startOfBlock: " + startOfBlock + ", endOfBlock: " + endOfBlock
-                + ", lastReturnedValue: " + debugLast + ", remaining: " + remaining + ")";
+        return SequenceBlock.class.getSimpleName() + "(startOfBlock: " + startOfBlock + ", endOfBlock: " + endOfBlock + ", lastReturnedValue: " + debugLast
+                + ", remaining: " + remaining + ")";
     }
 
 }

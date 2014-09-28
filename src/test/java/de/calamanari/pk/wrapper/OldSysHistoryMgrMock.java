@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * OldSys History Manager Mock
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.wrapper;
 
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import de.calamanari.pk.wrapper.legacy.OldSysHistoryMgr;
 
 /**
  * OldSys History Manager Mock - mocks the old system's history manager.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OldSysHistoryMgrMock extends OldSysHistoryMgr {
@@ -48,6 +51,7 @@ public class OldSysHistoryMgrMock extends OldSysHistoryMgr {
 
     /**
      * Method allows to add test data.
+     * 
      * @param customerId id of customer
      * @param historyData historical data about customer
      */

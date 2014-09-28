@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Session - supplementary class for MAPPER demonstration
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper;
 
 import java.util.ArrayList;
@@ -23,9 +25,10 @@ import java.util.logging.Logger;
 
 /**
  * Session - supplementary class for MAPPER demonstration<br>
- * According to Martin Fowler the mapper can't be invoked directly by either of the two components it is connected to,
- * because they both don't even know of the mapper.<br>
+ * According to Martin Fowler the mapper can't be invoked directly by either of the two components it is connected to, because they both don't even know of the
+ * mapper.<br>
  * One solution is a third party <i>driving</i> the mapper. In this example a session is responsible for this task.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Session {
@@ -49,6 +52,7 @@ public class Session {
 
     /**
      * Adds a mapper to the session management
+     * 
      * @param mapper session-managed mapper instance
      */
     public void add(AbstractMapper mapper) {

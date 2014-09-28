@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Info
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,36 +16,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.wrapper;
 
 import java.util.Date;
 
 /**
  * Customer Info - interface of the target component, which the WRAPPER provides.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface CustomerInfo {
 
     /**
      * Returns the customer-ID
+     * 
      * @return customerId
      */
     public String getId();
 
     /**
      * Returns the customer's name
+     * 
      * @return name of customer
      */
     public String getName();
 
     /**
      * Returns customer segment
+     * 
      * @return customer segment
      */
     public int getCustomerSegment();
 
     /**
      * Returns the last order date of this customer.
+     * 
      * @return last order date or null
      */
     public Date getLastOrderDate();

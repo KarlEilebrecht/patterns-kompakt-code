@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Bridge Test - demonstrates BRIDGE pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge;
 
 import static org.junit.Assert.assertEquals;
@@ -29,12 +31,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.bridge.Address;
-import de.calamanari.pk.bridge.Person;
-import de.calamanari.pk.bridge.PersonDataConnector;
-import de.calamanari.pk.bridge.PersonDataConnectorImp;
-import de.calamanari.pk.bridge.RwPersonDataConnector;
-import de.calamanari.pk.bridge.XyPerson;
 import de.calamanari.pk.bridge.halcorp.HalCorpPersonDataConnectorImp;
 import de.calamanari.pk.bridge.halcorp.HalCorpSecurePersonDataConnectorImp;
 import de.calamanari.pk.bridge.multiglom.MultiGlomPersonDataConnectorImp;
@@ -44,6 +40,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Bridge Test - demonstrates BRIDGE pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class BridgeTest {
@@ -81,9 +78,8 @@ public class BridgeTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, BridgeTest.class, PersonDataConnector.class, RwPersonDataConnector.class,
-                HalCorpPersonDataConnectorImp.class, HalCorpSecurePersonDataConnectorImp.class,
-                MultiGlomPersonDataConnectorImp.class, MultiGlomUdpPersonDataConnectorImp.class);
+        LogUtils.setLogLevel(LOG_LEVEL, BridgeTest.class, PersonDataConnector.class, RwPersonDataConnector.class, HalCorpPersonDataConnectorImp.class,
+                HalCorpSecurePersonDataConnectorImp.class, MultiGlomPersonDataConnectorImp.class, MultiGlomUdpPersonDataConnectorImp.class);
     }
 
     @Before
@@ -128,24 +124,22 @@ public class BridgeTest {
             assertTrue(halCorpConnector.checkPersonExistsById(id));
         }
 
-        assertEquals("Person({id=HC1001, firstName=Jack, lastName=Miller, role=General Manager})", halCorpConnector
-                .findPersonById(halCorpPersonTestIds.get(0)).toString());
+        assertEquals("Person({id=HC1001, firstName=Jack, lastName=Miller, role=General Manager})", halCorpConnector.findPersonById(halCorpPersonTestIds.get(0))
+                .toString());
 
         PersonDataConnector multiGlomConnector = new PersonDataConnector(multiGlomImp);
         for (String id : multiGlomPersonTestIds) {
             assertTrue(multiGlomConnector.checkPersonExistsById(id));
         }
 
-        assertEquals("Person({id=MG6667, firstName=Susi, lastName=Miller, role=General Manager})", multiGlomConnector
-                .findPersonById(multiGlomPersonTestIds.get(0)).toString());
+        assertEquals("Person({id=MG6667, firstName=Susi, lastName=Miller, role=General Manager})",
+                multiGlomConnector.findPersonById(multiGlomPersonTestIds.get(0)).toString());
 
         assertEquals("XyPerson({id=HC1001, firstName=Jack, lastName=Miller, role=General Manager, addressId=HC1002, "
-                + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})",
-                halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
+                + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})", halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
 
         assertEquals("XyPerson({id=MG6667, firstName=Susi, lastName=Miller, role=General Manager, addressId=MG6668, "
-                + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})",
-                multiGlomConnector.findXyPersonById(multiGlomPersonTestIds.get(0)).toString());
+                + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})", multiGlomConnector.findXyPersonById(multiGlomPersonTestIds.get(0)).toString());
 
         // now let's have a look at another member of the main inheritence hierarchy
         RwPersonDataConnector rwHalCorpConnector = new RwPersonDataConnector(halCorpImp);
@@ -156,11 +150,9 @@ public class BridgeTest {
         rwHalCorpConnector.createOrUpdateXyPerson(xyPerson);
 
         assertEquals("XyPerson({id=HC1001, firstName=John, lastName=Miller, role=General Manager, addressId=HC1002, "
-                + "street=Lame Duck Valley 180, city=Rugby, zipCode=88906})",
-                halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
+                + "street=Lame Duck Valley 180, city=Rugby, zipCode=88906})", halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
 
-        LOGGER.info("Test Bridge successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Bridge successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

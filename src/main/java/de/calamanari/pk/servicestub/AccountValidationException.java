@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Account Validation Exception - supplementary class in this example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.servicestub;
 
 /**
  * Account Validation Exception - supplementary class in this example
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AccountValidationException extends Exception {
@@ -30,6 +33,7 @@ public class AccountValidationException extends Exception {
 
     /**
      * Creates a new Exception with the given message
+     * 
      * @param message problem information
      */
     public AccountValidationException(String message) {

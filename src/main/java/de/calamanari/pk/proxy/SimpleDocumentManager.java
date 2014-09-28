@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Simple Document Manager
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.proxy;
 
 import java.util.Map;
@@ -22,8 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
- * Simple Document Manager is a concrete document manager. In this PROXY example we will protect it using a SECURITY
- * PROXY.
+ * Simple Document Manager is a concrete document manager. In this PROXY example we will protect it using a SECURITY PROXY.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SimpleDocumentManager implements DocumentManager {

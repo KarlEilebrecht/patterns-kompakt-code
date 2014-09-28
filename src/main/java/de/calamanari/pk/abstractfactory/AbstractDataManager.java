@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract data manager - demonstrates ABSTRACT FACTORY
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.abstractfactory;
 
 import java.util.logging.Logger;
 
 /**
  * Abstract data manager is the abstract base class (aka ABSTRACT FACTORY)
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractDataManager {
@@ -37,6 +40,7 @@ public abstract class AbstractDataManager {
 
     /**
      * Textual description of this manager.
+     * 
      * @return name may be null
      */
     public String getName() {
@@ -45,6 +49,7 @@ public abstract class AbstractDataManager {
 
     /**
      * Sets the manager name
+     * 
      * @param name textual description, may be null
      */
     protected void setName(String name) {
@@ -53,6 +58,7 @@ public abstract class AbstractDataManager {
 
     /**
      * Creates a data writer.
+     * 
      * @param itemName NOT NULL
      * @return data writer
      */
@@ -60,6 +66,7 @@ public abstract class AbstractDataManager {
 
     /**
      * Creates a data reader
+     * 
      * @param itemName NOT NULL
      * @return data reader
      */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Proxy Test demonstrates PROXY pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.proxy;
 
 import static org.junit.Assert.assertEquals;
@@ -31,15 +33,13 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.proxy.DocumentManager;
-import de.calamanari.pk.proxy.DocumentManagerSecurityProxy;
-import de.calamanari.pk.proxy.SimpleDocumentManager;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.SimpleAccessManager;
 
 /**
  * Proxy Test demonstrates PROXY pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ProxyTest {
@@ -77,8 +77,7 @@ public class ProxyTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ProxyTest.class, DocumentManagerSecurityProxy.class,
-                SimpleDocumentManager.class);
+        LogUtils.setLogLevel(LOG_LEVEL, ProxyTest.class, DocumentManagerSecurityProxy.class, SimpleDocumentManager.class);
     }
 
     @Test
@@ -174,12 +173,10 @@ public class ProxyTest {
 
         assertTrue(expectedException.get() instanceof RuntimeException);
         assertEquals(null, unexpectedException.get());
-        assertEquals("All the time, the fat yellow cow flew over the rotton lake.",
-                concreteDocumentManager.findDocumentByName(TEST_DOCUMENT_NAME));
+        assertEquals("All the time, the fat yellow cow flew over the rotton lake.", concreteDocumentManager.findDocumentByName(TEST_DOCUMENT_NAME));
         assertEquals(null, concreteDocumentManager.findDocumentByName(TEST_DOCUMENT_NAME2));
 
-        LOGGER.info("Test Proxy successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Proxy successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

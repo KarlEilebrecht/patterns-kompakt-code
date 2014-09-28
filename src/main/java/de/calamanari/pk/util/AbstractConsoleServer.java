@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract console server
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.io.IOException;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 /**
  * This abstract class can be sub-classed to easily create simple servers running on the console.<br>
  * Several TEMPLATE METHODs allow to define the concrete logic and to control the behavior in subclasses.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractConsoleServer {
@@ -50,6 +53,7 @@ public abstract class AbstractConsoleServer {
 
     /**
      * Creates new server without starting it yet.
+     * 
      * @param serverName name of this server
      */
     public AbstractConsoleServer(String serverName) {
@@ -60,6 +64,7 @@ public abstract class AbstractConsoleServer {
      * Creates stand-alone console server and starts it.<br>
      * This method shall be called from main()-method of subclass.<br>
      * This TEMPLATE METHOD uses operations implemented by subclasses.
+     * 
      * @param args command line argument
      */
     public void setupAndStart(String[] args) {
@@ -99,8 +104,7 @@ public abstract class AbstractConsoleServer {
 
         synchronized (monitor) {
             if (serverState != ServerState.OFFLINE) {
-                throw new IllegalStateException("Cannot startup, server is in state " + serverState + ", expected: "
-                        + ServerState.OFFLINE);
+                throw new IllegalStateException("Cannot startup, server is in state " + serverState + ", expected: " + ServerState.OFFLINE);
             }
             serverState = ServerState.START_UP;
         }
@@ -182,8 +186,8 @@ public abstract class AbstractConsoleServer {
     public void stop() {
         synchronized (monitor) {
             if (serverState != ServerState.ONLINE) {
-                throw new IllegalStateException("Cannot shutdown " + this.getServerName() + ", server is in state "
-                        + serverState + ", expected: " + ServerState.ONLINE);
+                throw new IllegalStateException("Cannot shutdown " + this.getServerName() + ", server is in state " + serverState + ", expected: "
+                        + ServerState.ONLINE);
             }
             serverState = ServerState.SHUT_DOWN;
         }
@@ -197,8 +201,7 @@ public abstract class AbstractConsoleServer {
                         monitor.wait();
                     }
                     catch (InterruptedException ex) {
-                        LOGGER.warning("Unexpected interruption during shutdown - server " + this.getServerName()
-                                + " down?!");
+                        LOGGER.warning("Unexpected interruption during shutdown - server " + this.getServerName() + " down?!");
                     }
                 }
                 if (serverState == ServerState.OFFLINE) {
@@ -216,6 +219,7 @@ public abstract class AbstractConsoleServer {
 
     /**
      * Returns the current state of this server
+     * 
      * @return server state
      */
     public ServerState getServerState() {
@@ -228,6 +232,7 @@ public abstract class AbstractConsoleServer {
 
     /**
      * Returns the name of this server
+     * 
      * @return server's name
      */
     public String getServerName() {
@@ -236,6 +241,7 @@ public abstract class AbstractConsoleServer {
 
     /**
      * Method for configuring the concrete server instance. Subclass instances shall pass command line arguments.
+     * 
      * @param cmdLineArgs command line arguments
      */
     protected abstract void configureInstance(String[] cmdLineArgs);
@@ -250,6 +256,7 @@ public abstract class AbstractConsoleServer {
     /**
      * Method for creating a message after successful startup.<br>
      * This is called when initialization has completed.
+     * 
      * @return messsage to be displayed on console.
      */
     protected abstract String createStartupCompletedMessage();
@@ -276,36 +283,36 @@ public abstract class AbstractConsoleServer {
     /**
      * States for a server's state machine<br>
      * Why so many states?<br>
-     * Reason: whenever multiple threads come into play using monitors (wait/notify) there is a risk of race conditions
-     * (notify before wait). By leveraging a monitor synchronization as a guard for state changes, we can design the
-     * code so that the normal case AND the rare race-condition case will be handled properly.
+     * Reason: whenever multiple threads come into play using monitors (wait/notify) there is a risk of race conditions (notify before wait). By leveraging a
+     * monitor synchronization as a guard for state changes, we can design the code so that the normal case AND the rare race-condition case will be handled
+     * properly.
      */
     public static enum ServerState {
         /**
          * during startup
          */
-        START_UP, 
-        
+        START_UP,
+
         /**
          * waiting for startup
          */
-        START_UP_WAITING, 
-        
+        START_UP_WAITING,
+
         /**
          * server ready
          */
-        ONLINE, 
-        
+        ONLINE,
+
         /**
          * during shutdown
          */
-        SHUT_DOWN, 
-        
+        SHUT_DOWN,
+
         /**
          * waiting for shutdown
          */
-        SHUT_DOWN_WAITING, 
-        
+        SHUT_DOWN_WAITING,
+
         /**
          * server offline
          */

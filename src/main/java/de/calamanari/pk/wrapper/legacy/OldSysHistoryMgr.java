@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * OldSys History Manager
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.wrapper.legacy;
 
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 /**
  * OldSys History Manager - part of the fictional legacy system, we want to create a WRAPPER for. <br>
  * This class provides access to historical data about a customer.<br>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OldSysHistoryMgr {
@@ -37,6 +40,7 @@ public class OldSysHistoryMgr {
      * <li>key</li>
      * <li>value</li>
      * </ul>
+     * 
      * @param customerId identifier
      * @return array with historical data or null if not found
      */

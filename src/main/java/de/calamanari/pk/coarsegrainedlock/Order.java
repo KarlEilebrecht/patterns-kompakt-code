@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Order - entity in COARSE GRAINED LOCK example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.coarsegrainedlock;
 
 /**
  * Order - entity in COARSE GRAINED LOCK example
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Order {
@@ -40,6 +43,7 @@ public class Order {
 
     /**
      * Creates new order related to the specified customer
+     * 
      * @param id order identifier
      * @param customerId associated customer identifier
      * @param orderData data for this order
@@ -52,6 +56,7 @@ public class Order {
 
     /**
      * Returns order id
+     * 
      * @return order id
      */
     public String getId() {
@@ -60,6 +65,7 @@ public class Order {
 
     /**
      * Returns the related customer id
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -68,6 +74,7 @@ public class Order {
 
     /**
      * Returns the order detail data
+     * 
      * @return order data
      */
     public String getOrderData() {
@@ -76,6 +83,7 @@ public class Order {
 
     /**
      * Sets the order detail data
+     * 
      * @param orderData data for this order
      */
     public void setOrderData(String orderData) {
@@ -84,8 +92,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({id='" + id + "', customerId='" + customerId + "', orderData='"
-                + orderData + "'})";
+        return this.getClass().getSimpleName() + "({id='" + id + "', customerId='" + customerId + "', orderData='" + orderData + "'})";
     }
 
 }

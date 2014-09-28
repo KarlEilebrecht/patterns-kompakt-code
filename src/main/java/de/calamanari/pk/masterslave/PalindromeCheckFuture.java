@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Palindrome Check Future - demonstrates MASTER SLAVE
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.masterslave;
 
 import java.util.concurrent.CountDownLatch;
@@ -27,6 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Palindrome Check Future - allows the MASTER to poll for the result and the SLAVES to report their results.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
@@ -35,10 +38,9 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
      * Constant {@value} for progress calculation
      */
     private static final double PROGRESS_100 = 100.0;
-    
+
     /**
-     * The combination of the results from different threads is complete after all results have been reported. This is
-     * controlled by a CountDownLatch
+     * The combination of the results from different threads is complete after all results have been reported. This is controlled by a CountDownLatch
      */
     private final CountDownLatch countDownLatch;
 
@@ -58,13 +60,13 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
     private final AtomicBoolean canceled = new AtomicBoolean(false);
 
     /**
-     * This flag will be set if the result has been computed and now all remaining threads shall terminate as fast as
-     * possible.
+     * This flag will be set if the result has been computed and now all remaining threads shall terminate as fast as possible.
      */
     private final AtomicBoolean abortDueToCompletion = new AtomicBoolean(false);
 
     /**
      * Creates new Future combining results of several partition checks
+     * 
      * @param numberOfPartitions number of checks to be awaited
      */
     public PalindromeCheckFuture(int numberOfPartitions) {
@@ -74,6 +76,7 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
 
     /**
      * This method indicates that we want to tell the slaves to terminate their work as fast as possible.
+     * 
      * @return true if execution has been canceled or is aborted due to completion
      */
     public boolean isAborted() {
@@ -110,8 +113,7 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
     }
 
     @Override
-    public PalindromeCheckResult get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
-            TimeoutException {
+    public PalindromeCheckResult get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         if (isCancelled()) {
             throw new ExecutionException(new IllegalStateException("Operation has been cancelled."));
         }
@@ -122,8 +124,7 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
     }
 
     /**
-     * does a fast count down, internally used after we know the result, this avoids the need for the MASTER to wait for
-     * all SLAVES to complete
+     * does a fast count down, internally used after we know the result, this avoids the need for the MASTER to wait for all SLAVES to complete
      */
     protected void countDownRemaining() {
         for (int i = 0; i < numberOfPartitions; i++) {
@@ -132,13 +133,12 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
     }
 
     /**
-     * Each thread reports his result, the first one finding a difference (no palindrome) wins and causes the whole
-     * check to complete as fast as possible.
+     * Each thread reports his result, the first one finding a difference (no palindrome) wins and causes the whole check to complete as fast as possible.
+     * 
      * @param partitionResult result for one partition
      */
     public void reportSlaveResult(PalindromeCheckResult partitionResult) {
-        if (!isAborted() && !partitionResult.equals(PalindromeCheckResult.UNKNOWN)
-                && !partitionResult.isPalindromeConfirmed()) {
+        if (!isAborted() && !partitionResult.equals(PalindromeCheckResult.UNKNOWN) && !partitionResult.isPalindromeConfirmed()) {
             // a slave reported a proof that the examined partition was no palindrome
             // now check if this was the first one ("the winner") who recognized a proof
             boolean callerIsWinner = abortDueToCompletion.compareAndSet(false, true);
@@ -161,6 +161,7 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
 
     /**
      * Returns the progress as a percentage value
+     * 
      * @return percentage value of progress
      */
     public double getProgressPerc() {

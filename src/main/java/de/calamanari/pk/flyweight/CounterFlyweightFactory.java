@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Counter Flyweight Factory - demonstrates a FLYWEIGHT factory.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.flyweight;
 
 import java.util.Map;
@@ -26,6 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Counter Flyweight Factory - demonstrates a FLYWEIGHT factory.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CounterFlyweightFactory {
@@ -39,21 +42,19 @@ public class CounterFlyweightFactory {
      * wait time between status messages
      */
     private static final long INTERVAL_MILLIS_100 = 100;
-    
+
     /**
      * This factory caches the flyweights, they can be used concurrently
      */
     private final Map<Character, CounterFlyweight> pool = new ConcurrentHashMap<>();
 
     /**
-     * in this example a flag decides whether to returned normal flyweights or unshared, in real-life scenarios this
-     * would depend on other factors
+     * in this example a flag decides whether to returned normal flyweights or unshared, in real-life scenarios this would depend on other factors
      */
     private final boolean forceUnshared;
 
     /**
-     * In this example, some workload will be added to each flyweight, in real-life scenarios this may consist of
-     * resources, pre-calculated tables, buffers ...
+     * In this example, some workload will be added to each flyweight, in real-life scenarios this may consist of resources, pre-calculated tables, buffers ...
      */
     private final String workload;
 
@@ -74,18 +75,19 @@ public class CounterFlyweightFactory {
 
     /**
      * Creates new Factory for flyweights
+     * 
      * @param workload simulated workload
      * @param forceUnshared if true, this factory will only return unshared flyweights
      */
     public CounterFlyweightFactory(String workload, boolean forceUnshared) {
-        LOGGER.fine(CounterFlyweightFactory.class.getSimpleName() + "(len=" + workload.length() + ", forceUnshared="
-                + forceUnshared + " ) created.");
+        LOGGER.fine(CounterFlyweightFactory.class.getSimpleName() + "(len=" + workload.length() + ", forceUnshared=" + forceUnshared + " ) created.");
         this.workload = workload;
         this.forceUnshared = forceUnshared;
     }
 
     /**
      * Returns a concrete Flyweight (created once on demand)
+     * 
      * @param c the character to be counted
      * @return CountStrategyFlyweight
      */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Composite Test - demonstrates COMPOSITE pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.composite;
 
 import static org.junit.Assert.assertEquals;
@@ -27,17 +29,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.composite.AbstractEnterpriseUnit;
-import de.calamanari.pk.composite.Company;
-import de.calamanari.pk.composite.Division;
-import de.calamanari.pk.composite.EnterpriseNode;
-import de.calamanari.pk.composite.Holding;
-import de.calamanari.pk.composite.StaffMember;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Composite Test - demonstrates COMPOSITE pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CompositeTest {
@@ -60,8 +57,7 @@ public class CompositeTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, CompositeTest.class, AbstractEnterpriseUnit.class, Holding.class,
-                Company.class, Division.class, StaffMember.class);
+        LogUtils.setLogLevel(LOG_LEVEL, CompositeTest.class, AbstractEnterpriseUnit.class, Holding.class, Company.class, Division.class, StaffMember.class);
     }
 
     @Before
@@ -101,8 +97,7 @@ public class CompositeTest {
                 StaffMember member = (StaffMember) enterpriseNode;
                 LOGGER.info(member.getFirstName() + " " + member.getLastName() + " is a staff member!");
                 if (enterpriseNode.getParentNode() == null) {
-                    LOGGER.info("No enterprise unit assigned for " + member.getFirstName() + " " + member.getLastName()
-                            + "!");
+                    LOGGER.info("No enterprise unit assigned for " + member.getFirstName() + " " + member.getLastName() + "!");
                 }
             }
             else if (enterpriseNode instanceof AbstractEnterpriseUnit) {
@@ -112,8 +107,7 @@ public class CompositeTest {
             }
 
         }
-        LOGGER.info("Test Composite successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Composite successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

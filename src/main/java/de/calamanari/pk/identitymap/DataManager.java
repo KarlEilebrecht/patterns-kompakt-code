@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Data Manager - provides finder methods in this example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,19 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identitymap;
 
 import java.util.logging.Logger;
 
 /**
- * Data Manager - provides finder methods in this example, placeholder for whatever persistence framework/strategies may
- * be in use. <br>
- * If DAOs come into play, you would have to decide where to place the calls to the identity map. On the one hand
- * logically the lookup belongs ON TOP of the DAO layer, introducing an extra layer (yuck!).<br>
+ * Data Manager - provides finder methods in this example, placeholder for whatever persistence framework/strategies may be in use. <br>
+ * If DAOs come into play, you would have to decide where to place the calls to the identity map. On the one hand logically the lookup belongs ON TOP of the DAO
+ * layer, introducing an extra layer (yuck!).<br>
  * On the other hand INSIDE DAO would be convenient to reduce lines of code.<br>
- * But with different DAOs (for XML, Oracle, MySQL), which is the primary reason for implementing a DAO-layer, the
- * identity map lookup code inside the DAO would have to be duplicated (yuck! again).<br>
+ * But with different DAOs (for XML, Oracle, MySQL), which is the primary reason for implementing a DAO-layer, the identity map lookup code inside the DAO would
+ * have to be duplicated (yuck! again).<br>
  * One solution to this dilemma could be an abstract DAO base class containing a generic identity map lookup procedure.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class DataManager {
@@ -43,9 +45,10 @@ public final class DataManager {
     private DataManager() {
         // no instances
     }
-    
+
     /**
      * Customer finder method
+     * 
      * @param customerId identifier
      * @return customer entity or null if not found
      */
@@ -80,6 +83,7 @@ public final class DataManager {
 
     /**
      * loads the entity from the persistence layer
+     * 
      * @param customerId identifier
      * @return entity or null if not found
      */
@@ -100,6 +104,7 @@ public final class DataManager {
 
     /**
      * Finder method for addresses
+     * 
      * @param addressId identifier
      * @return address entity or null if not found
      */
@@ -134,6 +139,7 @@ public final class DataManager {
 
     /**
      * loads the entity from the persistence layer
+     * 
      * @param addressId identifier
      * @return entity or null if not found
      */

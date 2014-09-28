@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Output Observable
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,16 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.observer;
 
 /**
  * Output Observable is the interface concrete observables have to implement to allow concrete OBSERVERS to register.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface OutputObservable {
 
     /**
      * This registers the observer to the observable
+     * 
      * @param outputObserver instance which is interested in events
      */
     public void addOutputObserver(OutputObserver outputObserver);
@@ -32,6 +36,7 @@ public interface OutputObservable {
     /**
      * This de-registers the observer from the observable.<br>
      * A call with an instance that was not observing (not in list) behaves like a no-op.
+     * 
      * @param outputObserver instance which shall no longer be informed about events.
      */
     public void removeOutputObserver(OutputObserver outputObserver);

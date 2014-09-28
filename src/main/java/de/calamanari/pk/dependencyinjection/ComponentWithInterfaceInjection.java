@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Component With Interface Injection - demonstrates INTERFACE INJECTION
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 import java.util.logging.Logger;
 
 /**
  * Component With Interface Injection - demonstrates INTERFACE INJECTION
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ComponentWithInterfaceInjection implements Component, PrintServiceInjectable {
@@ -49,8 +52,7 @@ public class ComponentWithInterfaceInjection implements Component, PrintServiceI
 
     @Override
     public void injectPrintService(PrintService printService) {
-        LOGGER.fine(this.getClass().getSimpleName()
-                + ".injectPrintService(...) called, service injected by interface method!");
+        LOGGER.fine(this.getClass().getSimpleName() + ".injectPrintService(...) called, service injected by interface method!");
         this.printService = printService;
     }
 

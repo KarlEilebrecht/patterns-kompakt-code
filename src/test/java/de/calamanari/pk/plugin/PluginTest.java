@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Plugin test demonstrates the PLUGIN pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin;
 
 import static org.junit.Assert.assertEquals;
@@ -27,8 +29,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.plugin.ExampleScriptingFramework;
-import de.calamanari.pk.plugin.MacroPluginFactory;
 import de.calamanari.pk.plugin.ext.FileMacroPlugin;
 import de.calamanari.pk.plugin.ext.StringMacroPlugin;
 import de.calamanari.pk.util.LogUtils;
@@ -36,6 +36,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Plugin test demonstrates the PLUGIN pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PluginTest {
@@ -58,8 +59,8 @@ public class PluginTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, PluginTest.class, ExampleScriptingFramework.class, MacroPluginFactory.class,
-                FileMacroPlugin.class, StringMacroPlugin.class);
+        LogUtils.setLogLevel(LOG_LEVEL, PluginTest.class, ExampleScriptingFramework.class, MacroPluginFactory.class, FileMacroPlugin.class,
+                StringMacroPlugin.class);
     }
 
     @AfterClass
@@ -91,16 +92,13 @@ public class PluginTest {
         long startTimeNanos = System.nanoTime();
         ExampleScriptingFramework framework = new ExampleScriptingFramework();
         MacroPluginFactory pluginFactory = new MacroPluginFactory(framework);
-        framework.executeScriptFile(MiscUtils.findFile("de/calamanari/pk/plugin/plugin-test-script.txt"),
-                pluginFactory);
+        framework.executeScriptFile(MiscUtils.findFile("de/calamanari/pk/plugin/plugin-test-script.txt"), pluginFactory);
 
-        String expectedResult = "The funny frog jumped over the lazy duck.\n.kcud yzal eht revo depmuj gorf ynnuf ehT;"
-                + " length=41";
+        String expectedResult = "The funny frog jumped over the lazy duck.\n.kcud yzal eht revo depmuj gorf ynnuf ehT;" + " length=41";
         String result = MiscUtils.readFileToString(new File(MiscUtils.getHomeDirectory(), "plugin-test-script.out"));
         assertEquals(expectedResult, result);
 
-        LOGGER.info("Test plugin successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test plugin successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
         LOGGER.fine(framework.getProtocol());
     }
 

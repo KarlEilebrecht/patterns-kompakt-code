@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer - interface for customer representations
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,20 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.datatransferobject;
 
 import java.io.IOException;
 
 /**
- * Customer - interface for customer representations, introduced in this example to allow transparently handling
- * different representations (DATA TRANSFER OBJECT vs. entity remote interface) by the client - for demonstration
- * purposes only.
+ * Customer - interface for customer representations, introduced in this example to allow transparently handling different representations (DATA TRANSFER OBJECT
+ * vs. entity remote interface) by the client - for demonstration purposes only.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface Customer {
 
     /**
      * Returns id of customer
+     * 
      * @return customerId
      * @throws IOException on data access error
      */
@@ -36,6 +39,7 @@ public interface Customer {
 
     /**
      * Sets the id of customer
+     * 
      * @param customerId identifier
      * @throws IOException on data access error
      */
@@ -43,6 +47,7 @@ public interface Customer {
 
     /**
      * Returns the customer's last name
+     * 
      * @return last name of customer
      * @throws IOException on data access error
      */
@@ -50,6 +55,7 @@ public interface Customer {
 
     /**
      * Sets the last name of customer
+     * 
      * @param lastName person's last name
      * @throws IOException on data access error
      */
@@ -57,6 +63,7 @@ public interface Customer {
 
     /**
      * Returns the first name of the customer
+     * 
      * @return firstName
      * @throws IOException on data access error
      */
@@ -64,6 +71,7 @@ public interface Customer {
 
     /**
      * Sets the first name of the customer
+     * 
      * @param firstName person's first name
      * @throws IOException on data access error
      */
@@ -71,6 +79,7 @@ public interface Customer {
 
     /**
      * Returns the street address of customer
+     * 
      * @return street
      * @throws IOException on data access error
      */
@@ -78,6 +87,7 @@ public interface Customer {
 
     /**
      * Sets the street of the customer
+     * 
      * @param street address field
      * @throws IOException on data access error
      */
@@ -85,6 +95,7 @@ public interface Customer {
 
     /**
      * Returns the zip-code of the customer
+     * 
      * @return zipCode address field
      * @throws IOException on data access error
      */
@@ -92,6 +103,7 @@ public interface Customer {
 
     /**
      * Sets the zip-code of the customer
+     * 
      * @param zipCode address field
      * @throws IOException on data access error
      */
@@ -99,6 +111,7 @@ public interface Customer {
 
     /**
      * Returns the city of the customer
+     * 
      * @return city address field
      * @throws IOException on data access error
      */
@@ -106,6 +119,7 @@ public interface Customer {
 
     /**
      * Sets the city of the customer
+     * 
      * @param city address field
      * @throws IOException on data access error
      */

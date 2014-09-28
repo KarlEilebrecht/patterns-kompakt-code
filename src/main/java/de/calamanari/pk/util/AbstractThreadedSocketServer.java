@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract Threaded Socket server
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.net.ServerSocket;
@@ -28,8 +30,8 @@ import java.util.logging.Logger;
 /**
  * Abstract Threaded Socket server<br>
  * This is a threaded socket server, it can accept and process an arbitrary number of connections concurrently.<br>
- * A subclass only has to implement the concrete communication operations, the other stuff is handled by logic in the
- * super classes (TEMPLATE METHOD pattern).<br>
+ * A subclass only has to implement the concrete communication operations, the other stuff is handled by logic in the super classes (TEMPLATE METHOD pattern).<br>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer {
@@ -56,6 +58,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
 
     /**
      * Creates new mock without starting it yet.
+     * 
      * @param serverName name of the new server
      */
     public AbstractThreadedSocketServer(String serverName) {
@@ -65,9 +68,10 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
 
     /**
      * This method handles the socket communication (usually the job of the native legacy library).<br>
-     * A call to this method returns immediately while the execution part runs in its own thread. This allows the server
-     * (the caller of this method) to proceed with accepting further requests. <br>
+     * A call to this method returns immediately while the execution part runs in its own thread. This allows the server (the caller of this method) to proceed
+     * with accepting further requests. <br>
      * This TEMPLATE METHOD delegates single communication handling to subclasses.
+     * 
      * @param socket accepted socket
      */
     protected void handleSocketCommunicationThreaded(final Socket socket) {
@@ -131,6 +135,8 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
     protected void doRequestProcessing() {
         while (true) {
             try {
+                // socket will be closed by the responsible worker thread
+                @SuppressWarnings("resource")
                 Socket socket = serverSocket.accept();
                 handleSocketCommunicationThreaded(socket);
             }
@@ -161,6 +167,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
      * Method for handling a single socket communication<br>
      * Subclasses communicate to the client using the socket's streams.<br>
      * This method must be implemented thread-safe.
+     * 
      * @param socket (for communication, will be closed by caller automatically)
      * @throws Exception delegate handling to caller
      */
@@ -169,6 +176,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
     /**
      * Method returning a default port.<br>
      * Subclasses return here a standard port for this server.
+     * 
      * @return default port
      */
     protected abstract int getDefaultPort();
@@ -176,6 +184,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
     /**
      * This method returns an appropriate ExecutorService for Thread-management. <br>
      * Subclasses may override this method to gain control about pool size and behavior.
+     * 
      * @return executor service
      */
     protected ExecutorService createExecutorService() {

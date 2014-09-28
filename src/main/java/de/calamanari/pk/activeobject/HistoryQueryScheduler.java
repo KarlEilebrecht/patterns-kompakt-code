@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * History Query Scheduler - demonstrates ACTIVE OBJECT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.activeobject;
 
 import java.util.concurrent.Executor;
@@ -22,8 +24,8 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
- * History Query Scheduler - isolates the history query component from thread management and control of maximum number
- * of parallel calls.
+ * History Query Scheduler - isolates the history query component from thread management and control of maximum number of parallel calls.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class HistoryQueryScheduler {
@@ -40,11 +42,11 @@ public class HistoryQueryScheduler {
 
     /**
      * Creates new scheduler allowing the specified amount of parallel executions
+     * 
      * @param maxParallelWorkers number of calls that shall execute in parallel
      */
     public HistoryQueryScheduler(int maxParallelWorkers) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created - working on queue with " + maxParallelWorkers
-                + " worker threads in parallel.");
+        LOGGER.fine(this.getClass().getSimpleName() + " created - working on queue with " + maxParallelWorkers + " worker threads in parallel.");
         // the chosen executor internally manages a queue and ensures that
         // only the given maximum of calls will execute in parallel
         this.executor = Executors.newFixedThreadPool(maxParallelWorkers);
@@ -52,6 +54,7 @@ public class HistoryQueryScheduler {
 
     /**
      * schedules the specified task and returns immediately
+     * 
      * @param task some task to be executed in the future
      */
     public void schedule(QueryRequest task) {

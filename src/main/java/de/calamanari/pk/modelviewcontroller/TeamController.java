@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Team Controller - the CONTROLLER in this MVC-example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.modelviewcontroller;
 
 import java.awt.Color;
@@ -31,6 +33,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  * Team Controller - the CONTROLLER in this MVC-example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class TeamController {
@@ -62,6 +65,7 @@ public class TeamController {
 
     /**
      * Creates new controller responsible for the given model and the given view
+     * 
      * @param teamModel the <b>M</b>odel to be attached to the <b>C</b>ontroller
      * @param teamView the <b>V</b>iew to be attached to the <b>C</b>ontroller
      */
@@ -144,8 +148,7 @@ public class TeamController {
                     radioButtonIndex++;
                 }
                 if (selectedIdx >= 0) {
-                    LOGGER.fine(TeamController.class.getSimpleName() + " - entry " + (selectedIdx + 1)
-                            + " was selected, removing.");
+                    LOGGER.fine(TeamController.class.getSimpleName() + " - entry " + (selectedIdx + 1) + " was selected, removing.");
                     model.remove(selectedIdx);
                 }
                 else {
@@ -278,6 +281,7 @@ public class TeamController {
 
     /**
      * updates the control depending on the current status
+     * 
      * @param member input name of the member
      * @param radioButton control associated to the member
      */

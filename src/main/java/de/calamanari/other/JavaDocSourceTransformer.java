@@ -19,12 +19,10 @@ import de.calamanari.other.SourceLineInterpreter.Phrase;
 
 public class JavaDocSourceTransformer {
 
-    private static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList(new String[] { "abstract", "assert",
-            "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do",
-            "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "goto", "implements",
-            "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected",
-            "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw",
-            "throws", "transient", "try", "void", "volatile", "while" }));
+    private static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList(new String[] { "abstract", "assert", "boolean", "break", "byte", "case",
+            "catch", "char", "class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if",
+            "goto", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return",
+            "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while" }));
 
     private final File baseDir;
 
@@ -101,8 +99,7 @@ public class JavaDocSourceTransformer {
                     sb.append(phrase.text);
                     sb.append("</span>");
                 }
-                else if (phrase.commentType == CommentType.CHAR_LITERAL
-                        || phrase.commentType == CommentType.STRING_LITERAL) {
+                else if (phrase.commentType == CommentType.CHAR_LITERAL || phrase.commentType == CommentType.STRING_LITERAL) {
                     sb.append("<span style=\"color: #2A00FF;\">");
                     sb.append(phrase.text);
                     sb.append("</span>");

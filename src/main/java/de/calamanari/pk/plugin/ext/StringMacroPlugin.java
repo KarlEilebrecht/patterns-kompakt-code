@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * String macro plugin 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin.ext;
 
 import java.util.Arrays;
@@ -25,6 +27,7 @@ import de.calamanari.pk.plugin.MacroPluginFramework;
 
 /**
  * String macro plugin allows string manipulation
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class StringMacroPlugin implements MacroPlugin {
@@ -87,21 +90,22 @@ public class StringMacroPlugin implements MacroPlugin {
         }
 
         switch (macroName) {
-            case "concat":
-                return executeMacroConcat(args);
-            case "length":
-                return executeMacroLength(args);
-            case "reverse":
-                return executeMacroReverse(args);
-            case "newString":
-                return executeMacroNewString(args);
-            default:
-                throw new RuntimeException("Could not execute macro '" + macroName + "' - unknown macro.");
+        case "concat":
+            return executeMacroConcat(args);
+        case "length":
+            return executeMacroLength(args);
+        case "reverse":
+            return executeMacroReverse(args);
+        case "newString":
+            return executeMacroNewString(args);
+        default:
+            throw new RuntimeException("Could not execute macro '" + macroName + "' - unknown macro.");
         }
     }
 
     /**
      * Creates a new string instance from a given string
+     * 
      * @param args single string or {@linkplain CharSequence}, not null
      * @return string (either the argument itself or a copy as string)
      */
@@ -122,6 +126,7 @@ public class StringMacroPlugin implements MacroPlugin {
 
     /**
      * Returns a reversed copy of the given string
+     * 
      * @param args single string argument, which may be null
      * @return reversed string or null if given argument was null
      */
@@ -143,6 +148,7 @@ public class StringMacroPlugin implements MacroPlugin {
 
     /**
      * Computes the length of a string
+     * 
      * @param args a string
      * @return length of the string
      */
@@ -159,6 +165,7 @@ public class StringMacroPlugin implements MacroPlugin {
 
     /**
      * Concatenates the given arguments
+     * 
      * @param args at least two arguments
      * @return concatenated string
      */

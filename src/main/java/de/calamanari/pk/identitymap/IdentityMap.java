@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Identity Map - demonstrates IDENTITY MAP
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identitymap;
 
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Identity Map - demonstrates IDENTITY MAP
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * @param <K> type of the entity key
  * @param <E> entity type
@@ -40,13 +43,13 @@ public class IdentityMap<K, E extends Entity<K>> {
     private final Map<K, E> instances = new HashMap<>();
 
     /**
-     * we store a reference to the entity type class only for demonstration purposes, this is not required, but useful
-     * for debugging
+     * we store a reference to the entity type class only for demonstration purposes, this is not required, but useful for debugging
      */
     private final Class<E> entityType;
 
     /**
      * Creates identity map
+     * 
      * @param entityType class of entity to be maintained
      */
     public IdentityMap(Class<E> entityType) {
@@ -55,31 +58,30 @@ public class IdentityMap<K, E extends Entity<K>> {
 
     /**
      * Adds an entity to the map
+     * 
      * @param entity (null will be silently ignored)
      */
     public void add(E entity) {
         if (entity != null) {
-            LOGGER.fine(this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName()
-                    + ").add() called");
+            LOGGER.fine(this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName() + ").add() called");
             instances.put(entity.getId(), entity);
         }
     }
 
     /**
      * Returns the requested entity corresponding to the key
+     * 
      * @param id (primary key)
      * @return entity or null if unknown
      */
     public E get(K id) {
-        LOGGER.fine(this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName() + ").get('" + id
-                + "') called");
+        LOGGER.fine(this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName() + ").get('" + id + "') called");
         return instances.get(id);
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName() + ", currentSize="
-                + instances.size() + ")";
+        return this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName() + ", currentSize=" + instances.size() + ")";
     }
 
 }

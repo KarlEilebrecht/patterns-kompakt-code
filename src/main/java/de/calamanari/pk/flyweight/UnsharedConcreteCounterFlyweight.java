@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Unshared Concrete Counter Flyweight - demonstrates a FLYWEIGHT.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,13 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.flyweight;
 
 import java.util.logging.Logger;
 
 /**
- * Unshared Concrete Counter Flyweight - unshared flyweights can be returned by a factory - transparently from the
- * client's point of view.
+ * Unshared Concrete Counter Flyweight - unshared flyweights can be returned by a factory - transparently from the client's point of view.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class UnsharedConcreteCounterFlyweight extends ConcreteCounterFlyweight {
@@ -33,6 +35,7 @@ public class UnsharedConcreteCounterFlyweight extends ConcreteCounterFlyweight {
 
     /**
      * Creates an unshared concrete counter flyweight, in this example there is no special behaviour.
+     * 
      * @param characterToBeCounted here we count occurrences of this character in strings
      * @param workload some data to simulate workload
      */
@@ -42,8 +45,7 @@ public class UnsharedConcreteCounterFlyweight extends ConcreteCounterFlyweight {
 
     @Override
     public int count(String extrinsicState) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".count('" + extrinsicState
-                + "') called, counting occurrences of '" + intrinsicState.charAt(0) + "' ...");
+        LOGGER.fine(this.getClass().getSimpleName() + ".count('" + extrinsicState + "') called, counting occurrences of '" + intrinsicState.charAt(0) + "' ...");
 
         int count = 0;
         for (int i = 0, size = extrinsicState.length(); i < size; i++) {

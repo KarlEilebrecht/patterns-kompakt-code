@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Delete Text Command - a concrete COMMAND.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.command;
 
 import java.util.logging.Logger;
 
 /**
  * Delete Text Command - a concrete COMMAND.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DeleteTextCommand extends InputCommand {
@@ -42,6 +45,7 @@ public class DeleteTextCommand extends InputCommand {
 
     /**
      * Creates new deletion command.
+     * 
      * @param receiver command destination
      * @param size number of characters to be deleted.
      */
@@ -53,8 +57,7 @@ public class DeleteTextCommand extends InputCommand {
 
     @Override
     public void execute() {
-        LOGGER.fine("Executing " + this.getClass().getSimpleName() + " to delete " + this.numberOfCharactersToBeDeleted
-                + " character(s).");
+        LOGGER.fine("Executing " + this.getClass().getSimpleName() + " to delete " + this.numberOfCharactersToBeDeleted + " character(s).");
         int newLength = receiver.length() - this.numberOfCharactersToBeDeleted;
         removedCharacters = receiver.substring(newLength);
         receiver.setLength(newLength);
@@ -62,8 +65,7 @@ public class DeleteTextCommand extends InputCommand {
 
     @Override
     public void executeUndo() {
-        LOGGER.fine("Undoing " + this.getClass().getSimpleName() + " to undelete " + this.numberOfCharactersToBeDeleted
-                + " character(s).");
+        LOGGER.fine("Undoing " + this.getClass().getSimpleName() + " to undelete " + this.numberOfCharactersToBeDeleted + " character(s).");
         receiver.append(removedCharacters);
     }
 

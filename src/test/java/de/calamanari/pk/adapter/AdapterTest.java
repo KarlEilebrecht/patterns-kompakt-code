@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Adapter test - demonstrates ADAPTER pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.adapter;
 
 import static org.junit.Assert.assertEquals;
@@ -28,13 +30,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.adapter.PersonViewAdapter;
-import de.calamanari.pk.adapter.SourceSystemPersonView;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Adapter test demonstrates the ADAPTER pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AdapterTest {
@@ -62,8 +63,7 @@ public class AdapterTest {
 
     @Before
     public void setUp() throws Exception {
-        sourceSystemPersonViewInstance = new SourceSystemPersonView(12345, "Jack", "Miller",
-                "Special Agent, works for Secret Shopper Service");
+        sourceSystemPersonViewInstance = new SourceSystemPersonView(12345, "Jack", "Miller", "Special Agent, works for Secret Shopper Service");
     }
 
     @Test
@@ -78,15 +78,14 @@ public class AdapterTest {
         String name = personViewAdapter.getName();
         String description = personViewAdapter.getDescription();
         boolean valid = personViewAdapter.isValid();
-        LOGGER.info("\n=====================================================================\nID:          '" + id
-                + "',\nname:        '" + name + "',\ndescription: '" + description + "',\nvalid:       "
-                + (valid ? "YES" : "NO") + "\n=====================================================================");
+        LOGGER.info("\n=====================================================================\nID:          '" + id + "',\nname:        '" + name
+                + "',\ndescription: '" + description + "',\nvalid:       " + (valid ? "YES" : "NO")
+                + "\n=====================================================================");
         assertEquals("12345", id);
         assertEquals("Jack Miller", name);
         assertEquals("Special Agent, works for Secret Shopper Service", description);
         assertTrue(valid);
-        LOGGER.info("Test Adapter properties successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Adapter properties successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
     @Test
@@ -109,8 +108,7 @@ public class AdapterTest {
         success = personViewAdapter.setValid(true);
         assertFalse(success);
         assertFalse(personViewAdapter.isValid());
-        LOGGER.info("Test Adapter operations successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Adapter operations successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

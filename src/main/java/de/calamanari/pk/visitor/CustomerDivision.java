@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Division - demonstrates VISITOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,13 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 import java.util.logging.Logger;
 
 /**
- * Customer Division - part of customer structure, a customer's business division may carry a special discount
- * negotiated between us (seller) and the division manager. Division discounts ALWAYS replace company discounts.
+ * Customer Division - part of customer structure, a customer's business division may carry a special discount negotiated between us (seller) and the division
+ * manager. Division discounts ALWAYS replace company discounts.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerDivision {
@@ -48,6 +51,7 @@ public class CustomerDivision {
 
     /**
      * Creates new Customer division
+     * 
      * @param company customer company the division belongs to
      * @param name divison's name
      * @param divisionDiscountPerc discount percentage for this division
@@ -60,6 +64,7 @@ public class CustomerDivision {
 
     /**
      * Returns division name
+     * 
      * @return name of division
      */
     public String getName() {
@@ -68,6 +73,7 @@ public class CustomerDivision {
 
     /**
      * Sets the division name
+     * 
      * @param name division's name
      */
     public void setName(String name) {
@@ -76,6 +82,7 @@ public class CustomerDivision {
 
     /**
      * Returns the discount percentage value, to be applied to all orders placed by members of this division.
+     * 
      * @return discount
      */
     public double getDivisionDiscountPerc() {
@@ -84,6 +91,7 @@ public class CustomerDivision {
 
     /**
      * Sets the discount percentage value, to be applied to all orders placed by members of this division.
+     * 
      * @param discountPerc discount percentage for this division
      */
     public void setDivisionDiscountPerc(double discountPerc) {
@@ -92,6 +100,7 @@ public class CustomerDivision {
 
     /**
      * Returns the company this division belongs to
+     * 
      * @return customer company
      */
     public CustomerCompany getCompany() {
@@ -100,6 +109,7 @@ public class CustomerDivision {
 
     /**
      * Method to accept enterprise visitor
+     * 
      * @param visitor current visitor
      */
     public void accept(EnterpriseVisitor visitor) {
@@ -110,8 +120,8 @@ public class CustomerDivision {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({name='" + name + "', divisionDiscountPerc=" + divisionDiscountPerc
-                + ", company='" + company.getName() + "'})";
+        return this.getClass().getSimpleName() + "({name='" + name + "', divisionDiscountPerc=" + divisionDiscountPerc + ", company='" + company.getName()
+                + "'})";
     }
 
 }

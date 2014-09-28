@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Iterator Test - demonstrates ITERATOR pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.iterator;
 
 import static org.junit.Assert.assertEquals;
@@ -27,14 +29,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.iterator.AbstractWorker;
-import de.calamanari.pk.iterator.Worker;
-import de.calamanari.pk.iterator.WorkerIterator;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Iterator Test - demonstrates ITERATOR pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class IteratorTest {
@@ -99,8 +99,7 @@ public class IteratorTest {
         LOGGER.info("All subordinates of " + rootWorker.getName() + " are: " + res);
         assertEquals("Hans, Jake, John, Larry, Linda", res);
 
-        LOGGER.info("Test Iterator successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Iterator successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

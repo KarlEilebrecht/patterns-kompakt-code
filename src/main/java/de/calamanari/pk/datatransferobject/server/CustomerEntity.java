@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Entity - the server entity (from persistence)
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.datatransferobject.server;
 
 import java.rmi.RemoteException;
@@ -27,9 +29,9 @@ import de.calamanari.pk.datatransferobject.CustomerRemote;
 import de.calamanari.pk.util.LogUtils;
 
 /**
- * Customer Entity - the server entity (from persistence) <b>Note:</b> To better visualize the runtime differences
- * between direct remoting and using DATA TRANSFER OBJECT, CustomerEntity itself has been implemented as remote object,
- * this is only for testing here and rather atypical!
+ * Customer Entity - the server entity (from persistence) <b>Note:</b> To better visualize the runtime differences between direct remoting and using DATA
+ * TRANSFER OBJECT, CustomerEntity itself has been implemented as remote object, this is only for testing here and rather atypical!
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerEntity extends UnicastRemoteObject implements CustomerRemote {
@@ -50,6 +52,7 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
 
     /**
      * Constructor
+     * 
      * @throws RemoteException on communication error
      */
     public CustomerEntity() throws RemoteException {
@@ -58,6 +61,7 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
 
     /**
      * Creates new entity from the given data
+     * 
      * @param customerId identifier
      * @param lastName person's last name
      * @param firstName person's first name
@@ -66,8 +70,7 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
      * @param city address field
      * @throws RemoteException on communication error
      */
-    public CustomerEntity(String customerId, String lastName, String firstName, String street, String zipCode,
-            String city) throws RemoteException {
+    public CustomerEntity(String customerId, String lastName, String firstName, String street, String zipCode, String city) throws RemoteException {
         super();
         this.customerId = customerId;
         this.lastName = lastName;
@@ -181,6 +184,7 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
 
     /**
      * Returns the corresponding DATA TRANSFER OBJECT for this entity
+     * 
      * @return dto
      */
     CustomerDto toDto() {
@@ -197,6 +201,7 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
 
     /**
      * Sets the fields of this entity from the given DATA TRANSFER OBJECT
+     * 
      * @param dto data transfer object to copy data from
      */
     void fromDto(CustomerDto dto) {
@@ -211,8 +216,8 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", lastName=" + lastName
-                + ", firstName=" + firstName + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", lastName=" + lastName + ", firstName=" + firstName + ", street=" + street
+                + ", zipCode=" + zipCode + ", city=" + city + "})";
     }
 
 }

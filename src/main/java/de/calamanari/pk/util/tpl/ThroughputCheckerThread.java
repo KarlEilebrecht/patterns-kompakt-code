@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Throughput Checker Thread
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.tpl;
 
 import java.lang.ref.WeakReference;
@@ -24,9 +26,9 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * A {@link ThroughputCheckerThread} manages a {@link ThroughputListener} at runtime.<br>
- * It is obviously impossible to notify the observer synchronously since there are possibly millions of concurrent calls
- * to a {@link ThroughputLimiter}. Thus the {@link ThroughputCheckerThread} periodically computes the current state and
- * notifies the registered listener.
+ * It is obviously impossible to notify the observer synchronously since there are possibly millions of concurrent calls to a {@link ThroughputLimiter}. Thus
+ * the {@link ThroughputCheckerThread} periodically computes the current state and notifies the registered listener.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class ThroughputCheckerThread extends Thread {
@@ -42,8 +44,7 @@ public final class ThroughputCheckerThread extends Thread {
     final ThroughputListener listener;
 
     /**
-     * Reference to the observed {@link ThroughputLimiter}, we use a weak reference to support garbage collection in
-     * case the listener never de-registers.
+     * Reference to the observed {@link ThroughputLimiter}, we use a weak reference to support garbage collection in case the listener never de-registers.
      */
     private final WeakReference<ThroughputLimiter> limiter;
 
@@ -88,6 +89,7 @@ public final class ThroughputCheckerThread extends Thread {
 
     /**
      * Creates a checker thread for the given limiter and listener.
+     * 
      * @param limiter the observed instance
      * @param listener observer
      * @param intervalTimeNanos wait time in nanoseconds between two checks
@@ -101,6 +103,7 @@ public final class ThroughputCheckerThread extends Thread {
 
     /**
      * Waits for the currently configured time
+     * 
      * @return wait nanos
      * @throws InterruptedException if the wait was interrupted externally
      */
@@ -115,8 +118,8 @@ public final class ThroughputCheckerThread extends Thread {
     }
 
     /**
-     * This method will be called periodically to convert the current state of the {@link ThroughputLimiter} into a
-     * {@link ThroughputEvent} to be passed to the registered listener.
+     * This method will be called periodically to convert the current state of the {@link ThroughputLimiter} into a {@link ThroughputEvent} to be passed to the
+     * registered listener.
      */
     private void doCheck() {
         ThroughputLimiter instance = limiter.get();
@@ -135,8 +138,7 @@ public final class ThroughputCheckerThread extends Thread {
                 lastCheckOverloadNanos = overloadNanos;
             }
             else {
-                ThroughputEvent newEvent = createThroughputEvent(nowNanoTime, passedCount, deniedCount,
-                        overloadNanos, state.overloadStartTimeNanos, overload);
+                ThroughputEvent newEvent = createThroughputEvent(nowNanoTime, passedCount, deniedCount, overloadNanos, state.overloadStartTimeNanos, overload);
                 event = newEvent;
                 listener.handleThroughputData(event);
             }
@@ -149,6 +151,7 @@ public final class ThroughputCheckerThread extends Thread {
 
     /**
      * Creates a new event to be passed to the observing client
+     * 
      * @param nowNanoTime system time
      * @param passedCount number of granted permissions
      * @param deniedCount number of denied permissions
@@ -157,19 +160,17 @@ public final class ThroughputCheckerThread extends Thread {
      * @param overload true if the system is currently overloaded, otherwise false
      * @return newly created event to be passed to the observer
      */
-    private ThroughputEvent createThroughputEvent(long nowNanoTime, long passedCount, long deniedCount,
-            long overloadNanos, long overloadStartTimeNanos, boolean overload) {
+    private ThroughputEvent createThroughputEvent(long nowNanoTime, long passedCount, long deniedCount, long overloadNanos, long overloadStartTimeNanos,
+            boolean overload) {
         long intervalNanos = nowNanoTime - lastEvent.sysTimeNanos;
         long totalElapsedNanos = nowNanoTime - firstCheckTimeNanos;
         double totalPerSecondThroughput = 0;
         if (totalElapsedNanos > 0) {
-            totalPerSecondThroughput = (((double) (passedCount - firstCheckTimePassedCount)) / totalElapsedNanos)
-                    * MiscUtils.BILLION;
+            totalPerSecondThroughput = (((double) (passedCount - firstCheckTimePassedCount)) / totalElapsedNanos) * MiscUtils.BILLION;
         }
         double currentPerSecondThroughput = 0;
         if (intervalNanos > 0) {
-            currentPerSecondThroughput = (((double) (passedCount - lastEvent.passedCount)) / intervalNanos)
-                    * MiscUtils.BILLION;
+            currentPerSecondThroughput = (((double) (passedCount - lastEvent.passedCount)) / intervalNanos) * MiscUtils.BILLION;
         }
         if (overload) {
             overloadNanos = computeOverloadNanosWithDelta(nowNanoTime, overloadNanos, overloadStartTimeNanos);
@@ -178,14 +179,15 @@ public final class ThroughputCheckerThread extends Thread {
             overloadNanos = overloadNanos - lastCheckOverloadNanos;
         }
         overloadNanos = adjustComputedOverloadTime(overloadNanos, intervalNanos);
-        ThroughputEvent newEvent = new ThroughputEvent(nowNanoTime, intervalNanos, overloadNanos, passedCount,
-                deniedCount, currentPerSecondThroughput, totalPerSecondThroughput, overload);
+        ThroughputEvent newEvent = new ThroughputEvent(nowNanoTime, intervalNanos, overloadNanos, passedCount, deniedCount, currentPerSecondThroughput,
+                totalPerSecondThroughput, overload);
         return newEvent;
     }
 
     /**
-     * It can happen due to the massive concurrency that the estimated overload time is bigger than the interval or even
-     * negative. These bad values will be adjusted properly.
+     * It can happen due to the massive concurrency that the estimated overload time is bigger than the interval or even negative. These bad values will be
+     * adjusted properly.
+     * 
      * @param overloadNanos computed overload time in nanoseconds during the interval
      * @param intervalNanos duration of the interval in nanoseconds
      * @return adjusted plausible overload time
@@ -202,10 +204,10 @@ public final class ThroughputCheckerThread extends Thread {
 
     /**
      * In overload state we compute the estimated overload nanos including the current delta to the overload start time.
+     * 
      * @param nowNanoTime current time in nanoseconds, see {@link MiscUtils#getSystemUptimeNanos()}
      * @param overloadNanos estimated time in nanoseconds the limiter was overloaded during the past interval
-     * @param overloadStartTimeNanos start time in nanoseconds the overload phase started, see
-     *            {@link MiscUtils#getSystemUptimeNanos()}
+     * @param overloadStartTimeNanos start time in nanoseconds the overload phase started, see {@link MiscUtils#getSystemUptimeNanos()}
      * @return overload time in past interval in nanoseconds
      */
     private long computeOverloadNanosWithDelta(long nowNanoTime, long overloadNanos, long overloadStartTimeNanos) {

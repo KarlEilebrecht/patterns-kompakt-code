@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Identity Field Test - demonstrates compound key in IDENTITY FIELD pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identityfield;
 
 import static org.junit.Assert.assertEquals;
@@ -31,14 +33,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.identityfield.CompoundKey;
-import de.calamanari.pk.identityfield.DataManager;
-import de.calamanari.pk.identityfield.Entity;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Identity Field Test - demonstrates compound key in IDENTITY FIELD pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class IdentityFieldTest {
@@ -88,8 +88,7 @@ public class IdentityFieldTest {
         assertFalse(e4711.equals(e4799));
         assertEquals("Entity({id=CompoundKey([47, 11]), x='Marty', y='McFly'})", e4711.toString());
         assertEquals("Entity({id=CompoundKey([47, 99]), x='Ernie', y='Bert'})", e4799.toString());
-        LOGGER.info("Test identity field successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test identity field successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
     @Test
@@ -143,8 +142,7 @@ public class IdentityFieldTest {
             assertEquals(i, keyMap.get(key).intValue());
         }
 
-        LOGGER.info("Test compound key successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test compound key successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

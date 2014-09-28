@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Pool thread
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.objectpool;
 
 import java.util.logging.Logger;
 
 /**
  * Managed thread for pooling.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PoolThread extends Thread {
@@ -34,7 +37,7 @@ public class PoolThread extends Thread {
      * number of digits in hashcode
      */
     private static final int HASH_CODE_LENGTH = 8;
-    
+
     /**
      * Thread knows the pool it is owned by.
      */
@@ -46,8 +49,7 @@ public class PoolThread extends Thread {
     private final Object lock = new Object();
 
     /**
-     * Runnable to be executed by the thread. The variable is declared volatile to be sure the thread sees the new
-     * content after notification.
+     * Runnable to be executed by the thread. The variable is declared volatile to be sure the thread sees the new content after notification.
      */
     private volatile Runnable job = null;
 
@@ -57,8 +59,7 @@ public class PoolThread extends Thread {
     private volatile long jobStartTimeMillis = 0;
 
     /**
-     * This flag will be set to true if a thread should be removed from the pool and thus no longer execute new jobs.
-     * Guarded by LOCK.
+     * This flag will be set to true if a thread should be removed from the pool and thus no longer execute new jobs. Guarded by LOCK.
      */
     private boolean disposed = false;
 
@@ -71,6 +72,7 @@ public class PoolThread extends Thread {
      * Constructor<br>
      * Creates a new thread.<br>
      * The thread is configured to be a deamon.
+     * 
      * @param threadPool backward reference to the pool for interaction.
      */
     protected PoolThread(SimpleThreadPool threadPool) {
@@ -81,6 +83,7 @@ public class PoolThread extends Thread {
 
     /**
      * This method will be EXCLUSIVELY called by job management to set the next job.
+     * 
      * @param nextJob some runnable
      */
     protected void setNextJob(Runnable nextJob) {
@@ -132,6 +135,7 @@ public class PoolThread extends Thread {
 
     /**
      * Returns the time when the current job execution was started.
+     * 
      * @return execution start time of current job, 0 if no job is currently executing
      */
     protected long getJobStartTimeMillis() {

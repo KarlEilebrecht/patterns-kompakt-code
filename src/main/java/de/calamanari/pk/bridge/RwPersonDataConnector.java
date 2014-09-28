@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Rw Person Data Connector
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,15 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge;
 
 import java.util.logging.Logger;
 
 /**
- * Rw Person Data Connector - this is a subclass in the main hierarchy, which evolves independently from the
- * "bridged-out" hierarchy.<br>
- * In this example the subclass adds additional behavior based on the super class and the "bridged-out" core
- * functionality.
+ * Rw Person Data Connector - this is a subclass in the main hierarchy, which evolves independently from the "bridged-out" hierarchy.<br>
+ * In this example the subclass adds additional behavior based on the super class and the "bridged-out" core functionality.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class RwPersonDataConnector extends PersonDataConnector {
@@ -35,6 +36,7 @@ public class RwPersonDataConnector extends PersonDataConnector {
 
     /**
      * Creates new RwPersonDataConnector
+     * 
      * @param personDataConnectorImp implementation
      */
     public RwPersonDataConnector(PersonDataConnectorImp personDataConnectorImp) {
@@ -43,6 +45,7 @@ public class RwPersonDataConnector extends PersonDataConnector {
 
     /**
      * Creates or updates the given person and returns the person id, which will also be set to the person
+     * 
      * @param person instance to be created
      * @return person id
      */
@@ -70,6 +73,7 @@ public class RwPersonDataConnector extends PersonDataConnector {
 
     /**
      * Creates an address object with the field values from the given person and sets the new addressId at the person
+     * 
      * @param person instance to create address for
      */
     private void createAddress(XyPerson person) {
@@ -84,6 +88,7 @@ public class RwPersonDataConnector extends PersonDataConnector {
 
     /**
      * Updates the address object with field values from the the person
+     * 
      * @param address instance to be updated
      * @param person source data
      */

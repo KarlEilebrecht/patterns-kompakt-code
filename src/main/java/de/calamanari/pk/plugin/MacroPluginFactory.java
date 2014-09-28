@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Macro plugin Factory
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin;
 
 import java.io.File;
@@ -28,6 +30,7 @@ import java.util.logging.Logger;
 
 /**
  * Macro plugin factory finds, initializes and manages plugins.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MacroPluginFactory {
@@ -54,6 +57,7 @@ public class MacroPluginFactory {
 
     /**
      * Creates a new Factory for finding and managing the system's plugins.
+     * 
      * @param frameworkReference reference to the framework which will be passed to the plugins
      */
     public MacroPluginFactory(MacroPluginFramework frameworkReference) {
@@ -65,6 +69,7 @@ public class MacroPluginFactory {
 
     /**
      * Returns plugin for the given macro
+     * 
      * @param macroName name of the requested macro
      * @return plugin for the macro
      */
@@ -75,8 +80,7 @@ public class MacroPluginFactory {
             List<String> allMacros = new ArrayList<>(macroPluginLookup.keySet());
             Collections.sort(allMacros);
             // hmm, very lazy, here we better should work with a checked exception :-)
-            throw new RuntimeException("No plugin available for macro '" + macroName
-                    + "',\nThe following macros are currently supported: " + allMacros);
+            throw new RuntimeException("No plugin available for macro '" + macroName + "',\nThe following macros are currently supported: " + allMacros);
         }
         return plugin;
     }
@@ -125,6 +129,7 @@ public class MacroPluginFactory {
 
     /**
      * Find all plugins in the given plugin-folder
+     * 
      * @param pluginFolder the folder (package) where plugin classes are located
      * @return list of plugin names (simple class names)
      */
@@ -143,14 +148,15 @@ public class MacroPluginFactory {
 
     /**
      * Installs the plugins
+     * 
      * @param pluginPackageName package of the plugins
      * @param pluginNames simple class names
      * @throws ClassNotFoundException if specified class could not be found
      * @throws InstantiationException if plugin-class could not be instantiated
      * @throws IllegalAccessException if there was a problem with the accessibility of the plugin's methods or properties
      */
-    private void installPlugins(String pluginPackageName, ArrayList<String> pluginNames) throws ClassNotFoundException,
-            InstantiationException, IllegalAccessException {
+    private void installPlugins(String pluginPackageName, ArrayList<String> pluginNames) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
         Collections.sort(pluginNames);
         ClassLoader loader = getThisClassLoader();
         for (String pluginName : pluginNames) {
@@ -160,12 +166,11 @@ public class MacroPluginFactory {
                 MacroPlugin plugin = (MacroPlugin) pluginClass.newInstance();
                 if (plugin.getMacros().length > 0) {
                     availablePlugins.add(plugin);
-                    LOGGER.info("Plugin installed: name=" + plugin.getName() + ",  version=" + plugin.getVersion()
-                            + ", vendor=" + plugin.getVendor());
+                    LOGGER.info("Plugin installed: name=" + plugin.getName() + ",  version=" + plugin.getVersion() + ", vendor=" + plugin.getVendor());
                 }
                 else {
-                    LOGGER.warning("Plugin skipped (no makros): name=" + plugin.getName() + ",  version="
-                            + plugin.getVersion() + ", vendor=" + plugin.getVendor());
+                    LOGGER.warning("Plugin skipped (no makros): name=" + plugin.getName() + ",  version=" + plugin.getVersion() + ", vendor="
+                            + plugin.getVendor());
                 }
             }
         }
@@ -173,6 +178,7 @@ public class MacroPluginFactory {
 
     /**
      * Returns the class loader that loaded <i>this</i> class
+     * 
      * @return class loader
      */
     private ClassLoader getThisClassLoader() {
@@ -185,6 +191,7 @@ public class MacroPluginFactory {
 
     /**
      * This method derives the plugin-folder
+     * 
      * @return folder to look for plugins
      */
     private File determinePluginFolder() {

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Example Reusable Object
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.objectpool;
 
 import java.util.logging.Logger;
@@ -23,6 +25,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Example reusable object for being pooled
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ExampleReusableObject {
@@ -36,7 +39,7 @@ public class ExampleReusableObject {
      * load simulation delay
      */
     private static final long CREATION_DELAY_MILLIS = 4000;
-    
+
     /**
      * the internal "state" which cannot be shared between threads
      */
@@ -56,6 +59,7 @@ public class ExampleReusableObject {
 
     /**
      * some operation the reusable object provides.
+     * 
      * @return result of operation
      */
     public String computeResult() {

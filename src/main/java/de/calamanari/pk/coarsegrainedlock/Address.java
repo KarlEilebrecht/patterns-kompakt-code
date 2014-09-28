@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address - entity in COARSE GRAINED LOCK example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.coarsegrainedlock;
 
 /**
  * Address - entity in COARSE GRAINED LOCK example
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Address {
@@ -50,6 +53,7 @@ public class Address {
 
     /**
      * Creates a new Address using the given parameters
+     * 
      * @param id identifier
      * @param customerId related person identifier
      * @param street address field
@@ -66,6 +70,7 @@ public class Address {
 
     /**
      * Returns address id
+     * 
      * @return address id
      */
     public String getId() {
@@ -74,6 +79,7 @@ public class Address {
 
     /**
      * Returns the related customer id
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -82,6 +88,7 @@ public class Address {
 
     /**
      * Returns the street
+     * 
      * @return street
      */
     public String getStreet() {
@@ -90,6 +97,7 @@ public class Address {
 
     /**
      * Sets the street
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -98,6 +106,7 @@ public class Address {
 
     /**
      * Returns the city
+     * 
      * @return city name
      */
     public String getCity() {
@@ -106,6 +115,7 @@ public class Address {
 
     /**
      * Sets the city
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -114,6 +124,7 @@ public class Address {
 
     /**
      * Returns the zip code
+     * 
      * @return zip code
      */
     public String getZipCode() {
@@ -122,6 +133,7 @@ public class Address {
 
     /**
      * Sets the zip code
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -130,8 +142,8 @@ public class Address {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({id='" + id + "', customerId='" + customerId + "', street='"
-                + street + "', zipCode='" + zipCode + "', city='" + city + "'})";
+        return this.getClass().getSimpleName() + "({id='" + id + "', customerId='" + customerId + "', street='" + street + "', zipCode='" + zipCode
+                + "', city='" + city + "'})";
     }
 
 }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Query Request Future - demonstrates ACTIVE OBJECT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.activeobject;
 
 import java.util.List;
@@ -22,8 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Query Request Future - allows the client to check the status and finally to retrieve the result of the scheduled
- * operation.
+ * Query Request Future - allows the client to check the status and finally to retrieve the result of the scheduled operation.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class QueryRequestFuture {
@@ -40,6 +42,7 @@ public class QueryRequestFuture {
 
     /**
      * Creates a new Future based on the request data
+     * 
      * @param queryRequest objectified request which has to be observed
      */
     public QueryRequestFuture(QueryRequest queryRequest) {
@@ -48,6 +51,7 @@ public class QueryRequestFuture {
 
     /**
      * Returns the result if - and only if computation is done, otherwise null (non-blocking)
+     * 
      * @return result or null (if not completed or cancelled)
      */
     public List<String[]> getResult() {
@@ -73,6 +77,7 @@ public class QueryRequestFuture {
 
     /**
      * Determines whether the query is cancelled
+     * 
      * @return true if this query is cancelled
      */
     public boolean isQueryCancelled() {
@@ -83,6 +88,7 @@ public class QueryRequestFuture {
 
     /**
      * Determines whether the query has finished
+     * 
      * @return true if this query is done
      */
     public boolean isQueryDone() {

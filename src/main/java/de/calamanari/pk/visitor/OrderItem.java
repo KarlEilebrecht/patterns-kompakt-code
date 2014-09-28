@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Order Item - demonstrates VISITOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,11 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 /**
- * Order Item - one or more order items are assigned to one order, each item specifies a product and the amount.
- * Furthermore an order item can carry a promotion discount.
+ * Order Item - one or more order items are assigned to one order, each item specifies a product and the amount. Furthermore an order item can carry a promotion
+ * discount.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OrderItem {
@@ -51,6 +54,7 @@ public class OrderItem {
 
     /**
      * Creates new order item. If the order already contains an item for the specified product a merge will take place.
+     * 
      * @param order the order this item belongs to
      * @param product ordered product
      * @param amount number of items
@@ -58,14 +62,14 @@ public class OrderItem {
      * @param promotionDiscountPerc special promotion discount percentage
      * @return valid order item
      */
-    public static OrderItem createOrderItem(CustomerOrder order, String product, int amount, double pricePerUnit,
-            double promotionDiscountPerc) {
+    public static OrderItem createOrderItem(CustomerOrder order, String product, int amount, double pricePerUnit, double promotionDiscountPerc) {
         // a factory method allows us to handle the cases "new item" and "merged items" transparently for the caller
         return order.addOrMergeOrderItem(new OrderItem(product, amount, pricePerUnit, promotionDiscountPerc));
     }
 
     /**
      * Creates new order item
+     * 
      * @param product ordered product
      * @param amount number of items
      * @param pricePerUnit price of one item
@@ -80,6 +84,7 @@ public class OrderItem {
 
     /**
      * Returns the product this item carries
+     * 
      * @return product
      */
     public String getProduct() {
@@ -88,6 +93,7 @@ public class OrderItem {
 
     /**
      * Returns the amount (number of units) this item carries
+     * 
      * @return amount
      */
     public int getAmount() {
@@ -96,6 +102,7 @@ public class OrderItem {
 
     /**
      * Sets the amount (number of units) to be ordered
+     * 
      * @param amount number of units
      */
     public void setAmount(int amount) {
@@ -104,6 +111,7 @@ public class OrderItem {
 
     /**
      * Returns the unit price
+     * 
      * @return unit price
      */
     public double getPricePerUnit() {
@@ -112,6 +120,7 @@ public class OrderItem {
 
     /**
      * Sets the unit price
+     * 
      * @param pricePerUnit price of one item
      */
     public void setPricePerUnit(double pricePerUnit) {
@@ -120,6 +129,7 @@ public class OrderItem {
 
     /**
      * Returns the optional promotion discount for this item
+     * 
      * @return promotion discount as percentage value
      */
     public double getPromotionDiscountPerc() {
@@ -128,6 +138,7 @@ public class OrderItem {
 
     /**
      * Sets the optional promotion discount for this item
+     * 
      * @param promotionDiscountPerc special promotion discount percentage
      */
     public void setPromotionDiscountPerc(double promotionDiscountPerc) {
@@ -136,6 +147,7 @@ public class OrderItem {
 
     /**
      * Returns the order this item belongs to
+     * 
      * @return order
      */
     public CustomerOrder getOrder() {
@@ -144,6 +156,7 @@ public class OrderItem {
 
     /**
      * Sets the order this item belongs to
+     * 
      * @param order related order
      */
     public void setOrder(CustomerOrder order) {
@@ -152,8 +165,8 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({product='" + product + "', amount=" + amount + ", pricePerUnit="
-                + pricePerUnit + ", promotionDiscountPerc=" + promotionDiscountPerc + "})";
+        return this.getClass().getSimpleName() + "({product='" + product + "', amount=" + amount + ", pricePerUnit=" + pricePerUnit
+                + ", promotionDiscountPerc=" + promotionDiscountPerc + "})";
     }
 
 }

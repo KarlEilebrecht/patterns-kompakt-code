@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Geo Bad Payer Info DTO Assembler - the TRANSFER OBJECT ASSEMBLER
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 /**
  * Geo Bad Payer Info DTO Assembler - the TRANSFER OBJECT ASSEMBLER<br>
  * The knowlegde which entities' data to query and which particular attributes to include has been centralized here.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class GeoBadPayerInfoDtoAssembler {
@@ -33,6 +36,7 @@ public class GeoBadPayerInfoDtoAssembler {
 
     /**
      * Creates new data transfer object for the customer
+     * 
      * @param customerId identifier
      * @return data transfer object or null if customer not found or no bad payer
      */
@@ -50,10 +54,9 @@ public class GeoBadPayerInfoDtoAssembler {
             if (dwhInfoEntity.isBadPayer()) {
                 if (customerEntity != null && addressEntity != null) {
                     LOGGER.fine("Creating data transfer object from entities customer, address and dwh information");
-                    res = new GeoBadPayerInfoDto(customerEntity.getCustomerId(), customerEntity.getTitle(),
-                            customerEntity.getLastName(), customerEntity.getFirstName(), addressEntity.getZipCode(),
-                            addressEntity.getCity(), addressEntity.getCountry(), dwhInfoEntity.getCustomerType(),
-                            dwhInfoEntity.isDueInvoice());
+                    res = new GeoBadPayerInfoDto(customerEntity.getCustomerId(), customerEntity.getTitle(), customerEntity.getLastName(),
+                            customerEntity.getFirstName(), addressEntity.getZipCode(), addressEntity.getCity(), addressEntity.getCountry(),
+                            dwhInfoEntity.getCustomerType(), dwhInfoEntity.isDueInvoice());
                 }
             }
         }

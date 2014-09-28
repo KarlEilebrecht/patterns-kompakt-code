@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Data Manager - supplementary class for MAPPER demonstration
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper;
 
 import java.util.HashMap;
@@ -26,8 +28,8 @@ import de.calamanari.pk.mapper.firstsys.Person;
 import de.calamanari.pk.mapper.secondsys.Customer;
 
 /**
- * Data Manager - supplementary class for MAPPER demonstration, this is rather a placeholder for some way to deal with
- * the database.
+ * Data Manager - supplementary class for MAPPER demonstration, this is rather a placeholder for some way to deal with the database.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DataManager {
@@ -49,6 +51,7 @@ public class DataManager {
 
     /**
      * utility method to fill "test database"
+     * 
      * @param person instance of a person
      * @param address person's address
      */
@@ -60,6 +63,7 @@ public class DataManager {
 
     /**
      * Finds the customer according to the given id and adds it to session management
+     * 
      * @param session persistence session
      * @param customerId identifier
      * @return customer or null if not found

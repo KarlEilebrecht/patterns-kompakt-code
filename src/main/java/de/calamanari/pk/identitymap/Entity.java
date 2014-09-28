@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Entity - this interface must be implemented by all entities in the system
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identitymap;
 
 /**
  * Entity - this interface must be implemented by all entities in the system
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * @param <K> primary key type of the entity
  */
@@ -26,6 +29,7 @@ public interface Entity<K> {
 
     /**
      * Returns the ID (primary key) of the entity
+     * 
      * @return id
      */
     public K getId();

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * EmbeddedJavaDbDataSource
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.db;
 
 import java.io.File;
@@ -39,9 +41,9 @@ import javax.sql.DataSource;
  * Pseudo-{@link DataSource} (SINGLETON) to access embedded Java DB.
  * <p>
  * <b>Important:</b><br>
- * The way we access the <i>EmbeddedDriver</i> here is a hack, which avoids changing the class-path before running the
- * example tests. However, to cut corners in this way (digging out the derby.jar) is only acceptable for demonstration
- * purposes but never ever for production code!
+ * The way we access the <i>EmbeddedDriver</i> here is a hack, which avoids changing the class-path before running the example tests. However, to cut corners in
+ * this way (digging out the derby.jar) is only acceptable for demonstration purposes but never ever for production code!
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class EmbeddedJavaDbDataSource implements DataSource {
@@ -74,11 +76,11 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
     /**
      * JDBC-URL for the embedded derby database
      */
-    public static final String EMBEDDED_JAVADB_JDBC_URL = "jdbc:derby:" + new File(DERBY_DIR, "pkdb").toString()
-            + ";create=true";
+    public static final String EMBEDDED_JAVADB_JDBC_URL = "jdbc:derby:" + new File(DERBY_DIR, "pkdb").toString() + ";create=true";
 
     /**
      * By default the derby.jar is not on the class path, this method uses a hack to find it anyway.
+     * 
      * @return URL to derby.jar
      * @throws DerbyJarNotFoundException derby.jar not found
      */
@@ -122,6 +124,7 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
 
     /**
      * Returns the only instance, a SINGLETON
+     * 
      * @return datasource instance
      */
     public static synchronized EmbeddedJavaDbDataSource getInstance() {
@@ -136,6 +139,7 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
      */
     private EmbeddedJavaDbDataSource() {
         try {
+            @SuppressWarnings("resource")
             ClassLoader loader = URLClassLoader.newInstance(new URL[] { findDerbyJar() });
             final Driver driver = (Driver) Class.forName(EMBEDDED_JAVADB_DRIVER_NAME, true, loader).newInstance();
 
@@ -224,8 +228,7 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        LOGGER.finest("Creating connection to '" + EMBEDDED_JAVADB_JDBC_URL + "' using Driver: "
-                + EMBEDDED_JAVADB_DRIVER_NAME);
+        LOGGER.finest("Creating connection to '" + EMBEDDED_JAVADB_JDBC_URL + "' using Driver: " + EMBEDDED_JAVADB_DRIVER_NAME);
         Connection con = DriverManager.getConnection(EMBEDDED_JAVADB_JDBC_URL);
         LOGGER.finest("Created connection.");
         return con;

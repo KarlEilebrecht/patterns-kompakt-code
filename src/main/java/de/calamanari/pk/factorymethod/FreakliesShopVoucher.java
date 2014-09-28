@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * FreakliesShop Voucher
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,13 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.factorymethod;
 
 import java.util.logging.Logger;
 
 /**
- * FreakliesShop Voucher (Voucher from the little shop owned by Mrs. Freakly in Chicago) is a concrete product in this
- * FACTORY METHOD example scenario.
+ * FreakliesShop Voucher (Voucher from the little shop owned by Mrs. Freakly in Chicago) is a concrete product in this FACTORY METHOD example scenario.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class FreakliesShopVoucher extends AbstractVoucher {
@@ -38,6 +40,7 @@ public class FreakliesShopVoucher extends AbstractVoucher {
 
     /**
      * Creates a new voucher.
+     * 
      * @param serialNumber identifies the voucher
      * @param firstName first name of the voucher owner
      * @param lastName last name of the voucher owner
@@ -58,12 +61,12 @@ public class FreakliesShopVoucher extends AbstractVoucher {
     @Override
     public String getVoucherDisplayCode() {
         LOGGER.fine("getVoucherDisplayCode() on concrete product " + this.getClass().getSimpleName() + " called.");
-        return "v" + this.getFirstName().toLowerCase().charAt(0) + this.getLastName().toLowerCase().charAt(0)
-                + serialNumber;
+        return "v" + this.getFirstName().toLowerCase().charAt(0) + this.getLastName().toLowerCase().charAt(0) + serialNumber;
     }
 
     /**
      * Returns the serialNumber that was specified initially.
+     * 
      * @return serial number of this FreakliesShop Voucher
      */
     public int getSerialNumber() {

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Template Method Test - demonstrates the TEMPLATE METHOD pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.templatemethod;
 
 import static org.junit.Assert.assertEquals;
@@ -31,15 +33,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.templatemethod.AbstractTemplateMethodStringCodec;
-import de.calamanari.pk.templatemethod.EchoServer;
-import de.calamanari.pk.templatemethod.ExampleTemplateMethodStringCodec;
 import de.calamanari.pk.util.ExternalProcessManager;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Template Method Test - demonstrates the TEMPLATE METHOD pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class TemplateMethodTest {
@@ -57,8 +57,7 @@ public class TemplateMethodTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, TemplateMethodTest.class, AbstractTemplateMethodStringCodec.class,
-                ExampleTemplateMethodStringCodec.class);
+        LogUtils.setLogLevel(LOG_LEVEL, TemplateMethodTest.class, AbstractTemplateMethodStringCodec.class, ExampleTemplateMethodStringCodec.class);
 
         // an external java-process for the EchoServer
         ExternalProcessManager.getInstance().startExternal(EchoServer.class, LOGGER);
@@ -91,8 +90,8 @@ public class TemplateMethodTest {
 
         assertEquals(testText, output2);
 
-        LOGGER.info("Test ExampleTemplateMethodStringCodec successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test ExampleTemplateMethodStringCodec successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
+                + " s");
 
     }
 
@@ -107,14 +106,9 @@ public class TemplateMethodTest {
         String answer1 = null;
         String answer2 = null;
 
-        Socket clientSocket = null;
-
-        try {
-
-            clientSocket = new Socket("localhost", EchoServer.DEFAULT_PORT);
-            PrintWriter bw = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-            BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
+        try (Socket clientSocket = new Socket("localhost", EchoServer.DEFAULT_PORT);
+                PrintWriter bw = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
             String inputLine = null;
             inputLine = br.readLine();
             LOGGER.info(inputLine);
@@ -134,19 +128,12 @@ public class TemplateMethodTest {
 
             inputLine = br.readLine();
             LOGGER.info(inputLine);
-
-            bw.close();
-            br.close();
-        }
-        finally {
-            MiscUtils.closeResourceCatch(clientSocket);
         }
 
         assertEquals(testText1, answer1);
         assertEquals(testText2, answer2);
 
-        LOGGER.info("Test EchoServer successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test EchoServer successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

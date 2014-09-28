@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Buffer Event
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.pfis;
 
 import java.nio.ByteBuffer;
 
 /**
  * BufferEvents are for communication between reader thread and main thread and vice-versa.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 final class BufferEvent {

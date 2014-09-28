@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Session - supplementary class
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identitymap;
 
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Session - supplementary class, the place where the IDENTITY MAPs reside in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Session {
@@ -51,6 +54,7 @@ public class Session {
 
     /**
      * Returns the current session from our simulated session management
+     * 
      * @return session
      */
     public static final Session getCurrentSession() {
@@ -59,6 +63,7 @@ public class Session {
 
     /**
      * This is used by the finder to lookup the corresponding identity map for an entity
+     * 
      * @param entityType class object of entity
      * @param <K> some key type
      * @param <E> some entity with key of corresponding type

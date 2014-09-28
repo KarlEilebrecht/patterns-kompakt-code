@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * External Process Manager
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.io.PrintWriter;
@@ -28,6 +30,7 @@ import java.util.logging.Logger;
 
 /**
  * This class (singleton) helps to start and stop external java program instances.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class ExternalProcessManager {
@@ -61,6 +64,7 @@ public final class ExternalProcessManager {
 
     /**
      * Returns manager instance
+     * 
      * @return the onley instance
      */
     public static ExternalProcessManager getInstance() {
@@ -69,13 +73,13 @@ public final class ExternalProcessManager {
 
     /**
      * Starts an external instance
+     * 
      * @param mainClass class to be executed (must provide main(arg[])-method NOT NULL
      * @param logger target for redirecting process console output NOT NULL
      * @param commandLineArgs optional arguments
      * @throws Exception on any error during start
      */
-    public synchronized void startExternal(Class<?> mainClass, Logger logger, String... commandLineArgs)
-            throws Exception {
+    public synchronized void startExternal(Class<?> mainClass, Logger logger, String... commandLineArgs) throws Exception {
 
         if (mainClass == null) {
             throw new IllegalArgumentException("Argument 'mainClass' must not be null.");
@@ -102,10 +106,8 @@ public final class ExternalProcessManager {
         ProcessBuilder pb = new ProcessBuilder(args);
 
         externalServerProcess = pb.start();
-        (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console",
-                externalServerProcess.getInputStream(), logger, Level.INFO)).start();
-        (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console",
-                externalServerProcess.getErrorStream(), logger, Level.INFO)).start();
+        (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console", externalServerProcess.getInputStream(), logger, Level.INFO)).start();
+        (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console", externalServerProcess.getErrorStream(), logger, Level.INFO)).start();
         externalServerProcesses.put(mainClass, externalServerProcess);
     }
 
@@ -113,14 +115,14 @@ public final class ExternalProcessManager {
      * Stops the running external instance.<br>
      * The system uses the input stream of the existing process, it will NOT execute "mainClass stopCommand"!<br>
      * If the process does not terminate it will be destroyed after approx. maxWaitTimeMillis.
+     * 
      * @param mainClass identifies the process
      * @param stopCommand quit command to send via process' input stream, if null/empty force termination
      * @param maxWaitTimeMillis maximum wait time in milliseconds, after this time the process will be killed
      * @return exit code or Integer.MIN_VALUE to indicate abnormal/forced termination
      * @throws Exception on any error while trying to stop
      */
-    public synchronized int stopExternal(Class<?> mainClass, String stopCommand, long maxWaitTimeMillis)
-            throws Exception {
+    public synchronized int stopExternal(Class<?> mainClass, String stopCommand, long maxWaitTimeMillis) throws Exception {
 
         if (mainClass == null) {
             throw new IllegalArgumentException("Argument 'mainClass' must not be null.");

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Team Model - the MODEL in this MVC-example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.modelviewcontroller;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Team Model - the MODEL in this MVC-example holding the member data of a team.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
@@ -37,7 +40,7 @@ public class TeamModel {
      * maximum number of members (usually this should be configurable)
      */
     private static final int MAX_NUMBER_OF_MEMBERS = 5;
-    
+
     /**
      * maintains the current members
      */
@@ -67,6 +70,7 @@ public class TeamModel {
 
     /**
      * Sets the model observer, one at a time
+     * 
      * @param observer model observer (replaces existing)
      */
     public void setModelObserver(TeamModelObserver observer) {
@@ -76,6 +80,7 @@ public class TeamModel {
 
     /**
      * Adds the member to the list
+     * 
      * @param member the member to add
      */
     public void add(String member) {
@@ -94,6 +99,7 @@ public class TeamModel {
 
     /**
      * Returns the member at the given position
+     * 
      * @param idx member position, 0-based
      * @return member or null if the member does not exist
      */
@@ -110,6 +116,7 @@ public class TeamModel {
 
     /**
      * Removes the specified member from the list
+     * 
      * @param idx member position, 0-based
      */
     public void remove(int idx) {
@@ -120,6 +127,7 @@ public class TeamModel {
 
     /**
      * Returns the model's size
+     * 
      * @return size
      */
     public int size() {

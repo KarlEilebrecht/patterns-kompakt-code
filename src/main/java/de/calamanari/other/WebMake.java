@@ -46,8 +46,8 @@ public class WebMake {
 
     private Map<String, String> javaDocReferenceMap = new HashMap<>();
 
-    private Set<String> excludeFileNames = new HashSet<>(Arrays.asList(new String[] { "class-use",
-            "package-frame.html", "package-summary.html", "package-tree.html", "package-use.html" }));
+    private Set<String> excludeFileNames = new HashSet<>(Arrays.asList(new String[] { "class-use", "package-frame.html", "package-summary.html",
+            "package-tree.html", "package-use.html" }));
 
     private static final String DEFAULT_INDENT = "    ";
 
@@ -97,8 +97,8 @@ public class WebMake {
         }
         System.out.println("" + rawDataList.size() + " items found");
         root = createDirectoryTree(rawDataList);
-        System.out.println(root.createString("", false, false, "Strukturmuster", "Verteilung", "Integration",
-                "Persistenz", "Datenbankschl&uuml;ssel", "Sonstige Patterns"));
+        System.out.println(root.createString("", false, false, "Strukturmuster", "Verteilung", "Integration", "Persistenz", "Datenbankschl&uuml;ssel",
+                "Sonstige Patterns"));
         rootContent = loadRootContent();
         System.out.println(rootContent);
         pkTemplate = loadPkPattern();
@@ -122,8 +122,7 @@ public class WebMake {
                     indexPatternFolder(patternTechName, file);
                 }
                 else {
-                    javaDocReferenceMap.put(patternTechName + "/" + fileName.substring(0, fileName.length() - 5),
-                            getRelativeJavaDocPath(file));
+                    javaDocReferenceMap.put(patternTechName + "/" + fileName.substring(0, fileName.length() - 5), getRelativeJavaDocPath(file));
                 }
             }
         }
@@ -209,9 +208,8 @@ public class WebMake {
             mapString = sb.toString();
         }
 
-        String link = indent + "<p />\n" + indent + "<div style=\"overflow:auto;width:675px;\">\n" + indent
-                + DEFAULT_INDENT + "<img src=\"./images/" + imageFileName + "\" " + usemap + "border=\"0\"/>"
-                + mapString + "\n" + indent + "</div>\n" + indent + "<p />";
+        String link = indent + "<p />\n" + indent + "<div style=\"overflow:auto;width:675px;\">\n" + indent + DEFAULT_INDENT + "<img src=\"./images/"
+                + imageFileName + "\" " + usemap + "border=\"0\"/>" + mapString + "\n" + indent + "</div>\n" + indent + "<p />";
         return link;
     }
 
@@ -226,10 +224,9 @@ public class WebMake {
         fileContent = fileContent.replace("root::", "");
         fileContent = fileContent.replace("date::", today);
         fileContent = fileContent.replace("year::", year);
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "ISO-8859-1"));
-
-        bw.write(fileContent);
-        bw.close();
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "ISO-8859-1"))) {
+            bw.write(fileContent);
+        }
 
     }
 
@@ -264,9 +261,8 @@ public class WebMake {
         DirNode categoryNode = findCategoryNode(category.categoryName);
         for (DirNode node : categoryNode.subNodes) {
             RawData patternRawData = findPatternRawData(node, rawDataList);
-            content = content + node.createString(DEFAULT_INDENT, true, false) + "<dd><i>"
-                    + patternRawData.patternDescription + "</i><p align=\"right\">siehe: "
-                    + createLinx(patternRawData.bookRefs) + "</p></dd>\n";
+            content = content + node.createString(DEFAULT_INDENT, true, false) + "<dd><i>" + patternRawData.patternDescription
+                    + "</i><p align=\"right\">siehe: " + createLinx(patternRawData.bookRefs) + "</p></dd>\n";
         }
         content = content + "</dl>\n";
         String fileContent = pkTemplate.replace("directory::", directory);
@@ -275,10 +271,9 @@ public class WebMake {
         fileContent = fileContent.replace("date::", today);
         fileContent = fileContent.replace("year::", year);
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "ISO-8859-1"));
-        bw.write(fileContent);
-        bw.close();
-
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "ISO-8859-1"))) {
+            bw.write(fileContent);
+        }
     }
 
     private void createPatternPage(RawData pattern) throws Exception {
@@ -287,8 +282,7 @@ public class WebMake {
         String directory = root.createString("", false, false, pattern.categoryName, pattern.patternName);
 
         String content = "<h2>" + pattern.patternName + "</h2>\n";
-        content = content + "<i>" + pattern.patternDescription + "</i><p>siehe: " + createLinx(pattern.bookRefs)
-                + "</p>\n";
+        content = content + "<i>" + pattern.patternDescription + "</i><p>siehe: " + createLinx(pattern.bookRefs) + "</p>\n";
 
         String patternContent = "";
 
@@ -307,8 +301,7 @@ public class WebMake {
             }
         }
 
-        content = content
-                + "\n<h3>Ressourcen</h3><ul><li><a href=\"../patterns.htm#CODE\">Quellcode</a></li><li><a href=\""
+        content = content + "\n<h3>Ressourcen</h3><ul><li><a href=\"../patterns.htm#CODE\">Quellcode</a></li><li><a href=\""
                 + javaDocReferenceMap.get(pattern.patternTechName) + "\" target=\"_blank\">JavaDoc</a></li></ul>\n";
 
         String fileContent = pkTemplate.replace("directory::", directory);
@@ -317,9 +310,9 @@ public class WebMake {
         fileContent = fileContent.replace("date::", today);
         fileContent = fileContent.replace("year::", year);
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "ISO-8859-1"));
-        bw.write(fileContent);
-        bw.close();
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "ISO-8859-1"))) {
+            bw.write(fileContent);
+        }
 
     }
 
@@ -369,19 +362,18 @@ public class WebMake {
         StringBuilder sb = new StringBuilder();
         File rawRootPath = new File(rootPath, "patterns/raw");
         File rootContentFile = new File(rawRootPath, "zz_root.htm");
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(rootContentFile), "ISO-8859-1"));
         String line = null;
-        while ((line = br.readLine()) != null) {
-            line = line.trim();
-            if (line.length() > 0) {
-                if (sb.length() > 0) {
-                    sb.append("\n");
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rootContentFile), "ISO-8859-1"))) {
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.length() > 0) {
+                    if (sb.length() > 0) {
+                        sb.append("\n");
+                    }
+                    sb.append(escape(line));
                 }
-                sb.append(escape(line));
             }
         }
-        br.close();
         return sb.toString();
     }
 
@@ -389,17 +381,16 @@ public class WebMake {
         StringBuilder sb = new StringBuilder();
         File rawRootPath = new File(rootPath, "patterns/templates");
         File rootContentFile = new File(rawRootPath, "patterns-template.html");
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(rootContentFile), "ISO-8859-1"));
         String line = null;
-        while ((line = br.readLine()) != null) {
-            line = line.trim();
-            if (sb.length() > 0) {
-                sb.append("\n");
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rootContentFile), "ISO-8859-1"))) {
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (sb.length() > 0) {
+                    sb.append("\n");
+                }
+                sb.append(line);
             }
-            sb.append(line);
         }
-        br.close();
         return sb.toString();
 
     }
@@ -413,46 +404,44 @@ public class WebMake {
                 RawData data = new RawData();
                 data.patternTechName = rawFile.getName().substring(0, rawFile.getName().length() - 5);
                 res.add(data);
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(new FileInputStream(rawFile), "ISO-8859-1"));
                 String line = null;
-                while ((line = br.readLine()) != null) {
-                    line = line.trim();
-                    if (line.length() > 0) {
-                        if (line.startsWith("ord::")) {
-                            data.orderId = line.substring(5);
-                        }
-                        else {
-                            String h2 = extractReadAhead(line, br, "<h2>");
-                            if (h2 != null) {
-                                data.patternName = escape(h2);
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rawFile), "ISO-8859-1"))) {
+                    while ((line = br.readLine()) != null) {
+                        line = line.trim();
+                        if (line.length() > 0) {
+                            if (line.startsWith("ord::")) {
+                                data.orderId = line.substring(5);
                             }
                             else {
-                                String h5 = extractReadAhead(line, br, "<h5>");
-                                if (h5 != null) {
-                                    data.categoryName = escape(h5);
-                                    String categoryTechName = data.categoryName.replace(' ', '_')
-                                            .replace("&uuml;", "ue").toLowerCase();
-                                    data.categoryTechName = categoryTechName;
+                                String h2 = extractReadAhead(line, br, "<h2>");
+                                if (h2 != null) {
+                                    data.patternName = escape(h2);
                                 }
                                 else {
-                                    String h4 = extractReadAhead(line, br, "<h4>");
-                                    if (h4 != null) {
-                                        data.patternDescription = escape(h4);
-                                    }
-                                    else if (line.startsWith("ref::")) {
-                                        data.bookRefs = line.substring(5) + ",PK";
+                                    String h5 = extractReadAhead(line, br, "<h5>");
+                                    if (h5 != null) {
+                                        data.categoryName = escape(h5);
+                                        String categoryTechName = data.categoryName.replace(' ', '_').replace("&uuml;", "ue").toLowerCase();
+                                        data.categoryTechName = categoryTechName;
                                     }
                                     else {
-                                        data.contentLines.add(escape(line));
+                                        String h4 = extractReadAhead(line, br, "<h4>");
+                                        if (h4 != null) {
+                                            data.patternDescription = escape(h4);
+                                        }
+                                        else if (line.startsWith("ref::")) {
+                                            data.bookRefs = line.substring(5) + ",PK";
+                                        }
+                                        else {
+                                            data.contentLines.add(escape(line));
+                                        }
                                     }
                                 }
                             }
-                        }
 
+                        }
                     }
                 }
-                br.close();
             }
         }
 
@@ -524,10 +513,9 @@ public class WebMake {
 
         @Override
         public String toString() {
-            return "RawData [orderId=" + orderId + ", patternName=" + patternName + ", patternTechName="
-                    + patternTechName + ", patternDescription=" + patternDescription + ", categoryName=" + categoryName
-                    + ", categoryTechName=" + categoryTechName + ", bookRefs=" + bookRefs + ", contentLines="
-                    + contentLines + "]";
+            return "RawData [orderId=" + orderId + ", patternName=" + patternName + ", patternTechName=" + patternTechName + ", patternDescription="
+                    + patternDescription + ", categoryName=" + categoryName + ", categoryTechName=" + categoryTechName + ", bookRefs=" + bookRefs
+                    + ", contentLines=" + contentLines + "]";
         }
 
     }
@@ -607,9 +595,7 @@ public class WebMake {
                 else if (subNodes.size() > 0) {
                     res = res + "\n" + indent + DEFAULT_INDENT + "<ul>\n";
                     for (DirNode node : subNodes) {
-                        res = res
-                                + node.createString(indent + DEFAULT_INDENT + DEFAULT_INDENT, false,
-                                        linkFromRootFolder, selectedNodes) + "\n";
+                        res = res + node.createString(indent + DEFAULT_INDENT + DEFAULT_INDENT, false, linkFromRootFolder, selectedNodes) + "\n";
                     }
                     res = res + indent + DEFAULT_INDENT + "</ul>\n" + indent;
 

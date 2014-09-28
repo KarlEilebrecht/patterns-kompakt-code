@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Money Test - demonstrates MONEY pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.money;
 
 import static org.junit.Assert.assertEquals;
@@ -32,12 +34,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.money.Money;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Money Test - demonstrates MONEY pattern and consequences when ignoring the basic problem.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MoneyTest {
@@ -169,8 +171,7 @@ public class MoneyTest {
 
         // now, Harry, Laura and Ben decide to buy
         // something together
-        BigDecimal valueTogether = (new BigDecimal(sValueHarry)).add(new BigDecimal(sValueLaura)).add(
-                new BigDecimal(sValueBen));
+        BigDecimal valueTogether = (new BigDecimal(sValueHarry)).add(new BigDecimal(sValueLaura)).add(new BigDecimal(sValueBen));
 
         // but in the shop they get a problem, the price is 4.00 Euros ...
         assertEquals("3.99", nf2.format(valueTogether));
@@ -189,8 +190,7 @@ public class MoneyTest {
         // Methods allowing to specify the SCALE (like BigDecimal.divide) will be your
         // friends if you try to define the number of digits AFTER the decimal point.
 
-        LOGGER.info("Test Money Technical Basics successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Money Technical Basics successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -253,8 +253,7 @@ public class MoneyTest {
         // ok, now it works
         assertEquals("4.00 EUR", valueTogether.toString());
 
-        LOGGER.info("Test Money successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Money successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

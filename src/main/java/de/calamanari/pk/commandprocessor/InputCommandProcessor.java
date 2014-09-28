@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Input Command Processor - a COMMAND PROCESSOR for InputCommands.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.commandprocessor;
 
 import java.util.Stack;
@@ -24,6 +26,7 @@ import de.calamanari.pk.command.InputCommand;
 
 /**
  * Input Command Processor - a COMMAND PROCESSOR for InputCommands.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class InputCommandProcessor {
@@ -45,6 +48,7 @@ public class InputCommandProcessor {
 
     /**
      * executes the given command
+     * 
      * @param command input command to be executed
      */
     public void execute(InputCommand command) {
@@ -55,6 +59,7 @@ public class InputCommandProcessor {
 
     /**
      * Undoes the last command
+     * 
      * @return true if an operation was undone
      */
     public boolean undo() {
@@ -74,6 +79,7 @@ public class InputCommandProcessor {
 
     /**
      * Re-does the last command that was undone.
+     * 
      * @return true if an operation was re-done
      */
     public boolean redo() {

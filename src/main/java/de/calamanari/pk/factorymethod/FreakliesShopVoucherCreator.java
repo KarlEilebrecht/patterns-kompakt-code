@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * FreakliesShop Voucher Creator
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.factorymethod;
 
 import java.util.logging.Logger;
 
 /**
  * FreakliesShop Voucher Creator is a concrete creator in this FACTORY METHOD example scenario.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class FreakliesShopVoucherCreator extends AbstractVoucherCreator {
@@ -34,7 +37,7 @@ public class FreakliesShopVoucherCreator extends AbstractVoucherCreator {
      * Numbers will start with {@value} + 1;
      */
     private static final int START_NUMBER = 11_111_111;
-    
+
     /**
      * this should be some kind of number generator, of course ...
      */

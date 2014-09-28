@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Input Command - to be extended by concrete COMMANDs.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.command;
 
 /**
  * Input Command - to be extended by concrete COMMANDs.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class InputCommand {
@@ -30,6 +33,7 @@ public abstract class InputCommand {
 
     /**
      * Creates new input command
+     * 
      * @param receiver the component we delegate to for executing the action
      */
     public InputCommand(TextComponent receiver) {

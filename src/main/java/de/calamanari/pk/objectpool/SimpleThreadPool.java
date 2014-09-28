@@ -1,5 +1,6 @@
+//@formatter:off
 /*
- * Simple Thread Pool 
+ * Simple Thread Pool
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.objectpool;
 
 import java.util.ArrayList;
@@ -22,10 +24,10 @@ import java.util.logging.Logger;
 
 /**
  * Simple Thread-Pool implementation using worker pool threads.<br>
- * I originally wrote this class in 2004 and although nowadays using the Executors framework (java.util.concurrent)
- * should be preferred(!), this simple thread pool is still a good example of an object pool maintaining expensive
- * objects (the threads), to be handed out to a caller for exclusive use and to be returned afterwards to the pool for
- * later reuse.
+ * I originally wrote this class in 2004 and although nowadays using the Executors framework (java.util.concurrent) should be preferred(!), this simple thread
+ * pool is still a good example of an object pool maintaining expensive objects (the threads), to be handed out to a caller for exclusive use and to be returned
+ * afterwards to the pool for later reuse.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SimpleThreadPool {
@@ -46,8 +48,7 @@ public class SimpleThreadPool {
     public static final int DEFAULT_MIN_THREADS = 1;
 
     /**
-     * Default value for incrementing the number of threads, if no more available and maximum not yet reached ({@value}
-     * )
+     * Default value for incrementing the number of threads, if no more available and maximum not yet reached ({@value} )
      */
     public static final int DEFAULT_INCREMENT = 1;
 
@@ -57,8 +58,8 @@ public class SimpleThreadPool {
     private final Object idleListLock = new Object();
 
     /**
-     * This lock will be used if the pool is exhausted (pool empty and maximum allowed threads out). Then we'll have to
-     * wait until the next thread will be returned.
+     * This lock will be used if the pool is exhausted (pool empty and maximum allowed threads out). Then we'll have to wait until the next thread will be
+     * returned.
      */
     private Object poolLock = new Object();
 
@@ -101,9 +102,9 @@ public class SimpleThreadPool {
 
     /**
      * Creates a new pool with the given values.<br>
-     * With incThreads the caller can configure the increment steps. If the distance between minThreads and maxThreads
-     * is not divisible by incThreads without remainder, we increase minThreads to fit. The specified number of threads
-     * will be initialized but not yet started, this will happen on first usage.
+     * With incThreads the caller can configure the increment steps. If the distance between minThreads and maxThreads is not divisible by incThreads without
+     * remainder, we increase minThreads to fit. The specified number of threads will be initialized but not yet started, this will happen on first usage.
+     * 
      * @param minThreads initial number of threads in the pool
      * @param maxThreads maximum number of threads in the pool
      * @param incThreads count of threads for pool increment until maximum is reached.
@@ -111,10 +112,8 @@ public class SimpleThreadPool {
      */
     public SimpleThreadPool(int minThreads, int maxThreads, int incThreads, boolean warmUp) {
         if (minThreads < 0 || maxThreads < minThreads || (minThreads + maxThreads) == 0 || incThreads < 0) {
-            throw new IllegalArgumentException("minThreads=" + minThreads + ", maxThreads=" + maxThreads
-                    + ", incThreads=" + incThreads
-                    + " not allowed (expected: minThreads >= 0, maxThreads >= minThreads, "
-                    + "(minThreads + maxThreads) > 0, incThreads >= 0).");
+            throw new IllegalArgumentException("minThreads=" + minThreads + ", maxThreads=" + maxThreads + ", incThreads=" + incThreads
+                    + " not allowed (expected: minThreads >= 0, maxThreads >= minThreads, " + "(minThreads + maxThreads) > 0, incThreads >= 0).");
         }
         if (incThreads + minThreads > maxThreads) {
             throw new IllegalArgumentException("(minThreads + incThreads) > maxThreads not allowed");
@@ -135,6 +134,7 @@ public class SimpleThreadPool {
     /**
      * Initializes the pool according to the settings.<br>
      * We create the minimum number of threads.
+     * 
      * @param warmUp if true, all threads will be started initially
      */
     protected void initialize(boolean warmUp) {
@@ -162,6 +162,7 @@ public class SimpleThreadPool {
     /**
      * Creates a new pool thread.<br>
      * Subclasses may override this method to return their own PoolThread (subclass) implementation.
+     * 
      * @return new pool thread instance.
      */
     protected PoolThread createNewPoolThread() {
@@ -172,6 +173,7 @@ public class SimpleThreadPool {
      * The FACTORY METHOD returns a Thread for executing the given Runnable. <br>
      * After the job is done the thread returns ITSELF to the pool. <br>
      * If the pool is exhausted, the method blocks until the next thread becomes available.
+     * 
      * @param job Runnable to be executed, null is allowed (for warm-up only)
      * @return configured Thread (client must call start())
      */
@@ -183,15 +185,15 @@ public class SimpleThreadPool {
 
     /**
      * This method checks the pool and will resize it if necessary and possible.<br>
-     * If the number of available threads is greater than (minThreads+incThreads), we will remove incThreads threads
-     * from the pool.
+     * If the number of available threads is greater than (minThreads+incThreads), we will remove incThreads threads from the pool.
+     * 
      * @return number of currently available threads in the pool
      */
     protected int checkIdleThreads() {
         synchronized (idleListLock) {
             if (idleThreads.size() > (minThreads + incThreads)) {
                 for (int i = 0; i < incThreads; i++) {
-                    PoolThread thread = (PoolThread) idleThreads.remove(idleThreads.size() - 1);
+                    PoolThread thread = idleThreads.remove(idleThreads.size() - 1);
                     thread.dispose();
                     threadCount--;
                 }
@@ -210,16 +212,16 @@ public class SimpleThreadPool {
 
     /**
      * Returns the next available thread from the pool.<br>
-     * If required the pool gets resized. If resizing is not possible, this method blocks until a thread has been
-     * returned to the pool by a client.
+     * If required the pool gets resized. If resizing is not possible, this method blocks until a thread has been returned to the pool by a client.
+     * 
      * @return PoolThread from the pool
      */
     protected synchronized PoolThread getNextAvailableThread() {
         PoolThread thread = null;
-        while (thread == null) {
+        while (true) {
             synchronized (idleListLock) {
                 if (checkIdleThreads() > 0) {
-                    thread = (PoolThread) idleThreads.remove(idleThreads.size() - 1);
+                    thread = idleThreads.remove(idleThreads.size() - 1);
                     break;
                 }
             }
@@ -242,6 +244,7 @@ public class SimpleThreadPool {
     /**
      * Return the pool thread to the idle pool.<br>
      * This method MUST ONLY be called by pool threads!
+     * 
      * @param poolThread idle thread to be returned to idle pool
      */
     protected void returnThreadToIdlePool(PoolThread poolThread) {
@@ -255,6 +258,7 @@ public class SimpleThreadPool {
 
     /**
      * Returns the internal thread group backing the pool's current threads.
+     * 
      * @return thread group all pool threads belong to
      */
     public ThreadGroup getThreadGroup() {
@@ -264,6 +268,7 @@ public class SimpleThreadPool {
     /**
      * Returns the number of threads maintained by the pool (idle + working).<br>
      * <b>Note:</b> To avoid deadlocks, this method should not be called from inside worker-Runnables.
+     * 
      * @return number of threads
      */
     public int getThreadCount() {
@@ -275,6 +280,7 @@ public class SimpleThreadPool {
     /**
      * Returns an int array [total number of threads, number of working threads, number of idle threads].<br>
      * <b>Note:</b> To avoid deadlocks, this method should not be called from inside worker-Runnables.
+     * 
      * @return [total, working, idle]
      */
     public int[] getPoolInfo() {

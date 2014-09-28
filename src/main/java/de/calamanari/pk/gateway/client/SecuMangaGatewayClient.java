@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * SecuManga Gateway Client Interface
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,16 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.gateway.client;
 
 /**
  * SecuManga Gateway Client interface, this additional interface helps to create mocks for testing "client-only".
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface SecuMangaGatewayClient {
 
     /**
      * Scrambles the given text using SecuManga via the gateway
+     * 
      * @param text data to be scrambled
      * @return scrambled text
      */
@@ -32,6 +36,7 @@ public interface SecuMangaGatewayClient {
 
     /**
      * Unscrambles the given text using SecuManga via the gateway
+     * 
      * @param text data to be restored
      * @return clear text
      */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Registry test - demonstrates the REGISTRY pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.registry;
 
 import static org.junit.Assert.assertEquals;
@@ -26,12 +28,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.registry.PropertyRegistry;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Registry test - demonstrates the REGISTRY pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class RegistryTest {
@@ -96,8 +98,7 @@ public class RegistryTest {
 
         assertEquals("Host: TREADSTONE, secure: true", s);
 
-        LOGGER.info("Test Registry successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Registry successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

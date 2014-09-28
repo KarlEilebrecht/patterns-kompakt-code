@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge;
 
 /**
  * Address - an object in this scenario (supplementary).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Address {
@@ -57,6 +60,7 @@ public class Address {
 
     /**
      * Creates a new Address using the given parameters
+     * 
      * @param id address identifier
      * @param personId identifier of the related person
      * @param street address field
@@ -73,6 +77,7 @@ public class Address {
 
     /**
      * Sets the id of this address entity
+     * 
      * @param id address id
      */
     public void setId(String id) {
@@ -81,6 +86,7 @@ public class Address {
 
     /**
      * Returns address id
+     * 
      * @return address id
      */
     public String getId() {
@@ -89,6 +95,7 @@ public class Address {
 
     /**
      * Returns the related person id
+     * 
      * @return person id
      */
     public String getPersonId() {
@@ -97,6 +104,7 @@ public class Address {
 
     /**
      * Sets the person id (owner)
+     * 
      * @param personId person identifier
      */
     public void setPersonId(String personId) {
@@ -105,6 +113,7 @@ public class Address {
 
     /**
      * Returns the street
+     * 
      * @return street
      */
     public String getStreet() {
@@ -113,6 +122,7 @@ public class Address {
 
     /**
      * Sets the street
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -121,6 +131,7 @@ public class Address {
 
     /**
      * Returns the city
+     * 
      * @return city name
      */
     public String getCity() {
@@ -129,6 +140,7 @@ public class Address {
 
     /**
      * Sets the city
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -137,6 +149,7 @@ public class Address {
 
     /**
      * Returns the zip code
+     * 
      * @return zip code
      */
     public String getZipCode() {
@@ -145,6 +158,7 @@ public class Address {
 
     /**
      * Sets the zip code
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {

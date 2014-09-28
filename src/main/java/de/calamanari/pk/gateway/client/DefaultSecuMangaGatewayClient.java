@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * SecuManga Gateway Client
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.gateway.client;
 
 import java.net.MalformedURLException;
@@ -27,6 +29,7 @@ import javax.xml.namespace.QName;
 /**
  * SecuManga Gateway Client - The client part of the GATEWAY.<br>
  * This class encapsulate webservice handling, the client just uses normal methods.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
@@ -58,6 +61,7 @@ public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
 
     /**
      * Creates the URL for SecuMangaService
+     * 
      * @param hostName name of host
      * @param port webservice port
      * @return webservice URL
@@ -77,6 +81,7 @@ public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
 
     /**
      * Creates a new Client, client instances are NOT thread-safe, no concurrent access allowed.
+     * 
      * @param hostName name of host
      * @param port number of webservice port
      */

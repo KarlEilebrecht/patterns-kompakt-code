@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Text Component - the RECEIVER in this COMMAND example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.command;
 
 import java.util.logging.Logger;
 
 /**
  * Text Component - the RECEIVER in this COMMAND example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class TextComponent {
@@ -37,6 +40,7 @@ public class TextComponent {
 
     /**
      * Returns current size of text, number of characters
+     * 
      * @return length
      */
     public int length() {
@@ -45,6 +49,7 @@ public class TextComponent {
 
     /**
      * Sets the new length of the internal buffer
+     * 
      * @param newLength length to be set
      */
     public void setLength(int newLength) {
@@ -54,6 +59,7 @@ public class TextComponent {
 
     /**
      * appends the given string to the internal buffer
+     * 
      * @param str string to be appended
      * @return this instance
      */
@@ -65,6 +71,7 @@ public class TextComponent {
 
     /**
      * Returns a string containing the string copied beginning with the given position
+     * 
      * @param start first character to be copied
      * @return string
      */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Mapper - demonstrates MAPPER pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper;
 
 import java.util.Date;
@@ -29,9 +31,9 @@ import de.calamanari.pk.util.MiscUtils;
  * Customer Mapper - demonstrates MAPPER pattern<br>
  * In the first subsystem there exists a Person entity and an address entity.<br>
  * For some reason in a second subsystem a Customer entity exists including address information.<br>
- * This mapper is responsible for transparently mapping data between the two without giving one subsystem any knowledge
- * of the other one.<br>
+ * This mapper is responsible for transparently mapping data between the two without giving one subsystem any knowledge of the other one.<br>
  * Neither of the subsystems is aware of the mapper.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerMapper extends AbstractMapper {
@@ -57,8 +59,8 @@ public class CustomerMapper extends AbstractMapper {
     private final Person person;
 
     /**
-     * Creates new customer mapper for the two entities from the first subsystem and the customer entity from the second
-     * subsystem
+     * Creates new customer mapper for the two entities from the first subsystem and the customer entity from the second subsystem
+     * 
      * @param person the person to be mapped
      * @param address the address to be mapped
      * @param customer the customer to be mapped
@@ -74,8 +76,7 @@ public class CustomerMapper extends AbstractMapper {
     public void map() {
         LOGGER.fine(this.getClass().getSimpleName() + ".map() called");
 
-        LOGGER.fine("Mapping data from subsystem1 (Person+Address) to subsystem2 structure (Customer[customerId='"
-                + customer.getCustomerId() + "'])");
+        LOGGER.fine("Mapping data from subsystem1 (Person+Address) to subsystem2 structure (Customer[customerId='" + customer.getCustomerId() + "'])");
         customer.setFirstName(person.getFirstName());
         customer.setLastName(person.getLastName());
 
@@ -96,8 +97,7 @@ public class CustomerMapper extends AbstractMapper {
     public void mapBack() {
         LOGGER.fine(this.getClass().getSimpleName() + ".mapBack() called");
 
-        LOGGER.fine("Mapping data from subsystem2 (Customer[customerId='" + customer.getCustomerId()
-                + "']) back to subsystem1 structures (Person+Address)");
+        LOGGER.fine("Mapping data from subsystem2 (Customer[customerId='" + customer.getCustomerId() + "']) back to subsystem1 structures (Person+Address)");
 
         // here a merge strategy could be placed as there might
         // be scenarios allowing concurrent changes in both subsystems

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Checksum Builder - interface for checksum BUILDERs.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,42 +16,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.builder;
 
 /**
  * Checksum Builder - interface for checksum BUILDERs.<br>
  * The PRODUCTs of these checksum builders are Checksum instances.<br>
  * If not otherwise stated, concrete instances are NOT safe to be used concurrently by multiple threads.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface ChecksumBuilder {
 
     /**
      * Builder-method to add a string
+     * 
      * @param text some string or null
      */
     public void addString(String text);
 
     /**
      * Builder-method to add a long value
+     * 
      * @param value some numeric value or null
      */
     public void addLong(Long value);
 
     /**
      * Builder-method to add an integer value
+     * 
      * @param value some numeric value or null
      */
     public void addInteger(Integer value);
 
     /**
      * Builder-method to add an double value
+     * 
      * @param value some numeric value or null
      */
     public void addDouble(Double value);
 
     /**
      * Builder-method to add a byte array
+     * 
      * @param bytes some bytes or null
      */
     public void addBytes(byte[] bytes);
@@ -58,6 +66,7 @@ public interface ChecksumBuilder {
     /**
      * Concrete BUILDERs return checksum for the given text.<br>
      * This is the result of the BUILDERs life.
+     * 
      * @return checksum value
      */
     public Checksum getChecksum();

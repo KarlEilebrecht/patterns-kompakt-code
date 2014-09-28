@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Load State
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,18 +16,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.tpl;
 
 import java.util.concurrent.CountDownLatch;
 
+import de.calamanari.pk.util.MiscUtils;
+
 /**
- * A {@link OverloadState} instance represents the overload state of the {@link ThroughputLimiter} 
- * including an overload start time and a latch (where requesters can wait for).
+ * A {@link OverloadState} instance represents the overload state of the {@link ThroughputLimiter} including an overload start time and a latch (where
+ * requesters can wait for).
  */
 public final class OverloadState {
 
     /**
-     * Dummy indicating {@link ThroughputLimiter} is currently not overloaded. 
+     * Dummy indicating {@link ThroughputLimiter} is currently not overloaded.
      */
     static final OverloadState NOT_OVERLOADED;
     static {
@@ -34,23 +38,24 @@ public final class OverloadState {
         dummy.waitLatch.countDown(); // never wait for this dummy
         NOT_OVERLOADED = dummy;
     }
-    
+
     /**
      * system when overload started
      */
     final long overloadStartTimeNanos;
-    
+
     /**
      * Threads use this latch to wait for the end of the overload state.
      */
     final CountDownLatch waitLatch = new CountDownLatch(1);
-    
+
     /**
      * Creates new overload state using the given start time
+     * 
      * @param startTimeNanos time in nanoseconds when overload started, see {@linkplain MiscUtils#getSystemUptimeNanos()}
      */
     OverloadState(long startTimeNanos) {
         this.overloadStartTimeNanos = startTimeNanos;
     }
-    
+
 }

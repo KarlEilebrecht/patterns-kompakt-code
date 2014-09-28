@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Macro plugin Framework
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,17 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin;
 
 /**
- * Macro plugin framework interface defines the methods a plugin may use to access properties and methods of the
- * surrounding framework.
+ * Macro plugin framework interface defines the methods a plugin may use to access properties and methods of the surrounding framework.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface MacroPluginFramework {
 
     /**
      * Returns the value of the requested property.
+     * 
      * @param propertyName name of the property, case insensitive, NOT NULL
      * @return mapped value
      */
@@ -33,6 +36,7 @@ public interface MacroPluginFramework {
 
     /**
      * Sets the value of the denoted property.
+     * 
      * @param propertyName name of the property, case insensitive, NOT NULL
      * @param value new value
      */
@@ -40,6 +44,7 @@ public interface MacroPluginFramework {
 
     /**
      * Returns whether the given property is currently known
+     * 
      * @param propertyName name of property, case insensitive, NOT NULL
      * @return true if property exists, otherwise false
      */
@@ -47,6 +52,7 @@ public interface MacroPluginFramework {
 
     /**
      * Allows protocol messages.
+     * 
      * @param source usually the plugin name
      * @param message info to be logged
      */

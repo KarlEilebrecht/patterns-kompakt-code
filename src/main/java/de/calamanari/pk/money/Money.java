@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Money - a MONEY demo implementation
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.money;
 
 import java.io.Serializable;
@@ -26,9 +28,9 @@ import java.util.Currency;
 
 /**
  * Money - a MONEY demo implementation<br>
- * Please be aware that this implementation has absolutely nothing to do with high performance or optimized memory
- * consumption. :-) <br>
+ * Please be aware that this implementation has absolutely nothing to do with high performance or optimized memory consumption. :-) <br>
  * You'll find full fledged and well tested Money libraries in the web.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Money implements Serializable, Comparable<Money> {
@@ -52,12 +54,12 @@ public class Money implements Serializable, Comparable<Money> {
      * Value 100
      */
     private static final BigDecimal BD_100 = BigDecimal.valueOf(100);
-    
+
     /**
      * Maximum scale: {@value}
      */
     private static final int MAX_SCALE = 20;
-    
+
     /**
      * The currency of the value
      */
@@ -80,6 +82,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Helper method to get the factor for a currency
+     * 
      * @param currency the currency for the {@link Money}-instance
      * @return factor multiplication factor to calculate smallest unit of currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -93,6 +96,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Parses the currency code from the string representation of a Money instance
+     * 
      * @param value string representation of Money
      * @return currency
      */
@@ -104,6 +108,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Parses the monetary value from the string representation of a Money instance
+     * 
      * @param value string representation of Money
      * @return monetary value
      * @throws IllegalArgumentException if the currency is not supported
@@ -116,6 +121,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a BigDecimal with the given currency
+     * 
      * @param value instance's value
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -130,6 +136,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a BigDecimal with the given currency
+     * 
      * @param value instance's value
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -140,6 +147,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a double value with the given currency
+     * 
      * @param value instance's value
      * @param currency the value's currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -150,6 +158,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a double value with the given currency
+     * 
      * @param value instance's value
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -160,6 +169,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a long value with the given currency
+     * 
      * @param value instance's value
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -170,6 +180,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a long value with the given currency
+     * 
      * @param value instance's value
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -180,6 +191,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a BigInteger with the given currency
+     * 
      * @param valueOfSmallestUnit instance's value in smallest units
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -194,6 +206,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a String with the given currency
+     * 
      * @param value stringified value (double or long)
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -204,6 +217,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a Money instance from a String with the given currency
+     * 
      * @param value stringified value (double or long)
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
@@ -214,6 +228,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * This constructor accepts the output of the toString()-method
+     * 
      * @param value stringified Money instance
      * @throws IllegalArgumentException if the currency is not supported
      */
@@ -223,6 +238,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Returns the corresponding BigDecimal value
+     * 
      * @return big decimal value, precision limited related to currencies smallest unit
      */
     public BigDecimal getBigDecimalValue() {
@@ -231,6 +247,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Returns the corresponding double value
+     * 
      * @return double value, precision limited related to currencies smallest unit
      */
     public double getDoubleValue() {
@@ -239,6 +256,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Returns the value represented using the smallest unit corresponding to the currency, i.e. 100 Cents for 1 Dollar
+     * 
      * @return value using smallest unit
      */
     public BigInteger getSmallestUnitValue() {
@@ -247,6 +265,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Determines the signum of this money instance
+     * 
      * @return -1, 0 or 1 for negative, zero or positive values
      */
     public int getSignum() {
@@ -255,6 +274,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Returns a new money instance as the negative value of this one
+     * 
      * @return negative money instance
      */
     public Money negate() {
@@ -263,6 +283,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a new money instance as the sum of this one plus the given one
+     * 
      * @param value money to add (must have the same currency)
      * @return new money instance
      */
@@ -282,6 +303,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Creates a new money instance as this one minus the given one
+     * 
      * @param value money to subtract (must have the same currency)
      * @return new money instance
      */
@@ -294,6 +316,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Multiplies this instance with the given factor and returns a new Money instance for the result.
+     * 
      * @param factor value to be multiplied
      * @return result
      */
@@ -306,6 +329,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Multiplies this instance with the given factor and returns a new Money instance for the result.
+     * 
      * @param factor value to be multiplied
      * @return result
      */
@@ -315,6 +339,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Multiplies this instance with the given factor and returns a new Money instance for the result.
+     * 
      * @param factor value to be multiplied
      * @return result
      */
@@ -327,6 +352,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Multiplies this instance with the given factor and returns a new Money instance for the result.
+     * 
      * @param factor value to be multiplied
      * @return result
      */
@@ -336,6 +362,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Divides this instance by the given divisor and returns a new Money instance for the result.
+     * 
      * @param divisor value to be used for division
      * @return result
      */
@@ -351,6 +378,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Divides this instance by the given divisor and returns a new Money instance for the result.
+     * 
      * @param divisor value to be used for division
      * @return result
      */
@@ -360,6 +388,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Divides this instance by the given divisor and returns a new Money instance for the result.
+     * 
      * @param divisor value to be used for division
      * @return result
      */
@@ -372,6 +401,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Divides this instance by the given divisor and returns a new Money instance for the result.
+     * 
      * @param divisor value to be used for division
      * @return result
      */
@@ -380,9 +410,9 @@ public class Money implements Serializable, Comparable<Money> {
     }
 
     /**
-     * Distributes <i>this</i> value according to the given weights, means [1,1,1] will have the same effect as
-     * [10,10,10].<br>
+     * Distributes <i>this</i> value according to the given weights, means [1,1,1] will have the same effect as [10,10,10].<br>
      * A potential remainder will be distributed to the items from the highest weight to the lowest, ignoring 0.
+     * 
      * @param weights used to distribute <i>this</i> value
      * @return array of money instances (distributed value of this instance)
      */
@@ -407,6 +437,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Computes the distribution values and returns the created array.
+     * 
      * @param weights used to distribute <i>this</i> value
      * @param sumOfWeights sum of all weights
      * @return distributed values
@@ -438,6 +469,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * Distributed the remainder value to the already distributed values to correct the total sum.
+     * 
      * @param remainder amount not yet distributed
      * @param weights only add a part of the remainder if weight was positive
      * @param distributionValues the distribution to be modified
@@ -461,8 +493,7 @@ public class Money implements Serializable, Comparable<Money> {
             int idx = pos % max;
             if (weights[idx].signum() > 0) {
                 // add one to this result
-                distributionValues[idx] = new Money(distributionValues[idx].valueOfSmallestUnit.add(delta),
-                        this.currency);
+                distributionValues[idx] = new Money(distributionValues[idx].valueOfSmallestUnit.add(delta), this.currency);
                 remainder = remainder.subtract(delta);
             }
             pos++;
@@ -471,6 +502,7 @@ public class Money implements Serializable, Comparable<Money> {
 
     /**
      * This method sums-up the given weights
+     * 
      * @param weights array of weight values NOT NULL
      * @return sum of weights
      * @throws IllegalArgumentException if a weight value was null or negative
@@ -490,9 +522,9 @@ public class Money implements Serializable, Comparable<Money> {
     }
 
     /**
-     * Distributes this value according to the given weights, means [1.0,1.0,1.0] will have the same effect as
-     * [10.0,10.0,10.0].<br>
+     * Distributes this value according to the given weights, means [1.0,1.0,1.0] will have the same effect as [10.0,10.0,10.0].<br>
      * A potential remainder will be distributed to the items from the highest weight to the lowest, ignoring 0.
+     * 
      * @param weights used to distribute the value
      * @return array of money instances (distributed value of this instance)
      */
@@ -539,8 +571,9 @@ public class Money implements Serializable, Comparable<Money> {
     }
 
     /**
-     * Returns the string representation of this money instance of the form 'value currencyCode', the returned string
-     * may be used with the corresponding constructor to recreate the money instance
+     * Returns the string representation of this money instance of the form 'value currencyCode', the returned string may be used with the corresponding
+     * constructor to recreate the money instance
+     * 
      * @return debug string for value
      */
     @Override

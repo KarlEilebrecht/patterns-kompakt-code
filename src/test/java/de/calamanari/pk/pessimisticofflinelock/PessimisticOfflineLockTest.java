@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Pessimistic Offline Lock Test - demonstrates PESSIMISTIC OFFLINE LOCK pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.pessimisticofflinelock;
 
 import static org.junit.Assert.assertEquals;
@@ -30,13 +32,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.pessimisticofflinelock.Customer;
-import de.calamanari.pk.pessimisticofflinelock.LockManager;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Pessimistic Offline Lock Test - demonstrates PESSIMISTIC OFFLINE LOCK pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PessimisticOfflineLockTest {
@@ -91,14 +92,13 @@ public class PessimisticOfflineLockTest {
 
         countDown.await();
 
-        assertEquals("LockInfo({elementId='4711', lockType='NONE', ownerIds=[]})", LockManager.getLockInfo("4711")
-                .toString());
+        assertEquals("LockInfo({elementId='4711', lockType='NONE', ownerIds=[]})", LockManager.getLockInfo("4711").toString());
 
-        assertEquals("Customer({customerId='4711', lastName='Miller', firstName='Jack', street='19, Lucky Road', "
-                + "zipCode='286736', city='Lemon Village'})", customerDb.get("4711").toString());
+        assertEquals(
+                "Customer({customerId='4711', lastName='Miller', firstName='Jack', street='19, Lucky Road', " + "zipCode='286736', city='Lemon Village'})",
+                customerDb.get("4711").toString());
 
-        LOGGER.info("Test Pessimistic Offline Lock successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Pessimistic Offline Lock successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
     /**
@@ -130,8 +130,8 @@ public class PessimisticOfflineLockTest {
                     lockSuccess = LockManager.acquireWriteLock("4711", "User_1");
                     assertTrue(lockSuccess);
 
-                    customer = new Customer(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
-                            "19, Lucky Road", customer.getZipCode(), customer.getCity());
+                    customer = new Customer(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(), "19, Lucky Road", customer.getZipCode(),
+                            customer.getCity());
                     customerDb.put("4711", customer);
 
                     MiscUtils.sleepIgnoreException(2000);
@@ -191,8 +191,7 @@ public class PessimisticOfflineLockTest {
 
                 assertTrue(lockFailed);
 
-                LOGGER.fine("User_3 failed to get write lock! - Existing Lock found: "
-                        + LockManager.getLockInfo("4711"));
+                LOGGER.fine("User_3 failed to get write lock! - Existing Lock found: " + LockManager.getLockInfo("4711"));
 
                 countDown.countDown();
             }

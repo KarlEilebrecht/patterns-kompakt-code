@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Model View Controller Test - demonstrates MODEL VIEW CONTROLLER pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.modelviewcontroller;
 
 import static org.junit.Assert.assertEquals;
@@ -30,14 +32,12 @@ import javax.swing.SwingUtilities;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.modelviewcontroller.TeamController;
-import de.calamanari.pk.modelviewcontroller.TeamModel;
-import de.calamanari.pk.modelviewcontroller.TeamView;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Model View Controller Test - demonstrates MODEL VIEW CONTROLLER pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ModelViewControllerTest {
@@ -55,8 +55,7 @@ public class ModelViewControllerTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ModelViewControllerTest.class, TeamModel.class, TeamView.class,
-                TeamController.class);
+        LogUtils.setLogLevel(LOG_LEVEL, ModelViewControllerTest.class, TeamModel.class, TeamView.class, TeamController.class);
     }
 
     @Test
@@ -166,8 +165,7 @@ public class ModelViewControllerTest {
 
         view.shutDownLatch.await();
 
-        LOGGER.info("Test Model View Controller successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Model View Controller successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -180,6 +178,7 @@ public class ModelViewControllerTest {
 
     /**
      * Clicks the given button
+     * 
      * @param button
      */
     private void doClick(final AbstractButton button) {
@@ -199,6 +198,7 @@ public class ModelViewControllerTest {
 
     /**
      * Simulates the user while entering data
+     * 
      * @param field
      * @param text
      */

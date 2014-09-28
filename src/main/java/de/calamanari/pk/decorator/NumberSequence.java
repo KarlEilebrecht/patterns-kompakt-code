@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Number sequence
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,11 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.decorator;
 
 /**
- * Number sequence is the common interface components to be decorated as well as the decorator implement when applying
- * the DECORATOR pattern
+ * Number sequence is the common interface components to be decorated as well as the decorator implement when applying the DECORATOR pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
@@ -27,12 +29,14 @@ public interface NumberSequence {
 
     /**
      * Returns the next value
+     * 
      * @return next unique id
      */
     public long getNextId();
 
     /**
      * returns the name of the sequence
+     * 
      * @return sequence name
      */
     public String getSequenceName();

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address - entity in the first subsystem
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper.firstsys;
 
 /**
  * Address - entity in the first subsystem
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Address {
@@ -45,6 +48,7 @@ public class Address {
 
     /**
      * Creates address for a person
+     * 
      * @param personId identifier
      * @param street address field
      * @param zipCode address field
@@ -59,6 +63,7 @@ public class Address {
 
     /**
      * Returns id of person, this address belongs to
+     * 
      * @return personId
      */
     public String getPersonId() {
@@ -67,6 +72,7 @@ public class Address {
 
     /**
      * Returns the street address of customer
+     * 
      * @return street
      */
     public String getStreet() {
@@ -75,6 +81,7 @@ public class Address {
 
     /**
      * Sets the street of the customer
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -83,6 +90,7 @@ public class Address {
 
     /**
      * Returns the zip-code of the customer
+     * 
      * @return zipCode
      */
     public String getZipCode() {
@@ -91,6 +99,7 @@ public class Address {
 
     /**
      * Sets the zip-code of the customer
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -99,6 +108,7 @@ public class Address {
 
     /**
      * Returns the city of the customer
+     * 
      * @return city
      */
     public String getCity() {
@@ -107,6 +117,7 @@ public class Address {
 
     /**
      * Sets the city of the customer
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -115,8 +126,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({personId=" + personId + ", street=" + street + ", zipCode="
-                + zipCode + ", city=" + city + "})";
+        return this.getClass().getSimpleName() + "({personId=" + personId + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + "})";
     }
 
 }

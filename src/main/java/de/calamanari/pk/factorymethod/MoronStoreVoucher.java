@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * MoronStore Voucher
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,13 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.factorymethod;
 
 import java.util.logging.Logger;
 
 /**
- * MoronStore Voucher (Voucher from the MoronStore Worldwide Company) is a concrete product in this FACTORY METHOD
- * example scenario.
+ * MoronStore Voucher (Voucher from the MoronStore Worldwide Company) is a concrete product in this FACTORY METHOD example scenario.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MoronStoreVoucher extends AbstractVoucher {
@@ -43,6 +45,7 @@ public class MoronStoreVoucher extends AbstractVoucher {
 
     /**
      * Creates new MoronStore Voucher
+     * 
      * @param id voucher's id
      * @param displayCode human readable display code
      * @param firstName first name of the voucher owner

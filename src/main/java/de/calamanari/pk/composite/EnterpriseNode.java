@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Enterprise Node is the COMPONENT interface in this COMPOSITE-example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,28 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.composite;
 
 /**
  * Enterprise Node is the COMPONENT interface in this COMPOSITE-example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface EnterpriseNode {
 
     /**
      * Name of organizational unit or member
+     * 
      * @return display name
      */
     public String getName();
 
     /**
      * Returns some descriptive text
+     * 
      * @return description
      */
     public String getDescription();
 
     /**
      * Returns the parent of this node or null for the root element.
+     * 
      * @return parent node or null
      */
     public EnterpriseNode getParentNode();

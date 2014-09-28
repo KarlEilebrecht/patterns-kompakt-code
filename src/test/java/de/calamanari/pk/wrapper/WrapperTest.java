@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Wrapper Test - demonstrates WRAPPER pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.wrapper;
 
 import static org.junit.Assert.assertEquals;
@@ -29,13 +31,11 @@ import org.junit.Test;
 
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
-import de.calamanari.pk.wrapper.CustomerInfo;
-import de.calamanari.pk.wrapper.LegacyCustomerInfo;
-import de.calamanari.pk.wrapper.LegacyCustomerInfoProvider;
 import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
 
 /**
  * Wrapper Test - demonstrates WRAPPER pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class WrapperTest {
@@ -58,9 +58,8 @@ public class WrapperTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, WrapperTest.class, OldSysCustomerMgrMock.class, OldSysHistoryMgrMock.class,
-                OldSysCustomerMgr.class, OldSysHistoryMgrMock.class, LegacyCustomerInfo.class,
-                LegacyCustomerInfoProvider.class);
+        LogUtils.setLogLevel(LOG_LEVEL, WrapperTest.class, OldSysCustomerMgrMock.class, OldSysHistoryMgrMock.class, OldSysCustomerMgr.class,
+                OldSysHistoryMgrMock.class, LegacyCustomerInfo.class, LegacyCustomerInfoProvider.class);
     }
 
     @Before
@@ -70,27 +69,22 @@ public class WrapperTest {
 
         testCustomerManager = new OldSysCustomerMgrMock();
         testHistoryManager = new OldSysHistoryMgrMock();
-        testCustomerManager.addTestRecord(1, new String[] { LegacyCustomerInfo.KEY_ID, "1",
-                LegacyCustomerInfo.KEY_NAME, "John Doe", LegacyCustomerInfo.KEY_SEGMENT, "67" });
-        testCustomerManager.addTestRecord(2, new String[] { LegacyCustomerInfo.KEY_ID, "2",
-                LegacyCustomerInfo.KEY_NAME, "Lara Crofft", LegacyCustomerInfo.KEY_SEGMENT, "67" });
-        testCustomerManager.addTestRecord(3, new String[] { LegacyCustomerInfo.KEY_ID, "3",
-                LegacyCustomerInfo.KEY_NAME, "Sandy Bridge", LegacyCustomerInfo.KEY_SEGMENT, "11" });
-        testCustomerManager.addTestRecord(4, new String[] { LegacyCustomerInfo.KEY_ID, "4",
-                LegacyCustomerInfo.KEY_NAME, "Jack Miller", LegacyCustomerInfo.KEY_SEGMENT, "11" });
-        testCustomerManager.addTestRecord(5, new String[] { LegacyCustomerInfo.KEY_ID, "5",
-                LegacyCustomerInfo.KEY_NAME, "Ren Stimpy", LegacyCustomerInfo.KEY_SEGMENT, "20" });
+        testCustomerManager.addTestRecord(1, new String[] { LegacyCustomerInfo.KEY_ID, "1", LegacyCustomerInfo.KEY_NAME, "John Doe",
+                LegacyCustomerInfo.KEY_SEGMENT, "67" });
+        testCustomerManager.addTestRecord(2, new String[] { LegacyCustomerInfo.KEY_ID, "2", LegacyCustomerInfo.KEY_NAME, "Lara Crofft",
+                LegacyCustomerInfo.KEY_SEGMENT, "67" });
+        testCustomerManager.addTestRecord(3, new String[] { LegacyCustomerInfo.KEY_ID, "3", LegacyCustomerInfo.KEY_NAME, "Sandy Bridge",
+                LegacyCustomerInfo.KEY_SEGMENT, "11" });
+        testCustomerManager.addTestRecord(4, new String[] { LegacyCustomerInfo.KEY_ID, "4", LegacyCustomerInfo.KEY_NAME, "Jack Miller",
+                LegacyCustomerInfo.KEY_SEGMENT, "11" });
+        testCustomerManager.addTestRecord(5, new String[] { LegacyCustomerInfo.KEY_ID, "5", LegacyCustomerInfo.KEY_NAME, "Ren Stimpy",
+                LegacyCustomerInfo.KEY_SEGMENT, "20" });
 
-        testHistoryManager.addTestRecord(1, new String[] { LegacyCustomerInfo.KEY_ID, "1",
-                LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-12-11" });
-        testHistoryManager.addTestRecord(2, new String[] { LegacyCustomerInfo.KEY_ID, "2",
-                LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-02-01" });
-        testHistoryManager.addTestRecord(3, new String[] { LegacyCustomerInfo.KEY_ID, "3",
-                LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2011-01-20" });
-        testHistoryManager.addTestRecord(4, new String[] { LegacyCustomerInfo.KEY_ID, "4",
-                LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2011-03-24" });
-        testHistoryManager.addTestRecord(5, new String[] { LegacyCustomerInfo.KEY_ID, "5",
-                LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-12-20" });
+        testHistoryManager.addTestRecord(1, new String[] { LegacyCustomerInfo.KEY_ID, "1", LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-12-11" });
+        testHistoryManager.addTestRecord(2, new String[] { LegacyCustomerInfo.KEY_ID, "2", LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-02-01" });
+        testHistoryManager.addTestRecord(3, new String[] { LegacyCustomerInfo.KEY_ID, "3", LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2011-01-20" });
+        testHistoryManager.addTestRecord(4, new String[] { LegacyCustomerInfo.KEY_ID, "4", LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2011-03-24" });
+        testHistoryManager.addTestRecord(5, new String[] { LegacyCustomerInfo.KEY_ID, "5", LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-12-20" });
 
         legacyCustomerInfoProvider = new LegacyCustomerInfoProvider(testCustomerManager, testHistoryManager);
 
@@ -111,8 +105,7 @@ public class WrapperTest {
         assertEquals("3", info3.getId());
         assertEquals("Sandy Bridge", info3.getName());
         assertEquals(11, info3.getCustomerSegment());
-        assertEquals("LegacyCustomerInfo({ID='3', Name='Sandy Bridge', Segment=11, Last Order Date='2011-01-20'})",
-                sInfo3);
+        assertEquals("LegacyCustomerInfo({ID='3', Name='Sandy Bridge', Segment=11, Last Order Date='2011-01-20'})", sInfo3);
 
         List<CustomerInfo> list = legacyCustomerInfoProvider.findCustomerInfosOfSegment(11);
         assertEquals(2, list.size());
@@ -122,12 +115,10 @@ public class WrapperTest {
         assertEquals(1, list2.size());
         CustomerInfo info5 = list2.get(0);
         String sInfo5 = info5.toString();
-        assertEquals("LegacyCustomerInfo({ID='5', Name='Ren Stimpy', Segment=20, Last Order Date='2010-12-20'})",
-                sInfo5);
+        assertEquals("LegacyCustomerInfo({ID='5', Name='Ren Stimpy', Segment=20, Last Order Date='2010-12-20'})", sInfo5);
         LOGGER.fine(sInfo5);
 
-        LOGGER.info("Test Wrapper successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Wrapper successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

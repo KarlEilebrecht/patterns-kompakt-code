@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * MoronStore Voucher Creator
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.factorymethod;
 
 import java.util.logging.Logger;
 
 /**
  * MoronStore Voucher Creator is a concrete creator in this FACTORY METHOD example scenario.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MoronStoreVoucherCreator extends AbstractVoucherCreator {
@@ -34,7 +37,7 @@ public class MoronStoreVoucherCreator extends AbstractVoucherCreator {
      * Numbers will start at {@value} + 1;
      */
     private static final int START_NUMBER = 777_777;
-    
+
     /**
      * this should be some kind of number generator, of course ...
      */
@@ -43,8 +46,7 @@ public class MoronStoreVoucherCreator extends AbstractVoucherCreator {
     @Override
     public AbstractVoucher createVoucher(String firstName, String lastName, double value) {
         LOGGER.fine("createVoucher() on concrete creator " + this.getClass().getSimpleName() + " called.");
-        AbstractVoucher voucher = new MoronStoreVoucher("" + lastNumber, Integer.toHexString(lastNumber), firstName,
-                lastName, value);
+        AbstractVoucher voucher = new MoronStoreVoucher("" + lastNumber, Integer.toHexString(lastNumber), firstName, lastName, value);
         lastNumber++;
         return voucher;
     }

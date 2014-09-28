@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Progress Observer
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.observer;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 
 /**
  * Progress Observer is a concrete OBSERVER implementation, writing a progress message to log channel.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ProgressObserver implements OutputObserver {
@@ -35,15 +38,14 @@ public class ProgressObserver implements OutputObserver {
      * Constant 100 for progress calculation.
      */
     private static final int PROGRESS_100 = 100;
-    
+
     /**
-     * Report progress in {@value}%-steps.
+     * Report progress in {@value} %-steps.
      */
     private static final int PROGRESS_PERCENT_INCREMENT = 5;
-    
+
     /**
-     * In this simple example the the progress observer knows the number of bytes expected all in all. Think of this as
-     * some intrinsic state of the OBSERVER.
+     * In this simple example the the progress observer knows the number of bytes expected all in all. Think of this as some intrinsic state of the OBSERVER.
      */
     private final long expectedSize;
 
@@ -59,6 +61,7 @@ public class ProgressObserver implements OutputObserver {
 
     /**
      * Creates new Progress observer with the expected size
+     * 
      * @param expectedSize number of bytes expected to be written
      */
     public ProgressObserver(long expectedSize) {
@@ -106,6 +109,7 @@ public class ProgressObserver implements OutputObserver {
 
     /**
      * Returns the current counter value
+     * 
      * @return bytes written all in all
      */
     public long getCounterValue() {

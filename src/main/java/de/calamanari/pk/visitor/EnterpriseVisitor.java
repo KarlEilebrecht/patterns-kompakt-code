@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Enterprise Visitor - interface to be implemented by all concrete VISITORs
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,34 +16,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 /**
  * Enterprise Visitor - interface to be implemented by all concrete VISITORs
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface EnterpriseVisitor {
 
     /**
      * Visit a holding
+     * 
      * @param holding element that can be visited
      */
     public void visit(CustomerHolding holding);
 
     /**
      * Visit a company
+     * 
      * @param company element that can be visited
      */
     public void visit(CustomerCompany company);
 
     /**
      * Visit a customer company division
+     * 
      * @param division element that can be visited
      */
     public void visit(CustomerDivision division);
 
     /**
      * Visit a customer order
+     * 
      * @param order element that can be visited
      */
     public void visit(CustomerOrder order);

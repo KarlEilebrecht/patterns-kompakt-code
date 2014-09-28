@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Component With Constructor Injection - demonstrates CONSTRUCTOR INJECTION
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 import java.util.logging.Logger;
 
 /**
  * Component With Constructor Injection - demonstrates CONSTRUCTOR INJECTION
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ComponentWithConstructorInjection implements Component {
@@ -42,6 +45,7 @@ public class ComponentWithConstructorInjection implements Component {
 
     /**
      * Constructor, only used by the framework, allows DEPENDENCY INJECTION
+     * 
      * @param printService injected reference to print service
      */
     public ComponentWithConstructorInjection(PrintService printService) {

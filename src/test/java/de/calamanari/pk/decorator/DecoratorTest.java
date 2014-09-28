@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Decorator test - demonstrates DECORATOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.decorator;
 
 import static org.junit.Assert.assertFalse;
@@ -29,15 +31,13 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.decorator.NumberSequence;
-import de.calamanari.pk.decorator.ShufflingSequenceDecorator;
-import de.calamanari.pk.decorator.SimpleNumberSequence;
 import de.calamanari.pk.sequenceblock.SequenceBlockCache;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Decorator test - demonstrates DECORATOR pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DecoratorTest {
@@ -65,8 +65,7 @@ public class DecoratorTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, DecoratorTest.class, SimpleNumberSequence.class,
-                ShufflingSequenceDecorator.class);
+        LogUtils.setLogLevel(LOG_LEVEL, DecoratorTest.class, SimpleNumberSequence.class, ShufflingSequenceDecorator.class);
 
         // suppress details we don't want to see in the log here
         LogUtils.setLogLevel(Level.SEVERE, SequenceBlockCache.class);
@@ -99,8 +98,7 @@ public class DecoratorTest {
             usedIdsInOrder.add(nextId);
         }
 
-        LOGGER.info("Test decorator shuffling successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test decorator shuffling successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         logUsedIds(usedIdsInOrder);
 
@@ -108,6 +106,7 @@ public class DecoratorTest {
 
     /**
      * Logs the used ids if logging is enabled
+     * 
      * @param usedIdsInOrder
      */
     private void logUsedIds(List<Long> usedIdsInOrder) {

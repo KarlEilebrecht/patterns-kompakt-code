@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * XyPerson
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge;
 
 /**
  * XyPerson - an object in this scenario (supplementary).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class XyPerson {
@@ -65,6 +68,7 @@ public class XyPerson {
 
     /**
      * Creates new person with the given id
+     * 
      * @param id person id
      */
     public XyPerson(String id) {
@@ -73,6 +77,7 @@ public class XyPerson {
 
     /**
      * Sets the id of this person
+     * 
      * @param id identifier
      */
     public void setId(String id) {
@@ -81,6 +86,7 @@ public class XyPerson {
 
     /**
      * Returns person id
+     * 
      * @return id of person
      */
     public String getId() {
@@ -89,6 +95,7 @@ public class XyPerson {
 
     /**
      * Returns the first name of the person
+     * 
      * @return first name
      */
     public String getFirstName() {
@@ -97,6 +104,7 @@ public class XyPerson {
 
     /**
      * Sets the person's first name
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -105,6 +113,7 @@ public class XyPerson {
 
     /**
      * Returns the person's last name
+     * 
      * @return last name
      */
     public String getLastName() {
@@ -113,6 +122,7 @@ public class XyPerson {
 
     /**
      * Sets the person's last name
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -121,6 +131,7 @@ public class XyPerson {
 
     /**
      * Returns the person's role
+     * 
      * @return person's role
      */
     public String getRole() {
@@ -129,6 +140,7 @@ public class XyPerson {
 
     /**
      * Set's the person's role
+     * 
      * @param role company role
      */
     public void setRole(String role) {
@@ -137,6 +149,7 @@ public class XyPerson {
 
     /**
      * Returns the person's address id
+     * 
      * @return id of address
      */
     public String getAddressId() {
@@ -145,6 +158,7 @@ public class XyPerson {
 
     /**
      * Set's the person's address id
+     * 
      * @param addressId identifier
      */
     public void setAddressId(String addressId) {
@@ -153,6 +167,7 @@ public class XyPerson {
 
     /**
      * Returns the street
+     * 
      * @return street
      */
     public String getStreet() {
@@ -161,6 +176,7 @@ public class XyPerson {
 
     /**
      * Set's street info
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -169,6 +185,7 @@ public class XyPerson {
 
     /**
      * Returns the city name
+     * 
      * @return city name
      */
     public String getCity() {
@@ -177,6 +194,7 @@ public class XyPerson {
 
     /**
      * Sets the city
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -185,6 +203,7 @@ public class XyPerson {
 
     /**
      * Returns the zipcode
+     * 
      * @return zipcode
      */
     public String getZipCode() {
@@ -193,6 +212,7 @@ public class XyPerson {
 
     /**
      * Sets the zipcode
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {

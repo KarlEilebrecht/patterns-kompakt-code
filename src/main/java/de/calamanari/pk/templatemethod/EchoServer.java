@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Echo server - concrete class implementing the operations used by TEMPLATE METHODs.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.templatemethod;
 
 import java.io.BufferedReader;
@@ -31,6 +33,7 @@ import de.calamanari.pk.util.LogUtils;
 /**
  * Echo server - concrete class implementing the operations used by TEMPLATE METHODs of AbstractThreadedSocketServer.<br>
  * This socket server returns each received line immediately.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class EchoServer extends AbstractThreadedSocketServer {
@@ -60,6 +63,7 @@ public class EchoServer extends AbstractThreadedSocketServer {
     /**
      * Concrete implementation of an operation used by a TEMPLATE METHOD in the super class.<br>
      * This implementation returns each received line immediately to the sender.
+     * 
      * @param socket accepted socket
      * @throws Exception on any communication error
      */
@@ -93,6 +97,7 @@ public class EchoServer extends AbstractThreadedSocketServer {
 
     /**
      * Another concrete operation to be used by the TEMPLATE METHOD in the super class.<br>
+     * 
      * @return default port
      */
     @Override
@@ -102,6 +107,7 @@ public class EchoServer extends AbstractThreadedSocketServer {
 
     /**
      * Creates new Echo Server
+     * 
      * @param args command line arguments, arg[0]=port (optional)
      */
     public static void main(String[] args) {

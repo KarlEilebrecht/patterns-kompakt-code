@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer DTO - one of the data transfer objects in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.io.Serializable;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 
 /**
  * Customer DTO - one of the data transfer objects in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerDto implements Serializable {
@@ -82,6 +85,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Creates new data transfer object from the given data
+     * 
      * @param customerId identifier
      * @param title person's title
      * @param lastName person's last name
@@ -90,8 +94,7 @@ public class CustomerDto implements Serializable {
      * @param email email-address
      * @param promotionOptIn opt-in-flag for promotion events
      */
-    public CustomerDto(String customerId, String title, String lastName, String firstName, String phone, String email,
-            boolean promotionOptIn) {
+    public CustomerDto(String customerId, String title, String lastName, String firstName, String phone, String email, boolean promotionOptIn) {
         this.customerId = customerId;
         this.title = title;
         this.lastName = lastName;
@@ -104,6 +107,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Returns the customerId
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -112,6 +116,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Sets the customerId
+     * 
      * @param customerId identifier
      */
     public void setCustomerId(String customerId) {
@@ -120,6 +125,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Returns customer title
+     * 
      * @return title of customer
      */
     public String getTitle() {
@@ -128,6 +134,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Sets the customer's title
+     * 
      * @param title person's title
      */
     public void setTitle(String title) {
@@ -136,6 +143,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Returns the last name of customer
+     * 
      * @return lastName
      */
     public String getLastName() {
@@ -144,6 +152,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Sets the customer's last name
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -152,6 +161,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Returns the customer's first name
+     * 
      * @return firstName
      */
     public String getFirstName() {
@@ -160,6 +170,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Sets the customer's first name
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -168,6 +179,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Returns the customer's phone number
+     * 
      * @return phone
      */
     public String getPhone() {
@@ -176,6 +188,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Sets the customer's phone number
+     * 
      * @param phone telephone number
      */
     public void setPhone(String phone) {
@@ -184,6 +197,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Returns the customer's email address
+     * 
      * @return email
      */
     public String getEmail() {
@@ -192,6 +206,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Sets the customer's email address
+     * 
      * @param email email-address
      */
     public void setEmail(String email) {
@@ -200,6 +215,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Returns whether the customer has agreed to receive advertisement media
+     * 
      * @return true if customer has agreed, otherwise (default) false
      */
     public boolean isPromotionOptIn() {
@@ -208,6 +224,7 @@ public class CustomerDto implements Serializable {
 
     /**
      * Sets the customer's promotion status, whether to participate in sales promotion actions or not
+     * 
      * @param promotionOptIn true means the customer has agreed to receive advertisement media
      */
     public void setPromotionOptIn(boolean promotionOptIn) {
@@ -216,9 +233,8 @@ public class CustomerDto implements Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", title=" + title + ", lastName="
-                + lastName + ", firstName=" + firstName + ", phone=" + phone + ", email=" + email + ", promotionOptIn="
-                + promotionOptIn + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", title=" + title + ", lastName=" + lastName + ", firstName=" + firstName
+                + ", phone=" + phone + ", email=" + email + ", promotionOptIn=" + promotionOptIn + "})";
     }
 
 }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Component With Setter Injection - demonstrates SETTER INJECTION
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 import java.util.logging.Logger;
 
 /**
  * Component With Setter Injection - demonstrates SETTER INJECTION
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ComponentWithSetterInjection implements Component {
@@ -49,10 +52,10 @@ public class ComponentWithSetterInjection implements Component {
 
     /**
      * Allows the framework to set the reference to the print service.<br>
-     * In the wildlife you'll probably see setter injection in conjunction with annotations. Annotations allow to choose
-     * an individual setter name (because the annotation indicates the need, not the name of the method), and they
-     * support properties. Maybe one component needs a thread-safe printer service while the most do not. Using an
-     * injection annotation the component can describe what it needs on a more fine-grained level.
+     * In the wildlife you'll probably see setter injection in conjunction with annotations. Annotations allow to choose an individual setter name (because the
+     * annotation indicates the need, not the name of the method), and they support properties. Maybe one component needs a thread-safe printer service while
+     * the most do not. Using an injection annotation the component can describe what it needs on a more fine-grained level.
+     * 
      * @param printService service to be injected
      */
     public void setPrintService(PrintService printService) {

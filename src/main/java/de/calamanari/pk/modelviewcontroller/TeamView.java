@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Team View - the VIEW in this MVC-example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.modelviewcontroller;
 
 import java.awt.BorderLayout;
@@ -37,8 +39,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
- * Team View - the VIEW in this MVC-example. This is a so-called PASSIVE VIEW, it does not hold a reference to the
- * model. The controller observes the model as well as the view and exclusively updates the view after model changes.<br>
+ * Team View - the VIEW in this MVC-example. This is a so-called PASSIVE VIEW, it does not hold a reference to the model. The controller observes the model as
+ * well as the view and exclusively updates the view after model changes.<br>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class TeamView extends JFrame {
@@ -228,6 +231,7 @@ public class TeamView extends JFrame {
 
     /**
      * Creates the center panel with the main inputs and outputs.
+     * 
      * @return created panel
      */
     private JPanel createCenterPanel() {
@@ -255,6 +259,7 @@ public class TeamView extends JFrame {
 
     /**
      * Creates the group of radio buttons which lets the user select a member.
+     * 
      * @return created panel
      */
     private JPanel createRadioPanel() {
@@ -278,6 +283,7 @@ public class TeamView extends JFrame {
 
     /**
      * Creates the output panel which lists the members.
+     * 
      * @return created panel
      */
     private JPanel createOutputPanel() {

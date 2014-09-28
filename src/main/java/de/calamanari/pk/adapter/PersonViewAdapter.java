@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Person View Adapter
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,13 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.adapter;
 
 import java.util.logging.Logger;
 
 /**
- * Person view adapter implements the target system person view interface and acts as an ADAPTER for
- * SourceSystemPersonView items.
+ * Person view adapter implements the target system person view interface and acts as an ADAPTER for SourceSystemPersonView items.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PersonViewAdapter implements TargetSystemPersonView {
@@ -38,6 +40,7 @@ public class PersonViewAdapter implements TargetSystemPersonView {
 
     /**
      * Constructs a new adapter for the given source system person view.
+     * 
      * @param sourceSystemPersonView adaptee
      */
     public PersonViewAdapter(SourceSystemPersonView sourceSystemPersonView) {

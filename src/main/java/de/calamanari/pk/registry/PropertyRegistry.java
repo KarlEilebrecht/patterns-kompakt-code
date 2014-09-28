@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Property Registry - demonstrates REGISTRY pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.registry;
 
 import java.util.Collections;
@@ -27,8 +29,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 /**
- * Property Registry - a simple registry: safe to be accessed concurrently with minimum synchronization, providing the
- * ability to be refreshed at any time.
+ * Property Registry - a simple registry: safe to be accessed concurrently with minimum synchronization, providing the ability to be refreshed at any time.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class PropertyRegistry {
@@ -50,8 +52,8 @@ public final class PropertyRegistry {
 
     /**
      * Returns the registry instance which is read-only.<br>
-     * Clients may cache the obtained instance i.e. while processing a single request. They should not cache the
-     * obtained instance permanently.
+     * Clients may cache the obtained instance i.e. while processing a single request. They should not cache the obtained instance permanently.
+     * 
      * @return registry instance
      */
     public static PropertyRegistry getInstance() {
@@ -68,9 +70,9 @@ public final class PropertyRegistry {
     }
 
     /**
-     * This method is used by the surrounding framework to re-initialize the registry. The method can be called at any
-     * time concurrently. <br>
+     * This method is used by the surrounding framework to re-initialize the registry. The method can be called at any time concurrently. <br>
      * Clients will see the update when they call {@link #getInstance()} next time.
+     * 
      * @param properties set of initial properties
      */
     public static void initialize(Properties properties) {
@@ -92,6 +94,7 @@ public final class PropertyRegistry {
 
     /**
      * Private constructor used internally to build a fresh read-only registry instance.
+     * 
      * @param properties set of initial properties
      */
     private PropertyRegistry(Properties properties) {
@@ -107,6 +110,7 @@ public final class PropertyRegistry {
 
     /**
      * Returns the property value for the given key.
+     * 
      * @param propertyName name of requested property
      * @param defaultValue return this value if property was not found
      * @return property value or defaultValue if not found
@@ -121,33 +125,33 @@ public final class PropertyRegistry {
 
     /**
      * Returns the property value or empty string if not found
+     * 
      * @param propertyName name of requested property
      * @return property value or empty string if not found
      */
     public String getProperty(String propertyName) {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode())
-                + ".getProperty('" + propertyName + "') called");
+        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode()) + ".getProperty('" + propertyName + "') called");
         return getProperty(propertyName, "");
     }
 
     /**
      * Returns whether the specified property exists or not
+     * 
      * @param propertyName name of requested property
      * @return true if property exists, otherwise false
      */
     public boolean containsProperty(String propertyName) {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode())
-                + ".containsProperty('" + propertyName + "') called");
+        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode()) + ".containsProperty('" + propertyName + "') called");
         return propertyMap.containsKey(propertyName);
     }
 
     /**
      * Returns the set of currently valid property names
+     * 
      * @return set of names (unmodifiable)
      */
     public Set<String> getPropertyNames() {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode())
-                + ".getPropertyNames() called");
+        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode()) + ".getPropertyNames() called");
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 }

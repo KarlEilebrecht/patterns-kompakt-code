@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * History Query Component - demonstrates ACTIVE OBJECT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,13 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.activeobject;
 
 import java.util.logging.Logger;
 
 /**
- * History Query Component - the api from the client's point of view, it provides asynchronous access to the underlying
- * engine to perform queries possibly taking some time.
+ * History Query Component - the api from the client's point of view, it provides asynchronous access to the underlying engine to perform queries possibly
+ * taking some time.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class HistoryQueryComponent {
@@ -43,6 +46,7 @@ public class HistoryQueryComponent {
 
     /**
      * Creates a new query component leveraging the given engine
+     * 
      * @param engine engine to be used for querying
      * @param scheduler used to schedule queries to be executed
      */
@@ -52,16 +56,16 @@ public class HistoryQueryComponent {
     }
 
     /**
-     * Triggers a query according to the given parameters and returns immediately. The returned Future allows the client
-     * to poll for the result from time to time.
+     * Triggers a query according to the given parameters and returns immediately. The returned Future allows the client to poll for the result from time to
+     * time.
+     * 
      * @param firstName person's first name to query for
      * @param lastName person's last name to query for
      * @param birthday person's birthday to query for
      * @return Future for communication and result retrieval
      */
     public QueryRequestFuture queryHistoryData(String firstName, String lastName, String birthday) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '"
-                + birthday + "') called");
+        LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '" + birthday + "') called");
         QueryRequest objectifiedRequest = new QueryRequest(engine, firstName, lastName, birthday);
         QueryRequestFuture future = new QueryRequestFuture(objectifiedRequest);
         scheduler.schedule(objectifiedRequest);

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Indexer Partition Meta Data
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.itfa;
 
 /**
  * Container for settings related to a single partition to be indexed
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 final class IndexerPartitionMetaData {

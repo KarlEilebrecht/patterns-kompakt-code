@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Observer Test - demonstrates OBSERVER pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.observer;
 
 import static org.junit.Assert.assertEquals;
@@ -32,9 +34,6 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.observer.OutputObservable;
-import de.calamanari.pk.observer.OutputWorker;
-import de.calamanari.pk.observer.ProgressObserver;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.tpl.ThroughputEvent;
@@ -43,6 +42,7 @@ import de.calamanari.pk.util.tpl.ThroughputListener;
 
 /**
  * Observer Test - demonstrates OBSERVER pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ObserverTest {
@@ -121,8 +121,7 @@ public class ObserverTest {
 
         assertEquals(bytesAllInAll, progressObserver.getCounterValue());
 
-        LOGGER.info("Test Observer successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Observer successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -131,11 +130,11 @@ public class ObserverTest {
 
         LOGGER.info("Test with asynchronous Observer ...");
         long startTimeNanos = System.nanoTime();
-        
+
         // The ThroughputLimiter allows to limit the number of requests to a given service.
         // Along with this functionality it provides the option for registering
         // a listener (OBSERVER) which logs or measures the current throughput.
-        
+
         // Watch the log output during execution.
 
         // The limit shall be 50 calls per second to our dummy service
@@ -157,8 +156,8 @@ public class ObserverTest {
         };
 
         // The registered observer will not be called inside the executing thread(s)
-        // but periodically (each second) in its own thread. 
-        // When performance is important, the observer's method runtime 
+        // but periodically (each second) in its own thread.
+        // When performance is important, the observer's method runtime
         // should never affect the core function.
         limiter.registerThroughputListener(observer, 1000);
 
@@ -177,20 +176,18 @@ public class ObserverTest {
         stoppedFlag.set(true);
         service.shutdown();
         service.awaitTermination(1, TimeUnit.SECONDS);
-        
+
         // asynchronous tests with multiple threads are delicate, thus we
         // give a little time to finish pending actions
         Thread.sleep(1500);
-        
+
         limiter.removeThroughputListener(observer);
-        
-        assertEquals(this.serviceCallAttemptCounter.get(),
-                (observedCallDeniedCounter.get() + observedCallSuccessCounter.get()));
+
+        assertEquals(this.serviceCallAttemptCounter.get(), (observedCallDeniedCounter.get() + observedCallSuccessCounter.get()));
         assertEquals(this.serviceCallSuccessCounter.get(), observedCallSuccessCounter.get());
-        
-        LOGGER.info("Test with asynchronous Observer successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
-        
+
+        LOGGER.info("Test with asynchronous Observer successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+
     }
 
     /**
@@ -218,6 +215,7 @@ public class ObserverTest {
 
         /**
          * Creates a new caller instance using the given limiter
+         * 
          * @param limiter restricts access to the dummy service
          * @param stoppedFlag Flag to stop execution
          */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Person Data Connector Imp
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,17 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge;
 
 /**
  * Person Data Connector Imp - interface to be provided by concrete PersonDataConnectorImps. <br>
  * These classes build a parallel hierarchy (core functionality) "bridged-out" from the PersonDataConnector hierarchy.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface PersonDataConnectorImp {
 
     /**
      * Finds the person by id
+     * 
      * @param personId identifier
      * @return person or null
      */
@@ -33,6 +37,7 @@ public interface PersonDataConnectorImp {
 
     /**
      * Returns the address for the given id
+     * 
      * @param addressId address identifier
      * @return address id or null
      */
@@ -40,6 +45,7 @@ public interface PersonDataConnectorImp {
 
     /**
      * Returns the address of the specified person
+     * 
      * @param personId identifier
      * @return address or null
      */
@@ -47,6 +53,7 @@ public interface PersonDataConnectorImp {
 
     /**
      * Creates a new person and returns the new id.
+     * 
      * @param person to be created
      * @return person Id
      */
@@ -54,6 +61,7 @@ public interface PersonDataConnectorImp {
 
     /**
      * Creates a new address and returns the new id.
+     * 
      * @param address to be created
      * @return address id
      */
@@ -61,12 +69,14 @@ public interface PersonDataConnectorImp {
 
     /**
      * Updates the person.
+     * 
      * @param person to be updated
      */
     public void updatePerson(Person person);
 
     /**
      * Updates the address.
+     * 
      * @param address to be updated
      */
     public void updateAddress(Address address);

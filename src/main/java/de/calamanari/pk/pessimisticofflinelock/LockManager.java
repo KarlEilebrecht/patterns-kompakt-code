@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Lock Manager - manages locks in this PESSIMISTIC OFFLINE LOCK example 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.pessimisticofflinelock;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import java.util.logging.Logger;
 /**
  * Lock Manager - manages locks in this PESSIMISTIC OFFLINE LOCK example<br>
  * This one uses a global lock table in the database
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class LockManager {
@@ -48,17 +51,17 @@ public final class LockManager {
     private LockManager() {
         // no instances
     }
-    
+
     /**
      * Creates a read lock for the given owner
+     * 
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
      * @return true if lock was set otherwise false
      */
     public static boolean acquireReadLock(String elementId, String ownerId) {
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + LockManager.class.getSimpleName() + ".acquireReadLock("
-                + elementId + ", " + ownerId + ") called");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + LockManager.class.getSimpleName() + ".acquireReadLock(" + elementId + ", " + ownerId + ") called");
 
         LockType currentLockType = LockType.NONE;
         LockType newLockType = LockType.READ_LOCK;
@@ -111,14 +114,12 @@ public final class LockManager {
                     // , VERSION = VERSION + 1
                     // where ELEMENT_ID = ${elementId} and VERSION = ${version}
 
-                    numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType,
-                            Arrays.asList(new String[] { ownerId }), version);
+                    numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }), version);
 
                     // end TX
 
                     if (numberOfUpdatedRows != 1) {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "concurrent modification detected - trying again ...");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                         // must be concurrent access, try the whole process again
                         continue;
                     }
@@ -135,14 +136,12 @@ public final class LockManager {
                 else {
                     // there is a read lock
                     if (lockOwnerIds.contains(ownerId)) {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "Existing read lock detected, owned by requestor, leaving with success.");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing read lock detected, owned by requestor, leaving with success.");
                         // we have already the lock, show reentrant behavior
                         success = true;
                     }
                     else {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "Existing read lock detected, adding requestor to owner list.");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing read lock detected, adding requestor to owner list.");
                         lockOwnerIds = new ArrayList<>(lockOwnerIds);
                         lockOwnerIds.add(ownerId);
 
@@ -156,14 +155,12 @@ public final class LockManager {
                         // , VERSION = VERSION + 1
                         // where ELEMENT_ID = ${elementId} and VERSION = ${version}
 
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds,
-                                version);
+                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
 
                         // end TX
 
                         if (numberOfUpdatedRows != 1) {
-                            LOGGER.fine(Thread.currentThread().getName() + ": "
-                                    + "concurrent modification detected - trying again ...");
+                            LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                             // must be concurrent access, try the whole process again
                             continue;
                         }
@@ -177,8 +174,7 @@ public final class LockManager {
             }
             else {
 
-                LOGGER.fine(Thread.currentThread().getName() + ": "
-                        + "No lock entry found in lock table, creating one ...");
+                LOGGER.fine(Thread.currentThread().getName() + ": " + "No lock entry found in lock table, creating one ...");
 
                 // currently there is no entry in the LOCK_TABLE
                 // thus we have to create one
@@ -190,14 +186,12 @@ public final class LockManager {
                 // insert into LOCK_TABLE (ELEMENT_ID, LOCK_TYPE, OWNER_IDS, VERSION)
                 // values (${elementId}, ${newLockType}, ${ownerId}, 0)
 
-                insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType,
-                        Arrays.asList(new String[] { ownerId }));
+                insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }));
 
                 // end TX
 
                 if (!insertSuccessful) {
-                    LOGGER.fine(Thread.currentThread().getName() + ": "
-                            + "concurrent modification detected - trying again ...");
+                    LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                     // must be concurrent access, try the whole process again
                     continue;
                 }
@@ -213,14 +207,15 @@ public final class LockManager {
 
     /**
      * Creates a write lock for the given owner
+     * 
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
      * @return true if lock was set otherwise false
      */
     public static boolean acquireWriteLock(String elementId, String ownerId) {
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + LockManager.class.getSimpleName() + ".acquireWriteLock("
-                + elementId + ", " + ownerId + ") called");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + LockManager.class.getSimpleName() + ".acquireWriteLock(" + elementId + ", " + ownerId
+                + ") called");
 
         LockType currentLockType = LockType.NONE;
         LockType newLockType = LockType.WRITE_LOCK;
@@ -275,14 +270,12 @@ public final class LockManager {
                     // , VERSION = VERSION + 1
                     // where ELEMENT_ID = ${elementId} and VERSION = ${version}
 
-                    numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType,
-                            Arrays.asList(new String[] { ownerId }), version);
+                    numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }), version);
 
                     // end TX
 
                     if (numberOfUpdatedRows != 1) {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "concurrent modification detected - trying again ...");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                         // must be concurrent access, try the whole process again
                         continue;
                     }
@@ -293,14 +286,12 @@ public final class LockManager {
                 }
                 else if (currentLockType == LockType.WRITE_LOCK) {
                     if (lockOwnerIds.contains(ownerId)) {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "Existing write lock detected, owned by requestor, leaving with success.");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing write lock detected, owned by requestor, leaving with success.");
                         // we have already the lock, show reentrant behavior
                         success = true;
                     }
                     else {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "Existing write lock detected - aborting.");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing write lock detected - aborting.");
                         // there is another write lock, thus cannot acquire one
                         abort = true;
                     }
@@ -308,14 +299,12 @@ public final class LockManager {
                 else {
                     // there is a read lock
                     if (lockOwnerIds.size() > 1 || !lockOwnerIds.contains(ownerId)) {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "Existing read lock (not owned by requestor) detected - aborting.");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing read lock (not owned by requestor) detected - aborting.");
                         // at least one read lock does not belong to us, cannot set write lock
                         abort = true;
                     }
                     else {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "Single read lock owned by requestor detected - switching to WRITE_LOCK.");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "Single read lock owned by requestor detected - switching to WRITE_LOCK.");
 
                         // we have THE ONLY read lock, thus we can turn it into a write lock
 
@@ -329,14 +318,12 @@ public final class LockManager {
                         // , VERSION = VERSION + 1
                         // where ELEMENT_ID = ${elementId} and VERSION = ${version}
 
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds,
-                                version);
+                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
 
                         // end TX
 
                         if (numberOfUpdatedRows != 1) {
-                            LOGGER.fine(Thread.currentThread().getName() + ": "
-                                    + "concurrent modification detected - trying again ...");
+                            LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                             // must be concurrent access, try the whole process again
                             continue;
                         }
@@ -350,8 +337,7 @@ public final class LockManager {
             }
             else {
 
-                LOGGER.fine(Thread.currentThread().getName() + ": "
-                        + "No lock entry found in lock table, creating one ...");
+                LOGGER.fine(Thread.currentThread().getName() + ": " + "No lock entry found in lock table, creating one ...");
 
                 // currently there is no entry in the LOCK_TABLE
                 // thus we have to create one
@@ -363,14 +349,12 @@ public final class LockManager {
                 // insert into LOCK_TABLE (ELEMENT_ID, LOCK_TYPE, OWNER_IDS, VERSION)
                 // values (${elementId}, ${newLockType}, ${ownerId}, 0)
 
-                insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType,
-                        Arrays.asList(new String[] { ownerId }));
+                insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }));
 
                 // end TX
 
                 if (!insertSuccessful) {
-                    LOGGER.fine(Thread.currentThread().getName() + ": "
-                            + "concurrent modification detected - trying again ...");
+                    LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                     // must be concurrent access, try the whole process again
                     continue;
                 }
@@ -386,14 +370,14 @@ public final class LockManager {
 
     /**
      * Releases the lock the given owner has on the specified element
+     * 
      * @param elementId identifier of the element which was locked
      * @param ownerId owner of the lock to be released
      * @return true if lock was released, otherwise false (no lock found)
      */
     public static boolean releaseLock(String elementId, String ownerId) {
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + LockManager.class.getSimpleName() + ".releaseLock("
-                + elementId + ", " + ownerId + ") called");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + LockManager.class.getSimpleName() + ".releaseLock(" + elementId + ", " + ownerId + ") called");
 
         LockType currentLockType = LockType.NONE;
         LockType newLockType = LockType.NONE;
@@ -434,8 +418,7 @@ public final class LockManager {
                 LOGGER.fine(Thread.currentThread().getName() + ": " + "lock entry found ");
 
                 if (currentLockType == LockType.NONE) {
-                    LOGGER.fine(Thread.currentThread().getName() + ": " + "element '" + elementId
-                            + "' currently not locked aborting ...");
+                    LOGGER.fine(Thread.currentThread().getName() + ": " + "element '" + elementId + "' currently not locked aborting ...");
 
                     // there was no lock
                     abort = true;
@@ -444,8 +427,7 @@ public final class LockManager {
 
                     if (lockOwnerIds.contains(ownerId)) {
 
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "write lock owned by requestor detected - removing lock");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "write lock owned by requestor detected - removing lock");
 
                         lockOwnerIds = new ArrayList<>();
 
@@ -459,14 +441,12 @@ public final class LockManager {
                         // , VERSION = VERSION + 1
                         // where ELEMENT_ID = ${elementId} and VERSION = ${version}
 
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds,
-                                version);
+                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
 
                         // end TX
 
                         if (numberOfUpdatedRows != 1) {
-                            LOGGER.fine(Thread.currentThread().getName() + ": "
-                                    + "concurrent modification detected - trying again ...");
+                            LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                             // must be concurrent access, try the whole process again
                             continue;
                         }
@@ -477,8 +457,7 @@ public final class LockManager {
 
                     }
                     else {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "write lock NOT owned by requestor detected - aborting ...");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "write lock NOT owned by requestor detected - aborting ...");
                         // cannot remove lock, belongs to someone else
                         abort = true;
                     }
@@ -486,20 +465,17 @@ public final class LockManager {
                 else {
                     // there is a read lock
                     if (!lockOwnerIds.contains(ownerId)) {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "read lock NOT owned by requestor detected - aborting ...");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "read lock NOT owned by requestor detected - aborting ...");
                         // nothing to be removed
                         abort = true;
                     }
                     else {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "read lock owned by requestor detected - removing lock ...");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "read lock owned by requestor detected - removing lock ...");
                         lockOwnerIds = new ArrayList<>(lockOwnerIds);
                         lockOwnerIds.remove(ownerId);
 
                         if (lockOwnerIds.size() > 0) {
-                            LOGGER.fine(Thread.currentThread().getName() + ": "
-                                    + "preserving read locks owned by others");
+                            LOGGER.fine(Thread.currentThread().getName() + ": " + "preserving read locks owned by others");
                             // keep element locked
                             newLockType = currentLockType;
                         }
@@ -514,14 +490,12 @@ public final class LockManager {
                         // , VERSION = VERSION + 1
                         // where ELEMENT_ID = ${elementId} and VERSION = ${version}
 
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds,
-                                version);
+                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
 
                         // end TX
 
                         if (numberOfUpdatedRows != 1) {
-                            LOGGER.fine(Thread.currentThread().getName() + ": "
-                                    + "concurrent modification detected - trying again ...");
+                            LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
                             // must be concurrent access, try the whole process again
                             continue;
                         }
@@ -554,6 +528,7 @@ public final class LockManager {
 
     /**
      * Returns the current lock information related to the given element
+     * 
      * @param elementId identifier of an element which might be locked
      * @return lock info
      */
@@ -584,6 +559,7 @@ public final class LockManager {
 
     /**
      * Selects the corresponding lock information for the given element
+     * 
      * @param elementId identifier of an element where a lock entry might exist
      * @return lock info or null if not found
      */
@@ -612,6 +588,7 @@ public final class LockManager {
 
     /**
      * Inserts the corresponding lock entry for the given element
+     * 
      * @param elementId identifier of an element, a lock entry shall be created
      * @param lockType type of the lock to be created
      * @param ownerIds list of lock-owner-ids
@@ -627,14 +604,14 @@ public final class LockManager {
 
     /**
      * Updates the corresponding lock entry for the given element
+     * 
      * @param elementId identifier of an element, the corresponding lock shall be updated
      * @param lockType new type of the lock
      * @param ownerIds list of lock-owner-ids
      * @param expectedVersion only update if the entry was not updated in the meantime
      * @return number of updated rows
      */
-    private static int doSimulateDatabaseUpdateLock(String elementId, LockType lockType, List<String> ownerIds,
-            long expectedVersion) {
+    private static int doSimulateDatabaseUpdateLock(String elementId, LockType lockType, List<String> ownerIds, long expectedVersion) {
         int numberOfUpdatedRows = 0;
         AtomicReference<String[]> record = DATABASE.get(elementId);
 
@@ -649,8 +626,7 @@ public final class LockManager {
                 throw new RuntimeException(ex);
             }
             if (currentVersion == expectedVersion) {
-                String[] newRecordData = new String[] { lockType.toString(),
-                        ownerIdListToCommaSeparatedString(ownerIds), "" + (currentVersion + 1) };
+                String[] newRecordData = new String[] { lockType.toString(), ownerIdListToCommaSeparatedString(ownerIds), "" + (currentVersion + 1) };
                 boolean success = record.compareAndSet(recordData, newRecordData);
                 if (success) {
                     numberOfUpdatedRows = 1;
@@ -662,8 +638,9 @@ public final class LockManager {
 
     /**
      * Utility method to put all the owner-ids in one string<br>
-     * This is not very elegant, a database column should contain atomic data but for this example this greatly
-     * simplifies work assuming that ownerIds never contain commas.
+     * This is not very elegant, a database column should contain atomic data but for this example this greatly simplifies work assuming that ownerIds never
+     * contain commas.
+     * 
      * @param ownerIds list of owners
      * @return stringified list
      */
@@ -710,6 +687,7 @@ public final class LockManager {
 
         /**
          * Creates new lock info
+         * 
          * @param elementId identifier of an element, this lock is assigned
          * @param lockType type of the lock
          * @param ownerIds list of current lock owners
@@ -724,8 +702,7 @@ public final class LockManager {
 
         @Override
         public String toString() {
-            return LockInfo.class.getSimpleName() + "({elementId='" + elementId + "', lockType='" + lockType
-                    + "', ownerIds=" + ownerIds + "})";
+            return LockInfo.class.getSimpleName() + "({elementId='" + elementId + "', lockType='" + lockType + "', ownerIds=" + ownerIds + "})";
         }
 
     }
@@ -737,13 +714,13 @@ public final class LockManager {
         /**
          * no lock / idle
          */
-        NONE, 
-        
+        NONE,
+
         /**
          * read lock
          */
-        READ_LOCK, 
-        
+        READ_LOCK,
+
         /**
          * write lock
          */

@@ -31,8 +31,7 @@ public class JavaDocSourceHolder {
 
     public final String[] importPackageNames;
 
-    public JavaDocSourceHolder(File baseDir, File file) throws IOException, UnsupportedEncodingException,
-            ClassNotFoundException {
+    public JavaDocSourceHolder(File baseDir, File file) throws IOException, UnsupportedEncodingException, ClassNotFoundException {
         this.path = file.toPath();
         List<String> rawLines = Files.readAllLines(path, Charset.forName("UTF-8"));
 

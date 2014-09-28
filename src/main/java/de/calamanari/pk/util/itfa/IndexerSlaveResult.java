@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Indexer Slave Result
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:off
 package de.calamanari.pk.util.itfa;
 
 /**

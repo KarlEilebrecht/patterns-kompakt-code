@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer - entity in the second subsystem
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper.secondsys;
 
 /**
  * Customer - entity in the second subsystem
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Customer {
@@ -60,6 +63,7 @@ public class Customer {
 
     /**
      * Creates customer
+     * 
      * @param customerId identifier
      */
     public Customer(String customerId) {
@@ -68,6 +72,7 @@ public class Customer {
 
     /**
      * Returns id of customer
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -76,6 +81,7 @@ public class Customer {
 
     /**
      * Returns the customer's lifetime in days
+     * 
      * @return customerLifeTimeDays
      */
     public int getCustomerLifeTimeDays() {
@@ -84,6 +90,7 @@ public class Customer {
 
     /**
      * Sets the customer lifetime in days
+     * 
      * @param customerLifeTimeDays time in day since date of birth
      */
     public void setCustomerLifeTimeDays(int customerLifeTimeDays) {
@@ -92,6 +99,7 @@ public class Customer {
 
     /**
      * Returns the customer's last name
+     * 
      * @return last name of customer
      */
     public String getLastName() {
@@ -100,6 +108,7 @@ public class Customer {
 
     /**
      * Sets the last name of customer
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -108,6 +117,7 @@ public class Customer {
 
     /**
      * Returns the first name of the customer
+     * 
      * @return firstName
      */
     public String getFirstName() {
@@ -116,6 +126,7 @@ public class Customer {
 
     /**
      * Sets the first name of the customer
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -124,6 +135,7 @@ public class Customer {
 
     /**
      * Returns the street address of customer
+     * 
      * @return street
      */
     public String getStreet() {
@@ -132,6 +144,7 @@ public class Customer {
 
     /**
      * Sets the street of the customer
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -140,6 +153,7 @@ public class Customer {
 
     /**
      * Returns the zip-code of the customer
+     * 
      * @return zipCode
      */
     public String getZipCode() {
@@ -148,6 +162,7 @@ public class Customer {
 
     /**
      * Sets the zip-code of the customer
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -156,6 +171,7 @@ public class Customer {
 
     /**
      * Returns the city of the customer
+     * 
      * @return city
      */
     public String getCity() {
@@ -164,6 +180,7 @@ public class Customer {
 
     /**
      * Sets the city of the customer
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -172,9 +189,8 @@ public class Customer {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", lastName=" + lastName
-                + ", firstName=" + firstName + ", customerLifeTimeDays=" + customerLifeTimeDays + ", street=" + street
-                + ", zipCode=" + zipCode + ", city=" + city + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", lastName=" + lastName + ", firstName=" + firstName
+                + ", customerLifeTimeDays=" + customerLifeTimeDays + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + "})";
     }
 
 }

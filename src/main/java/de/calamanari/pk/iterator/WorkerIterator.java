@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Worker Iterator
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.iterator;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.Set;
 
 /**
  * Worker Iterator - the ITERATOR implementation in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class WorkerIterator implements Iterator<Worker> {
@@ -41,6 +44,7 @@ public class WorkerIterator implements Iterator<Worker> {
 
     /**
      * Creates new Iterator returning all workers and their subordinates (recursively) alphabetically ordered.
+     * 
      * @param workers (root elements)
      */
     public WorkerIterator(Set<Worker> workers) {
@@ -56,6 +60,7 @@ public class WorkerIterator implements Iterator<Worker> {
     /**
      * Supplementary method to collect the workers from the tree.<br>
      * All subordinates will be added to the list allWorkers.
+     * 
      * @param worker root
      */
     private void findSubordinatesRecursively(Worker worker) {

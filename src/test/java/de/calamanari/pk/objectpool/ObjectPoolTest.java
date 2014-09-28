@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Example Object Pool test case - demonstrates an OBJECT POOL.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.objectpool;
 
 import static org.junit.Assert.assertEquals;
@@ -28,13 +30,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.objectpool.ExampleObjectPool;
-import de.calamanari.pk.objectpool.ExampleReusableObject;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Testcase for ExampleObjectPool and related stuff
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
@@ -101,8 +102,7 @@ public class ObjectPoolTest {
         assertEquals(callResult11, "X3");
         assertEquals(callResult12, "X4");
 
-        LOGGER.info("Test without pool successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test without pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -155,8 +155,7 @@ public class ObjectPoolTest {
         assertEquals(callResult11, "X3");
         assertEquals(callResult12, "X4");
 
-        LOGGER.info("Test with pool (no warm-up) successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test with pool (no warm-up) successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -214,13 +213,13 @@ public class ObjectPoolTest {
         assertEquals(callResult11, "X3");
         assertEquals(callResult12, "X4");
 
-        LOGGER.info("Test with pool (warm-up) successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test with pool (warm-up) successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
     /**
      * This one shows the result with pooling, starting with an empty pool, with concurrency.
+     * 
      * @throws Exception on any error
      */
     @Test
@@ -279,8 +278,7 @@ public class ObjectPoolTest {
         // give some time for log output
         Thread.sleep(1000);
 
-        LOGGER.info("Test with pool concurrent successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(endNanos - startTimeNanos) + " s");
+        LOGGER.info("Test with pool concurrent successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(endNanos - startTimeNanos) + " s");
 
     }
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract Mapper - mappers in this example extend this base class
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper;
 
 /**
  * Abstract Mapper - mappers in this example extend this base class
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractMapper {

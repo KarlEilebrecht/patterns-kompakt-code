@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Orb Of Confusion
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,34 +16,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.util.Arrays;
 
 /**
- * This class implements the "Orb Of Confusion" algorithm which performs a shuffled partition index transformation on an
- * arbitrary range of positive numbers.<br>
+ * This class implements the "Orb Of Confusion" algorithm which performs a shuffled partition index transformation on an arbitrary range of positive numbers.<br>
  * <ul>
- * <li><i>Objective:</i> Map bijectively any number of a given range to another number of the same range where the
- * mappings are not easy to be guessed. Thus a sequence of numbers (i.e. a database sequence) can be transformed
- * duplicate-free on-the-fly.</li>
+ * <li><i>Objective:</i> Map bijectively any number of a given range to another number of the same range where the mappings are not easy to be guessed. Thus a
+ * sequence of numbers (i.e. a database sequence) can be transformed duplicate-free on-the-fly.</li>
  * <li><i>Application:</i> serial numbers, voucher codes and other application of blurring numbers.</li>
  * <li><i>Idea:</i> Use pre-shuffled small partitions to virtually shuffle the whole range.<br>
- * Provide a method to quickly find the mapped value for any number in the range regardless how big this range may be (
- * {@link Long#MAX_VALUE} is the maximum upper bound).</li>
- * <li><i>Function:</i> Actually for a given number we partition the range in {@link #MAX_PART_COUNT} partitions and
- * choose one.<br>
- * Using the pre-shuffled partitions we map the partition to another partition and add the remainder. This is done
- * {@link #TRANSFORMATION_STEPS} times using different partition counts on each run.</li>
- * <li><i>Advantage:</i> Easy to implement and understand, state/configuration can be hold externally, no repetition
- * before every number of the range occurred. Last not least: a typical user (without super-natural powers) won't
- * suspect an interrelation or even be able to guess the next value.</li>
- * <li><i>Disadvantages:</i> The randomness of the created shuffled range values is probably not very good and of course
- * not scientifically examined. ;-)</li>
+ * Provide a method to quickly find the mapped value for any number in the range regardless how big this range may be ( {@link Long#MAX_VALUE} is the maximum
+ * upper bound).</li>
+ * <li><i>Function:</i> Actually for a given number we partition the range in {@link #MAX_PART_COUNT} partitions and choose one.<br>
+ * Using the pre-shuffled partitions we map the partition to another partition and add the remainder. This is done {@link #TRANSFORMATION_STEPS} times using
+ * different partition counts on each run.</li>
+ * <li><i>Advantage:</i> Easy to implement and understand, state/configuration can be hold externally, no repetition before every number of the range occurred.
+ * Last not least: a typical user (without super-natural powers) won't suspect an interrelation or even be able to guess the next value.</li>
+ * <li><i>Disadvantages:</i> The randomness of the created shuffled range values is probably not very good and of course not scientifically examined. ;-)</li>
  * </ul>
  * <br>
- * By the way: the name "Orb Of Confusion" is a reminiscence to a Sponge Bob TV-episode and reminds us of the fact that
- * we try to spread disorder over a range of numbers.
+ * By the way: the name "Orb Of Confusion" is a reminiscence to a Sponge Bob TV-episode and reminds us of the fact that we try to spread disorder over a range
+ * of numbers.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OrbOfConfusion {
@@ -76,19 +74,16 @@ public class OrbOfConfusion {
         DEFAULT_PARTITIONS[5] = new int[] { 12, 6, 10, 11, 3, 1, 2, 7, 4, 5, 0, 8, 9 }; // prime=13
         DEFAULT_PARTITIONS[6] = new int[] { 1, 0, 12, 6, 9, 11, 13, 14, 3, 15, 10, 4, 5, 16, 8, 2, 7 }; // prime=17
         DEFAULT_PARTITIONS[7] = new int[] { 6, 15, 13, 2, 1, 17, 5, 18, 4, 3, 0, 14, 7, 8, 10, 11, 9, 16, 12 }; // prime=19
-        DEFAULT_PARTITIONS[8] = new int[] { 12, 7, 3, 18, 5, 16, 22, 13, 15, 11, 1, 6, 4, 2, 0, 17, 21, 20, 9, 19, 8,
-                14, 10 }; // prime=23
-        DEFAULT_PARTITIONS[9] = new int[] { 20, 1, 0, 15, 23, 22, 25, 21, 28, 16, 19, 12, 26, 11, 4, 3, 2, 27, 10, 5,
-                8, 6, 18, 17, 24, 9, 13, 7, 14 }; // prime=29
-        DEFAULT_PARTITIONS[10] = new int[] { 9, 23, 24, 20, 28, 12, 26, 19, 21, 27, 22, 10, 4, 17, 18, 14, 29, 8, 25,
-                6, 15, 11, 0, 30, 7, 13, 16, 1, 2, 3, 5 }; // prime=31
+        DEFAULT_PARTITIONS[8] = new int[] { 12, 7, 3, 18, 5, 16, 22, 13, 15, 11, 1, 6, 4, 2, 0, 17, 21, 20, 9, 19, 8, 14, 10 }; // prime=23
+        DEFAULT_PARTITIONS[9] = new int[] { 20, 1, 0, 15, 23, 22, 25, 21, 28, 16, 19, 12, 26, 11, 4, 3, 2, 27, 10, 5, 8, 6, 18, 17, 24, 9, 13, 7, 14 }; // prime=29
+        DEFAULT_PARTITIONS[10] = new int[] { 9, 23, 24, 20, 28, 12, 26, 19, 21, 27, 22, 10, 4, 17, 18, 14, 29, 8, 25, 6, 15, 11, 0, 30, 7, 13, 16, 1, 2, 3, 5 }; // prime=31
     }
 
     /**
      * Returns default shuffled partitions
+     * 
      * @param sourcePartitions shuffled partitions set to be copied (must be a valid partition, no checks here)
-     * @return array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first
-     *         {@link #TRANSFORMATION_STEPS} primes.
+     * @return array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first {@link #TRANSFORMATION_STEPS} primes.
      */
     public static int[][] copyPartitions(int[][] sourcePartitions) {
         int[][] partitions = new int[TRANSFORMATION_STEPS][];
@@ -103,8 +98,8 @@ public class OrbOfConfusion {
 
     /**
      * Returns default shuffled partitions
-     * @return array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first
-     *         {@link #TRANSFORMATION_STEPS} primes.
+     * 
+     * @return array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first {@link #TRANSFORMATION_STEPS} primes.
      */
     public static int[][] createDefaultPartitions() {
         return copyPartitions(DEFAULT_PARTITIONS);
@@ -112,6 +107,7 @@ public class OrbOfConfusion {
 
     /**
      * Because partitions structure must follow strict rules, we provide a check method.
+     * 
      * @param partitions to be validated
      */
     public static final void checkPartitions(int[][] partitions) {
@@ -119,8 +115,7 @@ public class OrbOfConfusion {
             throw new IllegalArgumentException("Argument partitions must not be null.");
         }
         if (partitions.length < TRANSFORMATION_STEPS) {
-            throw new IllegalArgumentException("Argument partitions must at least have " + TRANSFORMATION_STEPS
-                    + " elements.");
+            throw new IllegalArgumentException("Argument partitions must at least have " + TRANSFORMATION_STEPS + " elements.");
         }
         for (int i = 0; i < TRANSFORMATION_STEPS; i++) {
             int[] partition = partitions[i];
@@ -128,8 +123,7 @@ public class OrbOfConfusion {
                 throw new IllegalArgumentException("partitions[" + i + "] was null.");
             }
             if (partition.length != PRIMES[i]) {
-                throw new IllegalArgumentException("partitions[" + i + "] contains " + partition.length
-                        + " elements (expected " + PRIMES[i] + ").");
+                throw new IllegalArgumentException("partitions[" + i + "] contains " + partition.length + " elements (expected " + PRIMES[i] + ").");
             }
             for (int j = 0; j < partition.length; j++) {
                 boolean ok = false;
@@ -147,8 +141,8 @@ public class OrbOfConfusion {
                         }
                         sb.append(partition[k]);
                     }
-                    throw new IllegalArgumentException("partitions[" + i + "][]{" + sb.toString()
-                            + "} is no valid shuffled index partition (missing index=" + j + ").");
+                    throw new IllegalArgumentException("partitions[" + i + "][]{" + sb.toString() + "} is no valid shuffled index partition (missing index="
+                            + j + ").");
                 }
             }
         }
@@ -156,6 +150,7 @@ public class OrbOfConfusion {
 
     /**
      * Calculates the remainder for two long operands.
+     * 
      * @param numerator operand
      * @param divisor operand
      * @return the remainder when calculating numerator over divisor
@@ -166,9 +161,9 @@ public class OrbOfConfusion {
 
     /**
      * Maps the input value to the range [0..limit] (limit excluded) using the specified pre-shuffled partition mapping.
+     * 
      * @param input arbitrary value less than limit (!)
-     * @param partitions array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first
-     *            {@link #TRANSFORMATION_STEPS} primes.
+     * @param partitions array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first {@link #TRANSFORMATION_STEPS} primes.
      * @param limit upper bound of range (excl.)
      * @param partitionIdx index of pre-shuffled mapping partition
      * @return value in target range
@@ -207,12 +202,12 @@ public class OrbOfConfusion {
     }
 
     /**
-     * Transforms the input value to a value in the specified range. Guarantees all numbers of the specified range to
-     * occur once before the first number will be repeated for when calling this method n times with input = n.<br>
+     * Transforms the input value to a value in the specified range. Guarantees all numbers of the specified range to occur once before the first number will be
+     * repeated for when calling this method n times with input = n.<br>
      * <i>Note:</i> The {@link #transform(long)} delegates to this method internally.
+     * 
      * @param input arbitrary positive value
-     * @param partitions array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first
-     *            {@link #TRANSFORMATION_STEPS} primes.
+     * @param partitions array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first {@link #TRANSFORMATION_STEPS} primes.
      * @param salt constant positive value which influences code generation (may be 0)
      * @param start begin of target range (incl.)
      * @param end limit of target range (excl.)
@@ -297,8 +292,8 @@ public class OrbOfConfusion {
 
     /**
      * Creates new configuration with the given partitions and salt.
-     * @param partitions array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first
-     *            {@link #TRANSFORMATION_STEPS} primes.
+     * 
+     * @param partitions array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first {@link #TRANSFORMATION_STEPS} primes.
      * @param salt 0 or positive value to influence number transformation
      * @param start begin of target range (incl.)
      * @param end limit of target range (excl.)
@@ -319,8 +314,8 @@ public class OrbOfConfusion {
 
     /**
      * Returns a copy of the currently used partition set.
-     * @return array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first
-     *         {@link #TRANSFORMATION_STEPS} primes.
+     * 
+     * @return array of {@link #TRANSFORMATION_STEPS} shuffled index arrays having the length of the first {@link #TRANSFORMATION_STEPS} primes.
      */
     public int[][] getPartitions() {
         return copyPartitions(partitions);
@@ -328,6 +323,7 @@ public class OrbOfConfusion {
 
     /**
      * Returns end (excl.) of target numbers range
+     * 
      * @return range limit
      */
     public long getRangeEnd() {
@@ -336,6 +332,7 @@ public class OrbOfConfusion {
 
     /**
      * Returns lower bound (incl.) of target numbers range
+     * 
      * @return range minimum
      */
     public long getRangeStart() {
@@ -344,6 +341,7 @@ public class OrbOfConfusion {
 
     /**
      * Returns the salt value for transformation
+     * 
      * @return salt value (greater or equal to 0)
      */
     public long getSalt() {
@@ -352,6 +350,7 @@ public class OrbOfConfusion {
 
     /**
      * Transforms the input value to a value in the configured range.
+     * 
      * @param input arbitrary positive value
      * @return value in target range
      */

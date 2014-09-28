@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * MultiGlom Person Data Connector Imp
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge.multiglom;
 
 import java.util.HashMap;
@@ -26,8 +28,9 @@ import de.calamanari.pk.bridge.Person;
 import de.calamanari.pk.bridge.PersonDataConnectorImp;
 
 /**
- * MultiGlom Person Data Connector Imp - a concrete member of the "bridged-out" hierarchy. In this example this is the
- * connector of the fictional MultiGlom company.
+ * MultiGlom Person Data Connector Imp - a concrete member of the "bridged-out" hierarchy. In this example this is the connector of the fictional MultiGlom
+ * company.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MultiGlomPersonDataConnectorImp implements PersonDataConnectorImp {
@@ -40,8 +43,8 @@ public class MultiGlomPersonDataConnectorImp implements PersonDataConnectorImp {
     /**
      * begin ids with {@value} + 1
      */
-    private static final int START_LAST_ID = 6666;    
-    
+    private static final int START_LAST_ID = 6666;
+
     /**
      * the "person database"
      */
@@ -59,6 +62,7 @@ public class MultiGlomPersonDataConnectorImp implements PersonDataConnectorImp {
 
     /**
      * Creates new HalCorp-ID
+     * 
      * @return new id
      */
     private String createNewId() {
@@ -80,8 +84,7 @@ public class MultiGlomPersonDataConnectorImp implements PersonDataConnectorImp {
 
     @Override
     public Address findAddressOfPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName()
-                + ".findAddressOfPersonById() called on the other side of the bridge");
+        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressOfPersonById() called on the other side of the bridge");
         Address res = null;
         for (Address address : addressDb.values()) {
             if (personId != null && personId.equals(address.getPersonId())) {

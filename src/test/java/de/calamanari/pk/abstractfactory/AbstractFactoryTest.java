@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract factory test case - demonstrates ABSTRACT FACTORY.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.abstractfactory;
 
 import static org.junit.Assert.assertEquals;
@@ -28,20 +30,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.abstractfactory.AbstractDataManager;
-import de.calamanari.pk.abstractfactory.AbstractDataReader;
-import de.calamanari.pk.abstractfactory.AbstractDataWriter;
-import de.calamanari.pk.abstractfactory.PlainFileDataManager;
-import de.calamanari.pk.abstractfactory.PlainFileDataReader;
-import de.calamanari.pk.abstractfactory.PlainFileDataWriter;
-import de.calamanari.pk.abstractfactory.SecureFileDataManager;
-import de.calamanari.pk.abstractfactory.SecureFileDataReader;
-import de.calamanari.pk.abstractfactory.SecureFileDataWriter;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Test case for ABSTRACT FACTORY
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AbstractFactoryTest {
@@ -74,8 +68,7 @@ public class AbstractFactoryTest {
     /**
      * Test text sample
      */
-    private static final String FUNNY_TEXT = "Three little birds\n(Anton, Jenny and Laura)\neat "
-            + "five big pigs\nwith potato wedges.";
+    private static final String FUNNY_TEXT = "Three little birds\n(Anton, Jenny and Laura)\neat " + "five big pigs\nwith potato wedges.";
 
     /**
      * name of the file to be created
@@ -90,9 +83,8 @@ public class AbstractFactoryTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, AbstractFactoryTest.class, AbstractDataManager.class, AbstractDataReader.class,
-                AbstractDataWriter.class, PlainFileDataManager.class, PlainFileDataReader.class,
-                PlainFileDataWriter.class, SecureFileDataManager.class, SecureFileDataReader.class,
+        LogUtils.setLogLevel(LOG_LEVEL, AbstractFactoryTest.class, AbstractDataManager.class, AbstractDataReader.class, AbstractDataWriter.class,
+                PlainFileDataManager.class, PlainFileDataReader.class, PlainFileDataWriter.class, SecureFileDataManager.class, SecureFileDataReader.class,
                 SecureFileDataWriter.class);
         SYSTEM_REGISTRY.put(CONFIG_KEY1, new PlainFileDataManager());
         SYSTEM_REGISTRY.put(CONFIG_KEY2, new SecureFileDataManager());
@@ -135,6 +127,7 @@ public class AbstractFactoryTest {
 
     /**
      * Central generic part of the test.
+     * 
      * @param configKey which configuration to be used
      * @param funnyText text to store
      */

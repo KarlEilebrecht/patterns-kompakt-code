@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Effective Discount Visitor - demonstrates VISITOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 import java.util.logging.Logger;
 
 /**
  * Effective Discount Visitor - a VISITOR collecting information to determine the effective discount.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class EffectiveDiscountVisitor implements EnterpriseVisitor {
@@ -33,8 +36,8 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
     /**
      * Const for percentage calculation: {@value}
      */
-    private static final double PERCENT_BASE_100 = 100.0; 
-    
+    private static final double PERCENT_BASE_100 = 100.0;
+
     /**
      * holding discount percentage value
      */
@@ -62,6 +65,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
     /**
      * Visit a holding to determine holding discount
+     * <p>
      * {@inheritDoc}
      */
     @Override
@@ -72,6 +76,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
     /**
      * Visit a company to determine company discount
+     * <p>
      * {@inheritDoc}
      */
     @Override
@@ -86,6 +91,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
     /**
      * Visit a customer company division to determine division discount
+     * <p>
      * {@inheritDoc}
      */
     @Override
@@ -100,6 +106,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
     /**
      * Visit a customer order to determine effective order discount
+     * <p>
      * {@inheritDoc}
      */
     @Override
@@ -116,6 +123,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
     /**
      * This method returns the effective discount after visiting
+     * 
      * @return effective discount percentage value
      */
     public double getEffectiveDiscountPerc() {
@@ -154,8 +162,8 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
     }
 
     /**
-     * Inspect the order items individual promotion discounts to calculate the effective promotion discount for the
-     * whole order.
+     * Inspect the order items individual promotion discounts to calculate the effective promotion discount for the whole order.
+     * 
      * @param order customer order to calculate the effective discount for
      * @return effective promotion discount as percentage value
      */
@@ -182,9 +190,8 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({holdingDiscountPerc=" + holdingDiscountPerc
-                + ", companyDiscountPerc=" + companyDiscountPerc + ", divisionDiscountPerc=" + divisionDiscountPerc
-                + ", orderDiscountPerc=" + orderDiscountPerc + ", promotionOrderDiscountPerc="
+        return this.getClass().getSimpleName() + "({holdingDiscountPerc=" + holdingDiscountPerc + ", companyDiscountPerc=" + companyDiscountPerc
+                + ", divisionDiscountPerc=" + divisionDiscountPerc + ", orderDiscountPerc=" + orderDiscountPerc + ", promotionOrderDiscountPerc="
                 + promotionOrderDiscountPerc + "})";
     }
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Parallel File Input Stream Buffer Type
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.pfis;
 
 /**
  * The {@link ParallelFileInputStream} supports three types of buffers.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public enum BufferType {
@@ -36,8 +39,7 @@ public enum BufferType {
     DIRECT,
 
     /**
-     * A memory-mapped byte buffer resides outside the normal VM-heap, this is the recommended type for high performance
-     * reading.
+     * A memory-mapped byte buffer resides outside the normal VM-heap, this is the recommended type for high performance reading.
      */
     MEMORY_MAPPED
 }

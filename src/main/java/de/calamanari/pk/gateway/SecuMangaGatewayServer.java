@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * SecuManga Gateway Server - demonstrates the server part of GATEWAY pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.gateway;
 
 import java.util.Collections;
@@ -31,6 +33,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * The SecuManga Gateway provides access to the fictional native legacy SecuManga security library.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
@@ -90,7 +93,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
      * delay for request processing
      */
     private static final long REQUEST_DELAY_MILLIS = 500;
-    
+
     /**
      * some properties of the gateway server
      */
@@ -102,6 +105,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
 
     /**
      * returns the server properties
+     * 
      * @return property map
      */
     public static Map<String, String> getSystemProperties() {
@@ -147,8 +151,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
                     secuMangaPort = Integer.parseInt(cmdLineArgs[2]);
                 }
                 catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Error parsing secuMangaPort='" + sSecuMangaPort + "', using default="
-                            + secuMangaPort, ex);
+                    LOGGER.log(Level.WARNING, "Error parsing secuMangaPort='" + sSecuMangaPort + "', using default=" + secuMangaPort, ex);
                 }
                 SYSTEM_PROPERTIES.put(PROPERTY_SECU_MANGA_PORT, "" + secuMangaPort);
             }
@@ -158,14 +161,12 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
 
     @Override
     protected void prepare() {
-        serviceEndpoint = Endpoint.publish("http://localhost:" + serverPort + "/SecuMangaWebService?wsdl",
-                new SecuMangaGatewayWebService());
+        serviceEndpoint = Endpoint.publish("http://localhost:" + serverPort + "/SecuMangaWebService?wsdl", new SecuMangaGatewayWebService());
     }
 
     @Override
     protected String createStartupCompletedMessage() {
-        return this.getServerName() + " started - webservice published at " + "http://localhost:" + serverPort
-                + "/SecuMangaWebService?wsdl";
+        return this.getServerName() + " started - webservice published at " + "http://localhost:" + serverPort + "/SecuMangaWebService?wsdl";
     }
 
     @Override
@@ -198,6 +199,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
 
     /**
      * Creates stand-alone console server mocking the SecuManga-legacy API
+     * 
      * @param args first argument may optionally specify the port
      */
     public static void main(String[] args) {

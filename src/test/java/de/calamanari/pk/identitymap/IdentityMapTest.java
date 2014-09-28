@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Identity Map Test - demonstrates IDENTITY MAP pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identitymap;
 
 import static org.junit.Assert.assertEquals;
@@ -27,17 +29,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.identitymap.AddressEntity;
-import de.calamanari.pk.identitymap.CustomerEntity;
-import de.calamanari.pk.identitymap.DataManager;
-import de.calamanari.pk.identitymap.Database;
-import de.calamanari.pk.identitymap.IdentityMap;
-import de.calamanari.pk.identitymap.Session;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Identity Map Test - demonstrates IDENTITY MAP pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class IdentityMapTest {
@@ -55,17 +52,17 @@ public class IdentityMapTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, IdentityMapTest.class, CustomerEntity.class, AddressEntity.class,
-                DataManager.class, IdentityMap.class, Session.class, Database.class);
+        LogUtils.setLogLevel(LOG_LEVEL, IdentityMapTest.class, CustomerEntity.class, AddressEntity.class, DataManager.class, IdentityMap.class, Session.class,
+                Database.class);
 
-        Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true,
-                "ADR00091", "Quark-Street 70", "91827", "Gotham City", "USA", "Dear Mr.");
-        Database.addTestData("ID0002", "Mrs.", "Clark", "Petula", "0817-871", "Petula.Clark@neversend.com", false,
-                "ADR01071", "Black Owl Way 34", "1217", "Pork Town", "USA", "Dear Mrs.");
-        Database.addTestData("ID0003", "Mrs.", "Blum", "Shanya", "089 8172 2123", "Shanya.Blum@neversend.com", true,
-                "ADR00912", "Hauptstrasse 11", "71622", "Blasenhain", "GER", "Sehr gehrte Frau");
-        Database.addTestData("ID0004", "Mr.", "De-Vil", "Sa Tan", "666 666 666", "souleater@neversend.com", false,
-                "ADR00666", "Road to Hell 666", "666666", "Blackhole", "USA", "Your Majesty");
+        Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true, "ADR00091", "Quark-Street 70", "91827",
+                "Gotham City", "USA", "Dear Mr.");
+        Database.addTestData("ID0002", "Mrs.", "Clark", "Petula", "0817-871", "Petula.Clark@neversend.com", false, "ADR01071", "Black Owl Way 34", "1217",
+                "Pork Town", "USA", "Dear Mrs.");
+        Database.addTestData("ID0003", "Mrs.", "Blum", "Shanya", "089 8172 2123", "Shanya.Blum@neversend.com", true, "ADR00912", "Hauptstrasse 11", "71622",
+                "Blasenhain", "GER", "Sehr gehrte Frau");
+        Database.addTestData("ID0004", "Mr.", "De-Vil", "Sa Tan", "666 666 666", "souleater@neversend.com", false, "ADR00666", "Road to Hell 666", "666666",
+                "Blackhole", "USA", "Your Majesty");
     }
 
     @Test
@@ -93,8 +90,7 @@ public class IdentityMapTest {
         // the identity map ensures we won't get a duplicate but the same instance again
         assertSame(customer1, customer2);
 
-        LOGGER.info("Test identity map successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test identity map successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

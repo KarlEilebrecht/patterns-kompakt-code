@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Host Name Data - interface in NULL OBJECT demonstration
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.nullobject;
 
 import java.io.Serializable;
@@ -22,24 +24,28 @@ import java.util.Collection;
 
 /**
  * Host Name Data - the interface defines the methods, both concrete object and null object must provide<br>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface HostNameData extends Iterable<String>, Cloneable, Serializable {
 
     /**
      * Returns the number of entries in host name data
+     * 
      * @return number of entries
      */
     public int getNumberOfEntries();
 
     /**
      * returns the purpose (whatever this might be :-) )
+     * 
      * @return purpose of list
      */
     public String getPurpose();
 
     /**
      * Returns whether this list contains the name
+     * 
      * @param name the host name to look for
      * @return true if found
      */
@@ -47,6 +53,7 @@ public interface HostNameData extends Iterable<String>, Cloneable, Serializable 
 
     /**
      * Returns the position of the given entry
+     * 
      * @param name the host name to look for
      * @return true if found otherwise -1
      */
@@ -54,6 +61,7 @@ public interface HostNameData extends Iterable<String>, Cloneable, Serializable 
 
     /**
      * Returns whether the list contains all of the given names
+     * 
      * @param names collection of names to look for
      * @return true if all names of the given list where found in this list
      */
@@ -61,12 +69,14 @@ public interface HostNameData extends Iterable<String>, Cloneable, Serializable 
 
     /**
      * Returns an array with all the names from the list
+     * 
      * @return array of names
      */
     public String[] toArray();
 
     /**
      * Returns the name at the given position
+     * 
      * @param index position
      * @return name at the given index or null if not found
      */
@@ -74,6 +84,7 @@ public interface HostNameData extends Iterable<String>, Cloneable, Serializable 
 
     /**
      * Adds the name to the list
+     * 
      * @param name host name
      * @return true if the name was added, false otherwise
      */
@@ -81,6 +92,7 @@ public interface HostNameData extends Iterable<String>, Cloneable, Serializable 
 
     /**
      * HostNameData is cloneable
+     * 
      * @return clone
      */
     public Object clone();

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Tracer
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.singleton;
 
 import java.io.BufferedWriter;
@@ -29,6 +31,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Tracer - a straight forward thread-safe SINGLETON implementation
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class Tracer {
@@ -49,8 +52,7 @@ public final class Tracer {
     private static final ReentrantLock LOCK = new ReentrantLock(true);
 
     /**
-     * For concurrency control (file access) we use a fair lock (of course not the same lock as for singleton
-     * management, this would be counterproductive!)
+     * For concurrency control (file access) we use a fair lock (of course not the same lock as for singleton management, this would be counterproductive!)
      */
     private final ReentrantLock fileAccessLock = new ReentrantLock(true);
 
@@ -66,6 +68,7 @@ public final class Tracer {
 
     /**
      * Method to retrieve the only instance of Tracer - the SINGLETON instance
+     * 
      * @return the tracer instance
      */
     public static Tracer getInstance() {
@@ -92,6 +95,7 @@ public final class Tracer {
 
     /**
      * Nobody but the getInstance()-method will be able to create a Tracer instance
+     * 
      * @param outputFile destination for tracer
      */
     private Tracer(File outputFile) {
@@ -107,6 +111,7 @@ public final class Tracer {
 
     /**
      * The task the SINGLETON performs, in this case write messages to a file
+     * 
      * @param message some textual information
      */
     public void trace(String message) {
@@ -130,6 +135,7 @@ public final class Tracer {
 
     /**
      * shuts down the Tracer
+     * 
      * @param deleteLogFile if true, immediately delete the created log file
      */
     public static void shutdown(boolean deleteLogFile) {
@@ -147,6 +153,7 @@ public final class Tracer {
 
     /**
      * at last close the internal writer and the underlying file
+     * 
      * @param deleteLogFile if true, immediately delete the created log file
      */
     protected void closeFile(boolean deleteLogFile) {

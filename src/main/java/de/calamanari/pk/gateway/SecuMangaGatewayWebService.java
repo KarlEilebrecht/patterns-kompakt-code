@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * SecuManga Gateway Web Service
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.gateway;
 
 import java.io.BufferedReader;
@@ -32,6 +34,7 @@ import javax.jws.soap.SOAPBinding;
 /**
  * Secu Manga Gateway Web Service is the server-side implementation of the web service, the server-part of GATEWAY.<br>
  * Here we delegate calls to the "native" SecuManga-API.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 @WebService(name = "SecuMangaWebService", serviceName = "SecuMangaService")
@@ -46,6 +49,7 @@ public class SecuMangaGatewayWebService {
 
     /**
      * scramble text
+     * 
      * @param text to be scrambled
      * @return scrambled version
      */
@@ -56,6 +60,7 @@ public class SecuMangaGatewayWebService {
 
     /**
      * unscramble text
+     * 
      * @param text scrambled text
      * @return unscrambled text
      */
@@ -66,6 +71,7 @@ public class SecuMangaGatewayWebService {
 
     /**
      * Internal method because the logic of both web methods is basically the same here.
+     * 
      * @param text input (base64)
      * @param secuMangaCommand what to do
      * @return response (base64)
@@ -91,6 +97,7 @@ public class SecuMangaGatewayWebService {
 
     /**
      * This method sends a SecuManga-command to the remote-server, receives and returns the result.
+     * 
      * @param host host name
      * @param port port
      * @param command one of the SecuManga commands
@@ -100,37 +107,31 @@ public class SecuMangaGatewayWebService {
      */
     private String doSecuMangaRequest(String host, int port, String command, String sendContent) throws Exception {
 
-        try (Socket secuMangaClientSocket = new Socket(host, port)) {
-
-            PrintWriter bw = new PrintWriter(new OutputStreamWriter(secuMangaClientSocket.getOutputStream()));
-            BufferedReader br = new BufferedReader(new InputStreamReader(secuMangaClientSocket.getInputStream()));
-
+        try (Socket secuMangaClientSocket = new Socket(host, port);
+                PrintWriter bw = new PrintWriter(new OutputStreamWriter(secuMangaClientSocket.getOutputStream()));
+                BufferedReader br = new BufferedReader(new InputStreamReader(secuMangaClientSocket.getInputStream()))) {
             writeRequestMessage(bw, command, sendContent);
-
             String content = readResponseMessage(secuMangaClientSocket, br);
-
-            bw.close();
-            br.close();
             return content;
         }
     }
 
     /**
      * Writes the request to the given writer in SecuManga format
+     * 
      * @param serverWriter writer to server
      * @param command one of the SecuManga commands
      * @param sendContent content to be sent
      */
     private void writeRequestMessage(PrintWriter serverWriter, String command, String sendContent) {
-        sendContent = sendContent.replace(SecuMangaGatewayServer.END_OF_TRANSMISSION,
-                SecuMangaGatewayServer.END_OF_TRANSMISSION_REPLACEMENT);
-        serverWriter.write("!" + command + "\n" + sendContent + "\n" + SecuMangaGatewayServer.END_OF_TRANSMISSION
-                + "\n");
+        sendContent = sendContent.replace(SecuMangaGatewayServer.END_OF_TRANSMISSION, SecuMangaGatewayServer.END_OF_TRANSMISSION_REPLACEMENT);
+        serverWriter.write("!" + command + "\n" + sendContent + "\n" + SecuMangaGatewayServer.END_OF_TRANSMISSION + "\n");
         serverWriter.flush();
     }
 
     /**
      * Reads the SecuManga server response from the given reader
+     * 
      * @param secuMangaClientSocket open socket (to check status while reading)
      * @param serverReader delivers data from the SecuManaga server
      * @return obtained response from the SecuManga server
@@ -151,8 +152,7 @@ public class SecuMangaGatewayWebService {
             count++;
         }
         String content = sbContent.toString();
-        content = content.replace(SecuMangaGatewayServer.END_OF_TRANSMISSION_REPLACEMENT,
-                SecuMangaGatewayServer.END_OF_TRANSMISSION);
+        content = content.replace(SecuMangaGatewayServer.END_OF_TRANSMISSION_REPLACEMENT, SecuMangaGatewayServer.END_OF_TRANSMISSION);
         return content;
     }
 

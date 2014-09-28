@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Active Object Test - demonstrates ACTIVE OBJECT pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.activeobject;
 
 import static org.junit.Assert.assertEquals;
@@ -30,16 +32,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.activeobject.AbstractHistoryQueryEngine;
-import de.calamanari.pk.activeobject.HistoryQueryComponent;
-import de.calamanari.pk.activeobject.HistoryQueryScheduler;
-import de.calamanari.pk.activeobject.QueryRequest;
-import de.calamanari.pk.activeobject.QueryRequestFuture;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Active Object Test - demonstrates ACTIVE OBJECT pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ActiveObjectTest {
@@ -60,8 +58,7 @@ public class ActiveObjectTest {
     private static final List<String[]> MOCK_HISTORY_DATA;
     static {
         MOCK_HISTORY_DATA = new ArrayList<>();
-        MOCK_HISTORY_DATA.add(new String[] { "Jack", "Miller", "1976-08-08",
-                "The quick brown fox jumped over the lazy dog." });
+        MOCK_HISTORY_DATA.add(new String[] { "Jack", "Miller", "1976-08-08", "The quick brown fox jumped over the lazy dog." });
         MOCK_HISTORY_DATA.add(new String[] { "Lisa", "Miller", "1978-10-17", "Bad bananas punished by old trees." });
         MOCK_HISTORY_DATA.add(new String[] { "Mary", "Gin-Tonic", "1978-10-17", "Blue apes on skyscrapers." });
     }
@@ -79,8 +76,8 @@ public class ActiveObjectTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ActiveObjectTest.class, HistoryQueryEngineMock.class,
-                HistoryQueryComponent.class, HistoryQueryScheduler.class, QueryRequest.class, QueryRequestFuture.class);
+        LogUtils.setLogLevel(LOG_LEVEL, ActiveObjectTest.class, HistoryQueryEngineMock.class, HistoryQueryComponent.class, HistoryQueryScheduler.class,
+                QueryRequest.class, QueryRequestFuture.class);
     }
 
     @Test
@@ -124,8 +121,7 @@ public class ActiveObjectTest {
         assertEquals("Bad bananas punished by old trees.", result2.get(0)[3]);
         assertEquals("Blue apes on skyscrapers.", result3.get(1)[3]);
 
-        LOGGER.info("Test Active Object successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Active Object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 
@@ -157,8 +153,7 @@ public class ActiveObjectTest {
         assertTrue(future1.isQueryCancelled());
         assertNull(future1.getResult());
 
-        LOGGER.info("Test Active Object cancel successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Active Object cancel successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

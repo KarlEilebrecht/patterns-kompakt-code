@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Simple Thread Pool test case - demonstrates a thread pool.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.objectpool;
 
 import static org.junit.Assert.assertEquals;
@@ -30,13 +32,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.objectpool.PoolThread;
-import de.calamanari.pk.objectpool.SimpleThreadPool;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Test case to demonstrate thread pool.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SimpleThreadPoolTest {
@@ -57,10 +58,9 @@ public class SimpleThreadPoolTest {
     private static final int NUMBER_OF_RUNS = 500;
 
     /**
-     * count down latch to be notified when all threads have finished their work Note: this reference will be
-     * re-initialized before each test (see setUp()) and accessed by multiple threads concurrently. To avoid that a
-     * thread during the second test gets the (exhausted) latch object from the first test, I declare the reference
-     * volatile. This has nothing to do with the latch itself!
+     * count down latch to be notified when all threads have finished their work Note: this reference will be re-initialized before each test (see setUp()) and
+     * accessed by multiple threads concurrently. To avoid that a thread during the second test gets the (exhausted) latch object from the first test, I declare
+     * the reference volatile. This has nothing to do with the latch itself!
      */
     private static volatile CountDownLatch doneCount;
 
@@ -102,6 +102,7 @@ public class SimpleThreadPoolTest {
 
     /**
      * This one shows the result without pooling.
+     * 
      * @throws Exception on any error
      */
     @Test
@@ -119,12 +120,12 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test without pool successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test without pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
     /**
      * This one shows the result with an empty growing pool.
+     * 
      * @throws Exception on any error
      */
     @Test
@@ -144,8 +145,7 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test with empty growing pool successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test with empty growing pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
         int countBefore = growingPool.getThreadCount();
 
         int[] poolInfo = growingPool.getPoolInfo();
@@ -158,13 +158,13 @@ public class SimpleThreadPoolTest {
         assertEquals(growingPool.getThreadCount(), countBefore - 10);
 
         poolInfo = growingPool.getPoolInfo();
-        LOGGER.info("Number of threads after shrink: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle="
-                + poolInfo[2]);
+        LOGGER.info("Number of threads after shrink: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle=" + poolInfo[2]);
 
     }
 
     /**
      * This one shows the result with a small restricted pool (causing wait times).
+     * 
      * @throws Exception on any error
      */
     @Test
@@ -183,8 +183,7 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test with small restricted pool successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test with small restricted pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         int[] poolInfo = smallPool.getPoolInfo();
         LOGGER.info("Number of threads: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle=" + poolInfo[2]);
@@ -196,6 +195,7 @@ public class SimpleThreadPoolTest {
 
     /**
      * This one shows the result using a large pool (no resizing necessary).
+     * 
      * @throws Exception on any error
      */
     @Test
@@ -214,8 +214,7 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test with large pool successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test with large pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         int[] poolInfo = largeWarmPool.getPoolInfo();
         LOGGER.info("Number of threads: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle=" + poolInfo[2]);

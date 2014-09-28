@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Mapper Test - demonstrates MAPPER pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper;
 
 import static org.junit.Assert.assertEquals;
@@ -26,10 +28,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.mapper.AbstractMapper;
-import de.calamanari.pk.mapper.CustomerMapper;
-import de.calamanari.pk.mapper.DataManager;
-import de.calamanari.pk.mapper.Session;
 import de.calamanari.pk.mapper.firstsys.Address;
 import de.calamanari.pk.mapper.firstsys.Person;
 import de.calamanari.pk.mapper.secondsys.Customer;
@@ -38,6 +36,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Mapper Test - demonstrates MAPPER pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MapperTest {
@@ -60,8 +59,8 @@ public class MapperTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, MapperTest.class, CustomerMapper.class, AbstractMapper.class,
-                DataManager.class, Session.class, Address.class, Person.class, Customer.class);
+        LogUtils.setLogLevel(LOG_LEVEL, MapperTest.class, CustomerMapper.class, AbstractMapper.class, DataManager.class, Session.class, Address.class,
+                Person.class, Customer.class);
     }
 
     @Before
@@ -112,8 +111,7 @@ public class MapperTest {
         customer1 = dataManager.findCustomer(session, "1");
         assertEquals(customerString1, customer1.toString());
 
-        LOGGER.info("Test Mapper successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Mapper successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

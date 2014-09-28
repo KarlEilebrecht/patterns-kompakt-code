@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Manager - interface for customer persistence service
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,20 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.datatransferobject;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Customer Manager - interface for customer persistence service, implemented by the customer manager server for finding
- * customers
+ * Customer Manager - interface for customer persistence service, implemented by the customer manager server for finding customers
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface CustomerManager extends Remote {
 
     /**
      * For testing, adds a customer to the manager's database
+     * 
      * @param customerId identifier
      * @param lastName person's last name
      * @param firstName person's first name
@@ -37,11 +40,11 @@ public interface CustomerManager extends Remote {
      * @param city address field
      * @throws RemoteException on communication error
      */
-    public void addCustomer(String customerId, String lastName, String firstName, String street, String zipCode,
-            String city) throws RemoteException;
+    public void addCustomer(String customerId, String lastName, String firstName, String street, String zipCode, String city) throws RemoteException;
 
     /**
      * Returns the remote interface for the customer entity
+     * 
      * @param customerId identifier
      * @return entity or null if not found
      * @throws RemoteException on communication error
@@ -50,6 +53,7 @@ public interface CustomerManager extends Remote {
 
     /**
      * Returns the DATA TRANSFER OBJECT for the customer entity
+     * 
      * @param customerId identifier
      * @return dto or null if not found
      * @throws RemoteException on communication error

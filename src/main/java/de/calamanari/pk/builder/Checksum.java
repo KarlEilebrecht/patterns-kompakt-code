@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Checksum - the PRODUCT to be build in this BUILDER pattern demonstration.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.builder;
 
 import java.util.logging.Logger;
 
 /**
  * Checksum - the PRODUCT to be built in this BUILDER pattern demonstration.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Checksum {
@@ -42,6 +45,7 @@ public class Checksum {
 
     /**
      * Creates a new checksum instance.
+     * 
      * @param type technical name of method
      * @param value the result value of checksum algorithm
      */
@@ -53,6 +57,7 @@ public class Checksum {
 
     /**
      * Returns technical name of checksum algorithm
+     * 
      * @return type of checksum
      */
     public String getType() {
@@ -61,6 +66,7 @@ public class Checksum {
 
     /**
      * returns the computed checkum value
+     * 
      * @return value
      */
     public long getValue() {

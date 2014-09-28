@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Gateway test - demonstrates GATEWAY pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.gateway;
 
 import static org.junit.Assert.assertEquals;
@@ -26,7 +28,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.gateway.SecuMangaGatewayServer;
 import de.calamanari.pk.gateway.client.DefaultSecuMangaGatewayClient;
 import de.calamanari.pk.gateway.client.SecuMangaGatewayClient;
 import de.calamanari.pk.util.ExternalProcessManager;
@@ -35,6 +36,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Gateway test, demonstrates GATEWAY pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class GatewayTest {
@@ -63,9 +65,8 @@ public class GatewayTest {
         ExternalProcessManager.getInstance().startExternal(SecuMangaServerMock.class, LOGGER);
 
         // an external java-process, the server-part of the GATEWAY
-        ExternalProcessManager.getInstance().startExternal(SecuMangaGatewayServer.class, LOGGER,
-                "" + SecuMangaGatewayServer.DEFAULT_PORT, SecuMangaGatewayServer.DEFAULT_SECU_MANGA_HOST,
-                "" + SecuMangaGatewayServer.DEFAULT_SECU_MANGA_PORT);
+        ExternalProcessManager.getInstance().startExternal(SecuMangaGatewayServer.class, LOGGER, "" + SecuMangaGatewayServer.DEFAULT_PORT,
+                SecuMangaGatewayServer.DEFAULT_SECU_MANGA_HOST, "" + SecuMangaGatewayServer.DEFAULT_SECU_MANGA_PORT);
 
         // to be sure the servers are up, wait for 5 seconds
         Thread.sleep(5000);
@@ -87,8 +88,7 @@ public class GatewayTest {
         LOGGER.info("Test gateway ...");
         long startTimeNanos = System.nanoTime();
 
-        SecuMangaGatewayClient client = new DefaultSecuMangaGatewayClient("localhost",
-                DefaultSecuMangaGatewayClient.DEFAULT_PORT);
+        SecuMangaGatewayClient client = new DefaultSecuMangaGatewayClient("localhost", DefaultSecuMangaGatewayClient.DEFAULT_PORT);
 
         String testText = "Take a coffee to survive - Keep alive!";
 
@@ -103,7 +103,7 @@ public class GatewayTest {
         // As you'll see, the most time takes the client setup
         // Because the client instances are NOT safe to be used concurrently,
         // SecuMangaGatewayClient instances should be cached in an OBJECT POOL!
-        long avgTime = (long) ((double) (System.nanoTime() - startTimeNanos) / ((double) NUMBER_OF_RUNS * 2));
+        long avgTime = (long) ((System.nanoTime() - startTimeNanos) / ((double) NUMBER_OF_RUNS * 2));
         LOGGER.info("Average runtime per call: " + MiscUtils.formatNanosAsSeconds(avgTime) + " s");
 
         LOGGER.fine("'" + scrambled + "'");
@@ -111,8 +111,7 @@ public class GatewayTest {
 
         assertEquals(testText, unscrambled);
 
-        LOGGER.info("Test gateway successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test gateway successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

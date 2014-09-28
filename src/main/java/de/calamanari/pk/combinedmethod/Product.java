@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Product - supplementary product class
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.combinedmethod;
 
 import java.io.Serializable;
 
 /**
  * Product - supplementary product class
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Product implements Serializable {
@@ -42,6 +45,7 @@ public class Product implements Serializable {
 
     /**
      * Creates product
+     * 
      * @param productId system-id of this product
      * @param productName name of the product
      */
@@ -52,6 +56,7 @@ public class Product implements Serializable {
 
     /**
      * Returns the name of the product
+     * 
      * @return name of product
      */
     public String getProductName() {
@@ -60,6 +65,7 @@ public class Product implements Serializable {
 
     /**
      * Sets the name of the product
+     * 
      * @param productName name of product
      */
     public void setProductName(String productName) {
@@ -68,6 +74,7 @@ public class Product implements Serializable {
 
     /**
      * Sets the product-ID
+     * 
      * @param productId identifier
      */
     public void setProductId(String productId) {
@@ -76,6 +83,7 @@ public class Product implements Serializable {
 
     /**
      * Returns the system-id of the product
+     * 
      * @return product id
      */
     public String getProductId() {

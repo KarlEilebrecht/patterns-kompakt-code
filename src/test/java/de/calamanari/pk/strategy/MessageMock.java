@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Message Mock
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,14 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.strategy;
 
 import java.util.logging.Logger;
 
-import de.calamanari.pk.strategy.HashStrategy;
-
 /**
  * Message mock supports testing the hash STRATEGY.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class MessageMock {
@@ -49,6 +50,7 @@ public class MessageMock {
 
     /**
      * Creates new message using the given text and the specified hash strategy
+     * 
      * @param text raw information
      * @param hashStrategy hash method to be applied
      */
@@ -62,6 +64,7 @@ public class MessageMock {
 
     /**
      * Returns the name (key) of the used hash strategy
+     * 
      * @return strategy name
      */
     public String getHashMethodName() {
@@ -70,6 +73,7 @@ public class MessageMock {
 
     /**
      * Returns the hash value
+     * 
      * @return hash value
      */
     public String getMessageHash() {
@@ -78,6 +82,7 @@ public class MessageMock {
 
     /**
      * Validates the message using the given hash method
+     * 
      * @param hashStrategy hash method to be applied
      * @return true if hash matches otherwise false
      */
@@ -90,6 +95,7 @@ public class MessageMock {
 
     /**
      * Returns the message string itself
+     * 
      * @return text
      */
     public String getText() {
@@ -98,8 +104,8 @@ public class MessageMock {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({hashMethodName='" + this.hashMethodName + "', messageHash='"
-                + this.messageHash + "', text='" + this.text + "'})";
+        return this.getClass().getSimpleName() + "({hashMethodName='" + this.hashMethodName + "', messageHash='" + this.messageHash + "', text='" + this.text
+                + "'})";
     }
 
 }

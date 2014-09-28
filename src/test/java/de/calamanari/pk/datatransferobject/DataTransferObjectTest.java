@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Data Transfer Object test - demonstrates DATA TRANSFER OBJECT pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.datatransferobject;
 
 import static org.junit.Assert.assertEquals;
@@ -30,10 +32,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.datatransferobject.Customer;
-import de.calamanari.pk.datatransferobject.CustomerDto;
-import de.calamanari.pk.datatransferobject.CustomerManager;
-import de.calamanari.pk.datatransferobject.CustomerRemote;
 import de.calamanari.pk.datatransferobject.server.CustomerManagerServer;
 import de.calamanari.pk.util.ExternalProcessManager;
 import de.calamanari.pk.util.LogUtils;
@@ -41,6 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Data Transfer Object test - demonstrates DATA TRANSFER OBJECT pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DataTransferObjectTest {
@@ -77,8 +76,7 @@ public class DataTransferObjectTest {
 
         // an external java-process, the customer manager server
         if (Level.FINE.equals(LOG_LEVEL)) {
-            ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT,
-                    "logfine");
+            ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT, "logfine");
         }
         else {
             ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT);
@@ -122,8 +120,7 @@ public class DataTransferObjectTest {
 
         Thread.sleep(1000);
 
-        LOGGER.info("Test without data transfer object successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test without data transfer object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 
@@ -143,13 +140,13 @@ public class DataTransferObjectTest {
 
         Thread.sleep(1000);
 
-        LOGGER.info("Test with data transfer object successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test with data transfer object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 
     /**
      * Do some reads on the customer (could be a DTO or not)
+     * 
      * @param customer
      * @throws Exception
      */

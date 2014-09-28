@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Counter Flyweight Carrying Item - demonstrates a FLYWEIGHT carrying item.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.flyweight;
 
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 /**
  * Counter Flyweight Carrying Item - demonstrates a FLYWEIGHT carrying item.<br>
  * In a real-world scenario this could be a cell in a sheet carrying a cell renderer, which is the flyweight.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CounterFlyweightCarryingItem {
@@ -43,6 +46,7 @@ public class CounterFlyweightCarryingItem {
 
     /**
      * Creates new item
+     * 
      * @param itemData carried information
      * @param counterFlyweight carried flyweight instance
      */
@@ -54,6 +58,7 @@ public class CounterFlyweightCarryingItem {
     /**
      * This is the item's operation it can only perform leveraging the flyweight.<br>
      * In a real-world example this could be the display operation of a cell which it performs calling its renderer.
+     * 
      * @return counter info
      */
     public String getCounterInfo() {

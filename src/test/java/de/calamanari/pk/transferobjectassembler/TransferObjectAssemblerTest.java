@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Transfer Object Assembler Test - demonstrates TRANSFER OBJECT ASSEMBLER pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import static org.junit.Assert.assertEquals;
@@ -27,21 +29,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.transferobjectassembler.AddressDto;
-import de.calamanari.pk.transferobjectassembler.AddressEntity;
-import de.calamanari.pk.transferobjectassembler.CustomerDto;
-import de.calamanari.pk.transferobjectassembler.CustomerDwhInfoDto;
-import de.calamanari.pk.transferobjectassembler.CustomerDwhInfoEntity;
-import de.calamanari.pk.transferobjectassembler.CustomerEntity;
-import de.calamanari.pk.transferobjectassembler.CustomerService;
-import de.calamanari.pk.transferobjectassembler.Database;
-import de.calamanari.pk.transferobjectassembler.GeoBadPayerInfoDto;
-import de.calamanari.pk.transferobjectassembler.GeoBadPayerInfoDtoAssembler;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Transfer Object Assembler Test - demonstrates TRANSFER OBJECT ASSEMBLER pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class TransferObjectAssemblerTest {
@@ -64,22 +57,18 @@ public class TransferObjectAssemblerTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, TransferObjectAssemblerTest.class, CustomerEntity.class, CustomerDto.class,
-                AddressEntity.class, AddressDto.class, CustomerDwhInfoEntity.class, CustomerDwhInfoDto.class,
-                CustomerService.class, Database.class, GeoBadPayerInfoDto.class, GeoBadPayerInfoDtoAssembler.class);
+        LogUtils.setLogLevel(LOG_LEVEL, TransferObjectAssemblerTest.class, CustomerEntity.class, CustomerDto.class, AddressEntity.class, AddressDto.class,
+                CustomerDwhInfoEntity.class, CustomerDwhInfoDto.class, CustomerService.class, Database.class, GeoBadPayerInfoDto.class,
+                GeoBadPayerInfoDtoAssembler.class);
 
-        Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true,
-                "ADR00091", "Quark-Street 70", "91827", "Gotham City", "USA", "Dear Mr.", "Active Multi Buyer", 82,
-                "2009-09-12", "2011-10-01", false, false, false);
-        Database.addTestData("ID0002", "Mrs.", "Clark", "Petula", "0817-871", "Petula.Clark@neversend.com", false,
-                "ADR01071", "Black Owl Way 34", "1217", "Pork Town", "USA", "Dear Mrs.", "New Customer", 31,
-                "2011-08-21", "2011-08-21", false, false, true);
-        Database.addTestData("ID0003", "Mrs.", "Blum", "Shanya", "089 8172 2123", "Shanya.Blum@neversend.com", true,
-                "ADR00912", "Hauptstrasse 11", "71622", "Blasenhain", "GER", "Sehr gehrte Frau",
-                "Inactive Multi Buyer", 57, "2005-09-21", "2010-12-17", false, false, false);
-        Database.addTestData("ID0004", "Mr.", "De-Vil", "Sa Tan", "666 666 666", "souleater@neversend.com", false,
-                "ADR00666", "Road to Hell 666", "666666", "Blackhole", "USA", "Your Majesty", "Active Multi Buyer", 20,
-                "2006-06-06", "2011-08-30", true, true, true);
+        Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true, "ADR00091", "Quark-Street 70", "91827",
+                "Gotham City", "USA", "Dear Mr.", "Active Multi Buyer", 82, "2009-09-12", "2011-10-01", false, false, false);
+        Database.addTestData("ID0002", "Mrs.", "Clark", "Petula", "0817-871", "Petula.Clark@neversend.com", false, "ADR01071", "Black Owl Way 34", "1217",
+                "Pork Town", "USA", "Dear Mrs.", "New Customer", 31, "2011-08-21", "2011-08-21", false, false, true);
+        Database.addTestData("ID0003", "Mrs.", "Blum", "Shanya", "089 8172 2123", "Shanya.Blum@neversend.com", true, "ADR00912", "Hauptstrasse 11", "71622",
+                "Blasenhain", "GER", "Sehr gehrte Frau", "Inactive Multi Buyer", 57, "2005-09-21", "2010-12-17", false, false, false);
+        Database.addTestData("ID0004", "Mr.", "De-Vil", "Sa Tan", "666 666 666", "souleater@neversend.com", false, "ADR00666", "Road to Hell 666", "666666",
+                "Blackhole", "USA", "Your Majesty", "Active Multi Buyer", 20, "2006-06-06", "2011-08-30", true, true, true);
     }
 
     @Test
@@ -97,11 +86,10 @@ public class TransferObjectAssemblerTest {
             AddressDto addressDto = customerService.findAddressByCustomerId(customerId);
             if (customerDto != null && addressDto != null) {
 
-                String displayText = "{" + "customerId=" + customerDto.getCustomerId() + ", title="
-                        + customerDto.getTitle() + ", lastName=" + customerDto.getLastName() + ", firstName="
-                        + customerDto.getFirstName() + ", zipCode=" + addressDto.getZipCode() + ", city="
-                        + addressDto.getCity() + ", country=" + addressDto.getCountry() + ", customerType="
-                        + dwhInfoDto.getCustomerType() + ", dueInvoice=" + dwhInfoDto.isDueInvoice() + "}";
+                String displayText = "{" + "customerId=" + customerDto.getCustomerId() + ", title=" + customerDto.getTitle() + ", lastName="
+                        + customerDto.getLastName() + ", firstName=" + customerDto.getFirstName() + ", zipCode=" + addressDto.getZipCode() + ", city="
+                        + addressDto.getCity() + ", country=" + addressDto.getCountry() + ", customerType=" + dwhInfoDto.getCustomerType() + ", dueInvoice="
+                        + dwhInfoDto.isDueInvoice() + "}";
 
                 display.add(displayText);
             }
@@ -112,8 +100,8 @@ public class TransferObjectAssemblerTest {
                 + "{customerId=ID0004, title=Mr., lastName=De-Vil, firstName=Sa Tan, zipCode=666666, "
                 + "city=Blackhole, country=USA, customerType=Active Multi Buyer, dueInvoice=true}]", display.toString());
 
-        LOGGER.info("Test without transfer object assembler successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test without transfer object assembler successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
+                + " s");
 
     }
 
@@ -132,10 +120,9 @@ public class TransferObjectAssemblerTest {
         List<GeoBadPayerInfoDto> badPayerInfos = customerService.findGeoBadPayerInfos();
 
         for (GeoBadPayerInfoDto infoDto : badPayerInfos) {
-            String displayText = "{" + "customerId=" + infoDto.getCustomerId() + ", title=" + infoDto.getTitle()
-                    + ", lastName=" + infoDto.getLastName() + ", firstName=" + infoDto.getFirstName() + ", zipCode="
-                    + infoDto.getZipCode() + ", city=" + infoDto.getCity() + ", country=" + infoDto.getCountry()
-                    + ", customerType=" + infoDto.getCustomerType() + ", dueInvoice=" + infoDto.isDueInvoice() + "}";
+            String displayText = "{" + "customerId=" + infoDto.getCustomerId() + ", title=" + infoDto.getTitle() + ", lastName=" + infoDto.getLastName()
+                    + ", firstName=" + infoDto.getFirstName() + ", zipCode=" + infoDto.getZipCode() + ", city=" + infoDto.getCity() + ", country="
+                    + infoDto.getCountry() + ", customerType=" + infoDto.getCustomerType() + ", dueInvoice=" + infoDto.isDueInvoice() + "}";
 
             display.add(displayText);
         }
@@ -145,8 +132,8 @@ public class TransferObjectAssemblerTest {
                 + "{customerId=ID0004, title=Mr., lastName=De-Vil, firstName=Sa Tan, zipCode=666666, "
                 + "city=Blackhole, country=USA, customerType=Active Multi Buyer, dueInvoice=true}]", display.toString());
 
-        LOGGER.info("Test with transfer object assembler successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test with transfer object assembler successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
+                + " s");
 
     }
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address Entity - one of the business entities in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.util.logging.Logger;
 
 /**
  * Address Entity - one of the business entities in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AddressEntity {
@@ -74,6 +77,7 @@ public class AddressEntity {
 
     /**
      * Creates new address entity from the given data
+     * 
      * @param addressId identifier
      * @param customerId related customer's identifier
      * @param street address field
@@ -82,8 +86,7 @@ public class AddressEntity {
      * @param country address field
      * @param salutation address field
      */
-    public AddressEntity(String addressId, String customerId, String street, String zipCode, String city,
-            String country, String salutation) {
+    public AddressEntity(String addressId, String customerId, String street, String zipCode, String city, String country, String salutation) {
         this.addressId = addressId;
         this.customerId = customerId;
         this.street = street;
@@ -95,6 +98,7 @@ public class AddressEntity {
 
     /**
      * Returns the address ID
+     * 
      * @return addressId
      */
     public String getAddressId() {
@@ -103,6 +107,7 @@ public class AddressEntity {
 
     /**
      * Sets the address ID
+     * 
      * @param addressId identifier
      */
     public void setAddressId(String addressId) {
@@ -111,6 +116,7 @@ public class AddressEntity {
 
     /**
      * Returns the customer ID
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -119,6 +125,7 @@ public class AddressEntity {
 
     /**
      * Sets the customer ID
+     * 
      * @param customerId related customer's identifier
      */
     public void setCustomerId(String customerId) {
@@ -127,6 +134,7 @@ public class AddressEntity {
 
     /**
      * Returns street address
+     * 
      * @return street
      */
     public String getStreet() {
@@ -135,6 +143,7 @@ public class AddressEntity {
 
     /**
      * Sets street address
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -143,6 +152,7 @@ public class AddressEntity {
 
     /**
      * Returns the zipcode
+     * 
      * @return zipCode
      */
     public String getZipCode() {
@@ -151,6 +161,7 @@ public class AddressEntity {
 
     /**
      * Sets the zipCode
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -159,6 +170,7 @@ public class AddressEntity {
 
     /**
      * Returns the city name
+     * 
      * @return city
      */
     public String getCity() {
@@ -167,6 +179,7 @@ public class AddressEntity {
 
     /**
      * Sets the city name
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -175,6 +188,7 @@ public class AddressEntity {
 
     /**
      * Returns the country name
+     * 
      * @return country
      */
     public String getCountry() {
@@ -183,6 +197,7 @@ public class AddressEntity {
 
     /**
      * Sets the country
+     * 
      * @param country address field
      */
     public void setCountry(String country) {
@@ -191,6 +206,7 @@ public class AddressEntity {
 
     /**
      * Returns salutation for letters
+     * 
      * @return salutation
      */
     public String getSalutation() {
@@ -199,6 +215,7 @@ public class AddressEntity {
 
     /**
      * Sets the salutation for letters
+     * 
      * @param salutation address field
      */
     public void setSalutation(String salutation) {
@@ -207,6 +224,7 @@ public class AddressEntity {
 
     /**
      * Returns a corresponding data transfer object for this Address
+     * 
      * @return dto
      */
     public AddressDto toDto() {
@@ -216,6 +234,7 @@ public class AddressEntity {
 
     /**
      * Updates this entity from the given data transfer object
+     * 
      * @param dto source data transfer object to copy data from into this instance
      */
     public void fromDto(AddressDto dto) {
@@ -230,9 +249,8 @@ public class AddressEntity {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({addressId=" + addressId + ", customerId=" + customerId
-                + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + ", country=" + country
-                + ", salutation=" + salutation + "})";
+        return this.getClass().getSimpleName() + "({addressId=" + addressId + ", customerId=" + customerId + ", street=" + street + ", zipCode=" + zipCode
+                + ", city=" + city + ", country=" + country + ", salutation=" + salutation + "})";
     }
 
 }

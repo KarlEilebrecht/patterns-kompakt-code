@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * CRC32 Checksum Builder - concrete checksum BUILDER implementation using CRC32.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.builder;
 
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * CRC32 Checksum Builder - concrete checksum BUILDER implementation using CRC32.<br>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Crc32ChecksumBuilder implements ChecksumBuilder {
@@ -107,6 +110,7 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
     /**
      * Adds the string to the checksum
+     * 
      * @param text some text
      */
     private void addStringInternal(String text) {
@@ -121,6 +125,7 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
     /**
      * Adds the bytes
+     * 
      * @param bytes bytes to be added
      */
     private void addBytesInternal(byte[] bytes) {

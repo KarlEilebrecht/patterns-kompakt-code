@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address DTO - one of the data transfer objects in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.io.Serializable;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 
 /**
  * Address DTO - one of the data transfer objects in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AddressDto implements Serializable {
@@ -80,6 +83,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Creates new address DATA TRANSFER OBJECT from the given data
+     * 
      * @param addressId identifier
      * @param customerId related customer's identifier
      * @param street address field
@@ -88,8 +92,7 @@ public class AddressDto implements Serializable {
      * @param country address field
      * @param salutation address field
      */
-    public AddressDto(String addressId, String customerId, String street, String zipCode, String city, String country,
-            String salutation) {
+    public AddressDto(String addressId, String customerId, String street, String zipCode, String city, String country, String salutation) {
         this.addressId = addressId;
         this.customerId = customerId;
         this.street = street;
@@ -102,6 +105,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Returns the address ID
+     * 
      * @return addressId
      */
     public String getAddressId() {
@@ -110,6 +114,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Sets the address ID
+     * 
      * @param addressId identifier
      */
     public void setAddressId(String addressId) {
@@ -118,6 +123,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Returns the customer ID
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -126,6 +132,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Sets the customer ID
+     * 
      * @param customerId related customer's identifier
      */
     public void setCustomerId(String customerId) {
@@ -134,6 +141,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Returns street address
+     * 
      * @return street
      */
     public String getStreet() {
@@ -142,6 +150,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Sets street address
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -150,6 +159,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Returns the zipcode
+     * 
      * @return zipCode
      */
     public String getZipCode() {
@@ -158,6 +168,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Sets the zipCode
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -166,6 +177,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Returns the city name
+     * 
      * @return city
      */
     public String getCity() {
@@ -174,6 +186,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Sets the city name
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -182,6 +195,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Returns the country name
+     * 
      * @return country
      */
     public String getCountry() {
@@ -190,6 +204,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Sets the country
+     * 
      * @param country address field
      */
     public void setCountry(String country) {
@@ -198,6 +213,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Returns salutation for letters
+     * 
      * @return salutation
      */
     public String getSalutation() {
@@ -206,6 +222,7 @@ public class AddressDto implements Serializable {
 
     /**
      * Sets the salutation for letters
+     * 
      * @param salutation address field
      */
     public void setSalutation(String salutation) {
@@ -214,9 +231,8 @@ public class AddressDto implements Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({addressId=" + addressId + ", customerId=" + customerId
-                + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + ", country=" + country
-                + ", salutation=" + salutation + "})";
+        return this.getClass().getSimpleName() + "({addressId=" + addressId + ", customerId=" + customerId + ", street=" + street + ", zipCode=" + zipCode
+                + ", city=" + city + ", country=" + country + ", salutation=" + salutation + "})";
     }
 
 }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Product Manager - demonstrates COMBINED METHOD
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,23 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.combinedmethod;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Product Manager - interface provided by the remote product manager server, originally with two methods to first
- * acquire a new id and than register the product. As always the reason for this strange interface is legacy behavior.
- * :-) <br>
- * A new COMBINED METHOD was introduced to combine the two steps into one transactional step to avoid inconsistencies in
- * case of error.
+ * Product Manager - interface provided by the remote product manager server, originally with two methods to first acquire a new id and than register the
+ * product. As always the reason for this strange interface is legacy behavior. :-) <br>
+ * A new COMBINED METHOD was introduced to combine the two steps into one transactional step to avoid inconsistencies in case of error.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface ProductManager extends Remote {
 
     /**
      * Returns a new product-ID, the ID must be acquired before registering a new product
+     * 
      * @return acquired product identifier
      * @throws RemoteException on remoting error
      */
@@ -39,6 +41,7 @@ public interface ProductManager extends Remote {
 
     /**
      * Registers a new product
+     * 
      * @param product the product to be registered, including a previously registered id
      * @throws RemoteException on remoting error
      */
@@ -46,6 +49,7 @@ public interface ProductManager extends Remote {
 
     /**
      * Finds the product and returns it
+     * 
      * @param id the product's id
      * @return product or null if not found
      * @throws RemoteException on remoting error
@@ -54,6 +58,7 @@ public interface ProductManager extends Remote {
 
     /**
      * COMBINED METHOD to acquire id and then register the product in one step
+     * 
      * @param product without id
      * @return product including id from remote system
      * @throws RemoteException on remoting error
@@ -62,12 +67,14 @@ public interface ProductManager extends Remote {
 
     /**
      * for testing, simulates error on next call
+     * 
      * @throws RemoteException on remoting error
      */
     public void setNextProductRegistrationMustFail() throws RemoteException;
 
     /**
      * for testing, resets state
+     * 
      * @throws RemoteException on remoting error
      */
     public void reset() throws RemoteException;

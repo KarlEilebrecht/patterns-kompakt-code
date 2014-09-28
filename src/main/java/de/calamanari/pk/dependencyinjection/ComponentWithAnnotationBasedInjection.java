@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Component With Annotation Based Injection
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 import java.util.logging.Logger;
@@ -23,6 +25,7 @@ import javax.annotation.Resource;
 
 /**
  * Component With annotation based Injection
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ComponentWithAnnotationBasedInjection implements Component {

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract Voucher Creator
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.factorymethod;
 
 import java.util.logging.Logger;
 
 /**
  * Abstract Voucher Creator is the abstract creator in this FACTORY METHOD example scenario.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractVoucherCreator {
@@ -33,6 +36,7 @@ public abstract class AbstractVoucherCreator {
     /**
      * Central method in this FACTORY METHOD example.<br>
      * Concrete voucher creators return a new voucher using the given arguments and their special data/logic.<br>
+     * 
      * @param firstName first name of the voucher owner
      * @param lastName last name of the voucher owner
      * @param value voucher's value

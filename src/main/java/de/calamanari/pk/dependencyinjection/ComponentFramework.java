@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Component Framework - supplementary class in DEPENDENCY INJECTION example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 import java.lang.reflect.Constructor;
@@ -27,8 +29,8 @@ import javax.annotation.Resource;
 
 /**
  * Component Framework - supplementary class in DEPENDENCY INJECTION example<br>
- * Allows the client to create a component, injects the necessary references before handing over the component to the
- * client.
+ * Allows the client to create a component, injects the necessary references before handing over the component to the client.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class ComponentFramework {
@@ -69,9 +71,10 @@ public final class ComponentFramework {
     private ComponentFramework() {
         // no instances
     }
-    
+
     /**
      * Creates the requested component and injects necessary services
+     * 
      * @param componentIdentifier identifies component type
      * @return created component
      * @throws Exception on any error
@@ -98,6 +101,7 @@ public final class ComponentFramework {
 
     /**
      * Creates component and performs a setter or annotation based injection (involves reflection).
+     * 
      * @param componentIdentifier for debugging
      * @param componentClass resolved class to create an instance of
      * @return component with injected reference
@@ -105,9 +109,8 @@ public final class ComponentFramework {
      * @throws IllegalAccessException injection method or field could not be accessed
      * @throws InvocationTargetException injection method or field could not be invoked
      */
-    private static Component createAndPerformSetterOrAnnotationBasedInjection(String componentIdentifier,
-            Class<? extends Component> componentClass) throws InstantiationException, IllegalAccessException,
-            InvocationTargetException {
+    private static Component createAndPerformSetterOrAnnotationBasedInjection(String componentIdentifier, Class<? extends Component> componentClass)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
         Component component = null;
         Method method = getInjectionMethod(componentClass);
         Field field = getInjectionField(componentClass);
@@ -122,22 +125,23 @@ public final class ComponentFramework {
             field.set(component, THE_PRINT_SERVICE);
         }
         else {
-            throw new IllegalArgumentException("Unable to inject reference into component: " + componentIdentifier
-                    + ", which was resolved to " + componentClass.getName());
+            throw new IllegalArgumentException("Unable to inject reference into component: " + componentIdentifier + ", which was resolved to "
+                    + componentClass.getName());
         }
         return component;
     }
 
     /**
      * Creates the component and injects the reference directly via constructor.
+     * 
      * @param constructor the component constructor to be called
      * @return component with injected reference
      * @throws InstantiationException if component could not be created
      * @throws IllegalAccessException injection method or field could not be accessed
      * @throws InvocationTargetException injection method or field could not be invoked
      */
-    private static Component createAndPerformConstructorInjection(Constructor<? extends Component> constructor)
-            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+    private static Component createAndPerformConstructorInjection(Constructor<? extends Component> constructor) throws InstantiationException,
+            IllegalAccessException, InvocationTargetException {
         Component component = null;
         LOGGER.fine("Executing constructor injection ...");
         component = constructor.newInstance(THE_PRINT_SERVICE);
@@ -146,13 +150,14 @@ public final class ComponentFramework {
 
     /**
      * Creates a new instance of the component and injects the reference via an interface method.
+     * 
      * @param componentClass resolved class to create an instance of
      * @return component with injected reference
      * @throws InstantiationException if component could not be created
      * @throws IllegalAccessException injection method or field could not be accessed
      */
-    private static Component createAndPerformInterfaceInjection(Class<? extends Component> componentClass)
-            throws InstantiationException, IllegalAccessException {
+    private static Component createAndPerformInterfaceInjection(Class<? extends Component> componentClass) throws InstantiationException,
+            IllegalAccessException {
         Component component = null;
         component = componentClass.newInstance();
         LOGGER.fine("Executing interface injection ...");
@@ -162,6 +167,7 @@ public final class ComponentFramework {
 
     /**
      * Resolves the component class by the given identifier
+     * 
      * @param componentIdentifier {@link #COMPONENT_1}, {@link #COMPONENT_2} or {@link #COMPONENT_3}
      * @return component class
      */
@@ -187,6 +193,7 @@ public final class ComponentFramework {
 
     /**
      * Return an injection constructor for print service injection or null if no such constructor.
+     * 
      * @param cl class to be reflected
      * @return appropriate constructor
      */
@@ -202,6 +209,7 @@ public final class ComponentFramework {
 
     /**
      * Return an injection method setPrintService() for print service injection or null if no such method.
+     * 
      * @param cl class to be reflected
      * @return appropriate method or null
      */
@@ -217,6 +225,7 @@ public final class ComponentFramework {
 
     /**
      * Return an annotated injection field for print service injection or null if no such field.
+     * 
      * @param cl class to be reflected
      * @return appropriate field or null
      */

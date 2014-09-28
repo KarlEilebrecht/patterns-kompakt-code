@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Request - Supplementary class representing objects using a Universally Unique ID (UUID/GUID)
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.uuid;
 
 /**
  * Request - Supplementary class representing objects using a Universally Unique ID (UUID/GUID)
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Request implements Comparable<Request> {
@@ -40,6 +43,7 @@ public class Request implements Comparable<Request> {
 
     /**
      * Creates new request object
+     * 
      * @param id unique identifier
      * @param requestTimeNanos time request occurred (System.currentTimeNanos())
      * @param payload some data related to this request
@@ -52,6 +56,7 @@ public class Request implements Comparable<Request> {
 
     /**
      * Returns the payload associated to this request
+     * 
      * @return payload
      */
     public String getPayload() {
@@ -60,6 +65,7 @@ public class Request implements Comparable<Request> {
 
     /**
      * Sets the payload associated to this request
+     * 
      * @param payload request payload
      */
     public void setPayload(String payload) {
@@ -68,6 +74,7 @@ public class Request implements Comparable<Request> {
 
     /**
      * Returns the uique ID of this request
+     * 
      * @return unique id
      */
     public String getId() {
@@ -76,6 +83,7 @@ public class Request implements Comparable<Request> {
 
     /**
      * Returns the time this request occurred (System.nanoTime())
+     * 
      * @return nanoTime
      */
     public long getRequestTimeNanos() {
@@ -116,8 +124,7 @@ public class Request implements Comparable<Request> {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({id=" + id + ", requestTimeNanos=" + requestTimeNanos + ", payload="
-                + payload + "})";
+        return this.getClass().getSimpleName() + "({id=" + id + ", requestTimeNanos=" + requestTimeNanos + ", payload=" + payload + "})";
     }
 
 }

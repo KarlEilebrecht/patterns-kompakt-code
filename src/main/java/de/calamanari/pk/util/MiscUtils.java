@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Miscellaneous Utilities
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.io.ByteArrayInputStream;
@@ -40,6 +42,7 @@ import java.util.logging.Logger;
 
 /**
  * Miscellaneous utilities
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class MiscUtils {
@@ -54,8 +57,7 @@ public final class MiscUtils {
      */
     private static final long STARTUP_NANO_TIME;
     static {
-        long deltaNanosSinceJvmStart = (System.currentTimeMillis() - ManagementFactory.getRuntimeMXBean()
-                .getStartTime()) * 1_000_000;
+        long deltaNanosSinceJvmStart = (System.currentTimeMillis() - ManagementFactory.getRuntimeMXBean().getStartTime()) * 1_000_000;
         STARTUP_NANO_TIME = System.nanoTime() - deltaNanosSinceJvmStart;
     }
 
@@ -68,7 +70,7 @@ public final class MiscUtils {
      * one billion
      */
     public static final int BILLION = 1_000_000_000;
-    
+
     /**
      * Utility class
      */
@@ -79,12 +81,12 @@ public final class MiscUtils {
     /**
      * Nanoseconds since system startup
      * <ul>
-     * <li>The first call initializes the measurement. This is the only calculation involving <i>wall clock time</i> (
-     * <code>System.currentTimeMillis()</code>).<br>
-     * Thus it is a good idea to call this method once right after JVM start to avoid any problems with clock adjustments
-     * (i.g. daylight saving). </li>
+     * <li>The first call initializes the measurement. This is the only calculation involving <i>wall clock time</i> ( <code>System.currentTimeMillis()</code>).
+     * <br>
+     * Thus it is a good idea to call this method once right after JVM start to avoid any problems with clock adjustments (i.g. daylight saving).</li>
      * <li>The precision may vary on different platforms.</li>
      * </ul>
+     * 
      * @return positive value denoting time in nanoseconds
      */
     public static long getSystemUptimeNanos() {
@@ -109,6 +111,7 @@ public final class MiscUtils {
 
     /**
      * Returns the user's home directory
+     * 
      * @return current user's home directory
      */
     public static File getHomeDirectory() {
@@ -117,6 +120,7 @@ public final class MiscUtils {
 
     /**
      * Writes the given string to the specified file using UTF-8 character set.
+     * 
      * @param str string to be written
      * @param destinationFile target file
      * @return file size
@@ -127,6 +131,7 @@ public final class MiscUtils {
 
     /**
      * Writes the given string to the specified file.
+     * 
      * @param str string to be written
      * @param destinationFile target file
      * @param charsetName character set, null means "UTF-8"
@@ -147,6 +152,7 @@ public final class MiscUtils {
 
     /**
      * Reads the given file and returns its content as a string using UTF-8 character set.
+     * 
      * @param sourceFile file to be read
      * @return String with file content
      */
@@ -156,6 +162,7 @@ public final class MiscUtils {
 
     /**
      * Reads the given file and returns its content as a string
+     * 
      * @param sourceFile file to be read
      * @param charsetName character set, null means "UTF-8"
      * @return String with file content, line separator = '\n'
@@ -188,6 +195,7 @@ public final class MiscUtils {
 
     /**
      * This method encodes a given string - using top secret algorithm! :-)
+     * 
      * @param source text
      * @return scrambled text
      */
@@ -199,7 +207,7 @@ public final class MiscUtils {
         for (int i = 0; i < len; i++) {
             char ch = characters[i];
             if (ch >= 65 && ch <= 90) {
-                int code = (int) ch;
+                int code = ch;
                 code = code - 65;
                 code = code + startOffset + i;
                 code = code % 26;
@@ -207,7 +215,7 @@ public final class MiscUtils {
                 ch = (char) code;
             }
             else if (ch >= 97 && ch <= 122) {
-                int code = (int) ch;
+                int code = ch;
                 code = code - 97;
                 code = code + startOffset + i;
                 code = code % 26;
@@ -221,6 +229,7 @@ public final class MiscUtils {
 
     /**
      * This method decodes a given string - using top secret algorithm! :-)
+     * 
      * @param scrambled text
      * @return unscrambled text
      */
@@ -232,7 +241,7 @@ public final class MiscUtils {
         for (int i = 0; i < len; i++) {
             char ch = characters[i];
             if (ch >= 65 && ch <= 90) {
-                int code = (int) ch;
+                int code = ch;
                 code = code - 65;
                 int dif = (startOffset + i) - code;
                 if (dif > 0) {
@@ -244,7 +253,7 @@ public final class MiscUtils {
                 ch = (char) code;
             }
             else if (ch >= 97 && ch <= 122) {
-                int code = (int) ch;
+                int code = ch;
                 code = code - 97;
                 int dif = (startOffset + i) - code;
                 if (dif > 0) {
@@ -262,6 +271,7 @@ public final class MiscUtils {
 
     /**
      * Returns the file object for the denoted resource
+     * 
      * @param resourceName name of resource
      * @return file object
      */
@@ -275,6 +285,7 @@ public final class MiscUtils {
 
     /**
      * Returns the bytes of the given string using UTF-8.
+     * 
      * @param text string to be converted into bytes
      * @return bytes after encoding the given text using UTF-8
      */
@@ -292,6 +303,7 @@ public final class MiscUtils {
 
     /**
      * Sets the time parts of the given calendar to 0
+     * 
      * @param cal some date
      */
     public static void setMidnight(Calendar cal) {
@@ -304,6 +316,7 @@ public final class MiscUtils {
     /**
      * Returns the difference between the two dates in days (at midnight).<br>
      * Be aware of the fact that this straight-forward implementation doesn't care much about time zones (use default)!
+     * 
      * @param date1 first date
      * @param date2 second date
      * @return difference in days
@@ -334,6 +347,7 @@ public final class MiscUtils {
 
     /**
      * Returns the time in seconds formatted
+     * 
      * @param nanos time in nanoseconds
      * @return formatted time in seconds
      */
@@ -346,20 +360,24 @@ public final class MiscUtils {
 
     /**
      * Simulates a pass-by-value situation (serialize/deserialize the given object)
+     * 
      * @param input must be serializable, not null
      * @param <T> type to be serialized and deserialized
      * @return object passed by value
      * @throws IOException if serialization/deserialization failed
      */
     public static <T extends Object> T passByValue(T input) throws IOException {
+        @SuppressWarnings("resource")
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(input);
-        oos.close();
+        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(input);
+        }
         bos.close();
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-                ObjectInputStream ois = new ObjectInputStream(bis)) {
-            return (T) input.getClass().cast(ois.readObject());
+
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray()); ObjectInputStream ois = new ObjectInputStream(bis)) {
+            @SuppressWarnings("unchecked")
+            T res = (T) input.getClass().cast(ois.readObject());
+            return res;
         }
         catch (ClassNotFoundException | ClassCastException ex) {
             throw new IOException("Unexpected type change after serialization/deserialization." + ex);
@@ -368,6 +386,7 @@ public final class MiscUtils {
 
     /**
      * This method "boxes" an array of primitives to the corresponding array of wrapper instances.
+     * 
      * @param primitiveArray (i.e. long[])
      * @param <T> wrapper type of array for boxing
      * @return wrapper array (i.e. Long[])
@@ -447,6 +466,7 @@ public final class MiscUtils {
 
     /**
      * Closes the given resource(s) and catches any exception
+     * 
      * @param logLevel the level for logging the exceptions, null suppresses logging
      * @param closeables resource(s) to be closed, null elements will be silently ignored
      */
@@ -467,6 +487,7 @@ public final class MiscUtils {
 
     /**
      * Closes the given resource(s) and catches any exception
+     * 
      * @param closeables resource(s) to be closed, null elements will be silently ignored
      */
     public static void closeResourceCatch(Closeable... closeables) {
@@ -475,6 +496,7 @@ public final class MiscUtils {
 
     /**
      * Calls {@linkplain Thread#sleep(long)} and optionally logs any {@linkplain InterruptedException}
+     * 
      * @param logLevel if null or level is disabled, ignores the exception, otherwise logs with the given level
      * @param millis time in milliseconds to sleep
      */
@@ -492,6 +514,7 @@ public final class MiscUtils {
     /**
      * Sleeps for the given time or until an {@linkplain InterruptedException} occurs.<br>
      * The latter will be suppressed.
+     * 
      * @param millis time in milliseconds to sleep
      */
     public static void sleepIgnoreException(long millis) {
@@ -501,6 +524,7 @@ public final class MiscUtils {
     /**
      * Sleeps for the given time or until an {@linkplain InterruptedException} occurs.<br>
      * The latter will be wrapped in a {@linkplain RuntimeException}.
+     * 
      * @param millis time in milliseconds to sleep
      */
     public static void sleepThrowRuntimeException(long millis) {
@@ -514,6 +538,7 @@ public final class MiscUtils {
 
     /**
      * Determines whether the current VM runs on a Microsoft Windows System.
+     * 
      * @return true if OS is Windows otherwise false
      */
     public static boolean isWindowsOS() {

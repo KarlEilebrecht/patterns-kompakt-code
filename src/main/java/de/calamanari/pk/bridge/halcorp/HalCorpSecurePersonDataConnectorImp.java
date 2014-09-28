@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * HalCorp Secure Person Data Connector Imp
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,14 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge.halcorp;
 
 import de.calamanari.pk.bridge.Address;
 import de.calamanari.pk.bridge.Person;
 
 /**
- * HalCorp Person Data Connector Imp - a concrete member of the "bridged-out" hierarchy. In this example this is a
- * second connector of the fictional HalCorp company, which supports some kind of super secure transport :-).
+ * HalCorp Person Data Connector Imp - a concrete member of the "bridged-out" hierarchy. In this example this is a second connector of the fictional HalCorp
+ * company, which supports some kind of super secure transport :-).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class HalCorpSecurePersonDataConnectorImp extends HalCorpPersonDataConnectorImp {

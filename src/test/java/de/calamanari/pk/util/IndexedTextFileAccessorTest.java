@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * IndexedTextFileAccessorTest
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import static org.junit.Assert.assertEquals;
@@ -35,12 +37,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.util.LogUtils;
-import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 
 /**
  * IndexedTextFileAccessorTest - some tests for IndexedTextFileAccessor class
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class IndexedTextFileAccessorTest {
@@ -156,50 +157,37 @@ public class IndexedTextFileAccessorTest {
         LogUtils.setLogLevel(LOG_LEVEL, IndexedTextFileAccessorTest.class, IndexedTextFileAccessor.class);
 
         emptyFile = createTextFile("emptyFile_" + CHARSET_NAME + ".txt", null, CHARSET_NAME);
-        onlyEmptyLines3File = createTextFile("onlyEmptyLines3File_" + CHARSET_NAME + ".txt",
-                Arrays.asList(new String[] { "", "\r" }), CHARSET_NAME);
-        singleCharFile = createTextFile("singleCharFile_" + CHARSET_NAME + ".txt",
-                Arrays.asList(new String[] { "\u00C4" }), CHARSET_NAME);
-        singleLineFile = createTextFile("singleLineFile_" + CHARSET_NAME + ".txt",
-                Arrays.asList(new String[] { "\u00C4 is a german letter." }), CHARSET_NAME);
+        onlyEmptyLines3File = createTextFile("onlyEmptyLines3File_" + CHARSET_NAME + ".txt", Arrays.asList(new String[] { "", "\r" }), CHARSET_NAME);
+        singleCharFile = createTextFile("singleCharFile_" + CHARSET_NAME + ".txt", Arrays.asList(new String[] { "\u00C4" }), CHARSET_NAME);
+        singleLineFile = createTextFile("singleLineFile_" + CHARSET_NAME + ".txt", Arrays.asList(new String[] { "\u00C4 is a german letter." }), CHARSET_NAME);
         singleLinePlusNewLineFile = createTextFile("singleLinePlusNewLineFile_" + CHARSET_NAME + ".txt",
                 Arrays.asList(new String[] { "\u00C4 is a german letter.", "" }), CHARSET_NAME);
-        oddChar3NumFile = createTextFile("oddChar3NumFile_" + CHARSET_NAME + ".txt",
-                Arrays.asList(new String[] { "\u00C4\u00D6\u00DC" }), CHARSET_NAME);
-        evenChar4NumFile = createTextFile("evenChar4NumFile_" + CHARSET_NAME + ".txt",
-                Arrays.asList(new String[] { "\u00C4\u00D6\u00DC!" }), CHARSET_NAME);
-        oddLine3NumFile = createTextFile(
-                "oddLine3NumFile_" + CHARSET_NAME + ".txt",
-                Arrays.asList(new String[] { "\u00C4 is a german letter.", "\u00D6 is a german letter.",
-                        "\u00DC is a german letter." }), CHARSET_NAME);
-        evenLine4NumFile = createTextFile(
-                "evenLine4NumFile_" + CHARSET_NAME + ".txt",
-                Arrays.asList(new String[] { "\u00C4 is a german letter.", "\u00D6 is a german letter.",
-                        "\u00DC is a german letter.", "Lorem ipsum." }), CHARSET_NAME);
+        oddChar3NumFile = createTextFile("oddChar3NumFile_" + CHARSET_NAME + ".txt", Arrays.asList(new String[] { "\u00C4\u00D6\u00DC" }), CHARSET_NAME);
+        evenChar4NumFile = createTextFile("evenChar4NumFile_" + CHARSET_NAME + ".txt", Arrays.asList(new String[] { "\u00C4\u00D6\u00DC!" }), CHARSET_NAME);
+        oddLine3NumFile = createTextFile("oddLine3NumFile_" + CHARSET_NAME + ".txt",
+                Arrays.asList(new String[] { "\u00C4 is a german letter.", "\u00D6 is a german letter.", "\u00DC is a german letter." }), CHARSET_NAME);
+        evenLine4NumFile = createTextFile("evenLine4NumFile_" + CHARSET_NAME + ".txt",
+                Arrays.asList(new String[] { "\u00C4 is a german letter.", "\u00D6 is a german letter.", "\u00DC is a german letter.", "Lorem ipsum." }),
+                CHARSET_NAME);
         String[] manyLines = new String[1000];
 
         for (int i = 0; i < 1000; i++) {
             manyLines[i] = "" + i + MULTI_LINE_BASE;
         }
 
-        surrogatePairFile = createTextFile("surrogatePairFile_UTF8.txt",
-                Arrays.asList(new String[] { "\uD800\uDC00" }), "UTF-8");
-        leadingSurrogatePairFile = createTextFile("leadingSurrogatePairFile_UTF8.txt",
-                Arrays.asList(new String[] { "\uD800\uDC00ABC" }), "UTF-8");
-        trailingSurrogatePairFile = createTextFile("trailingSurrogatePairFile_UTF8.txt",
-                Arrays.asList(new String[] { "ABC\uD800\uDC00" }), "UTF-8");
-        miscSurrogatePairFile = createTextFile("miscSurrogatePairFile_UTF8.txt",
-                Arrays.asList(new String[] { "A\uD800\uDC00BC\uD911\uDC14E\uD912\uDC15F" }), "UTF-8");
+        surrogatePairFile = createTextFile("surrogatePairFile_UTF8.txt", Arrays.asList(new String[] { "\uD800\uDC00" }), "UTF-8");
+        leadingSurrogatePairFile = createTextFile("leadingSurrogatePairFile_UTF8.txt", Arrays.asList(new String[] { "\uD800\uDC00ABC" }), "UTF-8");
+        trailingSurrogatePairFile = createTextFile("trailingSurrogatePairFile_UTF8.txt", Arrays.asList(new String[] { "ABC\uD800\uDC00" }), "UTF-8");
+        miscSurrogatePairFile = createTextFile("miscSurrogatePairFile_UTF8.txt", Arrays.asList(new String[] { "A\uD800\uDC00BC\uD911\uDC14E\uD912\uDC15F" }),
+                "UTF-8");
 
-        multiLines1000File = createTextFile("multiLines1000File_" + CHARSET_NAME + ".txt", Arrays.asList(manyLines),
-                CHARSET_NAME);
+        multiLines1000File = createTextFile("multiLines1000File_" + CHARSET_NAME + ".txt", Arrays.asList(manyLines), CHARSET_NAME);
 
         if (HUGE_TEST_ALLOWED) {
             long startTimeNanos = System.nanoTime();
             LOGGER.info("Creating huge file ... ");
             huge1000000LinesFile = createHugeFile("hugeFile1000000_" + CHARSET_NAME + ".txt");
-            LOGGER.info("Huge file '" + huge1000000LinesFile + "' created after "
-                    + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s.");
+            LOGGER.info("Huge file '" + huge1000000LinesFile + "' created after " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s.");
         }
 
     }
@@ -370,8 +358,7 @@ public class IndexedTextFileAccessorTest {
         assertEquals(1, ifa.getNumberOfLines());
         assertEquals(8, ifa.getNumberOfCharacterIndexEntries());
         assertEquals(1, ifa.getNumberOfLineIndexEntries());
-        assertEquals("A\uD800\uDC00BC\uD911\uDC14E\uD912\uDC15F",
-                readLineAndClose(ifa.createInputStreamReaderAtLine(0)));
+        assertEquals("A\uD800\uDC00BC\uD911\uDC14E\uD912\uDC15F", readLineAndClose(ifa.createInputStreamReaderAtLine(0)));
         assertEquals("\uD800\uDC00BC\uD911\uDC14E\uD912\uDC15F", readLineAndClose(ifa.createInputStreamReaderAtChar(1)));
         assertEquals("\uDC00BC\uD911\uDC14E\uD912\uDC15F", readLineAndClose(ifa.createInputStreamReaderAtChar(2)));
         assertEquals("BC\uD911\uDC14E\uD912\uDC15F", readLineAndClose(ifa.createInputStreamReaderAtChar(3)));
@@ -402,15 +389,13 @@ public class IndexedTextFileAccessorTest {
             long startTimeNanos = System.nanoTime();
             LOGGER.info("Creating IndexedTextFileAccessor ... ");
             IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(huge1000000LinesFile, CHARSET_NAME);
-            LOGGER.info("Index ready after " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                    + " s.");
+            LOGGER.info("Index ready after " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s.");
             assertEquals(1146888889, ifa.getFileSize());
             assertEquals(1056888889, ifa.getNumberOfCharacters());
             assertEquals(1000000, ifa.getNumberOfLines());
             assertTrue(9990 < ifa.getNumberOfCharacterIndexEntries());
             assertTrue(9980 < ifa.getNumberOfLineIndexEntries());
-            assertEquals("---> \u00C4\u00D6\u00DC!01234567890123456789",
-                    readLineAndClose(ifa.createInputStreamReaderAtChar(999052)));
+            assertEquals("---> \u00C4\u00D6\u00DC!01234567890123456789", readLineAndClose(ifa.createInputStreamReaderAtChar(999052)));
             String s = readLineAndClose(ifa.createInputStreamReaderAtLine(999999));
             assertEquals(1056, s.length());
             assertEquals("999999 --------> \u00C4\u00D6\u00DC!01234567890123456789", s.substring(0, 41));
@@ -420,6 +405,7 @@ public class IndexedTextFileAccessorTest {
 
     /**
      * helper to read some characters and close the file
+     * 
      * @param isr reader from index
      * @param length characters to read
      * @return string with characters
@@ -440,6 +426,7 @@ public class IndexedTextFileAccessorTest {
 
     /**
      * helper to read some characters and close the file
+     * 
      * @param isr reader from index
      * @param length characters to read
      * @return string with characters
@@ -459,6 +446,7 @@ public class IndexedTextFileAccessorTest {
 
     /**
      * Method to create test file
+     * 
      * @param fileName name of file (path will be home)
      * @param lines the lines of the file, may be empty/null
      * @param charsetName name of the character set
@@ -492,6 +480,7 @@ public class IndexedTextFileAccessorTest {
 
     /**
      * Creates the huge file with 1000000 lines
+     * 
      * @param fileName name of file without path
      * @return new file
      * @throws Exception
@@ -503,9 +492,7 @@ public class IndexedTextFileAccessorTest {
         for (int i = 0; i < 30; i++) {
             line.append(HUGE_LINE_BASE);
         }
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), CHARSET_NAME), 1048576);
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), CHARSET_NAME), 1048576)) {
             for (int i = 0; i < 1000000; i++) {
                 if (i > 0) {
                     // unix-style
@@ -514,9 +501,6 @@ public class IndexedTextFileAccessorTest {
                 bw.append("" + i);
                 bw.append(line);
             }
-        }
-        finally {
-            MiscUtils.closeResourceCatch(bw);
         }
         return file;
     }

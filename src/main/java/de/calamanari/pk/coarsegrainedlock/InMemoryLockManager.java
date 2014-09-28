@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * In-Memory Lock Manager - manages locks in the COARSE GRAINED LOCK example 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.coarsegrainedlock;
 
 import java.util.ArrayList;
@@ -28,10 +30,10 @@ import java.util.logging.Logger;
 
 /**
  * In-Memory Lock Manager - manages locks in the COARSE GRAINED LOCK example<br>
- * In non-distributed scenarios it often makes more sense to leverage an in-memory lock management rather than storing
- * lock information in database tables.<br>
- * A big advantage (besides performance) of in-memory management is the fact that the system is always in a clean state
- * after startup (no lock zombies surviving in lock tables).
+ * In non-distributed scenarios it often makes more sense to leverage an in-memory lock management rather than storing lock information in database tables.<br>
+ * A big advantage (besides performance) of in-memory management is the fact that the system is always in a clean state after startup (no lock zombies surviving
+ * in lock tables).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class InMemoryLockManager {
@@ -52,17 +54,18 @@ public final class InMemoryLockManager {
     private InMemoryLockManager() {
         // no instances
     }
-    
+
     /**
      * Creates a read lock for the given owner
+     * 
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
      * @return true if lock was set otherwise false
      */
     public static boolean acquireReadLock(String elementId, String ownerId) {
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + InMemoryLockManager.class.getSimpleName()
-                + ".acquireReadLock(" + elementId + ", " + ownerId + ") called");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + InMemoryLockManager.class.getSimpleName() + ".acquireReadLock(" + elementId + ", " + ownerId
+                + ") called");
         ElementLock currentLock = null;
         boolean success = false;
         boolean abort = false;
@@ -92,14 +95,15 @@ public final class InMemoryLockManager {
 
     /**
      * Creates a write lock for the given owner
+     * 
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
      * @return true if lock was set otherwise false
      */
     public static boolean acquireWriteLock(String elementId, String ownerId) {
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + InMemoryLockManager.class.getSimpleName()
-                + ".acquireWriteLock(" + elementId + ", " + ownerId + ") called");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + InMemoryLockManager.class.getSimpleName() + ".acquireWriteLock(" + elementId + ", " + ownerId
+                + ") called");
         ElementLock currentLock = null;
         boolean success = false;
         boolean abort = false;
@@ -121,8 +125,7 @@ public final class InMemoryLockManager {
                     List<String> lockOwnerIds = new ArrayList<>(currentLock.getOwnerIds());
                     // there is a read lock
                     if (lockOwnerIds.size() > 1 || !lockOwnerIds.contains(ownerId)) {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "Existing read lock (not owned by requestor) detected - aborting.");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing read lock (not owned by requestor) detected - aborting.");
                         // someone else also holds the read-lock, cannot upgrade to write lock
                         abort = true;
                     }
@@ -141,14 +144,15 @@ public final class InMemoryLockManager {
 
     /**
      * Releases the lock the given owner has on the specified element
+     * 
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
      * @return true if lock was released, otherwise false (no lock found)
      */
     public static boolean releaseLock(String elementId, String ownerId) {
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + InMemoryLockManager.class.getSimpleName()
-                + ".releaseLock(" + elementId + ", " + ownerId + ") called");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + InMemoryLockManager.class.getSimpleName() + ".releaseLock(" + elementId + ", " + ownerId
+                + ") called");
         ElementLock currentLock = null;
         boolean success = false;
         boolean abort = false;
@@ -166,8 +170,7 @@ public final class InMemoryLockManager {
                         success = releaseWriteLock(currentLock, elementId);
                     }
                     else {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "write lock NOT owned by requestor detected - aborting ...");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "write lock NOT owned by requestor detected - aborting ...");
                         // cannot remove lock, belongs to someone else
                         abort = true;
                     }
@@ -177,8 +180,7 @@ public final class InMemoryLockManager {
                         success = releaseReadLock(currentLock, elementId, ownerId);
                     }
                     else {
-                        LOGGER.fine(Thread.currentThread().getName() + ": "
-                                + "read lock NOT owned by requestor detected - aborting ...");
+                        LOGGER.fine(Thread.currentThread().getName() + ": " + "read lock NOT owned by requestor detected - aborting ...");
                         abort = true;
                     }
                 }
@@ -195,6 +197,7 @@ public final class InMemoryLockManager {
 
     /**
      * This method creates a new read-lock.
+     * 
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
      * @return true on success or false (concurrent modification)
@@ -203,8 +206,7 @@ public final class InMemoryLockManager {
         boolean success = false;
 
         LOGGER.fine(Thread.currentThread().getName() + ": " + "No lock entry found, creating one ...");
-        ElementLock newLock = new ElementLock(LockType.READ_LOCK, elementId, Arrays.asList(new String[] { ownerId }),
-                null);
+        ElementLock newLock = new ElementLock(LockType.READ_LOCK, elementId, Arrays.asList(new String[] { ownerId }), null);
 
         boolean haveLock = (LOCKS.putIfAbsent(elementId, newLock) == null);
         if (!haveLock) {
@@ -219,6 +221,7 @@ public final class InMemoryLockManager {
 
     /**
      * This method updates an existing read-lock (another owner will be added).
+     * 
      * @param readLock existing readLock
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
@@ -228,14 +231,12 @@ public final class InMemoryLockManager {
         boolean success = false;
         // there is a read lock
         if (readLock.getOwnerIds().contains(ownerId)) {
-            LOGGER.fine(Thread.currentThread().getName() + ": "
-                    + "Existing read lock detected, owned by requestor, leaving with success.");
+            LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing read lock detected, owned by requestor, leaving with success.");
             // we have already the lock, report success
             success = true;
         }
         else {
-            LOGGER.fine(Thread.currentThread().getName() + ": "
-                    + "Existing read lock detected, adding requestor to owner list.");
+            LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing read lock detected, adding requestor to owner list.");
             List<String> lockOwnerIds = new ArrayList<>(readLock.getOwnerIds());
             lockOwnerIds.add(ownerId);
 
@@ -243,8 +244,7 @@ public final class InMemoryLockManager {
 
             boolean haveLock = LOCKS.replace(elementId, readLock, newLock);
             if (!haveLock) {
-                LOGGER.fine(Thread.currentThread().getName() + ": "
-                        + "concurrent modification detected - trying again ...");
+                LOGGER.fine(Thread.currentThread().getName() + ": " + "concurrent modification detected - trying again ...");
             }
             else {
                 LOGGER.fine(Thread.currentThread().getName() + ": " + "Successfully acquired read lock.");
@@ -256,6 +256,7 @@ public final class InMemoryLockManager {
 
     /**
      * Creates a new exclusive write-lock for the given owner.
+     * 
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
      * @return true on success or false (concurrent modification)
@@ -264,8 +265,7 @@ public final class InMemoryLockManager {
         boolean success = false;
         LOGGER.fine(Thread.currentThread().getName() + ": " + "No lock entry found, creating one ...");
 
-        ElementLock newLock = new ElementLock(LockType.WRITE_LOCK, elementId, Arrays.asList(new String[] { ownerId }),
-                null);
+        ElementLock newLock = new ElementLock(LockType.WRITE_LOCK, elementId, Arrays.asList(new String[] { ownerId }), null);
 
         boolean haveLock = (LOCKS.putIfAbsent(elementId, newLock) == null);
         if (!haveLock) {
@@ -280,6 +280,7 @@ public final class InMemoryLockManager {
 
     /**
      * Checks whether the given write-lock is owned by the specified owner.
+     * 
      * @param writeLock existing write-lock
      * @param ownerId requester of the lock
      * @return true if given lock is owned by the specified owner, otherwise false
@@ -287,8 +288,7 @@ public final class InMemoryLockManager {
     private static boolean checkWriteLockOwner(ElementLock writeLock, String ownerId) {
         boolean success = false;
         if (writeLock.getOwnerIds().contains(ownerId)) {
-            LOGGER.fine(Thread.currentThread().getName() + ": "
-                    + "Existing write lock detected, owned by requestor, leaving with success.");
+            LOGGER.fine(Thread.currentThread().getName() + ": " + "Existing write lock detected, owned by requestor, leaving with success.");
             success = true;
         }
         else {
@@ -299,6 +299,7 @@ public final class InMemoryLockManager {
 
     /**
      * If the current read lock is owned exclusively by the specified owner, we can upgrade it to a write-lock.
+     * 
      * @param readLock existing read-lock
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
@@ -307,8 +308,7 @@ public final class InMemoryLockManager {
     private static boolean upgradeReadLockToWriteLock(ElementLock readLock, String elementId, String ownerId) {
         boolean success = false;
 
-        LOGGER.fine(Thread.currentThread().getName() + ": "
-                + "Single read lock owned by requestor detected - switching to WRITE_LOCK.");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + "Single read lock owned by requestor detected - switching to WRITE_LOCK.");
         List<String> lockOwnerIds = new ArrayList<>(1);
         lockOwnerIds.add(ownerId);
         ElementLock newLock = new ElementLock(LockType.WRITE_LOCK, elementId, lockOwnerIds, readLock.latch);
@@ -326,8 +326,8 @@ public final class InMemoryLockManager {
 
     /**
      * Releases the given read-lock for the specified owner. <br>
-     * If the owner was the last owner, the lock will be removed otherwise it will continue to exist for the remaining
-     * owners.
+     * If the owner was the last owner, the lock will be removed otherwise it will continue to exist for the remaining owners.
+     * 
      * @param readLock current lock
      * @param elementId global unique identifier of the item to be locked
      * @param ownerId requester of the lock
@@ -336,8 +336,7 @@ public final class InMemoryLockManager {
     private static boolean releaseReadLock(ElementLock readLock, String elementId, String ownerId) {
         boolean success = false;
         List<String> lockOwnerIds = new ArrayList<>(readLock.getOwnerIds());
-        LOGGER.fine(Thread.currentThread().getName() + ": "
-                + "read lock owned by requestor detected - removing lock ...");
+        LOGGER.fine(Thread.currentThread().getName() + ": " + "read lock owned by requestor detected - removing lock ...");
         lockOwnerIds.remove(ownerId);
 
         boolean haveReleased = false;
@@ -350,8 +349,7 @@ public final class InMemoryLockManager {
         else {
             haveReleased = LOCKS.remove(elementId, readLock);
             if (haveReleased) {
-                LOGGER.fine(Thread.currentThread().getName() + ": "
-                        + "Notifying potentially waiting threads about lock release ...");
+                LOGGER.fine(Thread.currentThread().getName() + ": " + "Notifying potentially waiting threads about lock release ...");
                 readLock.latch.countDown(); // if anyone was waiting he can now proceed
             }
         }
@@ -369,6 +367,7 @@ public final class InMemoryLockManager {
 
     /**
      * Releases the given write-lock
+     * 
      * @param writeLock current write-lock to be released
      * @param elementId global unique identifier of the item to be locked
      * @return true on success or false (lock not found)
@@ -384,8 +383,7 @@ public final class InMemoryLockManager {
             // must be concurrent access, try the whole process again
         }
         else {
-            LOGGER.fine(Thread.currentThread().getName() + ": "
-                    + "Notifying potentially waiting threads about lock release ...");
+            LOGGER.fine(Thread.currentThread().getName() + ": " + "Notifying potentially waiting threads about lock release ...");
             writeLock.latch.countDown(); // if anyone was waiting he can now proceed
             LOGGER.fine(Thread.currentThread().getName() + ": " + "Successfully removed write lock.");
             success = true;
@@ -395,6 +393,7 @@ public final class InMemoryLockManager {
 
     /**
      * Returns the lock currently associated with the specified element
+     * 
      * @param elementId globally unique identifier
      * @return lock meta data object or null if no lock was found
      */
@@ -429,6 +428,7 @@ public final class InMemoryLockManager {
 
         /**
          * Creates new lock
+         * 
          * @param lockType type of lock
          * @param elementId identifier
          * @param ownerIds lock owners
@@ -444,6 +444,7 @@ public final class InMemoryLockManager {
         /**
          * Client's may use this method to wait until the related lock was released.<br>
          * Afterwards the client does not own any lock, a new attempt to acquire must follow.
+         * 
          * @throws InterruptedException pass-through from waiting
          */
         public void await() throws InterruptedException {
@@ -453,6 +454,7 @@ public final class InMemoryLockManager {
         /**
          * Client's may use this method to wait until the related lock was released.<br>
          * Afterwards the client does not own any lock, a new attempt to acquire must follow.
+         * 
          * @param timeout milliseconds
          * @param unit the unit of measurement
          * @return true if the lock was released before timeout, otherwise false
@@ -464,6 +466,7 @@ public final class InMemoryLockManager {
 
         /**
          * Determines whether this lock is still engaged
+         * 
          * @return true if lock is engaged otherwise false
          */
         public boolean isEngaged() {
@@ -472,6 +475,7 @@ public final class InMemoryLockManager {
 
         /**
          * Returns the lock's type
+         * 
          * @return type of the lock
          */
         public LockType getLockType() {
@@ -480,6 +484,7 @@ public final class InMemoryLockManager {
 
         /**
          * Returns the id of the locked element
+         * 
          * @return elementId
          */
         public String getElementId() {
@@ -488,6 +493,7 @@ public final class InMemoryLockManager {
 
         /**
          * Returns the list of lock owners
+         * 
          * @return list of lock owners
          */
         public List<String> getOwnerIds() {
@@ -496,8 +502,8 @@ public final class InMemoryLockManager {
 
         @Override
         public String toString() {
-            return ElementLock.class.getSimpleName() + "({lockType=" + lockType + ", elementId='" + elementId
-                    + "', ownerIds=" + ownerIds.toString() + ", engaged=" + isEngaged() + "})";
+            return ElementLock.class.getSimpleName() + "({lockType=" + lockType + ", elementId='" + elementId + "', ownerIds=" + ownerIds.toString()
+                    + ", engaged=" + isEngaged() + "})";
         }
 
     }
@@ -509,8 +515,8 @@ public final class InMemoryLockManager {
         /**
          * indicates read lock
          */
-        READ_LOCK, 
-        
+        READ_LOCK,
+
         /**
          * indicates write lock
          */

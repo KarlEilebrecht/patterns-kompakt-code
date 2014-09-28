@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Article Manager - class of the component we create a FACADE for.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.facade.article;
 
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Article Manager - class of the component we create a FACADE for.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ArticleManager {
@@ -39,6 +42,7 @@ public class ArticleManager {
 
     /**
      * Returns the corresponding article for the given id
+     * 
      * @param articleId identifier
      * @return found article instance or null if not found
      */
@@ -54,6 +58,7 @@ public class ArticleManager {
 
     /**
      * Stores the article in the internal database
+     * 
      * @param article to be stored
      */
     public void storeArticle(Article article) {

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * UUID Test - demonstrates the Universally Unique Identifier (UUID/GUID) pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.uuid;
 
 import java.util.ArrayList;
@@ -31,12 +33,12 @@ import org.junit.Test;
 
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
-import de.calamanari.pk.uuid.Request;
 
 /**
  * UUID Test - demonstrates the Universally Unique Identifier (UUID/GUID) pattern.<br>
- * <b>Note:</b> We do not provide an example implementation of a UUID-generator because Java (same for .NET) already
- * provides a professional UUID-class, that should be used rather than some do-it-yourself-version.
+ * <b>Note:</b> We do not provide an example implementation of a UUID-generator because Java (same for .NET) already provides a professional UUID-class, that
+ * should be used rather than some do-it-yourself-version.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class UUIDTest {
@@ -93,8 +95,7 @@ public class UUIDTest {
 
         // Hint: Modify the Request.compareTo()-method to include requestTimeNanos.
 
-        LOGGER.info("Test UUID successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test UUID successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

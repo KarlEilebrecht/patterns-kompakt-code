@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Hash Strategy
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,11 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.strategy;
 
 /**
  * Hash Strategy - abstract base class for concrete hash-STRATEGY classes.<br>
  * Implementing classes compute hashes for strings.<br>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class HashStrategy {
@@ -31,6 +34,7 @@ public abstract class HashStrategy {
 
     /**
      * Creates new HashStrategy instance with given technical name
+     * 
      * @param name (ascii-letters, ciphers and underscore only!)
      */
     public HashStrategy(String name) {
@@ -39,6 +43,7 @@ public abstract class HashStrategy {
 
     /**
      * Returns an identifier (KEY) for this particular hash strategy
+     * 
      * @return name (ascii-letters, ciphers and underscore only!)
      */
     public String getName() {
@@ -47,6 +52,7 @@ public abstract class HashStrategy {
 
     /**
      * Concrete STRATEGY instances return a hash for the given text.
+     * 
      * @param text string a hash shall be computed for
      * @return hash string
      */

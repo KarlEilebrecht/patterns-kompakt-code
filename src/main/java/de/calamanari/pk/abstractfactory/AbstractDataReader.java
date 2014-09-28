@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract data reader - demonstrates ABSTRACT PRODUCT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.abstractfactory;
 
 import java.util.logging.Logger;
 
 /**
  * Abstract data reader is one base class of the ABSTRACT PRODUCTs each concrete ABSTRACT FACTORY can create.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractDataReader {
@@ -37,6 +40,7 @@ public abstract class AbstractDataReader {
 
     /**
      * Returns a textual description about the source.
+     * 
      * @return source info, may be null if unavailable
      */
     public String getSourceInfo() {
@@ -45,6 +49,7 @@ public abstract class AbstractDataReader {
 
     /**
      * Sets the source info.
+     * 
      * @param sourceInfo textual description, may be null
      */
     protected void setSourceInfo(String sourceInfo) {
@@ -53,6 +58,7 @@ public abstract class AbstractDataReader {
 
     /**
      * Reads the string from the source.
+     * 
      * @return string from source
      */
     public abstract String readString();

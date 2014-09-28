@@ -1,5 +1,6 @@
+//@formatter:off
 /*
- * Indexed Text File Accessor 
+ * Indexed Text File Accessor
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.itfa;
 
 import static de.calamanari.pk.util.CharsetUtils.CARRIAGE_RETURN_CODE;
@@ -40,6 +42,7 @@ import de.calamanari.pk.util.MiscUtils;
  * Indexed Text File Accessor creates an index for a given file and allows to jump to specific characters or lines.<br>
  * This is intended for reading large text files which won't be modified after index creation.<br>
  * An instance is safe to be used concurrently by multiple threads.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class IndexedTextFileAccessor {
@@ -121,13 +124,13 @@ public class IndexedTextFileAccessor {
 
     /**
      * Helper method to create configuration
+     * 
      * @param maxNumberOfCharIndexEntries maximum number of entries in the character index
      * @param maxNumberOfLineIndexEntries maximum number of entries in the line index
      * @param bomSize number of inital bytes to be skipped
      * @return new default configuration with the given changes applied
      */
-    private static ItfaConfiguration createConfiguration(int maxNumberOfCharIndexEntries,
-            int maxNumberOfLineIndexEntries, int bomSize) {
+    private static ItfaConfiguration createConfiguration(int maxNumberOfCharIndexEntries, int maxNumberOfLineIndexEntries, int bomSize) {
         ItfaConfiguration res = new ItfaConfiguration();
         res.bomSize = bomSize;
         res.maxNumberOfCharIndexEntries = maxNumberOfCharIndexEntries;
@@ -138,6 +141,7 @@ public class IndexedTextFileAccessor {
     /**
      * Creates new IndexedTextFileAccessor of default size <br>
      * see {@link #IndexedTextFileAccessor(File, String, ItfaConfiguration)}, {@link #DEFAULT_CONFIGURATION}
+     * 
      * @param file readable file
      * @param charsetName name of character set
      * @throws IOException on any error while indexing the file
@@ -148,11 +152,11 @@ public class IndexedTextFileAccessor {
 
     /**
      * Creates new IndexedTextFileAccessor, this opens the file followed by an index run, does NOT keep the file open.<br>
-     * By specifying the maximum number of index entries the caller has some control over the memory consumption. One
-     * entry consists of 3 Longs accompanied by some overhead.<br>
-     * This implementation does not support charset auto-detection but can ignore byte order mark by skipping a
-     * specified number of bytes. However, the job to decide whether or not there is a byte order mark is up to the
-     * caller, see also: http://bugs.sun.com/view_bug.do?bug_id=4508058
+     * By specifying the maximum number of index entries the caller has some control over the memory consumption. One entry consists of 3 Longs accompanied by
+     * some overhead.<br>
+     * This implementation does not support charset auto-detection but can ignore byte order mark by skipping a specified number of bytes. However, the job to
+     * decide whether or not there is a byte order mark is up to the caller, see also: http://bugs.sun.com/view_bug.do?bug_id=4508058
+     * 
      * @param file readable file
      * @param charsetName name of character set
      * @param maxNumberOfCharIndexEntries maximum number of index entries for characters (min=1)
@@ -160,13 +164,14 @@ public class IndexedTextFileAccessor {
      * @param bomSize number of bytes to be skipped
      * @throws IOException on any error while indexing the file
      */
-    public IndexedTextFileAccessor(File file, String charsetName, int maxNumberOfCharIndexEntries,
-            int maxNumberOfLineIndexEntries, int bomSize) throws IOException {
+    public IndexedTextFileAccessor(File file, String charsetName, int maxNumberOfCharIndexEntries, int maxNumberOfLineIndexEntries, int bomSize)
+            throws IOException {
         this(file, charsetName, createConfiguration(maxNumberOfCharIndexEntries, maxNumberOfLineIndexEntries, bomSize));
     }
 
     /**
      * Creates new IndexedTextFileAccessor, this opens the file followed by an index run, does NOT keep the file open.<br>
+     * 
      * @param file readable file
      * @param charsetName name of character set
      * @param configuration indexer settings, null means default
@@ -206,8 +211,8 @@ public class IndexedTextFileAccessor {
 
     /**
      * Creates a new UNBUFFERED InputStreamReader at the specified file position (byte).
-     * @param filePosition number of the byte the new Reader shall start reading at, see also
-     *            {@link #getLastKnownFilePosition()}
+     * 
+     * @param filePosition number of the byte the new Reader shall start reading at, see also {@link #getLastKnownFilePosition()}
      * @return new InputStreamReader, MUST BE CLOSED BY CALLER!
      * @throws IOException on file access problems
      */
@@ -231,9 +236,9 @@ public class IndexedTextFileAccessor {
 
     /**
      * Creates the reader at the specified byte position, either buffered or not
+     * 
      * @param filePosition byte position, where to start the input stream
-     * @param bufferSize size of the buffer to be used, for 0 or less the result will be the same as
-     *            {@link #createInputStreamReaderAtFilePosition(long)}
+     * @param bufferSize size of the buffer to be used, for 0 or less the result will be the same as {@link #createInputStreamReaderAtFilePosition(long)}
      * @return input stream reader
      * @throws IOException on file access problems
      */
@@ -257,6 +262,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Creates a new InputStreamReader at the given character position using default buffer size.
+     * 
      * @param charNumber number of requested character (starts with 0), MUST BE CLOSED BY CALLER!
      * @return input stream reader starting with the requested character
      * @throws IOException on file access problems
@@ -267,6 +273,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Creates a new InputStreamReader at the given character position.
+     * 
      * @param charNumber number of requested character (starts with 0), MUST BE CLOSED BY CALLER!
      * @param bufferSize for performance reasons a buffered reader will be used
      * @return input stream reader starting with the requested character
@@ -304,8 +311,7 @@ public class IndexedTextFileAccessor {
                 }
             }
             if (skipped < ignoredCharacters) {
-                throw new IOException("Positioning failed (charNumber=" + charNumber
-                        + " unreachable) - file truncated since index creation?");
+                throw new IOException("Positioning failed (charNumber=" + charNumber + " unreachable) - file truncated since index creation?");
             }
         }
         else {
@@ -316,6 +322,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Creates a new InputStreamReader at the given line position using default buffer size.
+     * 
      * @param lineNumber number of requested line (starts with 0)
      * @return input stream reader starting with the requested line, MUST BE CLOSED BY CALLER!
      * @throws IOException on file access problems
@@ -326,6 +333,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Creates a new InputStreamReader at the given line position.
+     * 
      * @param lineNumber number of requested line (starts with 0)
      * @param bufferSize for performance reasons a buffered reader will be used
      * @return input stream reader starting with the requested line, MUST BE CLOSED BY CALLER!
@@ -363,8 +371,7 @@ public class IndexedTextFileAccessor {
                 }
             }
             if (skipped < ignoredLines) {
-                throw new IOException("Positioning failed (lineNumber=" + lineNumber
-                        + " unreachable) - file truncated since index creation?");
+                throw new IOException("Positioning failed (lineNumber=" + lineNumber + " unreachable) - file truncated since index creation?");
             }
         }
         else {
@@ -378,10 +385,11 @@ public class IndexedTextFileAccessor {
      * <b>Note:</b>
      * <ul>
      * <li>Since this is no learning index, it might be a good idea to cache results externally.</li>
-     * <li>Technically a low surrogate has no absolute byte position, thus the position of the low surrogate will be
-     * <i>equal to</i> the position of the preceding high surrogate character!</li>
+     * <li>Technically a low surrogate has no absolute byte position, thus the position of the low surrogate will be <i>equal to</i> the position of the
+     * preceding high surrogate character!</li>
      * </ul>
      * See also: {@link #getLastKnownFilePosition()}
+     * 
      * @param charNumber (starts with 0)
      * @return position of the first byte of that character in the file
      * @throws IOException on file access problems
@@ -404,6 +412,7 @@ public class IndexedTextFileAccessor {
      * Returns the physical byte position for the given line position.<br>
      * Note: Since this is no learning index, it might be a good idea to cache results externally.<br>
      * See also: {@link #getLastKnownFilePosition()}
+     * 
      * @param lineNumber (starts with 0)
      * @return position line start
      * @throws IOException on file access problems
@@ -424,6 +433,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Returns the nearest smaller or equal indexed item number for the given key
+     * 
      * @param indexedKeys sorted array of indexed keys
      * @param key search key
      * @return valid key
@@ -446,15 +456,18 @@ public class IndexedTextFileAccessor {
 
     /**
      * Returns a new Channel
+     * 
      * @return new Channel to sourceFile, MUST BE CLOSED by caller!
      * @throws FileNotFoundException if file was not available
      */
+    @SuppressWarnings("resource")
     protected FileChannel createChannel() throws FileNotFoundException {
         return new RandomAccessFile(sourceFile, "r").getChannel();
     }
 
     /**
      * Creates new channel and sets the specified position.
+     * 
      * @param filePosition requested position in the channel
      * @return new channel
      * @throws IOException on file access problems
@@ -473,6 +486,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Returns the number of indexed characters.
+     * 
      * @return number of index entries
      */
     public int getNumberOfCharacterIndexEntries() {
@@ -481,6 +495,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Returns the number of indexed lines.
+     * 
      * @return number of index entries
      */
     public int getNumberOfLineIndexEntries() {
@@ -489,6 +504,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Returns the file size
+     * 
      * @return size of file
      */
     public long getFileSize() {
@@ -497,6 +513,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Returns the number of lines in the file
+     * 
      * @return number of lines
      */
     public long getNumberOfLines() {
@@ -505,6 +522,7 @@ public class IndexedTextFileAccessor {
 
     /**
      * Returns the number of characters in the file
+     * 
      * @return number of characters
      */
     public long getNumberOfCharacters() {
@@ -512,16 +530,15 @@ public class IndexedTextFileAccessor {
     }
 
     /**
-     * Whenever this instance returns a stream at a certain character or line position, it memorizes the related byte
-     * position.<br>
+     * Whenever this instance returns a stream at a certain character or line position, it memorizes the related byte position.<br>
      * A caller may call this method subsequently to get the physical position. <br>
-     * Since IndexedTextFileAccessor might be accessed concurrently by different threads, this information is managed
-     * thread-locally. Means: This method returns the least recent position known to the callers thread.
+     * Since IndexedTextFileAccessor might be accessed concurrently by different threads, this information is managed thread-locally. Means: This method returns
+     * the least recent position known to the callers thread.
      * <p>
      * <b>Note:</b><br>
-     * Since there is no absolute byte position <i>after</i> a high surrogate character, the returned position after
-     * returning a high surrogate will be equal to the position before the high surrogate while the position after the
-     * following low surrogate (after the pair) will be correct.
+     * Since there is no absolute byte position <i>after</i> a high surrogate character, the returned position after returning a high surrogate will be equal to
+     * the position before the high surrogate while the position after the following low surrogate (after the pair) will be correct.
+     * 
      * @return last known file position (byte-position) or -1 to indicate unknown
      */
     public long getLastKnownFilePosition() {
@@ -534,19 +551,16 @@ public class IndexedTextFileAccessor {
     }
 
     /**
-     * Reads from the reader until the requested number of characters has been skipped or the end of the stream was
-     * reached.
+     * Reads from the reader until the requested number of characters has been skipped or the end of the stream was reached.
+     * 
      * @param reader input
      * @param numberOfCharactersToSkip number of characters to be skipped starting at the current position
-     * @param bytePositionHolder a single-element long array, where the bytePositionHolder[0] will be incremented while
-     *            reading characters
-     * @param charLengthLookup the character length lookup maps the length of each character to its length in bytes
-     *            according to a charset.
+     * @param bytePositionHolder a single-element long array, where the bytePositionHolder[0] will be incremented while reading characters
+     * @param charLengthLookup the character length lookup maps the length of each character to its length in bytes according to a charset.
      * @return number of skipped characters
      * @throws IOException on file access problems
      */
-    private static final long skip(Reader reader, long numberOfCharactersToSkip, long[] bytePositionHolder,
-            byte[] charLengthLookup) throws IOException {
+    private static final long skip(Reader reader, long numberOfCharactersToSkip, long[] bytePositionHolder, byte[] charLengthLookup) throws IOException {
 
         int read = -1;
         long skipped = 0;
@@ -566,17 +580,15 @@ public class IndexedTextFileAccessor {
 
     /**
      * Reads from the reader until the given number of lines has been skipped or the end of the stream was reached.
+     * 
      * @param reader input
      * @param numberOfLinesToSkip specifies the number of lines to be skipped
-     * @param bytePositionHolder a single-element long array, where the bytePositionHolder[0] will be incremented while
-     *            reading characters
-     * @param charLengthLookup the character length lookup maps the length of each character to its length in bytes
-     *            according to a charset.
+     * @param bytePositionHolder a single-element long array, where the bytePositionHolder[0] will be incremented while reading characters
+     * @param charLengthLookup the character length lookup maps the length of each character to its length in bytes according to a charset.
      * @return number of skipped lines
      * @throws IOException on file access problems
      */
-    private static final long skipLines(Reader reader, long numberOfLinesToSkip, long[] bytePositionHolder,
-            byte[] charLengthLookup) throws IOException {
+    private static final long skipLines(Reader reader, long numberOfLinesToSkip, long[] bytePositionHolder, byte[] charLengthLookup) throws IOException {
         int read = -1;
         long skipped = 0;
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Combined Method test - demonstrates COMBINED METHOD pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.combinedmethod;
 
 import static org.junit.Assert.assertEquals;
@@ -29,17 +31,14 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.combinedmethod.Product;
-import de.calamanari.pk.combinedmethod.ProductManager;
-import de.calamanari.pk.combinedmethod.ProductManagerServer;
 import de.calamanari.pk.util.ExternalProcessManager;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Combined Method test - demonstrates COMBINED METHOD pattern.<br>
- * This test ("the client") calls remote methods, first sequentially than using a combined method to avoid
- * inconsistencies.
+ * This test ("the client") calls remote methods, first sequentially than using a combined method to avoid inconsistencies.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CombinedMethodTest {
@@ -66,8 +65,7 @@ public class CombinedMethodTest {
 
         // an external java-process, the product manager server
         if (Level.FINE.equals(LOG_LEVEL)) {
-            ExternalProcessManager.getInstance().startExternal(ProductManagerServer.class, LOGGER, "" + REGISTRY_PORT,
-                    "logfine");
+            ExternalProcessManager.getInstance().startExternal(ProductManagerServer.class, LOGGER, "" + REGISTRY_PORT, "logfine");
         }
         else {
             ExternalProcessManager.getInstance().startExternal(ProductManagerServer.class, LOGGER, "" + REGISTRY_PORT);
@@ -127,8 +125,7 @@ public class CombinedMethodTest {
 
         Thread.sleep(1000);
 
-        LOGGER.info("Test without combined method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed)
-                + " s");
+        LOGGER.info("Test without combined method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
     }
 
     @Test
@@ -172,8 +169,7 @@ public class CombinedMethodTest {
 
         Thread.sleep(1000);
 
-        LOGGER.info("Test with combined method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed)
-                + " s");
+        LOGGER.info("Test with combined method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 

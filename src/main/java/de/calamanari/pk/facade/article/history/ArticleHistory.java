@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Article History - another class of the component we create a FACADE for.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.facade.article.history;
 
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 /**
  * Article History - another class of the component we create a FACADE for.<br>
  * The history delivers details related to an article but not part of the core information.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ArticleHistory {
@@ -40,6 +43,7 @@ public class ArticleHistory {
 
     /**
      * Returns the current markdown price for the specified article.
+     * 
      * @param articleId identifier
      * @return current mark down price or -1 to indicate unknown
      */
@@ -55,6 +59,7 @@ public class ArticleHistory {
 
     /**
      * Sets the current markdown price for the given article
+     * 
      * @param articleId identifier
      * @param markDownPrice 0 or less means unknown
      */

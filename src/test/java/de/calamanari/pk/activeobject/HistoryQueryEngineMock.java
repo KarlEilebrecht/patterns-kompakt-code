@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * History Query Engine Mock - demonstrates ACTIVE OBJECT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.activeobject;
 
 import java.util.ArrayList;
@@ -23,11 +25,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import de.calamanari.pk.activeobject.AbstractHistoryQueryEngine;
-
 /**
- * History Query Engine Mock - in this example this is a component implementation for executing queries that may take
- * some time.
+ * History Query Engine Mock - in this example this is a component implementation for executing queries that may take some time.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
@@ -49,6 +49,7 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
 
     /**
      * In this example the history data fill be fed at startup.
+     * 
      * @param seedData list of String[4]=[firstName, lastName, birthday, data]
      * @param queryDurationMillis simulated time a query to this engine shall need
      */
@@ -64,6 +65,7 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
 
     /**
      * helper method for testing, adds the "back end" data related to the key
+     * 
      * @param key identifier
      * @param data values to put
      */
@@ -78,8 +80,7 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
 
     @Override
     public List<String[]> queryHistoryData(String firstName, String lastName, String birthday) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '"
-                + birthday + "') called.");
+        LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '" + birthday + "') called.");
         StringBuilder sbKey = new StringBuilder();
         if (firstName != null) {
             sbKey.append(firstName);
@@ -98,8 +99,7 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
             Thread.sleep(queryDurationMillis);
         }
         catch (InterruptedException ex) {
-            LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName
-                    + "', '" + birthday + "') was interrupted!");
+            LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '" + birthday + "') was interrupted!");
         }
         return result;
     }

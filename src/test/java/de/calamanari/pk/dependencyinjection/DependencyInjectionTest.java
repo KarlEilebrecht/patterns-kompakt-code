@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Dependency injection test - demonstrates DEPENDENCY INJECTION
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 import java.util.logging.Level;
@@ -23,17 +25,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.dependencyinjection.Component;
-import de.calamanari.pk.dependencyinjection.ComponentFramework;
-import de.calamanari.pk.dependencyinjection.ComponentWithAnnotationBasedInjection;
-import de.calamanari.pk.dependencyinjection.ComponentWithConstructorInjection;
-import de.calamanari.pk.dependencyinjection.ComponentWithInterfaceInjection;
-import de.calamanari.pk.dependencyinjection.ComponentWithSetterInjection;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Dependency injection test - demonstrates DEPENDENCY INJECTION
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DependencyInjectionTest {
@@ -51,9 +48,8 @@ public class DependencyInjectionTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, DependencyInjectionTest.class, ComponentFramework.class,
-                ComponentWithConstructorInjection.class, ComponentWithSetterInjection.class,
-                ComponentWithInterfaceInjection.class, ComponentWithAnnotationBasedInjection.class);
+        LogUtils.setLogLevel(LOG_LEVEL, DependencyInjectionTest.class, ComponentFramework.class, ComponentWithConstructorInjection.class,
+                ComponentWithSetterInjection.class, ComponentWithInterfaceInjection.class, ComponentWithAnnotationBasedInjection.class);
     }
 
     @Test
@@ -61,8 +57,8 @@ public class DependencyInjectionTest {
 
         // Hint: set the log-level above to FINE to see DEPENDENCY INJECTION working.
 
-        String[] componentTypes = new String[] { ComponentFramework.COMPONENT_1, ComponentFramework.COMPONENT_2,
-                ComponentFramework.COMPONENT_3, ComponentFramework.COMPONENT_4 };
+        String[] componentTypes = new String[] { ComponentFramework.COMPONENT_1, ComponentFramework.COMPONENT_2, ComponentFramework.COMPONENT_3,
+                ComponentFramework.COMPONENT_4 };
 
         LOGGER.info("Test dependency injection ...");
         long startTimeNanos = System.nanoTime();
@@ -73,8 +69,7 @@ public class DependencyInjectionTest {
             component.printData();
         }
 
-        LOGGER.info("Test dependency injection successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test dependency injection successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

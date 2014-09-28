@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract data writer - demonstrates ABSTRACT PRODUCT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.abstractfactory;
 
 import java.util.logging.Logger;
 
 /**
  * Abstract data writer is one base class of the ABSTRACT PRODUCTs each concrete ABSTRACT FACTORY can create.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractDataWriter {
@@ -37,6 +40,7 @@ public abstract class AbstractDataWriter {
 
     /**
      * Returns a textual description about the destination.
+     * 
      * @return destination info, may be null if unavailable
      */
     public String getDestinationInfo() {
@@ -45,6 +49,7 @@ public abstract class AbstractDataWriter {
 
     /**
      * Sets the destination info.
+     * 
      * @param destinationInfo textual description, may be null
      */
     protected void setDestinationInfo(String destinationInfo) {
@@ -53,6 +58,7 @@ public abstract class AbstractDataWriter {
 
     /**
      * writes the given string.
+     * 
      * @param item string to write
      * @return size (bytes written), -1 if unsupported
      */

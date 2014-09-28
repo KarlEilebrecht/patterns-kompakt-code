@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Person Data Connector
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,14 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge;
 
 import java.util.logging.Logger;
 
 /**
- * Person Data Connector - this is the service abstraction (root of a hierarchy) where we have "bridged-out" a parallel
- * hierarchy implementing core functionality.<br>
+ * Person Data Connector - this is the service abstraction (root of a hierarchy) where we have "bridged-out" a parallel hierarchy implementing core
+ * functionality.<br>
  * This shows the BRIDGE-pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
@@ -40,6 +43,7 @@ public class PersonDataConnector {
 
     /**
      * Creates new PersonDataConnector using the given PersonDataConnectorImp
+     * 
      * @param personDataConnectorImp implementation
      */
     public PersonDataConnector(PersonDataConnectorImp personDataConnectorImp) {
@@ -50,39 +54,40 @@ public class PersonDataConnector {
 
     /**
      * Finds the person by id
+     * 
      * @param personId identifier
      * @return person or null
      */
     public Person findPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName()
-                + ".findPersonById() called and directly delegated to other side of bridge.");
+        LOGGER.fine(this.getClass().getSimpleName() + ".findPersonById() called and directly delegated to other side of bridge.");
         return personDataConnectorImp.findPersonById(personId);
     }
 
     /**
      * Returns the address for the given id
+     * 
      * @param addressId address identifier
      * @return address id or null
      */
     public Address findAddressById(String addressId) {
-        LOGGER.fine(this.getClass().getSimpleName()
-                + ".findAddressById() called and directly delegated to other side of bridge.");
+        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressById() called and directly delegated to other side of bridge.");
         return personDataConnectorImp.findAddressById(addressId);
     }
 
     /**
      * Returns the address of the specified person
+     * 
      * @param personId identifier
      * @return address or null
      */
     public Address findAddressOfPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName()
-                + ".findAddressOfPersonById() called and directly delegated to other side of bridge.");
+        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressOfPersonById() called and directly delegated to other side of bridge.");
         return personDataConnectorImp.findAddressOfPersonById(personId);
     }
 
     /**
      * Finds the corresponding person for the given address
+     * 
      * @param addressId address identifier
      * @return person or null
      */
@@ -99,6 +104,7 @@ public class PersonDataConnector {
 
     /**
      * Returns XY-person (including address) for given id
+     * 
      * @param personId identifier
      * @return XY-person or null
      */
@@ -124,6 +130,7 @@ public class PersonDataConnector {
 
     /**
      * Checks whether the given person exists
+     * 
      * @param personId identifier
      * @return true if person exists, otherwise false
      */

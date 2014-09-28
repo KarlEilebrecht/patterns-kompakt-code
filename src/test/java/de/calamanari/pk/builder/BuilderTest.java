@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Builder Test - demonstrates BUILDER pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.builder;
 
 import static org.junit.Assert.assertEquals;
@@ -29,14 +31,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.builder.Checksum;
-import de.calamanari.pk.builder.ChecksumHelper;
-import de.calamanari.pk.builder.Crc32ChecksumBuilder;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Builder Test - demonstrates BUILDER pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class BuilderTest {
@@ -59,8 +59,7 @@ public class BuilderTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, BuilderTest.class, Crc32ChecksumBuilder.class, ChecksumHelper.class,
-                Checksum.class);
+        LogUtils.setLogLevel(LOG_LEVEL, BuilderTest.class, Crc32ChecksumBuilder.class, ChecksumHelper.class, Checksum.class);
     }
 
     @Before
@@ -103,8 +102,7 @@ public class BuilderTest {
         for (Object[] toBeNotEqual : toBeNotEqualArrays) {
             assertNotSame(checksum, checksumHelper.computeChecksum(toBeNotEqual));
         }
-        LOGGER.info("Test Builder successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Builder successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

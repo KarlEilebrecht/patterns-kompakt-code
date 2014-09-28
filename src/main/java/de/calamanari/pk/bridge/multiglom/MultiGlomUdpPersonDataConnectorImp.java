@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * MultiGlom UDP Person Data Connector Imp
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,11 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge.multiglom;
 
 /**
- * MultiGlom UDP Person Data Connector Imp - a concrete member of the "bridged-out" hierarchy. In this example this is a
- * second connector of the fictional MultiGlom company, which uses UDP for transport.
+ * MultiGlom UDP Person Data Connector Imp - a concrete member of the "bridged-out" hierarchy. In this example this is a second connector of the fictional
+ * MultiGlom company, which uses UDP for transport.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */

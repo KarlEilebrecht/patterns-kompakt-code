@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Parallel File Input Stream
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.pfis;
 
 import java.io.File;
@@ -31,15 +33,15 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Parallel File Input Stream - input stream using a concurrent reader thread.<br>
- * This class is useful for reading large files especially if processing takes longer than reading. In this case the
- * reader thread can do a parallel read ahead while the main thread processes the data from the last chunk and so on.<br>
- * Because the behavior of java NIO can differ from OS to OS the caller can choose which buffer type to be used (see
- * {@link BufferType}).<br>
+ * This class is useful for reading large files especially if processing takes longer than reading. In this case the reader thread can do a parallel read ahead
+ * while the main thread processes the data from the last chunk and so on.<br>
+ * Because the behavior of java NIO can differ from OS to OS the caller can choose which buffer type to be used (see {@link BufferType}).<br>
  * <b>Note:</b><br>
  * <ul>
  * <li>For small files this technique is not recommended and may result in slow processing.</li>
  * <li>Instances of ParallelFileInputStream MUST NOT be accessed concurrently.</li>
  * </ul>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class ParallelFileInputStream extends InputStream {
@@ -70,14 +72,12 @@ public final class ParallelFileInputStream extends InputStream {
     private final AtomicLong bytesDelivered = new AtomicLong(0L);
 
     /**
-     * The queue for communication from main thread to the reader The reader will not read a new buffer before being
-     * requested.
+     * The queue for communication from main thread to the reader The reader will not read a new buffer before being requested.
      */
     private final BlockingQueue<BufferEvent> bufferRequestQueue = new ArrayBlockingQueue<>(5);
 
     /**
-     * The queue for communication from reader thread to the main thread, the main thread waits for buffers delivered by
-     * the reader thread.
+     * The queue for communication from reader thread to the main thread, the main thread waits for buffers delivered by the reader thread.
      */
     private final BlockingQueue<BufferEvent> bufferDeliveryQueue = new ArrayBlockingQueue<>(5);
 
@@ -97,14 +97,14 @@ public final class ParallelFileInputStream extends InputStream {
     private final ReaderThread readerThread;
 
     /**
-     * We support the mark() operation, this stores the mark position relative to the current buffer. If the mark
-     * position is within the range of the current buffer, reset() is extremely cheap.
+     * We support the mark() operation, this stores the mark position relative to the current buffer. If the mark position is within the range of the current
+     * buffer, reset() is extremely cheap.
      */
     private int markPositionRel = -1;
 
     /**
-     * We support the mark() operation for the whole file, if the mark position is outside the current buffer, we can
-     * reach it using an absolute repositioning to this memorized position.
+     * We support the mark() operation for the whole file, if the mark position is outside the current buffer, we can reach it using an absolute repositioning
+     * to this memorized position.
      */
     private long markPositionAbs = 0;
 
@@ -121,14 +121,14 @@ public final class ParallelFileInputStream extends InputStream {
     /**
      * Creates a new Memory Mapped Parallel File Input Stream on the given file using the specified buffer size.<br>
      * Note: A small buffer may lead to extremely bad performance!
+     * 
      * @param file underlying source file
      * @param maxBufferSize maximum size a buffer may have (0 or less means {@link #DEFAULT_MAX_BUFFER_SIZE})
      * @param bufferType the type of buffer to be used, see {@link BufferType}
      * @return input stream
      * @throws IOException on file access error
      */
-    public static ParallelFileInputStream createInputStream(File file, int maxBufferSize, BufferType bufferType)
-            throws IOException {
+    public static ParallelFileInputStream createInputStream(File file, int maxBufferSize, BufferType bufferType) throws IOException {
         ParallelFileInputStream pfis = new ParallelFileInputStream(file, maxBufferSize, bufferType);
         pfis.readerThread.start();
         pfis.readNextPartitionParallel();
@@ -136,9 +136,10 @@ public final class ParallelFileInputStream extends InputStream {
     }
 
     /**
-     * Creates a new Memory Mapped Parallel File Input Stream on the given file using the specified buffer size. Uses
-     * memory mapped buffer (see {@link BufferType}).<br>
+     * Creates a new Memory Mapped Parallel File Input Stream on the given file using the specified buffer size. Uses memory mapped buffer (see
+     * {@link BufferType}).<br>
      * Note: A small buffer may lead to extremely bad performance!
+     * 
      * @param file underlying source file
      * @param maxBufferSize maximum size a buffer may have (0 or less means {@link #DEFAULT_MAX_BUFFER_SIZE})
      * @return input stream
@@ -149,8 +150,9 @@ public final class ParallelFileInputStream extends InputStream {
     }
 
     /**
-     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size (
-     * {@link #DEFAULT_MAX_BUFFER_SIZE}). Uses memory mapped buffer (see {@link BufferType}).
+     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size ( {@link #DEFAULT_MAX_BUFFER_SIZE}). Uses memory
+     * mapped buffer (see {@link BufferType}).
+     * 
      * @param file underlying source file
      * @return input stream
      * @throws IOException on file access error
@@ -160,8 +162,8 @@ public final class ParallelFileInputStream extends InputStream {
     }
 
     /**
-     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size (
-     * {@link #DEFAULT_MAX_BUFFER_SIZE}).
+     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size ( {@link #DEFAULT_MAX_BUFFER_SIZE}).
+     * 
      * @param file underlying source file
      * @param bufferType the type of buffer to be used, see {@link BufferType}
      * @return input stream
@@ -174,21 +176,22 @@ public final class ParallelFileInputStream extends InputStream {
     /**
      * Creates a new Memory Mapped Parallel File Input Stream on the given file using the specified buffer size.<br>
      * Note: A small buffer may lead to extremely bad performance!
+     * 
      * @param fileName underlying source file's name
      * @param maxBufferSize maximum size a buffer may have
      * @param bufferType the type of buffer to be used, see {@link BufferType}
      * @return input stream
      * @throws IOException on file access error
      */
-    public static ParallelFileInputStream createInputStream(String fileName, int maxBufferSize, BufferType bufferType)
-            throws IOException {
+    public static ParallelFileInputStream createInputStream(String fileName, int maxBufferSize, BufferType bufferType) throws IOException {
         return createInputStream(new File(fileName), maxBufferSize, bufferType);
     }
 
     /**
-     * Creates a new Memory Mapped Parallel File Input Stream on the given file using the specified buffer size. Uses
-     * memory mapped buffer (see {@link BufferType}).<br>
+     * Creates a new Memory Mapped Parallel File Input Stream on the given file using the specified buffer size. Uses memory mapped buffer (see
+     * {@link BufferType}).<br>
      * Note: A small buffer may lead to extremely bad performance!
+     * 
      * @param fileName underlying source file's name
      * @param maxBufferSize maximum size a buffer may have
      * @return input stream
@@ -199,8 +202,9 @@ public final class ParallelFileInputStream extends InputStream {
     }
 
     /**
-     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size (
-     * {@link #DEFAULT_MAX_BUFFER_SIZE}). Uses memory mapped buffer (see {@link BufferType}).
+     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size ( {@link #DEFAULT_MAX_BUFFER_SIZE}). Uses memory
+     * mapped buffer (see {@link BufferType}).
+     * 
      * @param fileName underlying source file's name
      * @return input stream
      * @throws IOException on file access error
@@ -210,8 +214,8 @@ public final class ParallelFileInputStream extends InputStream {
     }
 
     /**
-     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size (
-     * {@link #DEFAULT_MAX_BUFFER_SIZE}).
+     * Creates a new Memory Mapped Parallel File Input Stream on the given file using default buffer size ( {@link #DEFAULT_MAX_BUFFER_SIZE}).
+     * 
      * @param fileName underlying source file's name
      * @param bufferType the type of buffer to be used, see {@link BufferType}
      * @return input stream
@@ -224,6 +228,7 @@ public final class ParallelFileInputStream extends InputStream {
     /**
      * Creates a new Memory Mapped Parallel File Input Stream on the given file using the specified buffer size.<br>
      * Note: A small buffer may lead to extremely bad performance!
+     * 
      * @param file underlying source file
      * @param maxBufferSize maximum size a buffer may have (0 or less means {@link #DEFAULT_MAX_BUFFER_SIZE})
      * @param bufferType the type of buffer to be used, see {@link BufferType}
@@ -234,30 +239,38 @@ public final class ParallelFileInputStream extends InputStream {
             maxBufferSize = DEFAULT_MAX_BUFFER_SIZE;
         }
 
-        fileSize = file.length();
+        this.fileSize = file.length();
         if (maxBufferSize > fileSize) {
             maxBufferSize = (int) fileSize;
         }
         this.maxBufferSize = maxBufferSize;
 
-        fileChannel = (new RandomAccessFile(file, "r")).getChannel();
-
-        // tell the reader thread to fetch the first partition
+        boolean success = false;
         try {
-            bufferRequestQueue.put(new BufferEvent());
-        }
-        catch (InterruptedException ex) {
-            throw new IOException("Unexpected interruption during queue setup.", ex);
-        }
+            this.fileChannel = (new RandomAccessFile(file, "r")).getChannel();
 
-        this.readerThread = new ReaderThread(fileChannel, fileSize, bufferType, maxBufferSize, bufferRequestQueue,
-                bufferDeliveryQueue);
+            // tell the reader thread to fetch the first partition
+            try {
+                this.bufferRequestQueue.put(new BufferEvent());
+            }
+            catch (InterruptedException ex) {
+                throw new IOException("Unexpected interruption during queue setup.", ex);
+            }
+
+            this.readerThread = new ReaderThread(fileChannel, fileSize, bufferType, maxBufferSize, bufferRequestQueue, bufferDeliveryQueue);
+            success = true;
+        }
+        finally {
+            if (!success) {
+                MiscUtils.closeResourceCatch(this.fileChannel);
+            }
+        }
     }
 
     /**
      * Returns the number of bytes that has been returned to the caller during read()-operations until now.<br>
-     * This method does ignore skip() and mark(), so at the end of file the value may be smaller than the file size or
-     * even greater.
+     * This method does ignore skip() and mark(), so at the end of file the value may be smaller than the file size or even greater.
+     * 
      * @return number of bytes delivered to the caller
      */
     public long getNumberOfBytesDelivered() {
@@ -266,6 +279,7 @@ public final class ParallelFileInputStream extends InputStream {
 
     /**
      * Checks whether there was a read error and evtl. rethrows it
+     * 
      * @throws IOException on file access error
      */
     private void assertNoError() throws IOException {
@@ -276,6 +290,7 @@ public final class ParallelFileInputStream extends InputStream {
 
     /**
      * Checks whether there was a read error and evtl. rethrows it
+     * 
      * @param bufferEvent an event that could have an error
      * @throws IOException on file access error
      */
@@ -290,6 +305,7 @@ public final class ParallelFileInputStream extends InputStream {
 
     /**
      * Take error, memorize it and rethrow IOException
+     * 
      * @param error processing error to be memorized
      * @throws IOException on file access error
      */
@@ -308,6 +324,7 @@ public final class ParallelFileInputStream extends InputStream {
     /**
      * Internal method to read the next partition.<br>
      * Buffers will be switched and the reader will be triggered to fill the other buffer asynchronously.
+     * 
      * @throws IOException on file access error
      */
     private void readNextPartitionParallel() throws IOException {
@@ -350,8 +367,7 @@ public final class ParallelFileInputStream extends InputStream {
         assertNoError();
 
         if (off + len > b.length) {
-            throw new IndexOutOfBoundsException("The given byte[" + b.length + "]-array is too small to store " + len
-                    + " bytes starting at " + off + ".");
+            throw new IndexOutOfBoundsException("The given byte[" + b.length + "]-array is too small to store " + len + " bytes starting at " + off + ".");
         }
 
         int lenReal = len;
@@ -393,6 +409,7 @@ public final class ParallelFileInputStream extends InputStream {
     /**
      * Repositions the pointer on the stream so that the next buffer access will read at the given absolute position<br>
      * If this given position is greater than file size, the pointer will be set at the end of file.
+     * 
      * @param positionAbs absolute position in file (if greater than file size, we will reposition at EOF)
      * @throws IOException on file access error
      */
@@ -561,7 +578,9 @@ public final class ParallelFileInputStream extends InputStream {
 
     /**
      * Mark is supported.
+     * <p>
      * {@inheritDoc}
+     * 
      * @return true
      */
     @Override

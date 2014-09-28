@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Context - some kind of system registry in this STRATEGY demonstration.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.strategy;
 
 import java.util.Map;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 
 /**
  * Context - some kind of system registry in this STRATEGY demonstration.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Context {
@@ -40,6 +43,7 @@ public class Context {
 
     /**
      * Stores the strategy for the given key.
+     * 
      * @param strategyName strategy identifier
      * @param strategy hash strategy
      */
@@ -49,6 +53,7 @@ public class Context {
 
     /**
      * Returns the corresponding strategy
+     * 
      * @param strategyName strategy identifier
      * @return strategy or null if not found
      */
@@ -59,6 +64,7 @@ public class Context {
 
     /**
      * Returns a set of the available hash strategy names
+     * 
      * @return collection of strategies
      */
     public Set<String> getAllHashStrategyNames() {

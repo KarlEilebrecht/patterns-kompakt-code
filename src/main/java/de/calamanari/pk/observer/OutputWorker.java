@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Output Worker
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.observer;
 
 import java.util.logging.Logger;
@@ -23,6 +25,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Output Worker is a concrete observable in this OBSERVER example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OutputWorker extends Thread implements OutputObservable {
@@ -36,7 +39,7 @@ public class OutputWorker extends Thread implements OutputObservable {
      * load simulation delay
      */
     private static final long WAIT_DELAY_MILLIS = 100;
-    
+
     /**
      * The "work" to do for this worker
      */
@@ -54,6 +57,7 @@ public class OutputWorker extends Thread implements OutputObservable {
 
     /**
      * Creates new worker with the given "work" to do.
+     * 
      * @param workerNumber identifier of the worker
      * @param bytesToWrite number of bytes to be written by the worker
      */
@@ -77,6 +81,7 @@ public class OutputWorker extends Thread implements OutputObservable {
 
     /**
      * Returns the number (id) of this worker
+     * 
      * @return workerNumber
      */
     public int getWorkerNumber() {
@@ -84,8 +89,8 @@ public class OutputWorker extends Thread implements OutputObservable {
     }
 
     /**
-     * This implementation supports exactly one observer, calling this method twice replaces an oberserver registered
-     * before.
+     * This implementation supports exactly one observer, calling this method twice replaces an oberserver registered before.
+     * 
      * @param outputObserver the instance that wants to listen
      */
     @Override

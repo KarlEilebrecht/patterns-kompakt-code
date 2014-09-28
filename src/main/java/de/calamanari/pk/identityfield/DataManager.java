@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Data Manager - supplementary class in IDENTITY FIELD pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identityfield;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Data Manager - supplementary class in IDENTITY FIELD pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DataManager {
@@ -39,6 +42,7 @@ public class DataManager {
 
     /**
      * Adds entity row for testing
+     * 
      * @param pkField1 first primary key field
      * @param pkField2 second primary key field
      * @param x some entity field
@@ -50,6 +54,7 @@ public class DataManager {
 
     /**
      * Finder method to retrieve entity from DB
+     * 
      * @param x some value
      * @param y some value
      * @return entity or null if not found

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Staff member is the LEAF implementing the component interface 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.composite;
 
 /**
  * Staff member is the LEAF implementing the component interface
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class StaffMember implements EnterpriseNode {
@@ -45,6 +48,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Creates new member using this given arguments
+     * 
      * @param firstName first name
      * @param lastName name
      * @param jobTitle the job of the person
@@ -57,6 +61,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Returns the first name
+     * 
      * @return first name
      */
     public String getFirstName() {
@@ -65,6 +70,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * sets the person's first name
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -73,6 +79,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Returns the person's last name.
+     * 
      * @return last name
      */
     public String getLastName() {
@@ -81,6 +88,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Sets the person's last name
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -89,6 +97,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Sets the enterprise unit this person works for
+     * 
      * @param enterpriseUnit unit the member works for
      */
     public void setEnterpriseUnit(AbstractEnterpriseUnit enterpriseUnit) {
@@ -97,6 +106,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Returns the job title of this staff member
+     * 
      * @return job title
      */
     public String getJobTitle() {
@@ -105,6 +115,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Sets this staff member's job title
+     * 
      * @param jobTitle person's job
      */
     public void setJobTitle(String jobTitle) {
@@ -113,6 +124,7 @@ public class StaffMember implements EnterpriseNode {
 
     /**
      * Returns the enterprise unit this person works for.
+     * 
      * @return enterprise unit
      */
     public AbstractEnterpriseUnit getEnterpriseUnit() {

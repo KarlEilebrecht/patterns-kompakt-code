@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Print service - supplementary service interface, just some service to print
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,16 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
 /**
  * Print service - supplementary service interface, just some service to print
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface PrintService {
 
     /**
      * Some method to print something
+     * 
      * @param s string to be printed
      */
     public void print(String s);

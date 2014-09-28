@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * File macro plugin 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin.ext;
 
 import java.io.File;
@@ -27,6 +29,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * File Macro Plugin provides macros for file access.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class FileMacroPlugin implements MacroPlugin {
@@ -40,12 +43,12 @@ public class FileMacroPlugin implements MacroPlugin {
      * min number of arguments
      */
     private static final int MIN_ARGS = 2;
-    
+
     /**
      * max number of arguments
      */
     private static final int MAX_ARGS = 3;
-    
+
     /**
      * reference to the execution framework
      */
@@ -99,19 +102,20 @@ public class FileMacroPlugin implements MacroPlugin {
         }
 
         switch (macroName) {
-            case "writeStringToFile":
-                return executeMacroWriteStringToFile(args);
-            case "readFileToString":
-                return executeMacroReadFileToString(args);
-            case "createHomeFile":
-                return executeMacroCreateHomeFile(args);
-            default:
-                throw new RuntimeException("Could not execute macro '" + macroName + "' - unknown macro.");
+        case "writeStringToFile":
+            return executeMacroWriteStringToFile(args);
+        case "readFileToString":
+            return executeMacroReadFileToString(args);
+        case "createHomeFile":
+            return executeMacroCreateHomeFile(args);
+        default:
+            throw new RuntimeException("Could not execute macro '" + macroName + "' - unknown macro.");
         }
     }
 
     /**
      * Creates a file of the given name in the home directory
+     * 
      * @param args name of the file
      * @return created file reference
      */
@@ -128,6 +132,7 @@ public class FileMacroPlugin implements MacroPlugin {
 
     /**
      * Reads the given file to string
+     * 
      * @param args 0=file name, optionally 1=charset name
      * @return text from file
      */
@@ -151,6 +156,7 @@ public class FileMacroPlugin implements MacroPlugin {
 
     /**
      * Executes the writeStringToFile macro
+     * 
      * @param args macro arguments: 0=string, 1=file, optionally 2=charset name
      * @return file size in bytes
      */
@@ -167,8 +173,7 @@ public class FileMacroPlugin implements MacroPlugin {
         if (arg2 instanceof String) {
             arg2 = new File((String) arg2);
         }
-        if (arg1 == null || !(arg1 instanceof String) || arg2 == null || !(arg2 instanceof File)
-                || (arg3 != null && !(arg3 instanceof String))) {
+        if (arg1 == null || !(arg1 instanceof String) || arg2 == null || !(arg2 instanceof File) || (arg3 != null && !(arg3 instanceof String))) {
             throw new RuntimeException("Could not execute macro 'writeStringToFile' - illegal arguments.");
         }
         return Long.valueOf(MiscUtils.writeStringToFile((String) arg1, (File) arg2, (String) arg3));

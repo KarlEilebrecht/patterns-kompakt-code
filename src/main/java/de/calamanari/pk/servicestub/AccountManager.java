@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Account Manager - a component to be tested
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.servicestub;
 
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ import de.calamanari.pk.servicestub.adrchk.AddressValidatorService;
 /**
  * Account Manager - a component to be tested<br>
  * An instance can only be tested with a valid AddressValidator reference injected.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AccountManager {
@@ -45,6 +48,7 @@ public class AccountManager {
 
     /**
      * Constructor (to be used by framework) allowing service reference injection
+     * 
      * @param addressValidatorService injected validation service
      */
     public AccountManager(AddressValidatorService addressValidatorService) {
@@ -52,14 +56,14 @@ public class AccountManager {
             LOGGER.fine(this.getClass().getSimpleName() + "(null) created.");
         }
         else {
-            LOGGER.fine(this.getClass().getSimpleName() + "(instance of " + addressValidatorService.getClass()
-                    + ") created.");
+            LOGGER.fine(this.getClass().getSimpleName() + "(instance of " + addressValidatorService.getClass() + ") created.");
         }
         this.addressValidatorService = addressValidatorService;
     }
 
     /**
      * Creates new valid account - the method we will test, it uses address validation service internally
+     * 
      * @param firstName person's first name
      * @param lastName person's last name
      * @param street address field
@@ -68,10 +72,9 @@ public class AccountManager {
      * @return new account
      * @throws AccountValidationException if account could not be created
      */
-    public Account createAccount(String firstName, String lastName, String street, String zipCode, String city)
-            throws AccountValidationException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".createAccount('" + firstName + "', '" + lastName + "', '"
-                + street + "', '" + zipCode + "', '" + city + "') called ...");
+    public Account createAccount(String firstName, String lastName, String street, String zipCode, String city) throws AccountValidationException {
+        LOGGER.fine(this.getClass().getSimpleName() + ".createAccount('" + firstName + "', '" + lastName + "', '" + street + "', '" + zipCode + "', '" + city
+                + "') called ...");
         if (firstName == null || firstName.trim().length() == 0 || lastName == null || lastName.trim().length() == 0) {
             throw new AccountValidationException("Could not create account, invalid name.");
         }

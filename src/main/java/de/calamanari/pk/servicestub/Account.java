@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Account - supplementary class
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.servicestub;
 
 /**
  * Account - supplementary class
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Account {
@@ -55,6 +58,7 @@ public class Account {
 
     /**
      * Creates new address with the given attributes
+     * 
      * @param accountId identifier
      * @param firstName person's first name
      * @param lastName person's last name
@@ -73,6 +77,7 @@ public class Account {
 
     /**
      * Returns the account id
+     * 
      * @return account id
      */
     public String getAccountId() {
@@ -81,6 +86,7 @@ public class Account {
 
     /**
      * Returns the first name
+     * 
      * @return first name
      */
     public String getFirstName() {
@@ -89,6 +95,7 @@ public class Account {
 
     /**
      * Sets the first name
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -97,6 +104,7 @@ public class Account {
 
     /**
      * Returns the last name
+     * 
      * @return last name
      */
     public String getLastName() {
@@ -105,6 +113,7 @@ public class Account {
 
     /**
      * Sets the last name
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -113,6 +122,7 @@ public class Account {
 
     /**
      * Returns the street
+     * 
      * @return street
      */
     public String getStreet() {
@@ -121,6 +131,7 @@ public class Account {
 
     /**
      * Sets the street
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -129,6 +140,7 @@ public class Account {
 
     /**
      * Returns the zip code
+     * 
      * @return zip code
      */
     public String getZipCode() {
@@ -137,6 +149,7 @@ public class Account {
 
     /**
      * Sets the zip code
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -145,6 +158,7 @@ public class Account {
 
     /**
      * Returns the city
+     * 
      * @return city
      */
     public String getCity() {
@@ -153,6 +167,7 @@ public class Account {
 
     /**
      * Sets the city
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -161,9 +176,8 @@ public class Account {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({accountId='" + accountId + "', firstName='" + firstName
-                + "', lastName='" + lastName + "', street='" + street + "', zipCode='" + zipCode + "', city='" + city
-                + "'})";
+        return this.getClass().getSimpleName() + "({accountId='" + accountId + "', firstName='" + firstName + "', lastName='" + lastName + "', street='"
+                + street + "', zipCode='" + zipCode + "', city='" + city + "'})";
     }
 
 }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Command Processor Test - demonstrates COMMAND PROCESSOR pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.commandprocessor;
 
 import static org.junit.Assert.assertEquals;
@@ -31,12 +33,12 @@ import de.calamanari.pk.command.AppendTextCommand;
 import de.calamanari.pk.command.DeleteTextCommand;
 import de.calamanari.pk.command.InputCommand;
 import de.calamanari.pk.command.TextComponent;
-import de.calamanari.pk.commandprocessor.InputCommandProcessor;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Command Processor Test - demonstrates COMMAND PROCESSOR pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CommandProcessorTest {
@@ -54,8 +56,7 @@ public class CommandProcessorTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, CommandProcessorTest.class, InputCommandProcessor.class,
-                AppendTextCommand.class, DeleteTextCommand.class);
+        LogUtils.setLogLevel(LOG_LEVEL, CommandProcessorTest.class, InputCommandProcessor.class, AppendTextCommand.class, DeleteTextCommand.class);
     }
 
     @Test
@@ -72,18 +73,14 @@ public class CommandProcessorTest {
 
         List<InputCommand> commandList = Arrays.asList(new InputCommand[] {
 
-        new AppendTextCommand(textComponent, "The"), new AppendTextCommand(textComponent, "quick"),
-                new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
-                new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
-                new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, " "),
-                new AppendTextCommand(textComponent, "quick"), new AppendTextCommand(textComponent, " "),
-                new AppendTextCommand(textComponent, "brown"), new AppendTextCommand(textComponent, " "),
-                new AppendTextCommand(textComponent, "d"), new DeleteTextCommand(textComponent, 1),
-                new AppendTextCommand(textComponent, "f"), new AppendTextCommand(textComponent, "o"),
-                new AppendTextCommand(textComponent, "x"), new AppendTextCommand(textComponent, " "),
-                new AppendTextCommand(textComponent, "jumped over the lazy frog"),
-                new DeleteTextCommand(textComponent, 4), new AppendTextCommand(textComponent, "duck"),
-                new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
+        new AppendTextCommand(textComponent, "The"), new AppendTextCommand(textComponent, "quick"), new DeleteTextCommand(textComponent, 1),
+                new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
+                new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, " "), new AppendTextCommand(textComponent, "quick"),
+                new AppendTextCommand(textComponent, " "), new AppendTextCommand(textComponent, "brown"), new AppendTextCommand(textComponent, " "),
+                new AppendTextCommand(textComponent, "d"), new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, "f"),
+                new AppendTextCommand(textComponent, "o"), new AppendTextCommand(textComponent, "x"), new AppendTextCommand(textComponent, " "),
+                new AppendTextCommand(textComponent, "jumped over the lazy frog"), new DeleteTextCommand(textComponent, 4),
+                new AppendTextCommand(textComponent, "duck"), new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
                 new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, "og."), });
 
         for (InputCommand ic : commandList) {
@@ -105,8 +102,7 @@ public class CommandProcessorTest {
 
         assertEquals("The quick brown fox jumped over the lazy dog.", textComponent.toString());
 
-        LOGGER.info("Test Commmand Processor successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Commmand Processor successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

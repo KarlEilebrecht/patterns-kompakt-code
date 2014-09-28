@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Source system person view
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,15 +16,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.adapter;
 
 import java.util.logging.Logger;
 
 /**
- * Source system person view plays the role of an existing class. Its interface provides "the wrong" methods, thus it
- * has to be adapted for being used in the target scenario. <br>
+ * Source system person view plays the role of an existing class. Its interface provides "the wrong" methods, thus it has to be adapted for being used in the
+ * target scenario. <br>
  * Semantics as well as data structure is not sufficient.<br>
  * This is the ADAPTEE in ADAPTER pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SourceSystemPersonView {
@@ -65,6 +68,7 @@ public class SourceSystemPersonView {
 
     /**
      * Constructs new item, used in source system
+     * 
      * @param number identifier
      * @param firstName person's first name
      * @param lastName person's last name
@@ -79,6 +83,7 @@ public class SourceSystemPersonView {
 
     /**
      * returns whether this record is invalid
+     * 
      * @return true if record is invalid
      */
     public boolean isInvalid() {

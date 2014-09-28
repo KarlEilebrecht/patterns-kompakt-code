@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Worker
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.iterator;
 
 import java.util.HashSet;
@@ -22,6 +24,7 @@ import java.util.Set;
 
 /**
  * Worker represents the concrete AGGREGATE which can return an ITERATOR.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Worker extends AbstractWorker {
@@ -33,6 +36,7 @@ public class Worker extends AbstractWorker {
 
     /**
      * Creates a worker of the given name
+     * 
      * @param name person's name
      */
     public Worker(String name) {
@@ -41,6 +45,7 @@ public class Worker extends AbstractWorker {
 
     /**
      * Adds a subordinate to this worker
+     * 
      * @param subordinate person who works for this worker
      */
     public void addDirectSubordinate(Worker subordinate) {
@@ -49,6 +54,7 @@ public class Worker extends AbstractWorker {
 
     /**
      * Removes the given subordinate
+     * 
      * @param subordinate to be removed
      * @return true if the given worker was a subordinate before, otherwise false
      */

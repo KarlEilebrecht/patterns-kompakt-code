@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Entity - compound key carrying entity in IDENTITY FIELD pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identityfield;
 
 import java.util.logging.Logger;
 
 /**
  * Entity - compound key carrying entity in IDENTITY FIELD pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Entity {
@@ -47,6 +50,7 @@ public class Entity {
 
     /**
      * Creates new entity
+     * 
      * @param id the compound key
      * @param x value
      * @param y value
@@ -59,6 +63,7 @@ public class Entity {
 
     /**
      * Returns the x-field value
+     * 
      * @return x
      */
     public String getX() {
@@ -67,6 +72,7 @@ public class Entity {
 
     /**
      * Sets the x-field value
+     * 
      * @param x value
      */
     public void setX(String x) {
@@ -75,6 +81,7 @@ public class Entity {
 
     /**
      * Returns the y-field value
+     * 
      * @return y value
      */
     public String getY() {
@@ -83,6 +90,7 @@ public class Entity {
 
     /**
      * Sets the y-field value
+     * 
      * @param y value
      */
     public void setY(String y) {
@@ -91,6 +99,7 @@ public class Entity {
 
     /**
      * Returns the id (IDENTITY FIELD)
+     * 
      * @return compound key
      */
     public CompoundKey getId() {

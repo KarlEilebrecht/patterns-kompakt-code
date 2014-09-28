@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Throughput Event
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.tpl;
 
 import java.text.NumberFormat;
@@ -24,6 +26,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * A {@link ThroughputEvent} contains some KPIs about a {@link ThroughputLimiter}'s current state.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
@@ -76,19 +79,18 @@ public final class ThroughputEvent {
 
     /**
      * Creates a new throughput event to be reported
-     * @param sysTimeNanos time in nanoseconds when the event occurred, see also
-     *            {@linkplain MiscUtils#getSystemUptimeNanos()}
+     * 
+     * @param sysTimeNanos time in nanoseconds when the event occurred, see also {@linkplain MiscUtils#getSystemUptimeNanos()}
      * @param intervalNanos exact length of the past interval in nanoseconds
      * @param intervalOverloadNanos time in nanoseconds within the interval, the limiter was overloaded
      * @param passedCount number of granted permissions during the past interval
      * @param deniedCount number of denied permissions during the past interval
      * @param currentPerSecondThroughput calculated throughput for this interval (permissions granted per second)
-     * @param totalPerSecondThroughput calculated throughput throughout the listeners lifetime (permissions granted per
-     *            second)
+     * @param totalPerSecondThroughput calculated throughput throughout the listeners lifetime (permissions granted per second)
      * @param overloaded true if the limiter is currently overloaded, otherwise false
      */
-    public ThroughputEvent(long sysTimeNanos, long intervalNanos, long intervalOverloadNanos, long passedCount,
-            long deniedCount, double currentPerSecondThroughput, double totalPerSecondThroughput, boolean overloaded) {
+    public ThroughputEvent(long sysTimeNanos, long intervalNanos, long intervalOverloadNanos, long passedCount, long deniedCount,
+            double currentPerSecondThroughput, double totalPerSecondThroughput, boolean overloaded) {
         this.sysTimeNanos = sysTimeNanos;
         this.intervalNanos = intervalNanos;
         this.intervalOverloadNanos = intervalOverloadNanos;
@@ -105,16 +107,15 @@ public final class ThroughputEvent {
         nf.setGroupingUsed(false);
         nf.setMaximumFractionDigits(2);
         nf.setMinimumFractionDigits(2);
-        return this.getClass().getSimpleName() + "[eventTimeMillis=" + eventTimeMillis + ", sysTimeNanos="
-                + sysTimeNanos + ", intervalNanos=" + intervalNanos + ", intervalOverloadNanos="
-                + intervalOverloadNanos
-                + ", passedCount=" + passedCount + ", deniedCount=" + deniedCount + ", overloaded=" + overloaded
-                + ", totalThroughput=" + nf.format(totalPerSecondThroughput) + "/s, intervalThroughput="
-                + nf.format(intervalPerSecondThroughput) + "/s]";
+        return this.getClass().getSimpleName() + "[eventTimeMillis=" + eventTimeMillis + ", sysTimeNanos=" + sysTimeNanos + ", intervalNanos=" + intervalNanos
+                + ", intervalOverloadNanos=" + intervalOverloadNanos + ", passedCount=" + passedCount + ", deniedCount=" + deniedCount + ", overloaded="
+                + overloaded + ", totalThroughput=" + nf.format(totalPerSecondThroughput) + "/s, intervalThroughput=" + nf.format(intervalPerSecondThroughput)
+                + "/s]";
     }
 
     /**
      * Returns clock UTC-time in milliseconds, the event was created (System.currentTimeMillis())
+     * 
      * @return time in milliseconds
      */
     public long getEventTimeMillis() {

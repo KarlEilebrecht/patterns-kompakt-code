@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Indexer Master
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.itfa;
 
 import static de.calamanari.pk.util.CharsetUtils.CARRIAGE_RETURN_CODE;
@@ -35,8 +37,9 @@ import de.calamanari.pk.util.pfis.ParallelFileInputStream;
 
 /**
  * Indexer Master<br>
- * Indexing is implemented using the MASTER-SLAVE pattern. The master cuts the work into peaces the slaves perform the
- * indexing. Finally the master collects the results and sets up the full index.
+ * Indexing is implemented using the MASTER-SLAVE pattern. The master cuts the work into peaces the slaves perform the indexing. Finally the master collects the
+ * results and sets up the full index.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 final class IndexerMaster {
@@ -67,16 +70,14 @@ final class IndexerMaster {
     private final String charsetName;
 
     /**
-     * Handling line breaks is complex, we avoid carriage returns at the end of a partition, because there may be a
-     * following line feed.<br>
+     * Handling line breaks is complex, we avoid carriage returns at the end of a partition, because there may be a following line feed.<br>
      * Thus we move a trailing CR to the next partition.<br>
      * In this case the buffer start index will be 1 otherwise 0
      */
     private boolean movedCarriageReturnToNextPartition = false;
 
     /**
-     * The maximum number of character entries is fixed and has to be distributed as good as possible over the complete
-     * file.<br>
+     * The maximum number of character entries is fixed and has to be distributed as good as possible over the complete file.<br>
      * Process-inherent problems (rounding for example) can lead to a loss of entries.<br>
      * To avoid this, we maintain a delta (unused entries).
      */
@@ -161,11 +162,11 @@ final class IndexerMaster {
 
     /**
      * Creates the master, not started, yet
+     * 
      * @param configuration indexer configuration
      * @param file The file being indexed
      * @param charsetName name of the charset for the underlying file
-     * @param charLengthLookup A lookup for all character codes to the length (in bytes) of the character represented
-     *            using the current charset.
+     * @param charLengthLookup A lookup for all character codes to the length (in bytes) of the character represented using the current charset.
      */
     public IndexerMaster(ItfaConfiguration configuration, File file, String charsetName, byte[] charLengthLookup) {
         this.configuration = configuration;
@@ -180,6 +181,7 @@ final class IndexerMaster {
 
     /**
      * This method creates the index, an instance of {@link IndexerMasterResult}
+     * 
      * @return index data
      * @throws IOException on file access problems
      */
@@ -206,15 +208,14 @@ final class IndexerMaster {
     }
 
     /**
-     * This method creates the parallel file input stream for the indexer run and winds it forward to the first data
-     * position (after the byte-order-mark)
+     * This method creates the parallel file input stream for the indexer run and winds it forward to the first data position (after the byte-order-mark)
+     * 
      * @return prepared master stream
      * @throws IOException on file access problems
      */
     private ParallelFileInputStream prepareMasterStream() throws IOException {
         ParallelFileInputStream masterStream;
-        masterStream = ParallelFileInputStream.createInputStream(file, configuration.indexerReadBufferSize,
-                configuration.indexerReadBufferType);
+        masterStream = ParallelFileInputStream.createInputStream(file, configuration.indexerReadBufferSize, configuration.indexerReadBufferType);
 
         for (int i = 0; i < configuration.bomSize; i++) {
             masterStream.read();
@@ -264,6 +265,7 @@ final class IndexerMaster {
 
     /**
      * Processes all the data from the input file
+     * 
      * @param masterStream input data
      * @throws IOException on file access problems
      */
@@ -271,8 +273,7 @@ final class IndexerMaster {
         BufferedReader masterReader = null;
 
         try {
-            masterReader = new BufferedReader(new InputStreamReader(masterStream, charsetName),
-                    configuration.charBufferSize);
+            masterReader = new BufferedReader(new InputStreamReader(masterStream, charsetName), configuration.charBufferSize);
 
             long dataSize = fileSize - configuration.bomSize;
 
@@ -301,18 +302,16 @@ final class IndexerMaster {
 
     /**
      * Reads the underlying file's data partition-wise and indexes the obtained characters and lines.
+     * 
      * @param masterStream stream (for calculating absolute byte-positions)
      * @param masterReader provides the character from the file
      * @param buffer process character buffer (for partitioning)
      * @throws IOException on file access problems
      */
-    private void indexPartitions(ParallelFileInputStream masterStream, BufferedReader masterReader, char[] buffer)
-            throws IOException {
+    private void indexPartitions(ParallelFileInputStream masterStream, BufferedReader masterReader, char[] buffer) throws IOException {
         int partitionSize = 0;
         int bufferStartIdx = 0;
-        while ((partitionSize = masterReader
-                .read(buffer, bufferStartIdx, configuration.charBufferSize - bufferStartIdx)) != -1
-                || bufferStartIdx > 0) {
+        while ((partitionSize = masterReader.read(buffer, bufferStartIdx, configuration.charBufferSize - bufferStartIdx)) != -1 || bufferStartIdx > 0) {
 
             if (partitionSize == -1) {
                 partitionSize = bufferStartIdx;
@@ -321,8 +320,7 @@ final class IndexerMaster {
             // memorize position AFTER partition
             long numberOfBytesProcessed = masterStream.getNumberOfBytesDelivered();
 
-            IndexerPartitionMetaData metaData = preparePartitionAndAdjustDeltas(buffer, partitionSize,
-                    numberOfBytesProcessed);
+            IndexerPartitionMetaData metaData = preparePartitionAndAdjustDeltas(buffer, partitionSize, numberOfBytesProcessed);
 
             lostCharEntries = 0;
             lostLineEntries = 0;
@@ -344,6 +342,7 @@ final class IndexerMaster {
 
     /**
      * This method processes (indexes) a single partition of the input file
+     * 
      * @param buffer characters read from file
      * @param partitionMetaData partition settings
      * @throws IOException on file access problems
@@ -362,12 +361,12 @@ final class IndexerMaster {
 
     /**
      * Splits the partition into sub-partition and starts asynchronous slave-tasks to index these.
+     * 
      * @param buffer partition character data
      * @param partitionMetaData partition meta data
      * @param slavesFinishedLatch latch, any slave shall count-down after having finished
      */
-    private void indexSubPartitionsAsync(char[] buffer, IndexerPartitionMetaData partitionMetaData,
-            CountDownLatch slavesFinishedLatch) {
+    private void indexSubPartitionsAsync(char[] buffer, IndexerPartitionMetaData partitionMetaData, CountDownLatch slavesFinishedLatch) {
 
         // at sub-partition boundaries we must again care for carriage return characters
         boolean subPartitionMovedCR = false;
@@ -391,8 +390,7 @@ final class IndexerMaster {
             }
 
             // shall we move a trailing carriage return?
-            subPartitionMovedCR = (i < (partitionMetaData.numberOfSlaves - 1) && buffer[subPartitionStartIdx
-                    + subPartitionSize - 1] == CARRIAGE_RETURN_CODE);
+            subPartitionMovedCR = (i < (partitionMetaData.numberOfSlaves - 1) && buffer[subPartitionStartIdx + subPartitionSize - 1] == CARRIAGE_RETURN_CODE);
 
             if (subPartitionMovedCR) {
                 // move carriage return to next sub-partition by (truncate)
@@ -404,14 +402,14 @@ final class IndexerMaster {
                 subPartitionSize = partitionMetaData.partitionSize - subPartitionStartIdx;
             }
 
-            indexSubPartitionAsync(buffer, i, subPartitionStartIdx, subPartitionSize,
-                    partitionMetaData.maxNumberOfCharEntriesInSubPartition,
+            indexSubPartitionAsync(buffer, i, subPartitionStartIdx, subPartitionSize, partitionMetaData.maxNumberOfCharEntriesInSubPartition,
                     partitionMetaData.maxNumberOfLineEntriesInSubPartition, slavesFinishedLatch);
         }
     }
 
     /**
      * Starts a the specified slave on the given sub-partition
+     * 
      * @param buffer current buffer data
      * @param slaveNumber number of the slave 0-based
      * @param subPartitionStartIdx start of the sub-partition related to main partition
@@ -421,8 +419,7 @@ final class IndexerMaster {
      * @param slavesFinishedLatch latch, slave shall count-down after having finished
      */
     private void indexSubPartitionAsync(char[] buffer, int slaveNumber, int subPartitionStartIdx, int subPartitionSize,
-            int maxNumberOfCharEntriesInSubPartition, int maxNumberOfLineEntriesInSubPartition,
-            CountDownLatch slavesFinishedLatch) {
+            int maxNumberOfCharEntriesInSubPartition, int maxNumberOfLineEntriesInSubPartition, CountDownLatch slavesFinishedLatch) {
         IndexerSlave slave = indexerSlaves[slaveNumber];
         slave.latch = slavesFinishedLatch;
         slave.maxNumberOfCharEntries = maxNumberOfCharEntriesInSubPartition;
@@ -436,34 +433,30 @@ final class IndexerMaster {
     }
 
     /**
-     * This method calculates settings for processing the next partition and adjust global settings (memorize moved
-     * carriage return and entry deltas)
+     * This method calculates settings for processing the next partition and adjust global settings (memorize moved carriage return and entry deltas)
+     * 
      * @param buffer character buffer (partition data)
      * @param partitionSize size of the new partition
      * @param numberOfBytesProcessed number of bytes AFTER reading the current partition from the file
      * @return partition meta data
      */
-    private IndexerPartitionMetaData preparePartitionAndAdjustDeltas(char[] buffer, int partitionSize,
-            long numberOfBytesProcessed) {
+    private IndexerPartitionMetaData preparePartitionAndAdjustDeltas(char[] buffer, int partitionSize, long numberOfBytesProcessed) {
         IndexerPartitionMetaData partitionMetaData = new IndexerPartitionMetaData();
         partitionMetaData.partitionSize = partitionSize;
         partitionMetaData.partitionSizeInBytes = numberOfBytesProcessed - lastNumberOfBytesProcessed;
 
         // re-integrate moved carriage return
         if (movedCarriageReturnToNextPartition) {
-            partitionMetaData.partitionSizeInBytes = partitionMetaData.partitionSizeInBytes
-                    + charLengthLookup[(int) CARRIAGE_RETURN_CODE];
+            partitionMetaData.partitionSizeInBytes = partitionMetaData.partitionSizeInBytes + charLengthLookup[CARRIAGE_RETURN_CODE];
         }
 
         // check this partition whether it ends with a CR
-        movedCarriageReturnToNextPartition = (partitionMetaData.partitionSize > 1
-                && buffer[partitionMetaData.partitionSize - 1] == CARRIAGE_RETURN_CODE);
+        movedCarriageReturnToNextPartition = (partitionMetaData.partitionSize > 1 && buffer[partitionMetaData.partitionSize - 1] == CARRIAGE_RETURN_CODE);
 
         // move CR to next partition
         if (movedCarriageReturnToNextPartition) {
             partitionMetaData.partitionSize--;
-            partitionMetaData.partitionSizeInBytes = partitionMetaData.partitionSizeInBytes
-                    - charLengthLookup[(int) CARRIAGE_RETURN_CODE];
+            partitionMetaData.partitionSizeInBytes = partitionMetaData.partitionSizeInBytes - charLengthLookup[CARRIAGE_RETURN_CODE];
         }
 
         adjustSettingsAndDeltas(partitionMetaData);
@@ -471,23 +464,19 @@ final class IndexerMaster {
     }
 
     /**
-     * Distributing the entries over the file needs corrections to avoid loosing possible entries (division/remainder
-     * problem), to reduce loss, the character and line entry delta helps us collecting "entry fractions".<br>
-     * This method adjusts these deltas and uses the values to evtl. adjust the number of possible entries
-     * (character/line) entries in the next sub-partition.
+     * Distributing the entries over the file needs corrections to avoid loosing possible entries (division/remainder problem), to reduce loss, the character
+     * and line entry delta helps us collecting "entry fractions".<br>
+     * This method adjusts these deltas and uses the values to evtl. adjust the number of possible entries (character/line) entries in the next sub-partition.
+     * 
      * @param partitionMetaData current partition meta data
      */
     private void adjustSettingsAndDeltas(IndexerPartitionMetaData partitionMetaData) {
         // calculate number of entries and loss
-        double exactMaxNumberOfCharEntriesInPartition =
-                ((double) partitionMetaData.partitionSizeInBytes / (double) averageCharEntryDistance)
-                        + lostCharEntries;
+        double exactMaxNumberOfCharEntriesInPartition = ((double) partitionMetaData.partitionSizeInBytes / (double) averageCharEntryDistance) + lostCharEntries;
         int maxNumberOfCharEntriesInPartition = ((int) (Math.floor(exactMaxNumberOfCharEntriesInPartition)));
         charEntryDelta = charEntryDelta + (exactMaxNumberOfCharEntriesInPartition - maxNumberOfCharEntriesInPartition);
 
-        double exactMaxNumberOfLineEntriesInPartition =
-                ((double) partitionMetaData.partitionSizeInBytes / (double) averageLineEntryDistance)
-                        + lostLineEntries;
+        double exactMaxNumberOfLineEntriesInPartition = ((double) partitionMetaData.partitionSizeInBytes / (double) averageLineEntryDistance) + lostLineEntries;
         int maxNumberOfLineEntriesInPartition = ((int) (Math.floor(exactMaxNumberOfLineEntriesInPartition)));
         lineEntryDelta = lineEntryDelta + (exactMaxNumberOfLineEntriesInPartition - maxNumberOfLineEntriesInPartition);
 
@@ -501,13 +490,10 @@ final class IndexerMaster {
 
         // in the code below we calculate how many entries we have to spread over the partition and its sub-partitions
 
-        double exactMaxNumberOfCharEntriesInSubPartition = (double) maxNumberOfCharEntriesInPartition
-                / (double) partitionMetaData.numberOfSlaves;
+        double exactMaxNumberOfCharEntriesInSubPartition = (double) maxNumberOfCharEntriesInPartition / (double) partitionMetaData.numberOfSlaves;
 
-        partitionMetaData.maxNumberOfCharEntriesInSubPartition = (int) Math
-                .floor(exactMaxNumberOfCharEntriesInSubPartition);
-        charEntryDelta = charEntryDelta
-                + (exactMaxNumberOfCharEntriesInSubPartition - partitionMetaData.maxNumberOfCharEntriesInSubPartition)
+        partitionMetaData.maxNumberOfCharEntriesInSubPartition = (int) Math.floor(exactMaxNumberOfCharEntriesInSubPartition);
+        charEntryDelta = charEntryDelta + (exactMaxNumberOfCharEntriesInSubPartition - partitionMetaData.maxNumberOfCharEntriesInSubPartition)
                 * partitionMetaData.numberOfSlaves;
 
         if (charEntryDelta > partitionMetaData.numberOfSlaves) {
@@ -515,12 +501,9 @@ final class IndexerMaster {
             charEntryDelta = charEntryDelta - partitionMetaData.numberOfSlaves;
         }
 
-        double exactMaxNumberOfLineEntriesInSubPartition = (double) maxNumberOfLineEntriesInPartition
-                / (double) partitionMetaData.numberOfSlaves;
-        partitionMetaData.maxNumberOfLineEntriesInSubPartition = (int) Math
-                .floor(exactMaxNumberOfLineEntriesInSubPartition);
-        lineEntryDelta = lineEntryDelta
-                + (exactMaxNumberOfLineEntriesInSubPartition - partitionMetaData.maxNumberOfLineEntriesInSubPartition)
+        double exactMaxNumberOfLineEntriesInSubPartition = (double) maxNumberOfLineEntriesInPartition / (double) partitionMetaData.numberOfSlaves;
+        partitionMetaData.maxNumberOfLineEntriesInSubPartition = (int) Math.floor(exactMaxNumberOfLineEntriesInSubPartition);
+        lineEntryDelta = lineEntryDelta + (exactMaxNumberOfLineEntriesInSubPartition - partitionMetaData.maxNumberOfLineEntriesInSubPartition)
                 * partitionMetaData.numberOfSlaves;
 
         if (lineEntryDelta > partitionMetaData.numberOfSlaves) {
@@ -531,6 +514,7 @@ final class IndexerMaster {
 
     /**
      * Waits for all the started slaves
+     * 
      * @param slavesFinishedLatch the countdown-latch the slaves use to signal finalization to the master
      * @throws IOException on file access problems
      */
@@ -546,6 +530,7 @@ final class IndexerMaster {
     /**
      * After all slaves have finished we collect and combine their sub-partition index data.<br>
      * The result is the the index data for the partition
+     * 
      * @param numberOfSlaves number of indexing slaves
      * @throws IOException on file access problems
      */
@@ -567,10 +552,8 @@ final class IndexerMaster {
             totalNumberOfCharsRead = totalNumberOfCharsRead + slaveResult.numberOfCharactersRead;
             totalNumberOfLinesRead = totalNumberOfLinesRead + slaveResult.numberOfLinesRead;
 
-            lostCharEntries = lostCharEntries
-                    + Math.max(0, slave.maxNumberOfCharEntries - slaveResult.numberOfCharIndexEntries);
-            lostLineEntries = lostLineEntries
-                    + Math.max(0, slave.maxNumberOfLineEntries - slaveResult.numberOfLineIndexEntries);
+            lostCharEntries = lostCharEntries + Math.max(0, slave.maxNumberOfCharEntries - slaveResult.numberOfCharIndexEntries);
+            lostLineEntries = lostLineEntries + Math.max(0, slave.maxNumberOfLineEntries - slaveResult.numberOfLineIndexEntries);
 
             int numberOfCharIndexEntries = slaveResult.numberOfCharIndexEntries;
             long[][] charIndex = slaveResult.charIndex;
@@ -590,6 +573,7 @@ final class IndexerMaster {
 
     /**
      * Creates the indexer result from the collected process data
+     * 
      * @return result
      */
     private IndexerMasterResult createResult() {

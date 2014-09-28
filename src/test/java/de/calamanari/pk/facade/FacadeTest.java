@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Facade Test demonstrates FACADE pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.facade;
 
 import static org.junit.Assert.assertEquals;
@@ -37,6 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Facade Test demonstrates FACADE pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class FacadeTest {
@@ -69,8 +72,7 @@ public class FacadeTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, FacadeTest.class, ArticleViewFacade.class, Article.class, ArticleManager.class,
-                ArticleHistory.class);
+        LogUtils.setLogLevel(LOG_LEVEL, FacadeTest.class, ArticleViewFacade.class, Article.class, ArticleManager.class, ArticleHistory.class);
     }
 
     @Before
@@ -112,8 +114,7 @@ public class FacadeTest {
         assertEquals(nf.format(-1), nf.format(markDownPrice2));
         assertEquals(nf.format(-1), nf.format(markDownPrice3));
 
-        LOGGER.info("Test Facade successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Facade successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Persistence Session - supplementary class for LAZY LOAD demonstration
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.lazyload;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import de.calamanari.pk.util.MiscUtils;
 /**
  * Persistence Session - supplementary class for LAZY LOAD demonstration<br>
  * Placeholder for some kind of persistence management.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PersistenceSession {
@@ -55,6 +58,7 @@ public class PersistenceSession {
 
     /**
      * Method to fill-in test data
+     * 
      * @param invoiceId identifier
      * @param amountClaimed monetary value to be payed by the debtor
      * @param debtorName name of the person who has to pay
@@ -62,13 +66,13 @@ public class PersistenceSession {
      * @param zipCode address field
      * @param city address field
      */
-    public static void addInvoice(String invoiceId, String amountClaimed, String debtorName, String street,
-            String zipCode, String city) {
+    public static void addInvoice(String invoiceId, String amountClaimed, String debtorName, String street, String zipCode, String city) {
         database.put(invoiceId, new String[] { invoiceId, amountClaimed, debtorName, street, zipCode, city });
     }
 
     /**
      * finds the invoice in the database by id
+     * 
      * @param invoiceId identifier
      * @return invoice or null if not found
      */
@@ -87,6 +91,7 @@ public class PersistenceSession {
 
     /**
      * Returns a list of all invoices
+     * 
      * @param lazy if true enable lazy load, otherwise load all
      * @return list of invoice instances
      */
@@ -102,8 +107,7 @@ public class PersistenceSession {
             }
             else {
                 LOGGER.fine("Creating complete invoice instance ...");
-                res.add(new Invoice(this, invoiceData[0], invoiceData[1], invoiceData[2], invoiceData[3],
-                        invoiceData[4], invoiceData[5]));
+                res.add(new Invoice(this, invoiceData[0], invoiceData[1], invoiceData[2], invoiceData[3], invoiceData[4], invoiceData[5]));
             }
         }
         Collections.sort(res, Invoice.BY_ID_COMPARATOR);
@@ -112,6 +116,7 @@ public class PersistenceSession {
 
     /**
      * Returns a list of all invoices, using lazy load
+     * 
      * @return list of invoice instances
      */
     public List<Invoice> findAllInvoices() {
@@ -120,6 +125,7 @@ public class PersistenceSession {
 
     /**
      * Loads the data for the lazy load fields from the database and sets the fields
+     * 
      * @param invoice instance of the invoice to be loaded
      */
     public void loadLazyFields(Invoice invoice) {

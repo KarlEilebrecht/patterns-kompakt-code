@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Company - demonstrates VISITOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 import java.util.logging.Logger;
 
 /**
  * Customer Company - part of customer structure, may carry a discount negotiated between us (seller) and the company.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerCompany {
@@ -47,6 +50,7 @@ public class CustomerCompany {
 
     /**
      * Creates new company
+     * 
      * @param holding optional holding this company belongs to
      * @param name company's name
      * @param discountPerc discount percentage for the company
@@ -59,6 +63,7 @@ public class CustomerCompany {
 
     /**
      * Returns comany name
+     * 
      * @return name of company
      */
     public String getName() {
@@ -67,6 +72,7 @@ public class CustomerCompany {
 
     /**
      * Sets the company name
+     * 
      * @param name company's name
      */
     public void setName(String name) {
@@ -75,6 +81,7 @@ public class CustomerCompany {
 
     /**
      * Returns the discount percentage value, to be applied to all orders placed by members of this company.
+     * 
      * @return discount
      */
     public double getDiscountPerc() {
@@ -83,6 +90,7 @@ public class CustomerCompany {
 
     /**
      * Sets the discount percentage value, to be applied to all orders placed by members of this company.
+     * 
      * @param discountPerc discount percentage for the company
      */
     public void setDiscountPerc(double discountPerc) {
@@ -91,6 +99,7 @@ public class CustomerCompany {
 
     /**
      * Returns the holding this company belongs to
+     * 
      * @return holding or null
      */
     public CustomerHolding getHolding() {
@@ -99,6 +108,7 @@ public class CustomerCompany {
 
     /**
      * Sets the holding this company belongs to
+     * 
      * @param holding or null
      */
     public void setHolding(CustomerHolding holding) {
@@ -107,6 +117,7 @@ public class CustomerCompany {
 
     /**
      * Method to accept enterprise visitor
+     * 
      * @param visitor current visitor
      */
     public void accept(EnterpriseVisitor visitor) {

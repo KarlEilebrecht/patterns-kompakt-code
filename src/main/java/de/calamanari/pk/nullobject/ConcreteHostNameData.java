@@ -1,5 +1,6 @@
+//@formatter:off
 /*
- * Concrete Host Name Data - a real host name list
+ * Concrete Host Name Data - a real host name list 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.nullobject;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * Concrete Host Name Data - a real host name data implementation
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ConcreteHostNameData implements HostNameData {
@@ -51,6 +54,7 @@ public class ConcreteHostNameData implements HostNameData {
 
     /**
      * Creates new data object
+     * 
      * @param purpose what this instance is for
      */
     public ConcreteHostNameData(String purpose) {
@@ -59,6 +63,7 @@ public class ConcreteHostNameData implements HostNameData {
 
     /**
      * Creates new instance from the given list and purpose
+     * 
      * @param purpose data purpose
      * @param names collection of names, may be null
      */
@@ -124,6 +129,7 @@ public class ConcreteHostNameData implements HostNameData {
     @Override
     public Object clone() {
         LOGGER.fine(ConcreteHostNameData.class.getSimpleName() + ".clone() called.");
+        @SuppressWarnings("unchecked")
         ArrayList<String> clonedInternalList = (ArrayList<String>) internalList.clone();
         return new ConcreteHostNameData(purpose, clonedInternalList);
     }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * DerbyJarNotFoundException
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,11 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.db;
 
 /**
- * Exception to be thrown when the embedded Java-DB (Derby) could not be initialized because the related jar was not
- * available.
+ * Exception to be thrown when the embedded Java-DB (Derby) could not be initialized because the related jar was not available.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class DerbyJarNotFoundException extends RuntimeException {
@@ -31,6 +33,7 @@ public class DerbyJarNotFoundException extends RuntimeException {
 
     /**
      * Creates new exception
+     * 
      * @param message problem info
      */
     public DerbyJarNotFoundException(String message) {
@@ -39,6 +42,7 @@ public class DerbyJarNotFoundException extends RuntimeException {
 
     /**
      * Creates new exception
+     * 
      * @param message problem info
      * @param cause a previous exception
      */

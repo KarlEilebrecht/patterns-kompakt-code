@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Example Scripting Framework
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin;
 
 import java.io.File;
@@ -30,6 +32,7 @@ import java.util.logging.Logger;
 
 /**
  * This minimum framework demonstrates the usage of the PLUGIN pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ExampleScriptingFramework implements MacroPluginFramework {
@@ -79,6 +82,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
 
     /**
      * Returns the protocol.
+     * 
      * @return protocol as a string
      */
     public String getProtocol() {
@@ -87,6 +91,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
 
     /**
      * Executes the script from the given file using the specified factory.
+     * 
      * @param scriptFile file with script line by line
      * @param pluginFactory factory for retrieving plugins for macro execution
      */
@@ -115,6 +120,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
 
     /**
      * Executes a single line of a script
+     * 
      * @param line the instruction, not null empty, no comment
      * @param lineNumber position in script
      * @param pluginFactory factory for retrieving plugins for macro execution
@@ -128,8 +134,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             resultVarName = line.substring(0, eqPos).trim();
         }
         else {
-            throw new RuntimeException("Error in line " + (lineNumber + 1)
-                    + ": no result variable (expected x=macro(y,..))");
+            throw new RuntimeException("Error in line " + (lineNumber + 1) + ": no result variable (expected x=macro(y,..))");
         }
 
         Object result = executeMacro(line.substring(eqPos + 1), lineNumber, pluginFactory);
@@ -140,6 +145,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
 
     /**
      * Executes the given macro expression and returns the result
+     * 
      * @param expression script line part, expected to be a macro expression <code>macroName(...)</code>
      * @param lineNumber position in script (for debugging)
      * @param pluginFactory factory for retrieving plugins for macro execution
@@ -164,6 +170,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
 
     /**
      * This method parses the macro with its arguments from the given expression
+     * 
      * @param expression script line part, expected to be a macro expression <code>macroName(...)</code>
      * @param lineNumber script position for debugging
      * @return list of strings, 0=macro name, 1..n macro argument names
@@ -177,8 +184,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
         if (openPos > 0 && closePos > 0 && closePos > openPos) {
             macroName = expression.substring(0, openPos).trim();
             if (macroName.length() == 0) {
-                throw new RuntimeException("Error in line " + (lineNumber + 1)
-                        + ": no expression (expected x=macro(y,..))");
+                throw new RuntimeException("Error in line " + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
             }
             String argumentString = expression.substring(openPos + 1, closePos).trim();
             if (argumentString.length() > 0) {
@@ -196,6 +202,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
 
     /**
      * Resolves the argument values for the given argument names
+     * 
      * @param argumentNames may be empty NOT NULL
      * @return array of argument values
      */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * External Console Handler Thread
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.io.BufferedReader;
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * This thread observes an input stream from an external console and passes the data line by line to a given logger.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ExternalConsoleHandlerThread extends Thread {
@@ -51,6 +54,7 @@ public class ExternalConsoleHandlerThread extends Thread {
 
     /**
      * Creates new handler thread
+     * 
      * @param name name to be used for the thread
      * @param consoleStream stream to be handled
      * @param logger output logger

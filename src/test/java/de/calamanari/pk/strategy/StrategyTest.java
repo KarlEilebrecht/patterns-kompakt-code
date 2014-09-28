@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Strategy Test - demonstrates STRATEGY pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.strategy;
 
 import static org.junit.Assert.assertEquals;
@@ -30,15 +32,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.strategy.Context;
-import de.calamanari.pk.strategy.Crc32HashStrategy;
-import de.calamanari.pk.strategy.HashStrategy;
-import de.calamanari.pk.strategy.Sha1HashStrategy;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Strategy Test - demonstrates STRATEGY pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class StrategyTest {
@@ -61,8 +60,8 @@ public class StrategyTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, Context.class, StrategyTest.class, HashStrategy.class, MessageMock.class,
-                Crc32HashStrategy.class, Sha1HashStrategy.class);
+        LogUtils.setLogLevel(LOG_LEVEL, Context.class, StrategyTest.class, HashStrategy.class, MessageMock.class, Crc32HashStrategy.class,
+                Sha1HashStrategy.class);
     }
 
     @Before
@@ -81,8 +80,7 @@ public class StrategyTest {
 
         LOGGER.info("Test Strategy ...");
         long startTimeNanos = System.nanoTime();
-        String messageText = "Nowadays the scorpion would await the riverside, press money and - of course"
-                + " - then kill the stupid frog ...";
+        String messageText = "Nowadays the scorpion would await the riverside, press money and - of course" + " - then kill the stupid frog ...";
 
         List<MessageMock> messageList = new ArrayList<>();
         List<String> availableStrategyNames = new ArrayList<>(CONTEXT.getAllHashStrategyNames());
@@ -101,8 +99,7 @@ public class StrategyTest {
             assertEquals(messageText, messageMock.getText());
         }
 
-        LOGGER.info("Test Strategy successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Strategy successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

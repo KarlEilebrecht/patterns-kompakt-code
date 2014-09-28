@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Article - a supplementary class in FACADE example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.facade.article;
 
 import java.text.NumberFormat;
@@ -22,6 +24,7 @@ import java.util.Locale;
 
 /**
  * Article - a supplementary class in FACADE example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Article {
@@ -43,6 +46,7 @@ public class Article {
 
     /**
      * Creates new Article
+     * 
      * @param id identifier
      * @param name article name
      * @param price article price
@@ -55,6 +59,7 @@ public class Article {
 
     /**
      * Returns article identifier
+     * 
      * @return id
      */
     public String getId() {
@@ -63,6 +68,7 @@ public class Article {
 
     /**
      * Sets the article identifier
+     * 
      * @param id identifier
      */
     public void setId(String id) {
@@ -71,6 +77,7 @@ public class Article {
 
     /**
      * Returns article name
+     * 
      * @return name of article
      */
     public String getName() {
@@ -79,6 +86,7 @@ public class Article {
 
     /**
      * Sets the name of the article
+     * 
      * @param name article name
      */
     public void setName(String name) {
@@ -87,6 +95,7 @@ public class Article {
 
     /**
      * Returns the article price
+     * 
      * @return price of article
      */
     public double getPrice() {
@@ -95,6 +104,7 @@ public class Article {
 
     /**
      * Sets the article price
+     * 
      * @param price article price to set
      */
     public void setPrice(double price) {
@@ -123,8 +133,7 @@ public class Article {
         NumberFormat nf = NumberFormat.getInstance(Locale.US);
         nf.setMinimumFractionDigits(2);
         nf.setMaximumFractionDigits(2);
-        return this.getClass().getSimpleName() + "({id=" + this.id + ", name='" + this.name + "', price="
-                + nf.format(this.price) + "})";
+        return this.getClass().getSimpleName() + "({id=" + this.id + ", name='" + this.name + "', price=" + nf.format(this.price) + "})";
     }
 
 }

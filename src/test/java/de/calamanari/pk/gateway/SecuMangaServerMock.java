@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * SecuManga Server Mock - mocks the system we provide a GATEWAY for.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.gateway;
 
 import java.io.BufferedReader;
@@ -32,6 +34,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * SecuManga is a fictional native encryption library a GATEWAY will be provided for in this demonstration.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SecuMangaServerMock extends AbstractThreadedSocketServer {
@@ -68,8 +71,7 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 
     /**
      * Creates new mock without starting it yet.<br>
-     * We want to focus on the fictional legacy API, the most of the server/request stuff you'll find in the super
-     * classes.
+     * We want to focus on the fictional legacy API, the most of the server/request stuff you'll find in the super classes.
      */
     public SecuMangaServerMock() {
         super(SecuMangaServerMock.class.getSimpleName());
@@ -104,14 +106,14 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 
     /**
      * Reads the request (command name and content) from the open client socket reader
+     * 
      * @param socket open socket for reading the client's request and check status
      * @param clientReader input reader
      * @param sbCommandName for storing the parsed command name provided by the client
      * @param sbContent for storing the message content
      * @throws IOException on communication error
      */
-    private void readRequestMessage(final Socket socket, BufferedReader clientReader, StringBuilder sbCommandName,
-            StringBuilder sbContent) throws IOException {
+    private void readRequestMessage(final Socket socket, BufferedReader clientReader, StringBuilder sbCommandName, StringBuilder sbContent) throws IOException {
         int count = 0;
         boolean commandFound = false;
         String inputLine = null;
@@ -141,6 +143,7 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 
     /**
      * The heart of the SecuManga API, processes the text
+     * 
      * @param commandName identifies operation
      * @param text data to process
      * @return processes text
@@ -167,6 +170,7 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 
     /**
      * Creates new SecuManga Server Mock
+     * 
      * @param args command line arguments, arg[0]=port (optional)
      */
     public static void main(String[] args) {

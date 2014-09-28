@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Null Object Test - demonstrates NULL OBJECT pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,11 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.nullobject;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.logging.Level;
@@ -28,15 +30,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.nullobject.ConcreteHostNameData;
-import de.calamanari.pk.nullobject.HostNameData;
-import de.calamanari.pk.nullobject.HostNameDataNullObject;
-import de.calamanari.pk.nullobject.HostNameDataProvider;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Null Object Test - demonstrates NULL OBJECT pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class NullObjectTest {
@@ -54,8 +53,7 @@ public class NullObjectTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, NullObjectTest.class, ConcreteHostNameData.class, HostNameDataNullObject.class,
-                HostNameDataProvider.class);
+        LogUtils.setLogLevel(LOG_LEVEL, NullObjectTest.class, ConcreteHostNameData.class, HostNameDataNullObject.class, HostNameDataProvider.class);
     }
 
     @Test
@@ -103,12 +101,12 @@ public class NullObjectTest {
         HostNameData nameData3 = MiscUtils.passByValue(nameData);
         assertSame(nameData, nameData3);
 
-        LOGGER.info("Test Null Object successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Null Object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
     /**
      * A simple method to concatenate names
+     * 
      * @param nameData some names, NOT null
      * @return concatenated string of all names
      */

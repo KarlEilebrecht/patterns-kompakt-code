@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Article View Facade
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.facade.article;
 
 import java.util.logging.Logger;
@@ -22,8 +24,8 @@ import java.util.logging.Logger;
 import de.calamanari.pk.facade.article.history.ArticleHistory;
 
 /**
- * Article View Facade- a FACADE for article management, with restricted access (read-only) and extended by an option to
- * get the mark down price.
+ * Article View Facade- a FACADE for article management, with restricted access (read-only) and extended by an option to get the mark down price.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ArticleViewFacade {
@@ -45,6 +47,7 @@ public class ArticleViewFacade {
 
     /**
      * Creates a new facade connected to the manager and the history.
+     * 
      * @param articleManager manager instance for accessing articles
      * @param articleHistory history system reference
      */
@@ -56,24 +59,23 @@ public class ArticleViewFacade {
 
     /**
      * Returns the corresponding article for the given id
+     * 
      * @param articleId identifier
      * @return found article or null if not found
      */
     public Article findArticleById(String articleId) {
-        LOGGER.fine("" + this.getClass().getSimpleName()
-                + ".findArticleById() called, delegating to internal manager ...");
+        LOGGER.fine("" + this.getClass().getSimpleName() + ".findArticleById() called, delegating to internal manager ...");
         return this.articleManager.findArticleById(articleId);
     }
 
     /**
-     * Returns the current markdown price for the specified article, if and only if the markdown price is greater than
-     * current price
+     * Returns the current markdown price for the specified article, if and only if the markdown price is greater than current price
+     * 
      * @param articleId identifier
      * @return current mark down price or -1 to indicate unknown
      */
     public double getMarkDownPrice(String articleId) {
-        LOGGER.fine("" + this.getClass().getSimpleName()
-                + ".getMarkDownPrice() called, delegating to internal history ...");
+        LOGGER.fine("" + this.getClass().getSimpleName() + ".getMarkDownPrice() called, delegating to internal history ...");
         double res = -1;
         Article article = findArticleById(articleId);
         if (article != null) {

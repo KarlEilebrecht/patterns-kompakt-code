@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Checksum Helper - the DIRECTOR in this BUILDER example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.builder;
 
 import java.util.logging.Logger;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
  * Checksum Helper - the DIRECTOR in this BUILDER example.<br>
  * Instances of this class create a checksum out of a given object array using a BUILDER.<br>
  * These helper instances are not safe to be used concurrently by multiple threads.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ChecksumHelper {
@@ -39,6 +42,7 @@ public class ChecksumHelper {
 
     /**
      * Creates new helper instance using the given builder (kind of CONSTRUCTOR INJECTION).
+     * 
      * @param checksumBuilder instance to be used internally
      */
     public ChecksumHelper(ChecksumBuilder checksumBuilder) {
@@ -47,6 +51,7 @@ public class ChecksumHelper {
 
     /**
      * This method of the director uses the builder INTERNALLY to compute a checksum over the given array elements.
+     * 
      * @param data array elements
      * @return checksum
      */

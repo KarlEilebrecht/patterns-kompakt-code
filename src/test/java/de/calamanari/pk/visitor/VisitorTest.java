@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Visitor Test - demonstrates VISITOR pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 import static org.junit.Assert.assertEquals;
@@ -29,15 +31,10 @@ import org.junit.Test;
 
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
-import de.calamanari.pk.visitor.CustomerCompany;
-import de.calamanari.pk.visitor.CustomerDivision;
-import de.calamanari.pk.visitor.CustomerHolding;
-import de.calamanari.pk.visitor.CustomerOrder;
-import de.calamanari.pk.visitor.EffectiveDiscountVisitor;
-import de.calamanari.pk.visitor.OrderItem;
 
 /**
  * Visitor Test - demonstrates VISITOR pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class VisitorTest {
@@ -55,8 +52,8 @@ public class VisitorTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, VisitorTest.class, EffectiveDiscountVisitor.class, CustomerCompany.class,
-                CustomerDivision.class, CustomerHolding.class, CustomerOrder.class, OrderItem.class);
+        LogUtils.setLogLevel(LOG_LEVEL, VisitorTest.class, EffectiveDiscountVisitor.class, CustomerCompany.class, CustomerDivision.class,
+                CustomerHolding.class, CustomerOrder.class, OrderItem.class);
     }
 
     @Test
@@ -107,8 +104,7 @@ public class VisitorTest {
         order1.accept(visitor6);
         assertEquals("5.50", nf.format(visitor6.getEffectiveDiscountPerc()));
 
-        LOGGER.info("Test Visitor successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Visitor successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

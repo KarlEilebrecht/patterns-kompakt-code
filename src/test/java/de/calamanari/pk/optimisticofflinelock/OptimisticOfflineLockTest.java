@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Optimistic Offline Lock Test - demonstrates OPTIMISTIC OFFLINE LOCK pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.optimisticofflinelock;
 
 import static org.junit.Assert.assertEquals;
@@ -32,14 +34,13 @@ import javax.sql.DataSource;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.optimisticofflinelock.Customer;
-import de.calamanari.pk.optimisticofflinelock.DataManager;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
 
 /**
  * Optimistic Offline Lock Test - demonstrates OPTIMISTIC OFFLINE LOCK pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OptimisticOfflineLockTest {
@@ -81,8 +82,7 @@ public class OptimisticOfflineLockTest {
 
         try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
             stmt.executeUpdate("create table CUSTOMER (CUSTOMER_ID int PRIMARY KEY, FIRST_NAME varchar(20), "
-                    + "LAST_NAME varchar(20), STREET varchar(100), ZIPCODE varchar(20), "
-                    + "CITY varchar(50), VERSION int)");
+                    + "LAST_NAME varchar(20), STREET varchar(100), ZIPCODE varchar(20), " + "CITY varchar(50), VERSION int)");
         }
         LOGGER.info("Database setup completed. ");
 
@@ -108,8 +108,7 @@ public class OptimisticOfflineLockTest {
         assertEquals("Customer({customerId='4711', lastName='Miller', firstName='Jane', street='19, Lucky Road', "
                 + "zipCode='286736', city='Lemon Village', version=2})", dataManager.findCustomerById(4711).toString());
 
-        LOGGER.info("Test Optimistic Offline Lock successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Optimistic Offline Lock successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
     /**

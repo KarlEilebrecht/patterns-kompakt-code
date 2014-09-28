@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Service - customer data access component
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import de.calamanari.pk.util.MiscUtils;
  * In this example I was just too lazy :-) to implement real remoting here. <br>
  * Thus I decided to work with a network delay simulation.<br>
  * However, you can see a full-blown RMI-scenario in the DATA TRANSFER OBJECT example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerService {
@@ -52,6 +55,7 @@ public class CustomerService {
 
     /**
      * Finds a customer by ID
+     * 
      * @param customerId identifier
      * @return customer or null if not found
      */
@@ -64,6 +68,7 @@ public class CustomerService {
 
     /**
      * Finds a customer address
+     * 
      * @param customerId identifier
      * @return customer address or null if not found
      */
@@ -76,6 +81,7 @@ public class CustomerService {
 
     /**
      * Finds a customer dwh info
+     * 
      * @param customerId identifier
      * @return customer dwh info or null if not found
      */
@@ -88,6 +94,7 @@ public class CustomerService {
 
     /**
      * Returns dwh infos for all bad payers
+     * 
      * @return list of dwh info DTOs, may be empty, never null
      */
     public List<CustomerDwhInfoDto> findBadPayerDwhInfos() {
@@ -107,6 +114,7 @@ public class CustomerService {
 
     /**
      * Returns a list of data transfer objects with information about bad payer customers
+     * 
      * @return list of DTOs, may be empty, never null
      */
     public List<GeoBadPayerInfoDto> findGeoBadPayerInfos() {

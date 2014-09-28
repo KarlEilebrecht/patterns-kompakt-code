@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Database - static placeholder for any kind of persistence in this example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identitymap;
 
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Database - static placeholder for any kind of persistence in this example
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class Database {
@@ -46,11 +49,12 @@ public final class Database {
      * Utility class
      */
     private Database() {
-        //no instances
+        // no instances
     }
-    
+
     /**
      * For testing this allows to feed the "database"
+     * 
      * @param customerId identifier
      * @param title person's title
      * @param lastName person's last name
@@ -65,12 +69,10 @@ public final class Database {
      * @param country address field
      * @param salutation address field
      */
-    public static void addTestData(String customerId, String title, String lastName, String firstName, String phone,
-            String email, boolean promotionOptIn, String addressId, String street, String zipCode, String city,
-            String country, String salutation) {
+    public static void addTestData(String customerId, String title, String lastName, String firstName, String phone, String email, boolean promotionOptIn,
+            String addressId, String street, String zipCode, String city, String country, String salutation) {
 
-        CustomerEntity customer = new CustomerEntity(customerId, title, lastName, firstName, phone, email,
-                promotionOptIn);
+        CustomerEntity customer = new CustomerEntity(customerId, title, lastName, firstName, phone, email, promotionOptIn);
         CUSTOMERS.put(customerId, customer);
         AddressEntity address = new AddressEntity(addressId, customerId, street, zipCode, city, country, salutation);
         ADDRESSES.put(addressId, address);

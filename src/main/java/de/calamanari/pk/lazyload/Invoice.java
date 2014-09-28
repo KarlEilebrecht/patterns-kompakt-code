@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Invoice - supplementary class to demonstrate LAZY LOAD
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.lazyload;
 
 import java.io.Serializable;
@@ -25,8 +27,8 @@ import java.util.logging.Logger;
 
 /**
  * Invoice - supplementary class to demonstrate LAZY LOAD pattern.<br>
- * Each invoice has a number of fields, but only the invoiceId and the amountClaimed will be loaded by default. Other
- * fields will be loaded on demand.
+ * Each invoice has a number of fields, but only the invoiceId and the amountClaimed will be loaded by default. Other fields will be loaded on demand.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Invoice implements Serializable {
@@ -40,9 +42,9 @@ public class Invoice implements Serializable {
         public int compare(Invoice o1, Invoice o2) {
             return o1.getInvoiceId().compareTo(o2.getInvoiceId());
         }
-        
+
     };
-    
+
     /**
      * logger
      */
@@ -95,19 +97,18 @@ public class Invoice implements Serializable {
 
     /**
      * Creates new invoice instance
+     * 
      * @param persistenceSession current session
      * @param invoiceId identifier
-     * @param amountClaimed requested monetary value 
+     * @param amountClaimed requested monetary value
      * @param debtorName name of the one who has to pay
      * @param street address field
      * @param zipCode address field
      * @param city address field
      */
-    public Invoice(PersistenceSession persistenceSession, String invoiceId, String amountClaimed, String debtorName,
-            String street, String zipCode, String city) {
-        LOGGER.fine(this.getClass().getSimpleName() + "({invoiceId=" + invoiceId + ", amountClaimed=" + amountClaimed
-                + ", debtorName=" + debtorName + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city
-                + "}) created.");
+    public Invoice(PersistenceSession persistenceSession, String invoiceId, String amountClaimed, String debtorName, String street, String zipCode, String city) {
+        LOGGER.fine(this.getClass().getSimpleName() + "({invoiceId=" + invoiceId + ", amountClaimed=" + amountClaimed + ", debtorName=" + debtorName
+                + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + "}) created.");
         double amount = 0;
         try {
             amount = Double.parseDouble(amountClaimed);
@@ -127,6 +128,7 @@ public class Invoice implements Serializable {
 
     /**
      * Creates new invoice instance
+     * 
      * @param persistenceSession current session
      * @param invoiceId identifier
      * @param amountClaimed value to be payed by the debtor
@@ -154,14 +156,14 @@ public class Invoice implements Serializable {
 
     /**
      * This method is used to set the lazy-loaded fields when requested
+     * 
      * @param debtorName name of the person who has to pay
      * @param street address field
      * @param zipCode address field
      * @param city address field
      */
     public void setLazyFields(String debtorName, String street, String zipCode, String city) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setLazyFields('" + debtorName + "', '" + street + "', '"
-                + zipCode + "', '" + city + "') called.");
+        LOGGER.fine(this.getClass().getSimpleName() + ".setLazyFields('" + debtorName + "', '" + street + "', '" + zipCode + "', '" + city + "') called.");
         this.debtorName = debtorName;
         this.street = street;
         this.zipCode = zipCode;
@@ -170,6 +172,7 @@ public class Invoice implements Serializable {
 
     /**
      * Returns the invoice id
+     * 
      * @return invoiceId
      */
     public String getInvoiceId() {
@@ -179,6 +182,7 @@ public class Invoice implements Serializable {
 
     /**
      * Returns the amount
+     * 
      * @return amount of invoice
      */
     public double getAmountClaimed() {
@@ -188,6 +192,7 @@ public class Invoice implements Serializable {
 
     /**
      * Returns the debtor name
+     * 
      * @return debtor name
      */
     public String getDebtorName() {
@@ -198,6 +203,7 @@ public class Invoice implements Serializable {
 
     /**
      * Returns the address field street
+     * 
      * @return street
      */
     public String getStreet() {
@@ -208,6 +214,7 @@ public class Invoice implements Serializable {
 
     /**
      * Returns the address field zipCode
+     * 
      * @return zipCoe
      */
     public String getZipCode() {
@@ -218,6 +225,7 @@ public class Invoice implements Serializable {
 
     /**
      * Returns the address field city
+     * 
      * @return city
      */
     public String getCity() {
@@ -232,9 +240,8 @@ public class Invoice implements Serializable {
         nf.setMinimumFractionDigits(2);
         nf.setMaximumFractionDigits(2);
 
-        return this.getClass().getSimpleName() + "({invoiceId=" + invoiceId + ", amountClaimed="
-                + nf.format(amountClaimed) + ", debtorName=" + debtorName + ", street=" + street + ", zipCode="
-                + zipCode + ", city=" + city + ", dataComplete=" + dataComplete + ", detached="
+        return this.getClass().getSimpleName() + "({invoiceId=" + invoiceId + ", amountClaimed=" + nf.format(amountClaimed) + ", debtorName=" + debtorName
+                + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + ", dataComplete=" + dataComplete + ", detached="
                 + (persistenceSession == null) + "})";
     }
 

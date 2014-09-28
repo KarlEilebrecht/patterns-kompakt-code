@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Entity - one of the business entities in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,16 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.util.logging.Logger;
 
 /**
  * Customer Entity - one of the business entities in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerEntity {
-    
+
     /**
      * logger
      */
@@ -76,6 +79,7 @@ public class CustomerEntity {
 
     /**
      * Creates new entity from the given data
+     * 
      * @param customerId identifier
      * @param title person's title
      * @param lastName person's last name
@@ -84,8 +88,7 @@ public class CustomerEntity {
      * @param email email-address
      * @param promotionOptIn opt-in-flag for promotion events
      */
-    public CustomerEntity(String customerId, String title, String lastName, String firstName, String phone,
-            String email, boolean promotionOptIn) {
+    public CustomerEntity(String customerId, String title, String lastName, String firstName, String phone, String email, boolean promotionOptIn) {
         this.customerId = customerId;
         this.title = title;
         this.lastName = lastName;
@@ -97,6 +100,7 @@ public class CustomerEntity {
 
     /**
      * Returns the customerId
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -105,6 +109,7 @@ public class CustomerEntity {
 
     /**
      * Sets the customerId
+     * 
      * @param customerId identifier
      */
     public void setCustomerId(String customerId) {
@@ -113,6 +118,7 @@ public class CustomerEntity {
 
     /**
      * Returns customer title
+     * 
      * @return title of customer
      */
     public String getTitle() {
@@ -121,6 +127,7 @@ public class CustomerEntity {
 
     /**
      * Sets the customer's title
+     * 
      * @param title person's title
      */
     public void setTitle(String title) {
@@ -129,6 +136,7 @@ public class CustomerEntity {
 
     /**
      * Returns the last name of customer
+     * 
      * @return lastName
      */
     public String getLastName() {
@@ -137,6 +145,7 @@ public class CustomerEntity {
 
     /**
      * Sets the customer's last name
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -145,6 +154,7 @@ public class CustomerEntity {
 
     /**
      * Returns the customer's first name
+     * 
      * @return firstName
      */
     public String getFirstName() {
@@ -153,6 +163,7 @@ public class CustomerEntity {
 
     /**
      * Sets the customer's first name
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -161,6 +172,7 @@ public class CustomerEntity {
 
     /**
      * Returns the customer's phone number
+     * 
      * @return phone
      */
     public String getPhone() {
@@ -169,6 +181,7 @@ public class CustomerEntity {
 
     /**
      * Sets the customer's phone number
+     * 
      * @param phone telephone number
      */
     public void setPhone(String phone) {
@@ -177,6 +190,7 @@ public class CustomerEntity {
 
     /**
      * Returns the customer's email address
+     * 
      * @return email
      */
     public String getEmail() {
@@ -185,6 +199,7 @@ public class CustomerEntity {
 
     /**
      * Sets the customer's email address
+     * 
      * @param email email-address
      */
     public void setEmail(String email) {
@@ -193,6 +208,7 @@ public class CustomerEntity {
 
     /**
      * Returns whether the customer has agreed to receive advertisement media
+     * 
      * @return true if customer has agreed, otherwise (default) false
      */
     public boolean isPromotionOptIn() {
@@ -201,6 +217,7 @@ public class CustomerEntity {
 
     /**
      * Sets the customer's promotion status, whether to participate in sales promotion actions or not
+     * 
      * @param promotionOptIn true means the customer has agreed to receive advertisement media
      */
     public void setPromotionOptIn(boolean promotionOptIn) {
@@ -209,6 +226,7 @@ public class CustomerEntity {
 
     /**
      * Returns a data transfer object corresponding to this entity
+     * 
      * @return dto
      */
     public CustomerDto toDto() {
@@ -218,6 +236,7 @@ public class CustomerEntity {
 
     /**
      * Updates this entity from the given data transfer object
+     * 
      * @param dto data transfer object to copy data from into this object
      */
     public void fromDto(CustomerDto dto) {
@@ -232,9 +251,8 @@ public class CustomerEntity {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", title=" + title + ", lastName="
-                + lastName + ", firstName=" + firstName + ", phone=" + phone + ", email=" + email + ", promotionOptIn="
-                + promotionOptIn + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", title=" + title + ", lastName=" + lastName + ", firstName=" + firstName
+                + ", phone=" + phone + ", email=" + email + ", promotionOptIn=" + promotionOptIn + "})";
     }
 
 }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Macro Plugin Tech Info
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,34 +16,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.plugin;
 
 /**
  * Technical interface each Macro-plugin must implement to be recognized by framework.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public interface MacroPluginTechInfo {
 
     /**
      * Returns the plugin's name
+     * 
      * @return name of plugin
      */
     public String getName();
 
     /**
      * Returns information about Vendor
+     * 
      * @return vendor string
      */
     public String getVendor();
 
     /**
      * Returns the version of the plugin
+     * 
      * @return plugin version
      */
     public String getVersion();
 
     /**
      * Each macro-plugin must list its provided macros.
+     * 
      * @return array with the supported macro names
      */
     public String[] getMacros();

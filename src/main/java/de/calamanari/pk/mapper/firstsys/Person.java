@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Person - entity in the first subsystem
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.mapper.firstsys;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +24,7 @@ import java.util.Date;
 
 /**
  * Person - entity in the first subsystem
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Person {
@@ -48,6 +51,7 @@ public class Person {
 
     /**
      * Creates new person entity
+     * 
      * @param personId identifier
      * @param firstName person's first name
      * @param lastName person's last name
@@ -62,13 +66,13 @@ public class Person {
             this.firstOrderDate = firstOrderDateISO == null ? null : sdf.parse(firstOrderDateISO);
         }
         catch (Exception ex) {
-            throw new IllegalArgumentException("Unable to parse firstOrderDateISO='" + firstOrderDateISO
-                    + "' as date (expected: yyyy-MM-dd).");
+            throw new IllegalArgumentException("Unable to parse firstOrderDateISO='" + firstOrderDateISO + "' as date (expected: yyyy-MM-dd).");
         }
     }
 
     /**
      * Returns id of person
+     * 
      * @return personId
      */
     public String getPersonId() {
@@ -77,6 +81,7 @@ public class Person {
 
     /**
      * Returns the person's last name
+     * 
      * @return last name of person
      */
     public String getLastName() {
@@ -85,6 +90,7 @@ public class Person {
 
     /**
      * Sets the last name of person
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -93,6 +99,7 @@ public class Person {
 
     /**
      * Returns the first name of the person
+     * 
      * @return firstName
      */
     public String getFirstName() {
@@ -101,6 +108,7 @@ public class Person {
 
     /**
      * Sets the first name of the person
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -109,6 +117,7 @@ public class Person {
 
     /**
      * Returns the date of the first order placed by this person
+     * 
      * @return firstOrderDate
      */
     public Date getFirstOrderDate() {
@@ -118,8 +127,7 @@ public class Person {
     @Override
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return this.getClass().getSimpleName() + "({personId=" + personId + ", lastName=" + lastName + ", firstName="
-                + firstName + ", firstOrderDate="
+        return this.getClass().getSimpleName() + "({personId=" + personId + ", lastName=" + lastName + ", firstName=" + firstName + ", firstOrderDate="
                 + (firstOrderDate == null ? null : "'" + sdf.format(firstOrderDate) + "'") + "})";
     }
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Indexed Text File Accessor Configuration
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.itfa;
 
 import java.io.Serializable;
@@ -23,6 +25,7 @@ import de.calamanari.pk.util.pfis.BufferType;
 
 /**
  * {@link ItfaConfiguration} covers several settings for the indexer.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ItfaConfiguration implements Cloneable, Serializable {
@@ -117,25 +120,23 @@ public class ItfaConfiguration implements Cloneable, Serializable {
 
     /**
      * BOM-size (default is 0).<br>
-     * IndexedTextFileAccessor does not support charset auto-detection but can ignore any byte order mark by skipping a
-     * specified number of bytes. However, the job to decide whether or not there is a byte order mark is up to the
-     * caller, see also: http://bugs.sun.com/view_bug.do?bug_id=4508058
+     * IndexedTextFileAccessor does not support charset auto-detection but can ignore any byte order mark by skipping a specified number of bytes. However, the
+     * job to decide whether or not there is a byte order mark is up to the caller, see also: http://bugs.sun.com/view_bug.do?bug_id=4508058
      */
     public int bomSize = 0;
 
     /**
      * This method checks the values of certain arguments and throws an Exception if they don't match expectations.
+     * 
      * @throws IllegalArgumentException if current settings are discouraged
      */
     public void validate() {
         if (maxNumberOfCharIndexEntries < 1) {
-            throw new IllegalArgumentException("Argument maxNumberOfCharIndexEntries=" + maxNumberOfCharIndexEntries
-                    + " is too small.");
+            throw new IllegalArgumentException("Argument maxNumberOfCharIndexEntries=" + maxNumberOfCharIndexEntries + " is too small.");
         }
 
         if (maxNumberOfLineIndexEntries < 1) {
-            throw new IllegalArgumentException("Argument maxNumberOfLineIndexEntries=" + maxNumberOfLineIndexEntries
-                    + " is too small.");
+            throw new IllegalArgumentException("Argument maxNumberOfLineIndexEntries=" + maxNumberOfLineIndexEntries + " is too small.");
         }
 
         if (bomSize < 0) {
@@ -143,8 +144,7 @@ public class ItfaConfiguration implements Cloneable, Serializable {
         }
 
         if (childReaderBufferSize < 0) {
-            throw new IllegalArgumentException("Argument childReaderBufferSize must not be negative, given: "
-                    + childReaderBufferSize);
+            throw new IllegalArgumentException("Argument childReaderBufferSize must not be negative, given: " + childReaderBufferSize);
         }
     }
 

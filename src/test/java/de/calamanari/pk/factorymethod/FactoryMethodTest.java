@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Factory method test case - demonstrates FACTORY METHOD.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.factorymethod;
 
 import static org.junit.Assert.assertEquals;
@@ -27,17 +29,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.factorymethod.AbstractVoucher;
-import de.calamanari.pk.factorymethod.AbstractVoucherCreator;
-import de.calamanari.pk.factorymethod.FreakliesShopVoucher;
-import de.calamanari.pk.factorymethod.FreakliesShopVoucherCreator;
-import de.calamanari.pk.factorymethod.MoronStoreVoucher;
-import de.calamanari.pk.factorymethod.MoronStoreVoucherCreator;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Test case for FACTOY METHOD
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class FactoryMethodTest {
@@ -70,9 +67,8 @@ public class FactoryMethodTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, FactoryMethodTest.class, AbstractVoucher.class, AbstractVoucherCreator.class,
-                FreakliesShopVoucher.class, FreakliesShopVoucherCreator.class, MoronStoreVoucher.class,
-                MoronStoreVoucherCreator.class);
+        LogUtils.setLogLevel(LOG_LEVEL, FactoryMethodTest.class, AbstractVoucher.class, AbstractVoucherCreator.class, FreakliesShopVoucher.class,
+                FreakliesShopVoucherCreator.class, MoronStoreVoucher.class, MoronStoreVoucherCreator.class);
     }
 
     @Before
@@ -101,11 +97,9 @@ public class FactoryMethodTest {
         }
 
         assertEquals("MoronStoreVoucher({id=777777, displayCode=bde31, firstName=Jack, lastName=Miller, value=100.0})"
-                + "FreakliesShopVoucher({id=S11111111, displayCode=vjm11111111, "
-                + "firstName=Jack, lastName=Miller, value=100.0})", sb.toString());
+                + "FreakliesShopVoucher({id=S11111111, displayCode=vjm11111111, " + "firstName=Jack, lastName=Miller, value=100.0})", sb.toString());
 
-        LOGGER.info("Test Factory Method successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Factory Method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

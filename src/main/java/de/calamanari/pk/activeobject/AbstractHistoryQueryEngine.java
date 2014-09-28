@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract History Query Engine - demonstrates ACTIVE OBJECT
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,25 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.activeobject;
 
 import java.util.List;
 
 /**
- * Abstract History Query Engine - some engine that performs synchronous queries which take some time. A limitation
- * (provider contract) shall be that only a maximum number of parallel requests are allowed to reduce load on the
- * assumed backend system.
+ * Abstract History Query Engine - some engine that performs synchronous queries which take some time. A limitation (provider contract) shall be that only a
+ * maximum number of parallel requests are allowed to reduce load on the assumed backend system.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractHistoryQueryEngine {
 
     /**
      * Perform a synchronous query, which may take some time.
+     * 
      * @param firstName person's first name (optional)
      * @param lastName person's last name (optional)
      * @param birthday person's birthday (mandatory)
-     * @return data list of (String[4]=[firstName, lastName, birthday, data]) according to the query or empty list if
-     *         not found
+     * @return data list of (String[4]=[firstName, lastName, birthday, data]) according to the query or empty list if not found
      */
     public abstract List<String[]> queryHistoryData(String firstName, String lastName, String birthday);
 

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * All Tests - Test suite for all pattern tests.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk;
 
 import java.util.logging.Level;
@@ -66,9 +68,9 @@ import de.calamanari.pk.singleton.SingletonTest;
 import de.calamanari.pk.strategy.StrategyTest;
 import de.calamanari.pk.templatemethod.TemplateMethodTest;
 import de.calamanari.pk.transferobjectassembler.TransferObjectAssemblerTest;
+import de.calamanari.pk.util.IndexedTextFileAccessorTest;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
-import de.calamanari.pk.util.IndexedTextFileAccessorTest;
 import de.calamanari.pk.util.ParallelFileInputStreamTest;
 import de.calamanari.pk.uuid.UUIDTest;
 import de.calamanari.pk.valueobject.ValueObjectTest;
@@ -77,6 +79,7 @@ import de.calamanari.pk.wrapper.WrapperTest;
 
 /**
  * All Tests - Test suite for all pattern tests.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 @RunWith(Suite.class)
@@ -165,8 +168,7 @@ public final class AllTests {
      */
     @AfterClass
     public static void afterAll() {
-        LOGGER.info("AllTests completed. Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("AllTests completed. Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

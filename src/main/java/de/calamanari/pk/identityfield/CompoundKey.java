@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Compound Key - used in IDENTITY FIELD example
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identityfield;
 
 import java.io.Serializable;
@@ -27,6 +29,7 @@ import de.calamanari.pk.util.MiscUtils;
 /**
  * Compound Key - used in IDENTITY FIELD example <br>
  * Simple compound key (composite key) implementation following Martin Fowler's approach.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class CompoundKey implements Serializable {
@@ -48,6 +51,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Creates new compound keys from the given objects
+     * 
      * @param keyFieldValues parts of the key
      */
     public CompoundKey(Object... keyFieldValues) {
@@ -60,6 +64,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Creates new compound keys from the given long values
+     * 
      * @param keyFieldValues parts of the key
      */
     public CompoundKey(long[] keyFieldValues) {
@@ -68,6 +73,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Creates new compound keys from the given objects
+     * 
      * @param keyFieldValues parts of the key
      */
     public CompoundKey(Collection<? extends Object> keyFieldValues) {
@@ -76,6 +82,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Returns the value at the specified index
+     * 
      * @param idx part of the key
      * @return key part
      */
@@ -85,6 +92,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Returns the key value if this is a single field key (not a compound key)
+     * 
      * @return key part
      */
     public Object getSingleKeyValue() {
@@ -96,6 +104,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Returns whether this key has more than one field
+     * 
      * @return true if number of key fields is greater than 1, otherwise false
      */
     public boolean isCompoundKey() {
@@ -104,6 +113,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Returns the length of the key (number of parts)
+     * 
      * @return number of key fields
      */
     public int getKeyLength() {
@@ -112,6 +122,7 @@ public final class CompoundKey implements Serializable {
 
     /**
      * Checks the validity of the key field values
+     * 
      * @param keyFieldValues array to be verified
      * @return keyFieldValues pass-through
      * @throws IllegalArgumentException if array is empty or contains null
@@ -122,8 +133,7 @@ public final class CompoundKey implements Serializable {
         }
         for (Object value : keyFieldValues) {
             if (value == null) {
-                throw new IllegalArgumentException(CompoundKey.class.getSimpleName() + " cannot contain nulls, given: "
-                        + Arrays.asList(keyFieldValues));
+                throw new IllegalArgumentException(CompoundKey.class.getSimpleName() + " cannot contain nulls, given: " + Arrays.asList(keyFieldValues));
             }
         }
         return keyFieldValues;

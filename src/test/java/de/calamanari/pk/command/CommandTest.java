@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Command Test - demonstrates COMMAND pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.command;
 
 import static org.junit.Assert.assertEquals;
@@ -28,15 +30,12 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.command.AppendTextCommand;
-import de.calamanari.pk.command.DeleteTextCommand;
-import de.calamanari.pk.command.InputCommand;
-import de.calamanari.pk.command.TextComponent;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Command Test - demonstrates COMMAND pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CommandTest {
@@ -64,8 +63,7 @@ public class CommandTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, CommandTest.class, AppendTextCommand.class, DeleteTextCommand.class,
-                TextComponent.class);
+        LogUtils.setLogLevel(LOG_LEVEL, CommandTest.class, AppendTextCommand.class, DeleteTextCommand.class, TextComponent.class);
     }
 
     @Test
@@ -80,15 +78,12 @@ public class CommandTest {
 
         List<InputCommand> commandList = Arrays.asList(new InputCommand[] {
 
-        new AppendTextCommand(textComponent, "The"), new AppendTextCommand(textComponent, "quick"),
-                new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
-                new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
-                new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, " "),
-                new AppendTextCommand(textComponent, "quick"), new AppendTextCommand(textComponent, " "),
-                new AppendTextCommand(textComponent, "brown"), new AppendTextCommand(textComponent, " "),
-                new AppendTextCommand(textComponent, "d"), new DeleteTextCommand(textComponent, 1),
-                new AppendTextCommand(textComponent, "f"), new AppendTextCommand(textComponent, "o"),
-                new AppendTextCommand(textComponent, "x"), new AppendTextCommand(textComponent, " "),
+        new AppendTextCommand(textComponent, "The"), new AppendTextCommand(textComponent, "quick"), new DeleteTextCommand(textComponent, 1),
+                new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
+                new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, " "), new AppendTextCommand(textComponent, "quick"),
+                new AppendTextCommand(textComponent, " "), new AppendTextCommand(textComponent, "brown"), new AppendTextCommand(textComponent, " "),
+                new AppendTextCommand(textComponent, "d"), new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, "f"),
+                new AppendTextCommand(textComponent, "o"), new AppendTextCommand(textComponent, "x"), new AppendTextCommand(textComponent, " "),
                 new AppendTextCommand(textComponent, "jumped over the lazy duck."), });
 
         for (InputCommand ic : commandList) {
@@ -114,8 +109,7 @@ public class CommandTest {
 
         assertEquals("The quick brown fox jumped over the lazy duck.", textComponent.toString());
 
-        LOGGER.info("Test Commmand successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Commmand successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address Entity - one of the business entities in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.identitymap;
 
 import java.util.logging.Logger;
 
 /**
  * Address Entity - one of the business entities in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AddressEntity implements Entity<String>, Cloneable {
@@ -74,6 +77,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Creates new address entity from the given data
+     * 
      * @param addressId identifier
      * @param customerId owning customer identifier
      * @param street address field
@@ -82,8 +86,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
      * @param country address field
      * @param salutation address field
      */
-    public AddressEntity(String addressId, String customerId, String street, String zipCode, String city,
-            String country, String salutation) {
+    public AddressEntity(String addressId, String customerId, String street, String zipCode, String city, String country, String salutation) {
         this.id = addressId;
         this.customerId = customerId;
         this.street = street;
@@ -95,6 +98,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Returns the address-ID
+     * 
      * @return id
      */
     @Override
@@ -104,6 +108,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Sets the address-ID
+     * 
      * @param id identifier
      */
     public void setAddressId(String id) {
@@ -112,6 +117,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Returns the customer ID
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -120,6 +126,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Sets the customer ID
+     * 
      * @param customerId identifier of the owning customer
      */
     public void setCustomerId(String customerId) {
@@ -128,6 +135,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Returns street address
+     * 
      * @return street
      */
     public String getStreet() {
@@ -136,6 +144,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Sets street address
+     * 
      * @param street address field
      */
     public void setStreet(String street) {
@@ -144,6 +153,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Returns the zipcode
+     * 
      * @return zipCode address field
      */
     public String getZipCode() {
@@ -152,6 +162,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Sets the zipCode
+     * 
      * @param zipCode address field
      */
     public void setZipCode(String zipCode) {
@@ -160,6 +171,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Returns the city name
+     * 
      * @return city address field
      */
     public String getCity() {
@@ -168,6 +180,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Sets the city name
+     * 
      * @param city address field
      */
     public void setCity(String city) {
@@ -176,6 +189,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Returns the country name
+     * 
      * @return country
      */
     public String getCountry() {
@@ -184,6 +198,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Sets the country
+     * 
      * @param country address field
      */
     public void setCountry(String country) {
@@ -192,6 +207,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Returns salutation for letters
+     * 
      * @return salutation
      */
     public String getSalutation() {
@@ -200,6 +216,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     /**
      * Sets the salutation for letters
+     * 
      * @param salutation address field
      */
     public void setSalutation(String salutation) {
@@ -208,9 +225,8 @@ public class AddressEntity implements Entity<String>, Cloneable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({id=" + id + ", customerId=" + customerId + ", street=" + street
-                + ", zipCode=" + zipCode + ", city=" + city + ", country=" + country + ", salutation=" + salutation
-                + "})";
+        return this.getClass().getSimpleName() + "({id=" + id + ", customerId=" + customerId + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city
+                + ", country=" + country + ", salutation=" + salutation + "})";
     }
 
     @Override

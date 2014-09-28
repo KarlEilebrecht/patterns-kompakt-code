@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract Template Method String Codec - demonstrates TEMPLATE METHOD pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.templatemethod;
 
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 /**
  * Abstract Template Method String Codec<br>
  * This demonstrates TEMPLATE METHOD pattern
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractTemplateMethodStringCodec {
@@ -33,6 +36,7 @@ public abstract class AbstractTemplateMethodStringCodec {
 
     /**
      * This TEMPLATE METHOD processes the string using operations implemented by concrete subclasses.
+     * 
      * @param text input text
      * @return output text
      */
@@ -52,6 +56,7 @@ public abstract class AbstractTemplateMethodStringCodec {
 
     /**
      * Operation to be implemented by subclasses: Encodes the given text.
+     * 
      * @param text raw data
      * @return encoded string
      */
@@ -59,6 +64,7 @@ public abstract class AbstractTemplateMethodStringCodec {
 
     /**
      * Operation to be implemented by subclasses: Decodes the given text
+     * 
      * @param text encoded string
      * @return decoded string
      */
@@ -66,6 +72,7 @@ public abstract class AbstractTemplateMethodStringCodec {
 
     /**
      * Operation to be implemented by subclasses: Checks whether the given string is a properly encoded string.
+     * 
      * @param encodedText encoded string
      * @return true if encoded string is valid and could be decoded
      */

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Host Name Data Null Object - NULL OBJECT implementation for HostNameData
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.nullobject;
 
 import java.util.Arrays;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 
 /**
  * Host Name Data Null Object - NULL OBJECT implementation for HostNameList
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class HostNameDataNullObject implements HostNameData {
@@ -51,8 +54,7 @@ public final class HostNameDataNullObject implements HostNameData {
     /**
      * an empty iterator - another NULL OBJECT
      */
-    private static final Iterator<String> STRING_ITERATOR_NULL_OBJECT = Arrays.asList(STRING_ARRAY_NULL_OBJECT)
-            .iterator();
+    private static final Iterator<String> STRING_ITERATOR_NULL_OBJECT = Arrays.asList(STRING_ARRAY_NULL_OBJECT).iterator();
 
     /**
      * A NULL OBJECT is a VALUE OBJECT and can be implemented as a SINGLETON<br>
@@ -125,6 +127,7 @@ public final class HostNameDataNullObject implements HostNameData {
 
     /**
      * Do not create new instance during de-serialization
+     * 
      * @return {@link #INSTANCE}
      */
     public Object readResolve() {

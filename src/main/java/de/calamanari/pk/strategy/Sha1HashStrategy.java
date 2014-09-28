@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Sha1HashStrategy - concrete hash STRATEGY using SHA-1.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.strategy;
 
 import java.security.MessageDigest;
@@ -22,6 +24,7 @@ import java.util.logging.Logger;
 
 /**
  * Sha1HashStrategy - concrete hash STRATEGY using SHA-1.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Sha1HashStrategy extends HashStrategy {
@@ -40,7 +43,7 @@ public class Sha1HashStrategy extends HashStrategy {
      * base for hey conversion (AND)
      */
     private static final int HASH_BYTES_BASE = 0xFF;
-    
+
     /**
      * Creates new hash strategy instance
      */
@@ -62,6 +65,7 @@ public class Sha1HashStrategy extends HashStrategy {
      * <li>http://java.sun.com/javase/6/docs/technotes/guides/security/crypto/CryptoSpec.html</li>
      * <li>http://java.sun.com/javase/6/docs/technotes/guides/security/SunProviders.html</li>
      * </ul>
+     * 
      * @param text to be hashed
      * @return hash-string (hex), never null
      */
@@ -83,6 +87,7 @@ public class Sha1HashStrategy extends HashStrategy {
 
     /**
      * Converts the given bytes to a hex-string.
+     * 
      * @param hashBytes source bytes
      * @return hex-string
      */

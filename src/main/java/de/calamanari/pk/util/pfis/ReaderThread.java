@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Reader Thread
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.pfis;
 
 import java.io.IOException;
@@ -29,6 +31,7 @@ import de.calamanari.pk.util.MiscUtils;
 /**
  * The reader thread reads the stream concurrently to the main thread.<br>
  * This is achieved by switching buffers. While one buffer is in use (consumer reads) the other one can be filled.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 final class ReaderThread extends Thread {
@@ -39,14 +42,12 @@ final class ReaderThread extends Thread {
     private static final Logger LOGGER = Logger.getLogger(ReaderThread.class.getName());
 
     /**
-     * The queue for communication from main thread to the reader The reader will not read a new buffer before being
-     * requested.
+     * The queue for communication from main thread to the reader The reader will not read a new buffer before being requested.
      */
     private final BlockingQueue<BufferEvent> bufferRequestQueue;
 
     /**
-     * The queue for communication from reader thread to the main thread, the main thread waits for buffers delivered by
-     * the reader thread.
+     * The queue for communication from reader thread to the main thread, the main thread waits for buffers delivered by the reader thread.
      */
     private final BlockingQueue<BufferEvent> bufferDeliveryQueue;
 
@@ -82,6 +83,7 @@ final class ReaderThread extends Thread {
 
     /**
      * Creates new reader thread without starting it, yet.
+     * 
      * @param fileChannel the file channel we work on, it is kept open during the life time
      * @param fileSize file size determined when opening the file
      * @param bufferType configuration of the buffer type to be used
@@ -89,8 +91,8 @@ final class ReaderThread extends Thread {
      * @param bufferRequestQueue queue for communication from main thread to the reader
      * @param bufferDeliveryQueue queue for communication from reader thread to the main thread (answer)
      */
-    ReaderThread(FileChannel fileChannel, long fileSize, BufferType bufferType, int maxBufferSize,
-            BlockingQueue<BufferEvent> bufferRequestQueue, BlockingQueue<BufferEvent> bufferDeliveryQueue) {
+    ReaderThread(FileChannel fileChannel, long fileSize, BufferType bufferType, int maxBufferSize, BlockingQueue<BufferEvent> bufferRequestQueue,
+            BlockingQueue<BufferEvent> bufferDeliveryQueue) {
         this.fileChannel = fileChannel;
         this.fileSize = fileSize;
         this.bufferType = bufferType;
@@ -140,13 +142,13 @@ final class ReaderThread extends Thread {
 
     /**
      * Processes an incoming buffer (request) event for reading data from file
+     * 
      * @param bufferEvent incoming event
      * @throws IOException on file access error
      * @throws InterruptedException pass-through from waiting
      */
     private void processBufferEvent(BufferEvent bufferEvent) throws IOException, InterruptedException {
-        if (bufferEvent.eventType == BufferEventType.REQUEST_NEXT
-                || bufferEvent.eventType == BufferEventType.REQUEST_REPOSITION) {
+        if (bufferEvent.eventType == BufferEventType.REQUEST_NEXT || bufferEvent.eventType == BufferEventType.REQUEST_REPOSITION) {
 
             // set position if requested and prepare answer
             if (bufferEvent.eventType == BufferEventType.REQUEST_REPOSITION) {
@@ -178,6 +180,7 @@ final class ReaderThread extends Thread {
 
     /**
      * This method fills the buffer of the given event instance from the underlying file channel
+     * 
      * @param bufferEvent currently processed event
      * @param bufferSize number of requested bytes to be read from file
      * @throws IOException on file access error
@@ -210,6 +213,7 @@ final class ReaderThread extends Thread {
 
     /**
      * This method clears the buffer, the strategy for this operation depends on the buffer's type
+     * 
      * @param bufferEvent event that carries the buffer to be cleared
      */
     private void clearBuffer(BufferEvent bufferEvent) {

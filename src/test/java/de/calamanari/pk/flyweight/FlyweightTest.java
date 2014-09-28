@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Flyweight Test - demonstrates FLYWEIGHT pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.flyweight;
 
 import static org.junit.Assert.assertEquals;
@@ -26,15 +28,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.flyweight.ConcreteCounterFlyweight;
-import de.calamanari.pk.flyweight.CounterFlyweightCarryingItem;
-import de.calamanari.pk.flyweight.CounterFlyweightFactory;
-import de.calamanari.pk.flyweight.UnsharedConcreteCounterFlyweight;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Flyweight Test - demonstrates FLYWEIGHT pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class FlyweightTest {
@@ -106,9 +105,8 @@ public class FlyweightTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, FlyweightTest.class, ConcreteCounterFlyweight.class,
-                UnsharedConcreteCounterFlyweight.class, CounterFlyweightFactory.class,
-                CounterFlyweightCarryingItem.class);
+        LogUtils.setLogLevel(LOG_LEVEL, FlyweightTest.class, ConcreteCounterFlyweight.class, UnsharedConcreteCounterFlyweight.class,
+                CounterFlyweightFactory.class, CounterFlyweightCarryingItem.class);
         memInitial = getApproxMemory();
     }
 
@@ -139,8 +137,7 @@ public class FlyweightTest {
         for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
             String workloadCopy = new String(ITEM_WORK_LOAD.toCharArray()); // huh?! -> Force a copy (don't use the
                                                                             // string reference)
-            workingMemory[i] = new CounterFlyweightCarryingItem(workloadCopy,
-                    flyweightFactory.createCounterFlyweight(CHARS.charAt(i % CHARS.length())));
+            workingMemory[i] = new CounterFlyweightCarryingItem(workloadCopy, flyweightFactory.createCounterFlyweight(CHARS.charAt(i % CHARS.length())));
         }
 
         assertEquals("Counter-Info: 2", workingMemory[2].getCounterInfo());
@@ -168,8 +165,7 @@ public class FlyweightTest {
         for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
             String workloadCopy = new String(ITEM_WORK_LOAD.toCharArray()); // huh?! -> Force a copy (don't use the
                                                                             // string reference)
-            workingMemory[i] = new CounterFlyweightCarryingItem(workloadCopy,
-                    flyweightFactory.createCounterFlyweight(CHARS.charAt(i % CHARS.length())));
+            workingMemory[i] = new CounterFlyweightCarryingItem(workloadCopy, flyweightFactory.createCounterFlyweight(CHARS.charAt(i % CHARS.length())));
         }
 
         assertEquals("Counter-Info: 2", workingMemory[2].getCounterInfo());
@@ -180,8 +176,7 @@ public class FlyweightTest {
 
         LOGGER.info("Approx. memory consumption AFTER: " + getApproxMemory() + " bytes");
 
-        LOGGER.info("Test Flyweight Unshared successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed)
-                + " s");
+        LOGGER.info("Test Flyweight Unshared successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 
@@ -199,6 +194,7 @@ public class FlyweightTest {
 
     /**
      * Returns used memory information
+     * 
      * @return memory in bytes
      */
     private static final long getApproxMemory() {

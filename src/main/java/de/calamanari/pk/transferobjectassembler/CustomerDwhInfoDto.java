@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Dwh Info DTO - one of the data transfer objects in this example.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
 import java.io.Serializable;
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * Customer Dwh Info DTO - one of the data transfer objects in this example.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerDwhInfoDto implements Serializable {
@@ -50,9 +53,9 @@ public class CustomerDwhInfoDto implements Serializable {
             }
             return res;
         }
-        
+
     };
-    
+
     /**
      * logger
      */
@@ -114,6 +117,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Creates new data warehouse info data transfer object from the given data
+     * 
      * @param customerId identifier
      * @param customerType type of customer
      * @param scorePoints value from scoring process
@@ -123,8 +127,8 @@ public class CustomerDwhInfoDto implements Serializable {
      * @param fraudSuspicion flag to indicate that we suspect illegal activities
      * @param badPayer flag to indicate a customer paying late or has unpaid bills
      */
-    public CustomerDwhInfoDto(String customerId, String customerType, int scorePoints, Date firstOrderDate,
-            Date lastOrderDate, boolean dueInvoice, boolean fraudSuspicion, boolean badPayer) {
+    public CustomerDwhInfoDto(String customerId, String customerType, int scorePoints, Date firstOrderDate, Date lastOrderDate, boolean dueInvoice,
+            boolean fraudSuspicion, boolean badPayer) {
         this.customerId = customerId;
         this.customerType = customerType;
         this.scorePoints = scorePoints;
@@ -138,6 +142,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns the customer ID
+     * 
      * @return customerId
      */
     public String getCustomerId() {
@@ -146,6 +151,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the customer ID
+     * 
      * @param customerId identifier
      */
     public void setCustomerId(String customerId) {
@@ -154,6 +160,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns the type of customer (classification)
+     * 
      * @return customerType
      */
     public String getCustomerType() {
@@ -162,6 +169,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the customer type
+     * 
      * @param customerType type of customer
      */
     public void setCustomerType(String customerType) {
@@ -170,6 +178,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns the score points for this customer
+     * 
      * @return scorePoints
      */
     public int getScorePoints() {
@@ -178,6 +187,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the score points
+     * 
      * @param scorePoints value from scoring
      */
     public void setScorePoints(int scorePoints) {
@@ -186,6 +196,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns the date of first order placed by this customer
+     * 
      * @return firstOrderDate
      */
     public Date getFirstOrderDate() {
@@ -194,6 +205,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the date of first order placed by this customer
+     * 
      * @param firstOrderDate date of first order
      */
     public void setFirstOrderDate(Date firstOrderDate) {
@@ -202,6 +214,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns the date of least recent order placed by this customer
+     * 
      * @return lastOrderDate
      */
     public Date getLastOrderDate() {
@@ -210,6 +223,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the date of least recent order placed by this customer
+     * 
      * @param lastOrderDate date of least recent order
      */
     public void setLastOrderDate(Date lastOrderDate) {
@@ -218,6 +232,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns whether this customer has an open invoice
+     * 
      * @return true whether there is an open invoice
      */
     public boolean isDueInvoice() {
@@ -226,6 +241,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the due invoice flag
+     * 
      * @param dueInvoice true indicates an open invoice not payed yet
      */
     public void setDueInvoice(boolean dueInvoice) {
@@ -234,6 +250,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns whether this customer could be a fraud
+     * 
      * @return fraudSuspicion
      */
     public boolean isFraudSuspicion() {
@@ -242,6 +259,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the fraud suspicion flag
+     * 
      * @param fraudSuspicion flag to indicate that we suspect illegal activities
      */
     public void setFraudSuspicion(boolean fraudSuspicion) {
@@ -250,6 +268,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Returns whether this customer is a bad payer
+     * 
      * @return badPayer flag
      */
     public boolean isBadPayer() {
@@ -258,6 +277,7 @@ public class CustomerDwhInfoDto implements Serializable {
 
     /**
      * Sets the bad payer flag
+     * 
      * @param badPayer flag to indicate a customer who pays late or only after reminding
      */
     public void setBadPayer(boolean badPayer) {
@@ -268,11 +288,10 @@ public class CustomerDwhInfoDto implements Serializable {
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", customerType=" + customerType
-                + ", scorePoints=" + scorePoints + ", firstOrderDate="
-                + (firstOrderDate == null ? null : "'" + sdf.format(firstOrderDate) + "'") + ", lastOrderDate="
-                + (lastOrderDate == null ? null : "'" + sdf.format(lastOrderDate) + "'") + ", dueInvoice=" + dueInvoice
-                + ", fraudSuspicion=" + fraudSuspicion + ", badPayer=" + badPayer + "})";
+        return this.getClass().getSimpleName() + "({customerId=" + customerId + ", customerType=" + customerType + ", scorePoints=" + scorePoints
+                + ", firstOrderDate=" + (firstOrderDate == null ? null : "'" + sdf.format(firstOrderDate) + "'") + ", lastOrderDate="
+                + (lastOrderDate == null ? null : "'" + sdf.format(lastOrderDate) + "'") + ", dueInvoice=" + dueInvoice + ", fraudSuspicion=" + fraudSuspicion
+                + ", badPayer=" + badPayer + "})";
     }
 
 }

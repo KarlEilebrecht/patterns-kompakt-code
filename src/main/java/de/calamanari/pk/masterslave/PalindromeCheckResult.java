@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Palindrome Check Result - demonstrates MASTER SLAVE
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.masterslave;
 
 /**
  * Palindrome Check Result - represents result of palindrome check
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class PalindromeCheckResult {
@@ -55,6 +58,7 @@ public final class PalindromeCheckResult {
 
     /**
      * Creates new result
+     * 
      * @param confirmed if true, palindrome-nature was confirmed
      * @param errorPositionLeft in case the source is no palindrome, this is the problematic character on the left
      * @param errorPositionRight in case the source is no palindrome, this is the problematic character on the right
@@ -67,6 +71,7 @@ public final class PalindromeCheckResult {
 
     /**
      * Creates new failed result
+     * 
      * @param errorPositionLeft position of difference on the left
      * @param errorPositionRight position of difference on the right
      * @return check result for failure
@@ -77,6 +82,7 @@ public final class PalindromeCheckResult {
 
     /**
      * Returns whether the checked source was a palindrome
+     * 
      * @return true if palindrome was confirmed
      */
     public boolean isPalindromeConfirmed() {
@@ -85,6 +91,7 @@ public final class PalindromeCheckResult {
 
     /**
      * Returns difference position
+     * 
      * @return position of difference on the left, -1 means no position
      */
     public long getErrorPositionLeft() {
@@ -93,6 +100,7 @@ public final class PalindromeCheckResult {
 
     /**
      * Returns difference position
+     * 
      * @return position of difference on the right, -1 means no position
      */
     public long getErrorPositionRight() {
@@ -111,8 +119,8 @@ public final class PalindromeCheckResult {
 
     @Override
     public String toString() {
-        return PalindromeCheckResult.class.getSimpleName() + "(confirmed=" + palindromeConfirmed
-                + ", errorPositionLeft=" + errorPositionLeft + ", errorPositionRight=" + errorPositionRight + ")";
+        return PalindromeCheckResult.class.getSimpleName() + "(confirmed=" + palindromeConfirmed + ", errorPositionLeft=" + errorPositionLeft
+                + ", errorPositionRight=" + errorPositionRight + ")";
     }
 
 }

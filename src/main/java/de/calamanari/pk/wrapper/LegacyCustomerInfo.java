@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Legay Customer Info
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.wrapper;
 
 import java.text.ParseException;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 
 /**
  * Legacy Customer Info - a WRAPPER for the OldSys legacy system
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
@@ -66,6 +69,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
 
     /**
      * Creates new legacy customer info
+     * 
      * @param legacyCustomerData NOT NULL
      * @param legacyHistoryData may be null
      */
@@ -129,6 +133,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
 
     /**
      * Returns the value from the legacy record for the given key
+     * 
      * @param record customer data or history data
      * @param key field name
      * @return value
@@ -151,6 +156,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
 
     /**
      * Returns string representation for debugging purposes
+     * 
      * @return string representation
      */
     @Override

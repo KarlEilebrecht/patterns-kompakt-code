@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Abstract Enterprise Unit - the COMPOSITE implementing the component interface
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.composite;
 
 import java.util.ArrayList;
@@ -23,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Abstract Enterprise Unit is the abstract base class of the COMPOSITE implementing the interface of the component
- * (EnterpriseNode).
+ * Abstract Enterprise Unit is the abstract base class of the COMPOSITE implementing the interface of the component (EnterpriseNode).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
@@ -46,6 +48,7 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
 
     /**
      * Creates unit of this name
+     * 
      * @param name enterprise unit name
      */
     public AbstractEnterpriseUnit(String name) {
@@ -61,6 +64,7 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
 
     /**
      * Sets the unit's name
+     * 
      * @param name enterprise unit name
      */
     public void setName(String name) {
@@ -69,6 +73,7 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
 
     /**
      * sets this unit's parent unit
+     * 
      * @param parentUnit the owning unit
      */
     public void setParent(AbstractEnterpriseUnit parentUnit) {
@@ -77,6 +82,7 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
 
     /**
      * Adds the given node to this unit's child nodes.
+     * 
      * @param childNode NOT NULL
      */
     public void addChildNode(EnterpriseNode childNode) {
@@ -87,6 +93,7 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
 
     /**
      * Removes the given child node from this unit's children.
+     * 
      * @param childNode dependent node
      * @return true if the given node was one of this unit's child nodes and has been removed, otherwise false
      */
@@ -96,6 +103,7 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
 
     /**
      * Returns the nodes below this node if any.
+     * 
      * @return collection of nodes, NEVER null
      */
     public Collection<? extends EnterpriseNode> getChildNodes() {

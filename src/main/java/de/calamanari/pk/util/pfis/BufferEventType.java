@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Buffer Event Type
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,11 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.pfis;
 
 /**
- * The BufferEventType identifies the type of event in one of the queues for communication between main thread and
- * reader thread
+ * The BufferEventType identifies the type of event in one of the queues for communication between main thread and reader thread
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 enum BufferEventType {

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Order - demonstrates VISITOR pattern
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.visitor;
 
 import java.util.ArrayList;
@@ -23,9 +25,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Customer Order - each order can carry a special discount. This discount can be added to a company or division
- * discount but it is not applicable to order items carrying a special promotion discount. Instead the higher discount
- * will be chosen.
+ * Customer Order - each order can carry a special discount. This discount can be added to a company or division discount but it is not applicable to order
+ * items carrying a special promotion discount. Instead the higher discount will be chosen.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerOrder {
@@ -57,6 +59,7 @@ public class CustomerOrder {
 
     /**
      * Creates new order
+     * 
      * @param contactPerson person related to order
      * @param division optional division the order belongs to
      * @param specialDiscountPerc order-related discount
@@ -69,6 +72,7 @@ public class CustomerOrder {
 
     /**
      * Returns the division
+     * 
      * @return division the order belongs to or null if no division is involved
      */
     public CustomerDivision getDivision() {
@@ -77,6 +81,7 @@ public class CustomerOrder {
 
     /**
      * Sets the division
+     * 
      * @param division assigned divison
      */
     public void setDivision(CustomerDivision division) {
@@ -85,6 +90,7 @@ public class CustomerOrder {
 
     /**
      * Returns the contact person
+     * 
      * @return contact person responsible for the order
      */
     public String getContactPerson() {
@@ -93,6 +99,7 @@ public class CustomerOrder {
 
     /**
      * Sets the contact person
+     * 
      * @param contactPerson order-related contact person
      */
     public void setContactPerson(String contactPerson) {
@@ -101,6 +108,7 @@ public class CustomerOrder {
 
     /**
      * Returns the special discount percentage value, to be applied to the value of this order
+     * 
      * @return discount
      */
     public double getSpecialDiscountPerc() {
@@ -109,6 +117,7 @@ public class CustomerOrder {
 
     /**
      * Sets the special discount percentage value, to be applied to the value of this order
+     * 
      * @param specialDiscountPerc order-related discount
      */
     public void setSpecialDiscountPerc(double specialDiscountPerc) {
@@ -118,8 +127,8 @@ public class CustomerOrder {
     /**
      * Adds the order item and evtl. merges with existing one.<br>
      * The caller should always use the returned item because the item passed to this method may have been merged.<br>
-     * In case of merge the attributes we use the smaller value for price and the higher value for discount (customer
-     * advantage rule :-) ).
+     * In case of merge the attributes we use the smaller value for price and the higher value for discount (customer advantage rule :-) ).
+     * 
      * @param item order item to be added
      * @return the added item
      */
@@ -132,8 +141,7 @@ public class CustomerOrder {
         }
         if (mergeItem != null) {
             mergeItem.setAmount(mergeItem.getAmount() + item.getAmount());
-            mergeItem.setPromotionDiscountPerc(Math.max(item.getPromotionDiscountPerc(),
-                    mergeItem.getPromotionDiscountPerc()));
+            mergeItem.setPromotionDiscountPerc(Math.max(item.getPromotionDiscountPerc(), mergeItem.getPromotionDiscountPerc()));
             mergeItem.setPricePerUnit(Math.min(item.getPricePerUnit(), mergeItem.getPricePerUnit()));
             item = mergeItem;
         }
@@ -146,6 +154,7 @@ public class CustomerOrder {
 
     /**
      * Removes the given item from the order
+     * 
      * @param item the order item to be removed
      */
     public void removeOrderItem(OrderItem item) {
@@ -155,6 +164,7 @@ public class CustomerOrder {
 
     /**
      * Returns an unmodifiable list of the order items assigned to this order
+     * 
      * @return list of order items
      */
     public List<OrderItem> getOrderItems() {
@@ -163,6 +173,7 @@ public class CustomerOrder {
 
     /**
      * Method to accept enterprise visitor
+     * 
      * @param visitor current visitor
      */
     public void accept(EnterpriseVisitor visitor) {
@@ -173,9 +184,8 @@ public class CustomerOrder {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "({contactPersion='" + contactPerson + "', specialDiscountPerc="
-                + specialDiscountPerc + ", division='" + (division == null ? "Private person" : division.getName())
-                + "'})";
+        return this.getClass().getSimpleName() + "({contactPersion='" + contactPerson + "', specialDiscountPerc=" + specialDiscountPerc + ", division='"
+                + (division == null ? "Private person" : division.getName()) + "'})";
     }
 
 }

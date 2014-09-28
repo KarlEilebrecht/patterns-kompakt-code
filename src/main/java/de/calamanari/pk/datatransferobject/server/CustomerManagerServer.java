@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Customer Manager Server - a remote service handling persistence 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.datatransferobject.server;
 
 import java.rmi.NoSuchObjectException;
@@ -37,6 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Customer Manager Server - a remote service handling persistence
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class CustomerManagerServer extends AbstractConsoleServer implements CustomerManager {
@@ -50,12 +53,12 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
      * default registry port (our private server, usually this is 1099 for RMI!)
      */
     public static final int DEFAULT_REGISTRY_PORT = 8091;
-    
+
     /**
      * Time for RMI-registry to come up.
      */
     private static final long REGISTRY_STARTUP_MILLIS = 3000;
-    
+
     /**
      * simulated expensive request
      */
@@ -89,8 +92,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
     }
 
     @Override
-    public void addCustomer(String customerId, String lastName, String firstName, String street, String zipCode,
-            String city) throws RemoteException {
+    public void addCustomer(String customerId, String lastName, String firstName, String street, String zipCode, String city) throws RemoteException {
         CustomerEntity entity = new CustomerEntity(customerId, lastName, firstName, street, zipCode, city);
         CustomerEntity entityExist = database.get(customerId);
         if (entityExist != null) {
@@ -166,6 +168,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
 
     /**
      * Reads the RMI-registry port from the command line arguments
+     * 
      * @param cmdLineArgs programm arguments
      */
     private void configureRegistryPort(String[] cmdLineArgs) {
@@ -183,6 +186,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
 
     /**
      * Sets the log-level according the command line arguments
+     * 
      * @param cmdLineArgs program arguments
      */
     private void configureLogging(String[] cmdLineArgs) {
@@ -252,6 +256,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
 
     /**
      * Creates stand-alone console server
+     * 
      * @param args first argument may optionally specify the port
      */
     public static void main(String[] args) {

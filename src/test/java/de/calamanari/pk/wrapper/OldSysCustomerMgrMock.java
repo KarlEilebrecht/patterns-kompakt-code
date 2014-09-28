@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * OldSys Customer Manager Mock
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.wrapper;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
 
 /**
  * OldSys Customer Manager Mock - mocks the old system's customer manager.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
@@ -50,6 +53,7 @@ public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
 
     /**
      * Method allows to add test data.
+     * 
      * @param customerId id of customer
      * @param customerData data about customer
      */
@@ -82,6 +86,7 @@ public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
 
     /**
      * Matches customer with expected data
+     * 
      * @param expectedData this fields are requested
      * @param customerData current customer
      * @return true if customer matches example
@@ -92,8 +97,7 @@ public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
             String key = entry.getKey();
             String expectedValue = entry.getValue();
             String customerValue = customerData.get(key);
-            if ((customerValue == null && expectedValue == null)
-                    || (customerValue != null && customerValue.equals(expectedValue))) {
+            if ((customerValue == null && expectedValue == null) || (customerValue != null && customerValue.equals(expectedValue))) {
                 continue;
             }
             else {
@@ -106,6 +110,7 @@ public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
 
     /**
      * Helper method, creates map from a legacy record.
+     * 
      * @param customerData fields from customer record
      * @return map key/value
      */

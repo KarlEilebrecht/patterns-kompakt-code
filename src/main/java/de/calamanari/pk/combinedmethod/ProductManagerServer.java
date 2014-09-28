@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Product Manager Server - the server side
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.combinedmethod;
 
 import java.rmi.RemoteException;
@@ -37,6 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Product Manager Server - the server side
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ProductManagerServer extends AbstractConsoleServer implements ProductManager {
@@ -55,17 +58,17 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
      * product-ids will start at {@value} + 1
      */
     private static final int START_PRODUCT_ID = 1000;
-    
+
     /**
      * Time for RMI-registry to get ready.
      */
     private static final long REGISTRY_STARTUP_MILLIS = 3000;
-    
+
     /**
      * some milliseconds to simulate expensive request
      */
     private static final long REQUEST_DELAY_MILLIS = 500;
-    
+
     /**
      * server-side ID-sequence
      */
@@ -142,8 +145,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     @Override
     public Product combinedCreateAndRegisterProduct(Product product) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".combinedCreateAndRegisterProduct(" + product
-                + ") called - The COMBINED METHOD");
+        LOGGER.fine(this.getClass().getSimpleName() + ".combinedCreateAndRegisterProduct(" + product + ") called - The COMBINED METHOD");
         String productId = obtainProductId();
         LOGGER.fine("Assigning ID='" + productId + "' to product");
         product.setProductId(productId);
@@ -164,6 +166,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     /**
      * This method returns a free product-id, either from lost+found pool or newly acquired
+     * 
      * @return fresh product-id
      * @throws RemoteException on remoting error
      */
@@ -217,6 +220,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     /**
      * Parses the registry port from the command line arguments
+     * 
      * @param cmdLineArgs program arguments
      */
     private void configureRegistryPort(String[] cmdLineArgs) {
@@ -234,6 +238,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     /**
      * Configures log-level according to command line settings
+     * 
      * @param cmdLineArgs program arguments
      */
     private void configureLogging(String[] cmdLineArgs) {
@@ -304,6 +309,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     /**
      * Creates stand-alone console server
+     * 
      * @param args first argument may optionally specify the port
      */
     public static void main(String[] args) {

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Person
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.bridge;
 
 /**
  * A person object in this scenario (supplementary).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class Person {
@@ -45,6 +48,7 @@ public class Person {
 
     /**
      * Creates a new person instance with the given parameters.
+     * 
      * @param id identifier
      * @param firstName person's first name
      * @param lastName person's name
@@ -59,6 +63,7 @@ public class Person {
 
     /**
      * Sets the id of this person entry
+     * 
      * @param id identifier
      */
     public void setId(String id) {
@@ -67,6 +72,7 @@ public class Person {
 
     /**
      * Returns the person's id
+     * 
      * @return person id
      */
     public String getId() {
@@ -75,6 +81,7 @@ public class Person {
 
     /**
      * Returns the person's last name
+     * 
      * @return last name
      */
     public String getFirstName() {
@@ -83,6 +90,7 @@ public class Person {
 
     /**
      * Sets the person's first name
+     * 
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
@@ -91,6 +99,7 @@ public class Person {
 
     /**
      * Returns the person's last name
+     * 
      * @return last name
      */
     public String getLastName() {
@@ -99,6 +108,7 @@ public class Person {
 
     /**
      * Sets the person's last name
+     * 
      * @param lastName person's last name
      */
     public void setLastName(String lastName) {
@@ -107,6 +117,7 @@ public class Person {
 
     /**
      * returns the person's role
+     * 
      * @return role
      */
     public String getRole() {
@@ -115,6 +126,7 @@ public class Person {
 
     /**
      * Sets the person's role
+     * 
      * @param role company role
      */
     public void setRole(String role) {

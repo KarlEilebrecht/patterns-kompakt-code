@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Append Text Command - a concrete COMMAND.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.command;
 
 import java.util.logging.Logger;
 
 /**
  * Text Command - a concrete COMMAND.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AppendTextCommand extends InputCommand {
@@ -37,6 +40,7 @@ public class AppendTextCommand extends InputCommand {
 
     /**
      * Creates new append text command for the given text.
+     * 
      * @param receiver instance to execute the action
      * @param text string to be appended
      */

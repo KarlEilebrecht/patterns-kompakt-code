@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Address Validator Service Mock - SERVICE STUB (aka Mock) for AddressValidator Service 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.servicestub;
 
 import java.util.logging.Logger;
@@ -23,9 +25,9 @@ import de.calamanari.pk.servicestub.adrchk.AddressValidatorService;
 
 /**
  * Address Validator Service Mock - SERVICE STUB (aka Mock) for AddressValidator Service<br>
- * This is a very simple mock, always returning a predefined result, more sophisticated mocks create matching results
- * for different input sets. <br>
+ * This is a very simple mock, always returning a predefined result, more sophisticated mocks create matching results for different input sets. <br>
  * Mock frameworks (like http://code.google.com/p/mockito/) simplify mocking.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AddressValidatorServiceMock implements AddressValidatorService {
@@ -42,6 +44,7 @@ public class AddressValidatorServiceMock implements AddressValidatorService {
 
     /**
      * Creates a new mock object always returning the given validation result
+     * 
      * @param validationResult result to be returned
      */
     public AddressValidatorServiceMock(boolean validationResult) {
@@ -51,14 +54,14 @@ public class AddressValidatorServiceMock implements AddressValidatorService {
 
     @Override
     public boolean validateAddress(String street, String zipCode, String city) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".validateAddress('" + street + "', '" + zipCode + "', '" + city
-                + "') called.");
+        LOGGER.fine(this.getClass().getSimpleName() + ".validateAddress('" + street + "', '" + zipCode + "', '" + city + "') called.");
         LOGGER.fine("Returning " + validationResult);
         return validationResult;
     }
 
     /**
      * Sets the result to be returned
+     * 
      * @param validationResult result of the validation process
      */
     public void setValidationResult(boolean validationResult) {

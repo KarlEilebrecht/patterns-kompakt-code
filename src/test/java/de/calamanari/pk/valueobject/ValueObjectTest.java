@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Value Object Test - demonstrates VALUE OBJECT pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.valueobject;
 
 import static org.junit.Assert.assertEquals;
@@ -32,10 +34,10 @@ import org.junit.Test;
 
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
-import de.calamanari.pk.valueobject.Fraction;
 
 /**
  * Value Object Test - demonstrates VALUE OBJECT pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ValueObjectTest {
@@ -121,8 +123,7 @@ public class ValueObjectTest {
         Arrays.sort(fractions, Fraction.VIEW_COMPARATOR);
         assertEquals("[(0/1), (1/3), (2/2), (4/4), (25/5)]", Arrays.asList(fractions).toString());
 
-        LOGGER.info("Test Value Object successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Value Object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

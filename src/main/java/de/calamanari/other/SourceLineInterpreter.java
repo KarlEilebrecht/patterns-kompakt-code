@@ -118,8 +118,7 @@ public class SourceLineInterpreter {
         if (currentPhrase.toString().trim().length() > 0) {
             phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
         }
-        if (commentType == CommentType.END_OF_LINE || commentType == CommentType.CHAR_LITERAL
-                || commentType == CommentType.STRING_LITERAL) {
+        if (commentType == CommentType.END_OF_LINE || commentType == CommentType.CHAR_LITERAL || commentType == CommentType.STRING_LITERAL) {
             commentType = CommentType.NONE;
         }
     }

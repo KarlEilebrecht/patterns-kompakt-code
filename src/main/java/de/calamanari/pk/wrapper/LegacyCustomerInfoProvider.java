@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Legacy Customer Info Provider
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.wrapper;
 
 import java.util.ArrayList;
@@ -25,8 +27,8 @@ import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
 import de.calamanari.pk.wrapper.legacy.OldSysHistoryMgr;
 
 /**
- * Legacy Customer Info Provider - creates customer infos, uses WRAPPERs for customer infos loaded from the legacy
- * OldSys
+ * Legacy Customer Info Provider - creates customer infos, uses WRAPPERs for customer infos loaded from the legacy OldSys
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class LegacyCustomerInfoProvider {
@@ -53,6 +55,7 @@ public class LegacyCustomerInfoProvider {
 
     /**
      * Creates a new customer info provider for the legacy system.
+     * 
      * @param customerMgr reference to the legacy customer manager (CONSTRUCTOR INJECTION)
      * @param historyMgr reference to the legacy customer manager (CONSTRUCTOR INJECTION)
      */
@@ -63,6 +66,7 @@ public class LegacyCustomerInfoProvider {
 
     /**
      * Returns the customer or null if not available
+     * 
      * @param id identifies customer
      * @return customer info or null if not found
      */
@@ -90,6 +94,7 @@ public class LegacyCustomerInfoProvider {
 
     /**
      * Returns all customers in the given customer segment
+     * 
      * @param customerSegment segment to search
      * @return list of customer infos NEVER NULL
      */
@@ -97,8 +102,7 @@ public class LegacyCustomerInfoProvider {
         LOGGER.fine("findCustomerInfosOfSegment(" + customerSegment + ") called ...");
         List<CustomerInfo> res = new ArrayList<>();
         LOGGER.fine("calling Legacy API ...");
-        int[] ids = customerMgr.findCustomerByExample(new String[] { LegacyCustomerInfo.KEY_SEGMENT,
-                "" + customerSegment });
+        int[] ids = customerMgr.findCustomerByExample(new String[] { LegacyCustomerInfo.KEY_SEGMENT, "" + customerSegment });
         int len = ids.length;
         for (int i = 0; i < len; i++) {
             CustomerInfo customerInfo = getCustomerInfo("" + ids[i]);

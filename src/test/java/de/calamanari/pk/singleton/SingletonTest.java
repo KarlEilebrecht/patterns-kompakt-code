@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Singleton Test - demonstrates SINGLETON pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.singleton;
 
 import static org.junit.Assert.assertSame;
@@ -32,13 +34,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.calamanari.pk.singleton.Tracer;
-import de.calamanari.pk.singleton.Tracer2;
 import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Singleton Test - demonstrates SINGLETON pattern.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SingletonTest {
@@ -117,8 +118,7 @@ public class SingletonTest {
         }
 
         LOGGER.info("Test Singleton successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS))
-                + " s");
+                + MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS)) + " s");
 
     }
 
@@ -166,8 +166,7 @@ public class SingletonTest {
         // different implementations.
 
         LOGGER.info("Test Singleton2 successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS))
-                + " s");
+                + MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS)) + " s");
 
     }
 
@@ -180,9 +179,9 @@ public class SingletonTest {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(firstCallResult);
-        oos.close();
+        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(firstCallResult);
+        }
 
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bis);
@@ -190,8 +189,7 @@ public class SingletonTest {
 
         assertSame(firstCallResult, restored);
 
-        LOGGER.info("Test Singleton3 successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Singleton3 successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

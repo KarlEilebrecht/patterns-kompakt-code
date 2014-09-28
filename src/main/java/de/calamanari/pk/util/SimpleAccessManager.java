@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Simple Access Manager
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util;
 
 import java.util.Collections;
@@ -28,10 +30,10 @@ import java.util.WeakHashMap;
  * <b>Important:</b><br>
  * You should NEVER EVER implement your own security system, there are APIs for that which have been audited well.<br>
  * However in the current example there is a central flaw.<br>
- * Anyone getting a reference to the permissionsMap (via reflection) using setAccessible(true) can do just everything.
- * In a correct scenario security in a JVM cannot be implemented without a SecurityManager, but this is cumbersome :-).<br>
- * Additionally this manager cannot differentiate between methods with the same name but different parameters (unaware
- * of overloading).
+ * Anyone getting a reference to the permissionsMap (via reflection) using setAccessible(true) can do just everything. In a correct scenario security in a JVM
+ * cannot be implemented without a SecurityManager, but this is cumbersome :-).<br>
+ * Additionally this manager cannot differentiate between methods with the same name but different parameters (unaware of overloading).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class SimpleAccessManager {
@@ -49,11 +51,11 @@ public final class SimpleAccessManager {
     /**
      * a map for storing permissions<br>
      */
-    private final Map<Thread, Set<String>> permissionsMap = Collections
-            .synchronizedMap(new WeakHashMap<Thread, Set<String>>());
+    private final Map<Thread, Set<String>> permissionsMap = Collections.synchronizedMap(new WeakHashMap<Thread, Set<String>>());
 
     /**
      * Returns the access manager instance
+     * 
      * @return access manager
      */
     public static synchronized SimpleAccessManager getInstance() {
@@ -74,6 +76,7 @@ public final class SimpleAccessManager {
 
     /**
      * Checks whether the current thread has the permission to do the current operation
+     * 
      * @return true if allowed otherwise false
      */
     public boolean checkPermission() {
@@ -85,6 +88,7 @@ public final class SimpleAccessManager {
 
     /**
      * Allows the given operation.
+     * 
      * @param thread the thread permission shall be granted
      * @param operationName full class name + dot + method name
      */
@@ -104,6 +108,7 @@ public final class SimpleAccessManager {
 
     /**
      * Disallows the given operation.
+     * 
      * @param thread thread permission shall be revoked
      * @param operationName full class name + dot + method name
      */
@@ -121,6 +126,7 @@ public final class SimpleAccessManager {
 
     /**
      * Clears all permissions for the thread.
+     * 
      * @param thread the tread to clear assigned permissions
      */
     public void clearPermissions(Thread thread) {

@@ -1,3 +1,4 @@
+//@formatter:off
 /*
  * Indexer Slave
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
@@ -15,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//@formatter:on
 package de.calamanari.pk.util.itfa;
 
 import static de.calamanari.pk.util.CharsetUtils.CARRIAGE_RETURN_CODE;
@@ -27,10 +29,10 @@ import de.calamanari.pk.util.CharsetUtils;
 
 /**
  * Indexer Slave<br>
- * Indexing is implemented using the MASTER-SLAVE pattern. While the master (see {@link IndexerMaster}) splits the work
- * into parts the slaves perform the indexing. Finally the master collects the partial results and sets up the full
- * index.<br>
+ * Indexing is implemented using the MASTER-SLAVE pattern. While the master (see {@link IndexerMaster}) splits the work into parts the slaves perform the
+ * indexing. Finally the master collects the partial results and sets up the full index.<br>
  * Slaves can be recycled.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 final class IndexerSlave implements Runnable {
@@ -82,6 +84,7 @@ final class IndexerSlave implements Runnable {
 
     /**
      * Creates new slave
+     * 
      * @param charLengthLookup character length lookup used while indexing
      */
     public IndexerSlave(byte[] charLengthLookup) {
@@ -113,23 +116,17 @@ final class IndexerSlave implements Runnable {
 
         try {
             // copy instructions from master and prepare local data structures
-            final int currentMaxNumberOfCharEntries =
-                    (this.maxNumberOfCharEntries <= subPartitionSize ? this.maxNumberOfCharEntries
-                            : this.subPartitionSize);
-            final int currentMaxNumberOfLineEntries =
-                    (this.maxNumberOfLineEntries <= subPartitionSize ? this.maxNumberOfLineEntries
-                            : this.subPartitionSize);
+            final int currentMaxNumberOfCharEntries = (this.maxNumberOfCharEntries <= subPartitionSize ? this.maxNumberOfCharEntries : this.subPartitionSize);
+            final int currentMaxNumberOfLineEntries = (this.maxNumberOfLineEntries <= subPartitionSize ? this.maxNumberOfLineEntries : this.subPartitionSize);
             final int currentStartIdx = this.startIdx;
             final int currentSubPartitionSize = this.subPartitionSize;
             final char[] currentPartition = this.partition;
             final long[][] charIndex = new long[currentMaxNumberOfCharEntries][];
             final long[][] lineIndex = new long[currentMaxNumberOfLineEntries][];
-            final int charEntryDistance = currentMaxNumberOfCharEntries == 0 ? 0 : (int) Math
-                    .floor((double) currentSubPartitionSize
-                            / (double) currentMaxNumberOfCharEntries);
-            final int lineEntryDistance = currentMaxNumberOfLineEntries == 0 ? 0 : (int) Math
-                    .floor((double) currentSubPartitionSize
-                            / (double) currentMaxNumberOfLineEntries);
+            final int charEntryDistance = currentMaxNumberOfCharEntries == 0 ? 0 : (int) Math.floor((double) currentSubPartitionSize
+                    / (double) currentMaxNumberOfCharEntries);
+            final int lineEntryDistance = currentMaxNumberOfLineEntries == 0 ? 0 : (int) Math.floor((double) currentSubPartitionSize
+                    / (double) currentMaxNumberOfLineEntries);
 
             int availableCharEntries = charEntryDistance == 0 ? 0 : currentSubPartitionSize / charEntryDistance;
             int availableLineEntries = lineEntryDistance == 0 ? 0 : currentSubPartitionSize / lineEntryDistance;
@@ -158,7 +155,7 @@ final class IndexerSlave implements Runnable {
 
             int read = 0;
             for (int i = 0; i < currentSubPartitionSize; i++) {
-                read = (int) currentPartition[currentStartIdx + i];
+                read = currentPartition[currentStartIdx + i];
 
                 // increase the byte position using reverse lookup
                 currentBytePos = currentBytePos + charLengthLookup[read];
@@ -177,9 +174,7 @@ final class IndexerSlave implements Runnable {
                         newLineStartCharNumber--;
                     }
                     if (currentMaxNumberOfLineEntries > lineEntryCount
-                            && (newLineStartCharNumber == 0
-                                    || (newLineStartCharNumber - lastIndexedLineStartCharNumber >= lineEntryDistance)
-                                    || (backupLineEntries > 0 && (newLineStartCharNumber
+                            && (newLineStartCharNumber == 0 || (newLineStartCharNumber - lastIndexedLineStartCharNumber >= lineEntryDistance) || (backupLineEntries > 0 && (newLineStartCharNumber
                                     - lastIndexedLineStartCharNumber >= lineEntryDistance / 2)))) {
                         if (newLineStartCharNumber - lastIndexedLineStartCharNumber < lineEntryDistance) {
                             backupLineEntries--;
@@ -202,9 +197,7 @@ final class IndexerSlave implements Runnable {
                 // low surrogates don't have any absolute position
                 if ((read < CharsetUtils.MIN_HIGH_SURROGATE_CODE || read > CharsetUtils.MAX_SURROGATE_CODE)
                         && currentMaxNumberOfCharEntries > charEntryCount
-                        && (numberOfCharactersRead == 0
-                                || numberOfCharactersRead - lastIndexedCharNumber >= charEntryDistance 
-                                || (backupCharEntries > 0 && numberOfCharactersRead
+                        && (numberOfCharactersRead == 0 || numberOfCharactersRead - lastIndexedCharNumber >= charEntryDistance || (backupCharEntries > 0 && numberOfCharactersRead
                                 - lastIndexedCharNumber >= charEntryDistance / 2))) {
                     if (numberOfCharactersRead - lastIndexedCharNumber < charEntryDistance) {
                         backupCharEntries--;
@@ -220,7 +213,7 @@ final class IndexerSlave implements Runnable {
                 lastBytePos = currentBytePos;
             }
 
-            if (!lastCharWasIndexed && charEntryCount < currentMaxNumberOfCharEntries 
+            if (!lastCharWasIndexed && charEntryCount < currentMaxNumberOfCharEntries
                     && (read < CharsetUtils.MIN_HIGH_SURROGATE_CODE || read > CharsetUtils.MAX_SURROGATE_CODE)) {
                 charEntryCount++;
                 charIndex[charEntryCount - 1] = new long[] { numberOfCharactersRead - 1, beforeLastBytePos };
@@ -234,8 +227,8 @@ final class IndexerSlave implements Runnable {
             }
 
             // slave results for master
-            IndexerSlaveResult localResult = new IndexerSlaveResult(charIndex, lineIndex, currentBytePos,
-                    numberOfCharactersRead, numberOfLinesRead, charEntryCount, lineEntryCount);
+            IndexerSlaveResult localResult = new IndexerSlaveResult(charIndex, lineIndex, currentBytePos, numberOfCharactersRead, numberOfLinesRead,
+                    charEntryCount, lineEntryCount);
             this.result.set(localResult);
         }
         catch (Throwable e) {
