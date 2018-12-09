@@ -24,18 +24,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.bridge.halcorp.HalCorpPersonDataConnectorImp;
 import de.calamanari.pk.bridge.halcorp.HalCorpSecurePersonDataConnectorImp;
-import de.calamanari.pk.bridge.multiglom.MultiGlomPersonDataConnectorImp;
 import de.calamanari.pk.bridge.multiglom.MultiGlomUdpPersonDataConnectorImp;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -45,15 +41,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class BridgeTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(BridgeTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BridgeTest.class);
 
     /**
      * Test-IDs
@@ -74,13 +62,6 @@ public class BridgeTest {
      * PersonDataConnectorImp for MultiGlom
      */
     private PersonDataConnectorImp multiGlomImp = null;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, BridgeTest.class, PersonDataConnector.class, RwPersonDataConnector.class, HalCorpPersonDataConnectorImp.class,
-                HalCorpSecurePersonDataConnectorImp.class, MultiGlomPersonDataConnectorImp.class, MultiGlomUdpPersonDataConnectorImp.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -124,8 +105,8 @@ public class BridgeTest {
             assertTrue(halCorpConnector.checkPersonExistsById(id));
         }
 
-        assertEquals("Person({id=HC1001, firstName=Jack, lastName=Miller, role=General Manager})", halCorpConnector.findPersonById(halCorpPersonTestIds.get(0))
-                .toString());
+        assertEquals("Person({id=HC1001, firstName=Jack, lastName=Miller, role=General Manager})",
+                halCorpConnector.findPersonById(halCorpPersonTestIds.get(0)).toString());
 
         PersonDataConnector multiGlomConnector = new PersonDataConnector(multiGlomImp);
         for (String id : multiGlomPersonTestIds) {
@@ -135,11 +116,15 @@ public class BridgeTest {
         assertEquals("Person({id=MG6667, firstName=Susi, lastName=Miller, role=General Manager})",
                 multiGlomConnector.findPersonById(multiGlomPersonTestIds.get(0)).toString());
 
-        assertEquals("XyPerson({id=HC1001, firstName=Jack, lastName=Miller, role=General Manager, addressId=HC1002, "
-                + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})", halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
+        assertEquals(
+                "XyPerson({id=HC1001, firstName=Jack, lastName=Miller, role=General Manager, addressId=HC1002, "
+                        + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})",
+                halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
 
-        assertEquals("XyPerson({id=MG6667, firstName=Susi, lastName=Miller, role=General Manager, addressId=MG6668, "
-                + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})", multiGlomConnector.findXyPersonById(multiGlomPersonTestIds.get(0)).toString());
+        assertEquals(
+                "XyPerson({id=MG6667, firstName=Susi, lastName=Miller, role=General Manager, addressId=MG6668, "
+                        + "street=Lame Duck Valley 180, city=Rugby, zipCode=13476})",
+                multiGlomConnector.findXyPersonById(multiGlomPersonTestIds.get(0)).toString());
 
         // now let's have a look at another member of the main inheritence hierarchy
         RwPersonDataConnector rwHalCorpConnector = new RwPersonDataConnector(halCorpImp);
@@ -149,10 +134,13 @@ public class BridgeTest {
         xyPerson.setZipCode("88906");
         rwHalCorpConnector.createOrUpdateXyPerson(xyPerson);
 
-        assertEquals("XyPerson({id=HC1001, firstName=John, lastName=Miller, role=General Manager, addressId=HC1002, "
-                + "street=Lame Duck Valley 180, city=Rugby, zipCode=88906})", halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
+        assertEquals(
+                "XyPerson({id=HC1001, firstName=John, lastName=Miller, role=General Manager, addressId=HC1002, "
+                        + "street=Lame Duck Valley 180, city=Rugby, zipCode=88906})",
+                halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
 
-        LOGGER.info("Test Bridge successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Bridge successful! Elapsed time: {} s", elapsedSeconds);
 
     }
 

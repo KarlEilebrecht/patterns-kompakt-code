@@ -21,12 +21,12 @@ package de.calamanari.pk.datatransferobject.server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.datatransferobject.CustomerDto;
 import de.calamanari.pk.datatransferobject.CustomerRemote;
-import de.calamanari.pk.util.LogUtils;
 
 /**
  * Customer Entity - the server entity (from persistence) <b>Note:</b> To better visualize the runtime differences between direct remoting and using DATA
@@ -36,19 +36,12 @@ import de.calamanari.pk.util.LogUtils;
  */
 public class CustomerEntity extends UnicastRemoteObject implements CustomerRemote {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(CustomerEntity.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerEntity.class);
 
     /**
      * for serialization
      */
     private static final long serialVersionUID = 944660653625665398L;
-
-    static {
-        LogUtils.setLogLevel(Level.FINE, CustomerEntity.class);
-    }
 
     /**
      * Constructor
@@ -112,73 +105,73 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
 
     @Override
     public String getCustomerId() throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getCustomerId() called");
+        LOGGER.debug("{}.getCustomerId() called", this.getClass().getSimpleName());
         return this.customerId;
     }
 
     @Override
     public void setCustomerId(String customerId) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setCustomerId('" + customerId + "') called");
+        LOGGER.debug("{}.setCustomerId('{}') called", this.getClass().getSimpleName(), customerId);
         this.customerId = customerId;
     }
 
     @Override
     public String getLastName() throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getLastName() called");
+        LOGGER.debug("{}.getLastName() called", this.getClass().getSimpleName());
         return this.lastName;
     }
 
     @Override
     public void setLastName(String lastName) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setLastName('" + lastName + "') called");
+        LOGGER.debug("{}.setLastName('{}') called", this.getClass().getSimpleName(), lastName);
         this.lastName = lastName;
     }
 
     @Override
     public String getFirstName() throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getFirstName() called");
+        LOGGER.debug("{}.getFirstName() called", this.getClass().getSimpleName());
         return this.firstName;
     }
 
     @Override
     public void setFirstName(String firstName) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setFirstName('" + firstName + "') called");
+        LOGGER.debug("{}.setFirstName('{}') called", this.getClass().getSimpleName(), firstName);
         this.firstName = firstName;
     }
 
     @Override
     public String getStreet() throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getStreet() called");
+        LOGGER.debug("{}.getStreet() called", this.getClass().getSimpleName());
         return this.street;
     }
 
     @Override
     public void setStreet(String street) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setStreet('" + street + "') called");
+        LOGGER.debug("{}.setStreet('{}') called", this.getClass().getSimpleName(), street);
         this.street = street;
     }
 
     @Override
     public String getZipCode() throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getZipCode() called");
+        LOGGER.debug("{}.getZipCode() called", this.getClass().getSimpleName());
         return this.zipCode;
     }
 
     @Override
     public void setZipCode(String zipCode) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setZipCode('" + zipCode + "') called");
+        LOGGER.debug("{}.setZipCode('{}') called", this.getClass().getSimpleName(), zipCode);
         this.zipCode = zipCode;
     }
 
     @Override
     public String getCity() throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getCity() called");
+        LOGGER.debug("{}.getCity() called", this.getClass().getSimpleName());
         return this.city;
     }
 
     @Override
     public void setCity(String city) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setCity('" + city + "') called");
+        LOGGER.debug("{}.setCity('{}') called", this.getClass().getSimpleName(), city);
         this.city = city;
     }
 
@@ -188,7 +181,7 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
      * @return dto
      */
     CustomerDto toDto() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".toDto() called");
+        LOGGER.debug("{}.toDto() called", this.getClass().getSimpleName());
         CustomerDto dto = new CustomerDto();
         dto.setCustomerId(customerId);
         dto.setLastName(lastName);
@@ -205,7 +198,7 @@ public class CustomerEntity extends UnicastRemoteObject implements CustomerRemot
      * @param dto data transfer object to copy data from
      */
     void fromDto(CustomerDto dto) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".fromDto(...) called");
+        LOGGER.debug("{}.fromDto(...) called", this.getClass().getSimpleName());
         this.customerId = dto.getCustomerId();
         this.lastName = dto.getLastName();
         this.firstName = dto.getFirstName();

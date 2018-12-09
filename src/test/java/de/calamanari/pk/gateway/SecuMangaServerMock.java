@@ -25,11 +25,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.AbstractThreadedSocketServer;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,10 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(SecuMangaServerMock.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecuMangaServerMock.class);
 
     /**
      * While communicating with SecuManga this line ends the current message.
@@ -97,7 +94,7 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
                 bw.write("\n" + END_OF_TRANSMISSION + "\n");
             }
             else {
-                LOGGER.warning("Illegal call: '" + commandName + "' / " + content);
+                LOGGER.warn("Illegal call: '{}' / {}", commandName, content);
                 bw.write("ERR! command '" + commandName + "'" + (content.length() > 0 ? "" : " MISSING CONTENT"));
             }
             bw.flush();
@@ -174,7 +171,6 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
      * @param args command line arguments, arg[0]=port (optional)
      */
     public static void main(String[] args) {
-        LogUtils.setConsoleHandlerLogLevel(Level.INFO);
         (new SecuMangaServerMock()).setupAndStart(args);
     }
 

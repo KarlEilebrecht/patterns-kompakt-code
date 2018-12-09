@@ -21,7 +21,9 @@ package de.calamanari.pk.bridge.halcorp;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.bridge.Address;
 import de.calamanari.pk.bridge.Person;
@@ -34,10 +36,7 @@ import de.calamanari.pk.bridge.PersonDataConnectorImp;
  */
 public class HalCorpPersonDataConnectorImp implements PersonDataConnectorImp {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(HalCorpPersonDataConnectorImp.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HalCorpPersonDataConnectorImp.class);
 
     /**
      * begin ids with {@value} + 1
@@ -71,19 +70,19 @@ public class HalCorpPersonDataConnectorImp implements PersonDataConnectorImp {
 
     @Override
     public Person findPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findPersonById() called on the other side of the bridge");
+        LOGGER.debug("{}.findPersonById() called on the other side of the bridge", this.getClass().getSimpleName());
         return personDb.get(personId);
     }
 
     @Override
     public Address findAddressById(String addressId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressById() called on the other side of the bridge");
+        LOGGER.debug("{}.findAddressById() called on the other side of the bridge", this.getClass().getSimpleName());
         return addressDb.get(addressId);
     }
 
     @Override
     public Address findAddressOfPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressOfPersonById() called on the other side of the bridge");
+        LOGGER.debug("{}.findAddressOfPersonById() called on the other side of the bridge", this.getClass().getSimpleName());
         Address res = null;
         for (Address address : addressDb.values()) {
             if (personId != null && personId.equals(address.getPersonId())) {
@@ -95,7 +94,7 @@ public class HalCorpPersonDataConnectorImp implements PersonDataConnectorImp {
 
     @Override
     public String createNewPerson(Person person) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".createNewPerson() called on the other side of the bridge");
+        LOGGER.debug("{}.createNewPerson() called on the other side of the bridge", this.getClass().getSimpleName());
         String newId = createNewId();
         person.setId(newId);
         this.personDb.put(newId, person);
@@ -104,7 +103,7 @@ public class HalCorpPersonDataConnectorImp implements PersonDataConnectorImp {
 
     @Override
     public String createNewAddress(Address address) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".createNewAddress() called on the other side of the bridge");
+        LOGGER.debug("{}.createNewAddress() called on the other side of the bridge", this.getClass().getSimpleName());
         String newId = createNewId();
         address.setId(newId);
         this.addressDb.put(newId, address);
@@ -113,7 +112,7 @@ public class HalCorpPersonDataConnectorImp implements PersonDataConnectorImp {
 
     @Override
     public void updatePerson(Person person) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".updatePerson() called on the other side of the bridge");
+        LOGGER.debug("{}.updatePerson() called on the other side of the bridge", this.getClass().getSimpleName());
         if (this.personDb.containsKey(person.getId())) {
             this.personDb.put(person.getId(), person);
         }
@@ -124,7 +123,7 @@ public class HalCorpPersonDataConnectorImp implements PersonDataConnectorImp {
 
     @Override
     public void updateAddress(Address address) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".updateAddress() called on the other side of the bridge");
+        LOGGER.debug("{}.updateAddress() called on the other side of the bridge", this.getClass().getSimpleName());
         if (this.addressDb.containsKey(address.getId())) {
             this.addressDb.put(address.getId(), address);
         }

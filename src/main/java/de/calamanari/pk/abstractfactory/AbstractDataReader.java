@@ -19,19 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.abstractfactory;
 
-import java.util.logging.Logger;
-
 /**
  * Abstract data reader is one base class of the ABSTRACT PRODUCTs each concrete ABSTRACT FACTORY can create.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractDataReader {
-
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(AbstractDataReader.class.getName());
 
     /**
      * describes the source

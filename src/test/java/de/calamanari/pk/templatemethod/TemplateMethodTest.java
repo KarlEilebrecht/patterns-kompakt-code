@@ -26,15 +26,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,20 +43,10 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class TemplateMethodTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(TemplateMethodTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TemplateMethodTest.class);
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, TemplateMethodTest.class, AbstractTemplateMethodStringCodec.class, ExampleTemplateMethodStringCodec.class);
 
         // an external java-process for the EchoServer
         ExternalProcessManager.getInstance().startExternal(EchoServer.class, LOGGER);
@@ -84,14 +73,14 @@ public class TemplateMethodTest {
 
         ExampleTemplateMethodStringCodec codec = new ExampleTemplateMethodStringCodec();
         String output1 = codec.processText(testText);
-        LOGGER.fine(output1);
+        LOGGER.debug(output1);
         String output2 = codec.processText(output1);
-        LOGGER.fine(output2);
+        LOGGER.debug(output2);
 
         assertEquals(testText, output2);
 
-        LOGGER.info("Test ExampleTemplateMethodStringCodec successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test ExampleTemplateMethodStringCodec successful! Elapsed time: {} s", elapsedSeconds);
 
     }
 
@@ -133,7 +122,8 @@ public class TemplateMethodTest {
         assertEquals(testText1, answer1);
         assertEquals(testText2, answer2);
 
-        LOGGER.info("Test EchoServer successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test EchoServer successful! Elapsed time: {} s", elapsedSeconds);
     }
 
 }

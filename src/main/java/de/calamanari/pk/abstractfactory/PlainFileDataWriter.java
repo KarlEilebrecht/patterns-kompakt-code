@@ -20,7 +20,9 @@
 package de.calamanari.pk.abstractfactory;
 
 import java.io.File;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -31,10 +33,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class PlainFileDataWriter extends AbstractDataWriter {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(PlainFileDataWriter.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlainFileDataWriter.class);
 
     /**
      * destination file
@@ -47,7 +46,7 @@ public class PlainFileDataWriter extends AbstractDataWriter {
      * @param file destination NOT NULL
      */
     public PlainFileDataWriter(File file) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created.");
+        LOGGER.debug("{} created.", this.getClass().getSimpleName());
         if (file == null) {
             throw new IllegalArgumentException("Argument file must not be null!");
         }
@@ -57,8 +56,8 @@ public class PlainFileDataWriter extends AbstractDataWriter {
 
     @Override
     public long writeString(String item) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".writeString('" + item + "') called.");
-        LOGGER.fine("output='" + item + "'.");
+        LOGGER.debug("{}.writeString('{}') called.", this.getClass().getSimpleName(), item);
+        LOGGER.debug("output='{}'.", item);
         return MiscUtils.writeStringToFile(item, destinationFile);
     }
 

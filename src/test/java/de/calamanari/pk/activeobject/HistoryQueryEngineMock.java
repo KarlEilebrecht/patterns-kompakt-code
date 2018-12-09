@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * History Query Engine Mock - in this example this is a component implementation for executing queries that may take some time.
@@ -32,10 +34,7 @@ import java.util.logging.Logger;
  */
 public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(HistoryQueryEngineMock.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryQueryEngineMock.class);
 
     /**
      * Simulated query duration in milliseconds
@@ -80,7 +79,7 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
 
     @Override
     public List<String[]> queryHistoryData(String firstName, String lastName, String birthday) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '" + birthday + "') called.");
+        LOGGER.debug("{}.queryHistoryData('{}', '{}', '{}') called.", this.getClass().getSimpleName(), firstName, lastName, birthday);
         StringBuilder sbKey = new StringBuilder();
         if (firstName != null) {
             sbKey.append(firstName);
@@ -99,7 +98,8 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
             Thread.sleep(queryDurationMillis);
         }
         catch (InterruptedException ex) {
-            LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '" + birthday + "') was interrupted!");
+            Thread.currentThread().interrupt();
+            LOGGER.debug("{}.queryHistoryData('{}', '{}', '{}') was interrupted!", this.getClass().getSimpleName(), firstName, lastName, birthday);
         }
         return result;
     }

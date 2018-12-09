@@ -20,10 +20,13 @@
 package de.calamanari.pk.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 /**
  * This thread observes an input stream from an external console and passes the data line by line to a given logger.
@@ -32,10 +35,7 @@ import java.util.logging.Logger;
  */
 public class ExternalConsoleHandlerThread extends Thread {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ExternalConsoleHandlerThread.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExternalConsoleHandlerThread.class);
 
     /**
      * Input stream of the external console
@@ -73,12 +73,12 @@ public class ExternalConsoleHandlerThread extends Thread {
         try {
             String line = null;
             while ((line = consoleReader.readLine()) != null) {
-                targetLogger.log(logLevel, this.getName() + "\n" + line);
+                LogUtils.log(targetLogger, logLevel, this.getName() + "\n" + line);
             }
-            LOGGER.fine("Observation of '" + this.getName() + "' terminated.");
+            LOGGER.debug("Observation of '{}' terminated.", this.getName());
         }
-        catch (Throwable t) {
-            LOGGER.log(Level.WARNING, "Observation of '" + this.getName() + "' terminated with exception!", t);
+        catch (IOException | RuntimeException t) {
+            LOGGER.warn("Observation of '{}' terminated with exception!", this.getName(), t);
         }
     }
 

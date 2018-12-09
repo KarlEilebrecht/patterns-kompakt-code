@@ -19,7 +19,9 @@
 //@formatter:on
 package de.calamanari.pk.datatransferobject.server;
 
+import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -28,13 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 import de.calamanari.pk.datatransferobject.Customer;
 import de.calamanari.pk.datatransferobject.CustomerManager;
 import de.calamanari.pk.util.AbstractConsoleServer;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,10 +47,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class CustomerManagerServer extends AbstractConsoleServer implements CustomerManager {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(CustomerManagerServer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerManagerServer.class);
 
     /**
      * default registry port (our private server, usually this is 1099 for RMI!)
@@ -110,20 +110,19 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
 
     @Override
     public Customer findCustomer(String customerId) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findCustomer('" + customerId + "') called");
+        LOGGER.debug("{}.findCustomer('{}') called", this.getClass().getSimpleName(), customerId);
         return database.get(customerId);
     }
 
     @Override
     public Customer findCustomerReturnDto(String customerId) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findCustomerReturnDto('" + customerId + "') called");
+        LOGGER.debug("{}.findCustomerReturnDto('{}') called", this.getClass().getSimpleName(), customerId);
         CustomerEntity entity = database.get(customerId);
         return (entity == null ? null : entity.toDto());
     }
 
     @Override
     protected void configureInstance(String[] cmdLineArgs) {
-        configureLogging(cmdLineArgs);
         configureRegistryPort(cmdLineArgs);
         startRmiRegistry();
     }
@@ -139,7 +138,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.environment().put("CLASSPATH", System.getProperties().getProperty("java.class.path", null));
         try {
-            LOGGER.info("Starting private RMI-Registry on port " + this.registryPort + " ...");
+            LOGGER.info("Starting private RMI-Registry on port {} ...", this.registryPort);
             rmiRegistryProcess = pb.start();
             // give the registry some time to get ready
             Thread.sleep(REGISTRY_STARTUP_MILLIS);
@@ -161,8 +160,8 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
                 LOGGER.info("Private RMI-Registry stopped!");
             }
         }
-        catch (Throwable t) {
-            LOGGER.log(Level.SEVERE, "Error during RMI-shutdown!", t);
+        catch (RuntimeException t) {
+            LOGGER.error("Error during RMI-shutdown!", t);
         }
     }
 
@@ -178,25 +177,10 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
                 port = Integer.parseInt(cmdLineArgs[0]);
             }
             catch (Exception ex) {
-                LOGGER.log(Level.WARNING, "Error parsing rmi-port='" + cmdLineArgs[0] + "', using default=" + port, ex);
+                LOGGER.warn("Error parsing rmi-port='{}', using default={}", cmdLineArgs[0], port, ex);
             }
         }
         this.registryPort = port;
-    }
-
-    /**
-     * Sets the log-level according the command line arguments
-     * 
-     * @param cmdLineArgs program arguments
-     */
-    private void configureLogging(String[] cmdLineArgs) {
-        if (cmdLineArgs != null && cmdLineArgs.length > 1 && "logfine".equalsIgnoreCase(cmdLineArgs[1])) {
-            LogUtils.setConsoleHandlerLogLevel(Level.FINE);
-            LogUtils.setLogLevel(Level.FINE, CustomerManagerServer.class);
-        }
-        else {
-            LogUtils.setConsoleHandlerLogLevel(Level.INFO);
-        }
     }
 
     @Override
@@ -206,8 +190,8 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
             Registry registry = LocateRegistry.getRegistry(registryPort);
             registry.bind("CustomerManager", this.customerManagerStub);
         }
-        catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error during preparation!", ex);
+        catch (RemoteException | AlreadyBoundException | RuntimeException ex) {
+            LOGGER.error("Error during preparation!", ex);
         }
     }
 
@@ -219,7 +203,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
     @Override
     protected void doRequestProcessing() {
         while (true) {
-            MiscUtils.sleep(Level.WARNING, REQUEST_DELAY_MILLIS);
+            MiscUtils.sleep(Level.WARN, REQUEST_DELAY_MILLIS);
             if (getServerState() != ServerState.ONLINE) {
                 break;
             }
@@ -248,8 +232,8 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
                 }
             }
         }
-        catch (Throwable t) {
-            LOGGER.log(Level.SEVERE, "Error during clean-up!", t);
+        catch (RemoteException | NotBoundException | RuntimeException t) {
+            LOGGER.error("Error during clean-up!", t);
         }
         shutdownRmiRegistry();
     }

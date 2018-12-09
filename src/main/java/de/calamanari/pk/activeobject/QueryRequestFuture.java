@@ -20,8 +20,9 @@
 package de.calamanari.pk.activeobject;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Query Request Future - allows the client to check the status and finally to retrieve the result of the scheduled operation.
@@ -30,10 +31,7 @@ import java.util.logging.Logger;
  */
 public class QueryRequestFuture {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(QueryRequestFuture.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryRequestFuture.class);
 
     /**
      * The task being observed
@@ -55,14 +53,14 @@ public class QueryRequestFuture {
      * @return result or null (if not completed or cancelled)
      */
     public List<String[]> getResult() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getResult() called");
+        LOGGER.debug("{}.getResult() called", this.getClass().getSimpleName());
         try {
             if (queryRequest.isDone() && !queryRequest.isCancelled()) {
                 return queryRequest.get();
             }
         }
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Failed to get result!", ex);
+            LOGGER.error("Failed to get result!", ex);
         }
         return null;
     }
@@ -71,7 +69,7 @@ public class QueryRequestFuture {
      * Cancels the query
      */
     public void cancelQuery() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".cancelQuery() called");
+        LOGGER.debug("{}.cancelQuery() called", this.getClass().getSimpleName());
         queryRequest.cancel(true);
     }
 
@@ -82,7 +80,7 @@ public class QueryRequestFuture {
      */
     public boolean isQueryCancelled() {
         boolean res = queryRequest.isCancelled();
-        LOGGER.fine(this.getClass().getSimpleName() + ".isQueryCancelled() called - " + res);
+        LOGGER.debug("{}.isQueryCancelled() called - {}", this.getClass().getSimpleName(), res);
         return res;
     }
 
@@ -93,7 +91,7 @@ public class QueryRequestFuture {
      */
     public boolean isQueryDone() {
         boolean res = queryRequest.isDone();
-        LOGGER.fine(this.getClass().getSimpleName() + ".isQueryDone() called - " + res);
+        LOGGER.debug("{}.isQueryDone() called - {}", this.getClass().getSimpleName(), res);
         return res;
     }
 

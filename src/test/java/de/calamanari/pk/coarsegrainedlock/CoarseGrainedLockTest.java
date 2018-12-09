@@ -27,14 +27,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,20 +42,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class CoarseGrainedLockTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CoarseGrainedLockTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoarseGrainedLockTest.class);
 
     /**
      * allow stress test only in info mode and if number of processors > 1 :-)
      */
-    private static final boolean STRESS_TEST = (LOG_LEVEL == Level.INFO) && (Runtime.getRuntime().availableProcessors() > 1);
+    private static final boolean STRESS_TEST = !LOGGER.isDebugEnabled() && (Runtime.getRuntime().availableProcessors() > 1);
 
     /**
      * for thread coordination
@@ -78,12 +68,6 @@ public class CoarseGrainedLockTest {
      * mocks the order database table
      */
     private final Map<String, Order> orderDb = new ConcurrentHashMap<>();
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, CoarseGrainedLockTest.class, InMemoryLockManager.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -128,8 +112,8 @@ public class CoarseGrainedLockTest {
 
         assertTrue(InMemoryLockManager.getLockInfo("4711") == null);
 
-        assertEquals("Address({id='8877', customerId='4711', street='19, Lucky Road', zipCode='286736', city='Lemon Village'})", addressDb.get("8877")
-                .toString());
+        assertEquals("Address({id='8877', customerId='4711', street='19, Lucky Road', zipCode='286736', city='Lemon Village'})",
+                addressDb.get("8877").toString());
 
         assertEquals("Order({id='8877', customerId='4711', orderData='POLKIJUHZGT77653FF'})", orderDb.get("9966").toString());
 
@@ -178,6 +162,14 @@ public class CoarseGrainedLockTest {
             LOGGER.info("Test Lock Stress successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         }
+        else {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.info("Skipped lock stress test in debug mode.");
+            }
+            else {
+                LOGGER.warn("Skipped lock stress test in single core mode!");
+            }
+        }
     }
 
     /**
@@ -199,8 +191,8 @@ public class CoarseGrainedLockTest {
                     Address address = addressDb.get("8877"); // address of
                                                              // customer
 
-                    LOGGER.fine("User_1 displays customer: " + customer.toString());
-                    LOGGER.fine("User_1 displays address: " + address.toString());
+                    LOGGER.debug("User_1 displays customer: {}", customer);
+                    LOGGER.debug("User_1 displays address: {}", address);
 
                     MiscUtils.sleepIgnoreException(5000);
 
@@ -243,7 +235,7 @@ public class CoarseGrainedLockTest {
                 try {
 
                     Customer customer = customerDb.get("4711");
-                    LOGGER.fine("User_2 displays customer: " + customer.toString());
+                    LOGGER.debug("User_2 displays customer: {}", customer);
 
                     MiscUtils.sleepIgnoreException(2000);
 
@@ -273,18 +265,19 @@ public class CoarseGrainedLockTest {
                 assertTrue(lockFailed);
 
                 InMemoryLockManager.ElementLock lock = InMemoryLockManager.getLockInfo("4711");
-                LOGGER.fine("User_3 failed to get write lock! - Existing Lock found: " + lock);
+                LOGGER.debug("User_3 failed to get write lock! - Existing Lock found: {}", lock);
 
-                LOGGER.fine("User_3 phones the two other users and presses [Wait for]-button ... ");
+                LOGGER.debug("User_3 phones the two other users and presses [Wait for]-button ... ");
                 try {
                     lock.await();
                 }
                 catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
                     // should not happen
                     throw new RuntimeException(ex);
                 }
 
-                LOGGER.fine("User_3 has been notified and tries again ... ");
+                LOGGER.debug("User_3 has been notified and tries again ... ");
 
                 try {
                     boolean lockSuccess = InMemoryLockManager.acquireWriteLock("4711", "User_3");
@@ -318,7 +311,7 @@ public class CoarseGrainedLockTest {
 
                 assertTrue(lockFailed);
 
-                LOGGER.fine("User_4 failed to get read lock! - Existing Lock found: " + InMemoryLockManager.getLockInfo("4711"));
+                LOGGER.debug("User_4 failed to get read lock! - Existing Lock found: {}", InMemoryLockManager.getLockInfo("4711"));
 
                 countDown.countDown();
             }
@@ -344,7 +337,7 @@ public class CoarseGrainedLockTest {
                 try {
 
                     Order order = orderDb.get("9966");
-                    LOGGER.fine("User_5 displays order: " + order.toString());
+                    LOGGER.debug("User_5 displays order: {}", order);
 
                 }
                 finally {

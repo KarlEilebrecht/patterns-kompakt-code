@@ -20,7 +20,9 @@
 package de.calamanari.pk.abstractfactory;
 
 import java.io.File;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -31,10 +33,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class SecureFileDataReader extends AbstractDataReader {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(SecureFileDataReader.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecureFileDataReader.class);
 
     /**
      * source file
@@ -47,7 +46,7 @@ public class SecureFileDataReader extends AbstractDataReader {
      * @param file source NOT NULL
      */
     public SecureFileDataReader(File file) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created for file " + file);
+        LOGGER.debug("{} created for file {}", this.getClass().getSimpleName(), file);
         if (file == null) {
             throw new IllegalArgumentException("Argument file must not be null!");
         }
@@ -57,10 +56,10 @@ public class SecureFileDataReader extends AbstractDataReader {
 
     @Override
     public String readString() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".readString() called.");
+        LOGGER.debug("{}.readString() called.", this.getClass().getSimpleName());
         String scrambledItem = MiscUtils.readFileToString(sourceFile);
         String item = MiscUtils.unscramble(scrambledItem);
-        LOGGER.fine("return='" + item + "'.");
+        LOGGER.debug("return='{}'.", item);
         return item;
     }
 

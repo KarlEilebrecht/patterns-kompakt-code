@@ -22,13 +22,13 @@ package de.calamanari.pk.gateway;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.ws.Endpoint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.calamanari.pk.util.AbstractConsoleServer;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,10 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class SecuMangaGatewayServer extends AbstractConsoleServer {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(SecuMangaGatewayServer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecuMangaGatewayServer.class);
 
     /**
      * default port
@@ -103,6 +100,11 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
         SYSTEM_PROPERTIES.put(PROPERTY_SECU_MANGA_PORT, "" + DEFAULT_SECU_MANGA_PORT);
     }
 
+    static {
+        // Fix issue with missing property: https://github.com/javaee/metro-jax-ws/issues/1237
+        System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl");
+    }
+
     /**
      * returns the server properties
      * 
@@ -138,7 +140,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
                 port = Integer.parseInt(cmdLineArgs[0]);
             }
             catch (Exception ex) {
-                LOGGER.log(Level.WARNING, "Error parsing port='" + cmdLineArgs[0] + "', using default=" + port, ex);
+                LOGGER.warn("Error parsing port='{}', using default={}", cmdLineArgs[0], port, ex);
             }
             if (cmdLineArgs.length > 1) {
                 String secuMangaHost = cmdLineArgs[1];
@@ -151,7 +153,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
                     secuMangaPort = Integer.parseInt(cmdLineArgs[2]);
                 }
                 catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Error parsing secuMangaPort='" + sSecuMangaPort + "', using default=" + secuMangaPort, ex);
+                    LOGGER.warn("Error parsing secuMangaPort='{}', using default={}", sSecuMangaPort, secuMangaPort, ex);
                 }
                 SYSTEM_PROPERTIES.put(PROPERTY_SECU_MANGA_PORT, "" + secuMangaPort);
             }
@@ -192,8 +194,8 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
                 serviceEndpoint.stop();
             }
         }
-        catch (Throwable t) {
-            LOGGER.log(Level.WARNING, "Error during clean-up!", t);
+        catch (RuntimeException t) {
+            LOGGER.warn("Error during clean-up!", t);
         }
     }
 
@@ -203,7 +205,6 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
      * @param args first argument may optionally specify the port
      */
     public static void main(String[] args) {
-        LogUtils.setConsoleHandlerLogLevel(Level.INFO);
         (new SecuMangaGatewayServer()).setupAndStart(args);
     }
 

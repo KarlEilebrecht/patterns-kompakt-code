@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.bridge;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Rw Person Data Connector - this is a subclass in the main hierarchy, which evolves independently from the "bridged-out" hierarchy.<br>
@@ -29,10 +30,7 @@ import java.util.logging.Logger;
  */
 public class RwPersonDataConnector extends PersonDataConnector {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(RwPersonDataConnector.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(RwPersonDataConnector.class);
 
     /**
      * Creates new RwPersonDataConnector
@@ -50,7 +48,7 @@ public class RwPersonDataConnector extends PersonDataConnector {
      * @return person id
      */
     public String createOrUpdateXyPerson(XyPerson person) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".createOrUpdateXyPerson() called.");
+        LOGGER.debug("{}.createOrUpdateXyPerson() called.", this.getClass().getSimpleName());
         if (checkPersonExistsById(person.getId())) {
             Person person1 = new Person(person.getId(), person.getFirstName(), person.getLastName(), person.getRole());
             personDataConnectorImp.updatePerson(person1);

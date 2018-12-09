@@ -24,11 +24,11 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.AbstractThreadedSocketServer;
-import de.calamanari.pk.util.LogUtils;
 
 /**
  * Echo server - concrete class implementing the operations used by TEMPLATE METHODs of AbstractThreadedSocketServer.<br>
@@ -38,10 +38,7 @@ import de.calamanari.pk.util.LogUtils;
  */
 public class EchoServer extends AbstractThreadedSocketServer {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(EchoServer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(EchoServer.class);
 
     /**
      * command to end communication
@@ -111,7 +108,6 @@ public class EchoServer extends AbstractThreadedSocketServer {
      * @param args command line arguments, arg[0]=port (optional)
      */
     public static void main(String[] args) {
-        LogUtils.setConsoleHandlerLogLevel(Level.INFO);
         (new EchoServer()).setupAndStart(args);
     }
 

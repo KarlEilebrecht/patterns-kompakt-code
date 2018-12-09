@@ -21,10 +21,11 @@ package de.calamanari.pk.gateway.client;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SecuManga Gateway Client - The client part of the GATEWAY.<br>
@@ -34,10 +35,7 @@ import javax.xml.namespace.QName;
  */
 public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(DefaultSecuMangaGatewayClient.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSecuMangaGatewayClient.class);
 
     /**
      * default port
@@ -59,6 +57,11 @@ public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
      */
     private final SecuMangaWebService webService;
 
+    static {
+        // Fix issue with missing property: https://github.com/javaee/metro-jax-ws/issues/1237
+        System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl");
+    }
+
     /**
      * Creates the URL for SecuMangaService
      * 
@@ -74,7 +77,7 @@ public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
             url = new URL(sUrl);
         }
         catch (MalformedURLException ex) {
-            LOGGER.log(Level.SEVERE, "Could not create URL(" + sUrl + ")!");
+            LOGGER.error("Could not create URL({})!", sUrl);
         }
         return url;
     }

@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.builder;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Checksum - the PRODUCT to be built in this BUILDER pattern demonstration.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class Checksum {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Checksum.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Checksum.class);
 
     /**
      * Type of checksum
@@ -50,7 +48,7 @@ public class Checksum {
      * @param value the result value of checksum algorithm
      */
     public Checksum(String type, long value) {
-        LOGGER.fine("new Checksum('" + type + "', " + value + ")");
+        LOGGER.debug("new Checksum('{}', {})", type, value);
         this.type = type;
         this.value = value;
     }
@@ -71,6 +69,11 @@ public class Checksum {
      */
     public long getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return Checksum.class.getSimpleName() + " [type='" + type + "', value=" + value + "]";
     }
 
 }

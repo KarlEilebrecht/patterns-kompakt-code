@@ -19,8 +19,10 @@
 //@formatter:on
 package de.calamanari.pk.builder;
 
-import java.util.logging.Logger;
 import java.util.zip.CRC32;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -31,10 +33,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Crc32ChecksumBuilder.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Crc32ChecksumBuilder.class);
 
     /**
      * Checksum type key
@@ -65,13 +64,13 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
     @Override
     public void addString(String text) {
-        LOGGER.fine("addString('" + text + "')");
+        LOGGER.debug("addString('{}')", text);
         this.addStringInternal(text);
     }
 
     @Override
     public void addLong(Long value) {
-        LOGGER.fine("addLong(" + value + ")");
+        LOGGER.debug("addLong({})", value);
         if (value == null) {
             this.addStringInternal(null);
         }
@@ -82,7 +81,7 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
     @Override
     public void addInteger(Integer value) {
-        LOGGER.fine("addInteger(" + value + ")");
+        LOGGER.debug("addInteger({})", value);
         if (value == null) {
             this.addStringInternal(null);
         }
@@ -93,7 +92,7 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
     @Override
     public void addDouble(Double value) {
-        LOGGER.fine("addDouble(" + value + ")");
+        LOGGER.debug("addDouble({})", value);
         if (value == null) {
             this.addStringInternal(null);
         }
@@ -104,7 +103,7 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
     @Override
     public void addBytes(byte[] bytes) {
-        LOGGER.fine("addBytes(" + (bytes == null ? 0 : bytes.length) + ")");
+        LOGGER.debug("addBytes({})", (bytes == null ? 0 : bytes.length));
         addBytesInternal(bytes);
     }
 
@@ -136,9 +135,9 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
 
     @Override
     public Checksum getChecksum() {
-        LOGGER.fine("creating now the result (Checksum)");
+        LOGGER.debug("creating now the result (Checksum)");
         Checksum checksum = new Checksum(CHECKSUM_TYPE, crc32.getValue());
-        LOGGER.fine("returning checksum (" + checksum + ")");
+        LOGGER.debug("returning checksum ({})", checksum);
         return checksum;
     }
 

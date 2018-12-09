@@ -19,6 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.combinedmethod;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -30,11 +32,12 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 import de.calamanari.pk.util.AbstractConsoleServer;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,10 +47,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ProductManagerServer extends AbstractConsoleServer implements ProductManager {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ProductManagerServer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductManagerServer.class);
 
     /**
      * default registry port (our private server, usually this is 1099 for RMI!)
@@ -113,28 +113,28 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     @Override
     public Product findProductById(String id) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findProductById('" + id + "') called");
+        LOGGER.debug("findProductById('" + id + "') called");
         return database.get(id);
     }
 
     @Override
     public String acquireProductId() throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".acquireProductId() called");
+        LOGGER.debug("acquireProductId() called");
         return "ID" + lastId.incrementAndGet();
     }
 
     @Override
     public void registerProduct(Product product) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".registerProduct(" + product + ") called");
+        LOGGER.debug("registerProduct(" + product + ") called");
         if (nextProductRegistrationMustFail) {
-            LOGGER.fine("Simulating some error");
+            LOGGER.debug("Simulating some error");
             nextProductRegistrationMustFail = false;
             throw new RuntimeException("Some error!");
         }
         String id = product.getProductId();
         if (id != null) {
             database.put(id, product);
-            LOGGER.fine("Product registration successful.");
+            LOGGER.debug("Product registration successful.");
         }
     }
 
@@ -145,16 +145,16 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     @Override
     public Product combinedCreateAndRegisterProduct(Product product) throws RemoteException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".combinedCreateAndRegisterProduct(" + product + ") called - The COMBINED METHOD");
+        LOGGER.debug("combinedCreateAndRegisterProduct({}) called - The COMBINED METHOD", product);
         String productId = obtainProductId();
-        LOGGER.fine("Assigning ID='" + productId + "' to product");
+        LOGGER.debug("Assigning ID='{}' to product", productId);
         product.setProductId(productId);
         try {
             registerProduct(product);
         }
         catch (Exception ex) {
             // "rollback"
-            LOGGER.fine("Handling error during registration, preserving ID='" + productId + "' for reuse");
+            LOGGER.debug("Handling error during registration, preserving ID='{}' for reuse", productId);
             lostAndFoundIds.add(productId);
             if ((ex instanceof RemoteException) || (ex instanceof RuntimeException)) {
                 throw ex;
@@ -171,13 +171,13 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
      * @throws RemoteException on remoting error
      */
     private String obtainProductId() throws RemoteException {
-        LOGGER.fine("Checking for lost IDs ...");
+        LOGGER.debug("Checking for lost IDs ...");
         String productId = lostAndFoundIds.poll();
         if (productId == null) {
             productId = acquireProductId();
         }
         else {
-            LOGGER.fine("Reusing lost ID '" + productId + "'");
+            LOGGER.debug("Reusing lost ID '{}'", productId);
         }
         return productId;
     }
@@ -191,7 +191,6 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     @Override
     protected void configureInstance(String[] cmdLineArgs) {
-        configureLogging(cmdLineArgs);
         configureRegistryPort(cmdLineArgs);
         startRmiRegistry();
     }
@@ -212,7 +211,12 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
             Thread.sleep(REGISTRY_STARTUP_MILLIS);
             LOGGER.info("RMI-Registry ready.");
         }
-        catch (Exception ex) {
+        catch (InterruptedException ex) {
+            ex.printStackTrace();
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(ex);
+        }
+        catch (IOException | RuntimeException ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex);
         }
@@ -230,25 +234,10 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
                 port = Integer.parseInt(cmdLineArgs[0]);
             }
             catch (Exception ex) {
-                LOGGER.log(Level.WARNING, "Error parsing rmi-port='" + cmdLineArgs[0] + "', using default=" + port, ex);
+                LOGGER.warn("Error parsing rmi-port='{}', using default={}", cmdLineArgs[0], port, ex);
             }
         }
         this.registryPort = port;
-    }
-
-    /**
-     * Configures log-level according to command line settings
-     * 
-     * @param cmdLineArgs program arguments
-     */
-    private void configureLogging(String[] cmdLineArgs) {
-        if (cmdLineArgs != null && cmdLineArgs.length > 1 && "logfine".equalsIgnoreCase(cmdLineArgs[1])) {
-            LogUtils.setConsoleHandlerLogLevel(Level.FINE);
-            LogUtils.setLogLevel(Level.FINE, ProductManagerServer.class);
-        }
-        else {
-            LogUtils.setConsoleHandlerLogLevel(Level.INFO);
-        }
     }
 
     @Override
@@ -259,7 +248,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
             registry.bind("ProductManager", this.productManagerStub);
         }
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error during preparation!", ex);
+            LOGGER.error("Error during preparation!", ex);
         }
     }
 
@@ -271,7 +260,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
     @Override
     protected void doRequestProcessing() {
         while (true) {
-            MiscUtils.sleep(Level.WARNING, REQUEST_DELAY_MILLIS);
+            MiscUtils.sleep(Level.WARN, REQUEST_DELAY_MILLIS);
             if (getServerState() != ServerState.ONLINE) {
                 break;
             }
@@ -293,8 +282,8 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
                 UnicastRemoteObject.unexportObject(this, true);
             }
         }
-        catch (Throwable t) {
-            LOGGER.log(Level.SEVERE, "Error during clean-up!", t);
+        catch (RemoteException | NotBoundException | RuntimeException t) {
+            LOGGER.error("Error during clean-up!", t);
         }
         try {
             if (rmiRegistryProcess != null) {
@@ -302,8 +291,8 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
                 LOGGER.info("Private RMI-Registry stopped!");
             }
         }
-        catch (Throwable t) {
-            LOGGER.log(Level.SEVERE, "Error during RMI-shutdown!", t);
+        catch (RuntimeException t) {
+            LOGGER.error("Error during RMI-shutdown!", t);
         }
     }
 

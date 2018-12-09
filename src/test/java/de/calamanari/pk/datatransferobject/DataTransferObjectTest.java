@@ -24,17 +24,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.datatransferobject.server.CustomerManagerServer;
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,15 +43,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class DataTransferObjectTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(DataTransferObjectTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataTransferObjectTest.class);
 
     /**
      * number of runs to show the runtime difference
@@ -71,16 +62,7 @@ public class DataTransferObjectTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, DataTransferObjectTest.class, CustomerDto.class);
-
-        // an external java-process, the customer manager server
-        if (Level.FINE.equals(LOG_LEVEL)) {
-            ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT, "logfine");
-        }
-        else {
-            ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT);
-        }
+        ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT);
 
         // to be sure the server is up, wait 8 seconds
         Thread.sleep(8000);

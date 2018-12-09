@@ -246,9 +246,10 @@ public final class ParallelFileInputStream extends InputStream {
         this.maxBufferSize = maxBufferSize;
 
         boolean success = false;
+        FileChannel fileChannelLocal = null;
         try {
-            this.fileChannel = (new RandomAccessFile(file, "r")).getChannel();
-
+            fileChannelLocal = (new RandomAccessFile(file, "r")).getChannel();
+            this.fileChannel = fileChannelLocal;
             // tell the reader thread to fetch the first partition
             try {
                 this.bufferRequestQueue.put(new BufferEvent());
@@ -262,7 +263,7 @@ public final class ParallelFileInputStream extends InputStream {
         }
         finally {
             if (!success) {
-                MiscUtils.closeResourceCatch(this.fileChannel);
+                MiscUtils.closeResourceCatch(fileChannelLocal);
             }
         }
     }

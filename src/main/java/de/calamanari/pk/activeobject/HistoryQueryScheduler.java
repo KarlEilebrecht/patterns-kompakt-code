@@ -21,7 +21,9 @@ package de.calamanari.pk.activeobject;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * History Query Scheduler - isolates the history query component from thread management and control of maximum number of parallel calls.
@@ -30,10 +32,7 @@ import java.util.logging.Logger;
  */
 public class HistoryQueryScheduler {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(HistoryQueryScheduler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryQueryScheduler.class);
 
     /**
      * Thread and queue management
@@ -46,7 +45,7 @@ public class HistoryQueryScheduler {
      * @param maxParallelWorkers number of calls that shall execute in parallel
      */
     public HistoryQueryScheduler(int maxParallelWorkers) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created - working on queue with " + maxParallelWorkers + " worker threads in parallel.");
+        LOGGER.debug("{} created - working on queue with {} worker threads in parallel.", this.getClass().getSimpleName(), maxParallelWorkers);
         // the chosen executor internally manages a queue and ensures that
         // only the given maximum of calls will execute in parallel
         this.executor = Executors.newFixedThreadPool(maxParallelWorkers);
@@ -58,8 +57,8 @@ public class HistoryQueryScheduler {
      * @param task some task to be executed in the future
      */
     public void schedule(QueryRequest task) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".schedule() called.");
-        LOGGER.fine("enqueuing objectified request: " + task.toString());
+        LOGGER.debug("{}.schedule() called.", this.getClass().getSimpleName());
+        LOGGER.debug("enqueuing objectified request: {}", task.toString());
         executor.execute(task);
     }
 

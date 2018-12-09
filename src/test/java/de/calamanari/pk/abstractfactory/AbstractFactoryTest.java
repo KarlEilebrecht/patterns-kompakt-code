@@ -23,14 +23,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -40,15 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class AbstractFactoryTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(AbstractFactoryTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractFactoryTest.class);
 
     /**
      * for the testcases we simulate some kind of registry.
@@ -82,10 +73,6 @@ public class AbstractFactoryTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, AbstractFactoryTest.class, AbstractDataManager.class, AbstractDataReader.class, AbstractDataWriter.class,
-                PlainFileDataManager.class, PlainFileDataReader.class, PlainFileDataWriter.class, SecureFileDataManager.class, SecureFileDataReader.class,
-                SecureFileDataWriter.class);
         SYSTEM_REGISTRY.put(CONFIG_KEY1, new PlainFileDataManager());
         SYSTEM_REGISTRY.put(CONFIG_KEY2, new SecureFileDataManager());
     }
@@ -112,8 +99,8 @@ public class AbstractFactoryTest {
         LOGGER.info("Performing test with configuration 1 ...");
         long startTimeNanos = System.nanoTime();
         commonTestInternal(CONFIG_KEY1, FUNNY_TEXT);
-        LOGGER.info("Execution of test with configuration 1 was successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Execution of test with configuration 1 was successful! Elapsed time: {} s", elapsedSeconds);
     }
 
     @Test
@@ -121,8 +108,8 @@ public class AbstractFactoryTest {
         LOGGER.info("Performing test with configuration 2 ...");
         long startTimeNanos = System.nanoTime();
         commonTestInternal(CONFIG_KEY2, FUNNY_TEXT);
-        LOGGER.info("Execution of test with configuration 2 was successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Execution of test with configuration 2 was successful! Elapsed time: {} s", elapsedSeconds);
     }
 
     /**
@@ -133,21 +120,21 @@ public class AbstractFactoryTest {
      */
     private void commonTestInternal(String configKey, String funnyText) {
 
-        LOGGER.fine("Text: \n============================\n" + funnyText + "\n============================\n.");
+        LOGGER.debug("Text: \n============================\n{}\n============================\n.", funnyText);
 
         // retrieve a concrete manager (CONCRETE FACTORY)
         AbstractDataManager mgr = SYSTEM_REGISTRY.get(configKey);
 
-        LOGGER.fine("Using Manager: " + mgr.getName());
+        LOGGER.debug("Using Manager: {}", mgr.getName());
 
         // retrieve concrete writer (CONCRETE PRODUCT)
         AbstractDataWriter writer = mgr.createDataWriter("Funny Text");
-        LOGGER.fine("Writing to destination: " + writer.getDestinationInfo());
+        LOGGER.debug("Writing to destination: {}", writer.getDestinationInfo());
         writer.writeString(funnyText);
 
         // retrieve concrete reader (CONCRETE PRODUCT)
         AbstractDataReader reader = mgr.createDataReader("Funny Text");
-        LOGGER.fine("Reading from source: " + reader.getSourceInfo());
+        LOGGER.debug("Reading from source: {}", reader.getSourceInfo());
         String result = reader.readString();
 
         assertEquals(result, funnyText);

@@ -20,7 +20,9 @@
 package de.calamanari.pk.abstractfactory;
 
 import java.io.File;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -31,10 +33,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class PlainFileDataReader extends AbstractDataReader {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(PlainFileDataReader.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlainFileDataReader.class);
 
     /**
      * source file
@@ -47,7 +46,7 @@ public class PlainFileDataReader extends AbstractDataReader {
      * @param file source NOT NULL
      */
     public PlainFileDataReader(File file) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created.");
+        LOGGER.debug("{} created.", this.getClass().getSimpleName());
         if (file == null) {
             throw new IllegalArgumentException("Argument file must not be null!");
         }
@@ -57,9 +56,9 @@ public class PlainFileDataReader extends AbstractDataReader {
 
     @Override
     public String readString() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".readString() called.");
+        LOGGER.debug("{}.readString() called.", this.getClass().getSimpleName());
         String item = MiscUtils.readFileToString(sourceFile);
-        LOGGER.fine("return='" + item + "'.");
+        LOGGER.debug("return='{}'.", item);
         return item;
     }
 

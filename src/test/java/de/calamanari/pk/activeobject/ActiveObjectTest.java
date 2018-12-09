@@ -26,13 +26,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,15 +40,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ActiveObjectTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ActiveObjectTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActiveObjectTest.class);
 
     /**
      * some test data
@@ -72,13 +62,6 @@ public class ActiveObjectTest {
      * number of worker threads for test
      */
     private static final int NUMBER_OF_WORKERS = 2; // Runtime.getRuntime().availableProcessors()
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ActiveObjectTest.class, HistoryQueryEngineMock.class, HistoryQueryComponent.class, HistoryQueryScheduler.class,
-                QueryRequest.class, QueryRequestFuture.class);
-    }
 
     @Test
     public void testActiveObject() throws Exception {
@@ -121,7 +104,8 @@ public class ActiveObjectTest {
         assertEquals("Bad bananas punished by old trees.", result2.get(0)[3]);
         assertEquals("Blue apes on skyscrapers.", result3.get(1)[3]);
 
-        LOGGER.info("Test Active Object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Active Object successful! Elapsed time: {} s", elapsedSeconds);
 
     }
 
@@ -153,7 +137,8 @@ public class ActiveObjectTest {
         assertTrue(future1.isQueryCancelled());
         assertNull(future1.getResult());
 
-        LOGGER.info("Test Active Object cancel successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Active Object cancel successful! Elapsed time: {} s", elapsedSeconds);
 
     }
 

@@ -25,8 +25,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 /**
  * This class (singleton) helps to start and stop external java program instances.
@@ -35,10 +37,7 @@ import java.util.logging.Logger;
  */
 public final class ExternalProcessManager {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ExternalProcessManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExternalProcessManager.class);
 
     /**
      * The only instance
@@ -156,7 +155,7 @@ public final class ExternalProcessManager {
             if (stopCommand == null || stopCommand.trim().length() > 0 || waitAttempts >= maxWaitAttempts) {
                 externalServerProcess.destroy();
                 if (waitAttempts >= maxWaitAttempts) {
-                    LOGGER.warning("Forcibly terminated external process " + mainClass.getSimpleName() + ".");
+                    LOGGER.warn("Forcibly terminated external process " + mainClass.getSimpleName() + ".");
                 }
             }
         }

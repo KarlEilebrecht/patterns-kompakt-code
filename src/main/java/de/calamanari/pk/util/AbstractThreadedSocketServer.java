@@ -24,22 +24,22 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 /**
  * Abstract Threaded Socket server<br>
  * This is a threaded socket server, it can accept and process an arbitrary number of connections concurrently.<br>
- * A subclass only has to implement the concrete communication operations, the other stuff is handled by logic in the super classes (TEMPLATE METHOD pattern).<br>
+ * A subclass only has to implement the concrete communication operations, the other stuff is handled by logic in the super classes (TEMPLATE METHOD
+ * pattern).<br>
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(AbstractThreadedSocketServer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractThreadedSocketServer.class);
 
     /**
      * port the mock server listens
@@ -85,7 +85,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
             public void run() {
 
                 try {
-                    LOGGER.fine(Thread.currentThread().getName() + " Connected to " + socket.getInetAddress());
+                    LOGGER.debug("{} Connected to {}", Thread.currentThread().getName(), socket.getInetAddress());
                     handleSocketCommunication(socket);
                 }
                 catch (Exception ex) {
@@ -94,7 +94,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
                 finally {
                     MiscUtils.closeResourceCatch(socket);
                 }
-                LOGGER.fine(Thread.currentThread().getName() + " disconnected.");
+                LOGGER.debug("{} disconnected.", Thread.currentThread().getName());
             }
         });
     }
@@ -107,7 +107,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
                 port = Integer.parseInt(cmdLineArgs[0]);
             }
             catch (Exception ex) {
-                LOGGER.log(Level.WARNING, "Error parsing port='" + cmdLineArgs[0] + "', using default=" + port, ex);
+                LOGGER.warn("Error parsing port='{}', using default={}", cmdLineArgs[0], port, ex);
             }
         }
         this.serverPort = port;
@@ -146,7 +146,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
                     break;
                 }
                 else {
-                    LOGGER.log(Level.SEVERE, "Communication error!", ex);
+                    LOGGER.error("Communication error!", ex);
                 }
             }
         }
@@ -154,12 +154,12 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
 
     @Override
     protected void initiateShutdown() {
-        MiscUtils.closeResourceCatch(Level.WARNING, serverSocket);
+        MiscUtils.closeResourceCatch(Level.WARN, serverSocket);
     }
 
     @Override
     protected void cleanUp() {
-        MiscUtils.closeResourceCatch(Level.WARNING, serverSocket);
+        MiscUtils.closeResourceCatch(Level.WARN, serverSocket);
         executorService.shutdown();
     }
 

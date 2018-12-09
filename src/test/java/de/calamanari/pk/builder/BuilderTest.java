@@ -24,14 +24,12 @@ import static org.junit.Assert.assertNotSame;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -41,26 +39,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class BuilderTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(BuilderTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BuilderTest.class);
 
     /**
      * The checksum-builder leverages a BUILDER. In the builder pattern this is the DIRECTOR.
      */
     private ChecksumHelper checksumHelper = null;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, BuilderTest.class, Crc32ChecksumBuilder.class, ChecksumHelper.class, Checksum.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -95,14 +79,15 @@ public class BuilderTest {
         Object[] toBeEqual = toBeEqualList.toArray();
         long checksum = checksumHelper.computeChecksum(testData);
 
-        LOGGER.fine("Original array checksum: " + checksum);
+        LOGGER.debug("Original array checksum: {}", checksum);
 
         assertEquals(checksum, checksumHelper.computeChecksum(toBeEqual));
 
         for (Object[] toBeNotEqual : toBeNotEqualArrays) {
             assertNotSame(checksum, checksumHelper.computeChecksum(toBeNotEqual));
         }
-        LOGGER.info("Test Builder successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Builder successful! Elapsed time: {} s", elapsedSeconds);
 
     }
 

@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.bridge;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Person Data Connector - this is the service abstraction (root of a hierarchy) where we have "bridged-out" a parallel hierarchy implementing core
@@ -31,10 +32,7 @@ import java.util.logging.Logger;
  */
 public class PersonDataConnector {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(PersonDataConnector.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersonDataConnector.class);
 
     /**
      * The reference to the corresponding PersonDataConnectorImp
@@ -47,8 +45,8 @@ public class PersonDataConnector {
      * @param personDataConnectorImp implementation
      */
     public PersonDataConnector(PersonDataConnectorImp personDataConnectorImp) {
-        LOGGER.fine("New " + this.getClass().getSimpleName() + " created and connected to other side of bridge ("
-                + personDataConnectorImp.getClass().getSimpleName() + ").");
+        LOGGER.debug("New {} created and connected to other side of bridge ({}).", this.getClass().getSimpleName(),
+                personDataConnectorImp.getClass().getSimpleName());
         this.personDataConnectorImp = personDataConnectorImp;
     }
 
@@ -59,7 +57,7 @@ public class PersonDataConnector {
      * @return person or null
      */
     public Person findPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findPersonById() called and directly delegated to other side of bridge.");
+        LOGGER.debug("{}.findPersonById() called and directly delegated to other side of bridge.", this.getClass().getSimpleName());
         return personDataConnectorImp.findPersonById(personId);
     }
 
@@ -70,7 +68,7 @@ public class PersonDataConnector {
      * @return address id or null
      */
     public Address findAddressById(String addressId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressById() called and directly delegated to other side of bridge.");
+        LOGGER.debug("{}.findAddressById() called and directly delegated to other side of bridge.", this.getClass().getSimpleName());
         return personDataConnectorImp.findAddressById(addressId);
     }
 
@@ -81,7 +79,7 @@ public class PersonDataConnector {
      * @return address or null
      */
     public Address findAddressOfPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressOfPersonById() called and directly delegated to other side of bridge.");
+        LOGGER.debug("{}.findAddressOfPersonById() called and directly delegated to other side of bridge.", this.getClass().getSimpleName());
         return personDataConnectorImp.findAddressOfPersonById(personId);
     }
 
@@ -92,7 +90,7 @@ public class PersonDataConnector {
      * @return person or null
      */
     public Person findPersonForAddressById(String addressId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findPersonForAddressById() called.");
+        LOGGER.debug("{}.findPersonForAddressById() called.", this.getClass().getSimpleName());
         Address address = findAddressById(addressId);
         if (address != null) {
             return findPersonById(address.getPersonId());
@@ -109,7 +107,7 @@ public class PersonDataConnector {
      * @return XY-person or null
      */
     public XyPerson findXyPersonById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findXyPersonById() called.");
+        LOGGER.debug("{}.findXyPersonById() called.", this.getClass().getSimpleName());
         XyPerson xyPerson = null;
         Person person = findPersonById(personId);
         if (person != null) {
@@ -135,7 +133,7 @@ public class PersonDataConnector {
      * @return true if person exists, otherwise false
      */
     public boolean checkPersonExistsById(String personId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".checkPersonExistsById() called.");
+        LOGGER.debug("{}.checkPersonExistsById() called.", this.getClass().getSimpleName());
         return (findPersonById(personId) != null);
     }
 

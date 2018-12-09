@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.builder;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Checksum Helper - the DIRECTOR in this BUILDER example.<br>
@@ -30,10 +31,7 @@ import java.util.logging.Logger;
  */
 public class ChecksumHelper {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ChecksumHelper.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChecksumHelper.class);
 
     /**
      * Reference to the internally used builder.
@@ -57,7 +55,7 @@ public class ChecksumHelper {
      */
     public long computeChecksum(Object[] data) {
 
-        LOGGER.fine("Helper uses the builder ...");
+        LOGGER.debug("Helper uses the builder ...");
 
         checksumBuilder.reset();
         if (data == null) {
@@ -70,17 +68,17 @@ public class ChecksumHelper {
 
             int len = data.length;
             // prefix step
-            LOGGER.fine("add general prefix ...");
+            LOGGER.debug("add general prefix ...");
             checksumBuilder.addString("[" + len + "]");
 
             for (int i = 0; i < len; i++) {
                 Object element = data[i];
 
                 // field prefix step
-                LOGGER.fine("add field prefix ...");
+                LOGGER.debug("add field prefix ...");
                 checksumBuilder.addString("/" + i + "=");
 
-                LOGGER.fine("add field value ...");
+                LOGGER.debug("add field value ...");
                 if (element == null || element instanceof String) {
                     checksumBuilder.addString((String) element);
                 }
@@ -98,7 +96,7 @@ public class ChecksumHelper {
                 }
             }
         }
-        LOGGER.fine("Helper retrieves the result (checksum) from the builder ...");
+        LOGGER.debug("Helper retrieves the result (checksum) from the builder ...");
         Checksum checksum = checksumBuilder.getChecksum();
         return checksum.getValue();
     }

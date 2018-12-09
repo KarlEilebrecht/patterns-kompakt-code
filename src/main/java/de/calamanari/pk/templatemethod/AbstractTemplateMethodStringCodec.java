@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.templatemethod;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract Template Method String Codec<br>
@@ -29,10 +30,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractTemplateMethodStringCodec {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(AbstractTemplateMethodStringCodec.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTemplateMethodStringCodec.class);
 
     /**
      * This TEMPLATE METHOD processes the string using operations implemented by concrete subclasses.
@@ -42,13 +40,13 @@ public abstract class AbstractTemplateMethodStringCodec {
      */
     public String processText(String text) {
         String res = null;
-        LOGGER.fine("Using subclass operation to encode input!");
+        LOGGER.debug("Using subclass operation to encode input!");
         if (this.checkValid(text)) {
-            LOGGER.fine("Using subclass operation to decode input!");
+            LOGGER.debug("Using subclass operation to decode input!");
             res = this.decode(text);
         }
         else {
-            LOGGER.fine("Using subclass operation to encode input!");
+            LOGGER.debug("Using subclass operation to encode input!");
             res = this.encode(text);
         }
         return res;

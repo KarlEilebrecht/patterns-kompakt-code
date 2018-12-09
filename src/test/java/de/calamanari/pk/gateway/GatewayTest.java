@@ -21,17 +21,15 @@ package de.calamanari.pk.gateway;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.gateway.client.DefaultSecuMangaGatewayClient;
 import de.calamanari.pk.gateway.client.SecuMangaGatewayClient;
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -41,15 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class GatewayTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(GatewayTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GatewayTest.class);
 
     /**
      * number of test runs
@@ -58,8 +48,6 @@ public class GatewayTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, GatewayTest.class, SecuMangaGatewayClient.class);
 
         // an external java-process mocks the legacy api
         ExternalProcessManager.getInstance().startExternal(SecuMangaServerMock.class, LOGGER);
@@ -104,14 +92,16 @@ public class GatewayTest {
         // Because the client instances are NOT safe to be used concurrently,
         // SecuMangaGatewayClient instances should be cached in an OBJECT POOL!
         long avgTime = (long) ((System.nanoTime() - startTimeNanos) / ((double) NUMBER_OF_RUNS * 2));
-        LOGGER.info("Average runtime per call: " + MiscUtils.formatNanosAsSeconds(avgTime) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(avgTime);
+        LOGGER.info("Average runtime per call: {} s", elapsedSeconds);
 
-        LOGGER.fine("'" + scrambled + "'");
-        LOGGER.fine("'" + unscrambled + "'");
+        LOGGER.debug("'{}'", scrambled);
+        LOGGER.debug("'{}'", unscrambled);
 
         assertEquals(testText, unscrambled);
 
-        LOGGER.info("Test gateway successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test gateway successful! Elapsed time: {} s", elapsedSeconds);
 
     }
 

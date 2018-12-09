@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.adapter;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Source system person view plays the role of an existing class. Its interface provides "the wrong" methods, thus it has to be adapted for being used in the
@@ -31,10 +32,7 @@ import java.util.logging.Logger;
  */
 public class SourceSystemPersonView {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(SourceSystemPersonView.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SourceSystemPersonView.class);
 
     /**
      * identifies this record
@@ -87,9 +85,9 @@ public class SourceSystemPersonView {
      * @return true if record is invalid
      */
     public boolean isInvalid() {
-        LOGGER.fine("isInvalid() called.");
+        LOGGER.debug("isInvalid() called.");
         boolean res = invalid || deleted;
-        LOGGER.fine("Instance is" + (res ? " in" : "") + " valid.");
+        LOGGER.debug("Instance is{} valid.", (res ? " in" : ""));
         return res;
     }
 
@@ -97,7 +95,7 @@ public class SourceSystemPersonView {
      * Sets this record invalid
      */
     public void setInvalid() {
-        LOGGER.fine("setInvalid() called.");
+        LOGGER.debug("setInvalid() called.");
         this.invalid = true;
     }
 
@@ -105,7 +103,7 @@ public class SourceSystemPersonView {
      * Sets this record valid
      */
     public void setValid() {
-        LOGGER.fine("setValid() called.");
+        LOGGER.debug("setValid() called.");
         this.invalid = false;
     }
 
@@ -113,7 +111,7 @@ public class SourceSystemPersonView {
      * deletes the person
      */
     public void delete() {
-        LOGGER.fine("delete() called.");
+        LOGGER.debug("delete() called.");
         this.deleted = true;
     }
 }

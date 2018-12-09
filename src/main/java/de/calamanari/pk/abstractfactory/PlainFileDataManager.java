@@ -20,7 +20,9 @@
 package de.calamanari.pk.abstractfactory;
 
 import java.io.File;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -31,22 +33,19 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class PlainFileDataManager extends AbstractDataManager {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(PlainFileDataManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlainFileDataManager.class);
 
     /**
      * Creates new Plain File Data Manager
      */
     public PlainFileDataManager() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created.");
+        LOGGER.debug("{} created.", this.getClass().getSimpleName());
         this.setName("Plain File Data Manager");
     }
 
     @Override
     public PlainFileDataWriter createDataWriter(String itemName) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".createDataWriter() called.");
+        LOGGER.debug("{}.createDataWriter() called.", this.getClass().getSimpleName());
         if (itemName == null || (itemName.trim().length() == 0)) {
             // to be honest, the rule is not strict enough :-)
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");

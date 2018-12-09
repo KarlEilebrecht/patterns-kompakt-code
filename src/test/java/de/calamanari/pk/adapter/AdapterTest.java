@@ -23,14 +23,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -40,26 +37,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class AdapterTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(AdapterTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdapterTest.class);
 
     /**
      * Instance for testing (ADAPTEE)
      */
     private SourceSystemPersonView sourceSystemPersonViewInstance;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, AdapterTest.class, SourceSystemPersonView.class, PersonViewAdapter.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -78,14 +61,16 @@ public class AdapterTest {
         String name = personViewAdapter.getName();
         String description = personViewAdapter.getDescription();
         boolean valid = personViewAdapter.isValid();
-        LOGGER.info("\n=====================================================================\nID:          '" + id + "',\nname:        '" + name
-                + "',\ndescription: '" + description + "',\nvalid:       " + (valid ? "YES" : "NO")
-                + "\n=====================================================================");
+        LOGGER.debug(
+                "\n=====================================================================\nID:          '{}',\nname:        '{}',\ndescription: '{}',"
+                        + "\nvalid:       {}\n=====================================================================",
+                id, name, description, (valid ? "YES" : "NO"));
         assertEquals("12345", id);
         assertEquals("Jack Miller", name);
         assertEquals("Special Agent, works for Secret Shopper Service", description);
         assertTrue(valid);
-        LOGGER.info("Test Adapter properties successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Adapter properties successful! Elapsed time: {} s", elapsedSeconds);
     }
 
     @Test
@@ -108,7 +93,8 @@ public class AdapterTest {
         success = personViewAdapter.setValid(true);
         assertFalse(success);
         assertFalse(personViewAdapter.isValid());
-        LOGGER.info("Test Adapter operations successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Adapter operations successful! Elapsed time: {} s", elapsedSeconds);
     }
 
 }

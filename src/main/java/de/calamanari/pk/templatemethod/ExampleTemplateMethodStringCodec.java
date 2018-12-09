@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.templatemethod;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -30,10 +31,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ExampleTemplateMethodStringCodec extends AbstractTemplateMethodStringCodec {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ExampleTemplateMethodStringCodec.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleTemplateMethodStringCodec.class);
 
     /**
      * Prefix for decision whether a String is encoded or not
@@ -42,19 +40,19 @@ public class ExampleTemplateMethodStringCodec extends AbstractTemplateMethodStri
 
     @Override
     public String encode(String text) {
-        LOGGER.fine("Encoding '" + text + "'");
+        LOGGER.debug("Encoding '{}'", text);
         return CODE_PREFIX + MiscUtils.scramble(text);
     }
 
     @Override
     public String decode(String text) {
-        LOGGER.fine("Decoding '" + text + "'");
+        LOGGER.debug("Decoding '{}'", text);
         return MiscUtils.unscramble(text.substring(CODE_PREFIX.length()));
     }
 
     @Override
     public boolean checkValid(String text) {
-        LOGGER.fine("Checking whether '" + text + "' is encoded");
+        LOGGER.debug("Checking whether '{}' is encoded", text);
         return (text != null && text.startsWith(CODE_PREFIX));
     }
 

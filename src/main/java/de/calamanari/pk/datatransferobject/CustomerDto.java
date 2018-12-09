@@ -21,10 +21,9 @@
 package de.calamanari.pk.datatransferobject;
 
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import de.calamanari.pk.util.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer DTO - the DATA TRANSFER OBJECT
@@ -33,19 +32,12 @@ import de.calamanari.pk.util.LogUtils;
  */
 public class CustomerDto implements Customer, Serializable {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(CustomerDto.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDto.class);
 
     /**
      * for serialization, DTOs are typically serializable
      */
     private static final long serialVersionUID = 7996392672467364829L;
-
-    static {
-        LogUtils.setLogLevel(Level.FINE, CustomerDto.class);
-    }
 
     /**
      * id of customer
@@ -81,78 +73,78 @@ public class CustomerDto implements Customer, Serializable {
      * Constructor
      */
     public CustomerDto() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created");
+        LOGGER.debug("{} created", this.getClass().getSimpleName());
     }
 
     @Override
     public String getCustomerId() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getCustomerId() called");
+        LOGGER.debug("{}.getCustomerId() called", this.getClass().getSimpleName());
         return customerId;
     }
 
     @Override
     public void setCustomerId(String customerId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setCustomerId('" + customerId + "') called");
+        LOGGER.debug("{}.setCustomerId('{}') called", this.getClass().getSimpleName(), customerId);
         this.customerId = customerId;
     }
 
     @Override
     public String getLastName() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getLastName() called");
+        LOGGER.debug("{}.getLastName() called", this.getClass().getSimpleName());
         return lastName;
     }
 
     @Override
     public void setLastName(String lastName) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setLastName('" + lastName + "') called");
+        LOGGER.debug("{}.setLastName('{}') called", this.getClass().getSimpleName(), lastName);
         this.lastName = lastName;
     }
 
     @Override
     public String getFirstName() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getFirstName() called");
+        LOGGER.debug("{}.getFirstName() called", this.getClass().getSimpleName());
         return firstName;
     }
 
     @Override
     public void setFirstName(String firstName) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setFirstName('" + firstName + "') called");
+        LOGGER.debug("{}.setFirstName('{}') called", this.getClass().getSimpleName(), firstName);
         this.firstName = firstName;
     }
 
     @Override
     public String getStreet() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getStreet() called");
+        LOGGER.debug("{}.getStreet() called", this.getClass().getSimpleName());
         return street;
     }
 
     @Override
     public void setStreet(String street) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setStreet('" + street + "') called");
+        LOGGER.debug("{}.setStreet('{}') called", this.getClass().getSimpleName(), street);
         this.street = street;
     }
 
     @Override
     public String getZipCode() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getZipCode() called");
+        LOGGER.debug("{}.getZipCode() called", this.getClass().getSimpleName());
         return zipCode;
     }
 
     @Override
     public void setZipCode(String zipCode) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setZipCode('" + zipCode + "') called");
+        LOGGER.debug("{}.setZipCode('{}') called", this.getClass().getSimpleName(), zipCode);
         this.zipCode = zipCode;
     }
 
     @Override
     public String getCity() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getCity() called");
+        LOGGER.debug("{}.getCity() called", this.getClass().getSimpleName());
         return this.city;
     }
 
     @Override
     public void setCity(String city) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setCity('" + city + "') called");
+        LOGGER.debug("{}.setCity('{}') called", this.getClass().getSimpleName(), city);
         this.city = city;
     }
 

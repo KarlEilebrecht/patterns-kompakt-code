@@ -20,7 +20,9 @@
 package de.calamanari.pk.abstractfactory;
 
 import java.io.File;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -31,10 +33,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class SecureFileDataWriter extends AbstractDataWriter {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(SecureFileDataWriter.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecureFileDataWriter.class);
 
     /**
      * destination file
@@ -47,7 +46,7 @@ public class SecureFileDataWriter extends AbstractDataWriter {
      * @param file destination NOT NULL
      */
     public SecureFileDataWriter(File file) {
-        LOGGER.fine(this.getClass().getSimpleName() + "created for file " + file);
+        LOGGER.debug("{} created for file {}", this.getClass().getSimpleName(), file);
         if (file == null) {
             throw new IllegalArgumentException("Argument file must not be null!");
         }
@@ -57,9 +56,9 @@ public class SecureFileDataWriter extends AbstractDataWriter {
 
     @Override
     public long writeString(String item) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".writeString('" + item + "') called.");
+        LOGGER.debug("{}.writeString('{}') called.", this.getClass().getSimpleName(), item);
         String scrambledItem = MiscUtils.scramble(item);
-        LOGGER.fine("output='" + scrambledItem + "'.");
+        LOGGER.debug("output='{}'.", scrambledItem);
         return MiscUtils.writeStringToFile(scrambledItem, destinationFile);
     }
 

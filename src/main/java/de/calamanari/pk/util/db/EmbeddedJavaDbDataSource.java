@@ -86,34 +86,30 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
      */
     private static final URL findDerbyJar() throws DerbyJarNotFoundException {
         URL res = null;
-        URL url = ClassLoader.getSystemClassLoader().getResource("java/lang/String.class");
+        URL url = ClassLoader.getSystemClassLoader().getResource("org/apache/derby/jdbc/EmbeddedDriver.class");
         if (url != null) {
             String s = null;
             try {
                 s = url.getPath();
-                int afterJarPos = s.lastIndexOf("!/java/lang/String.class");
+                int afterJarPos = s.lastIndexOf("!/org/apache/derby/jdbc/EmbeddedDriver.class");
                 if (afterJarPos < 0) {
-                    throw new DerbyJarNotFoundException("Unexpected JDK structure: " + url);
+                    throw new DerbyJarNotFoundException("Unexpected Derby jar structure: " + url);
                 }
                 s = s.substring(0, afterJarPos);
-                int basePos = s.lastIndexOf("/jre/lib");
-                if (basePos < 0) {
-                    throw new DerbyJarNotFoundException("Unexpected JDK structure: " + url);
-                }
-                s = s.substring(0, basePos) + "/db/lib/derby.jar";
                 res = new URL(s);
                 File file = new File(URLDecoder.decode(res.getFile(), "UTF-8"));
                 if (!file.exists()) {
-                    throw new DerbyJarNotFoundException("Could not find derby.jar: " + url + " - no JDK?");
+                    throw new DerbyJarNotFoundException("Could not find derby-xxx.jar: " + url + "");
                 }
             }
             catch (MalformedURLException | UnsupportedEncodingException ex) {
-                throw new DerbyJarNotFoundException("Unable to create URL for derby.jar: " + s, ex);
+                throw new DerbyJarNotFoundException("Unable to create URL for derby-xxx.jar: " + s, ex);
             }
         }
         else {
-            throw new DerbyJarNotFoundException("Unexpected JDK structure: String class not found.");
+            throw new DerbyJarNotFoundException("Unable to lookup Derby in classpath!");
         }
+
         return res;
     }
 
@@ -141,7 +137,7 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
         try {
             @SuppressWarnings("resource")
             ClassLoader loader = URLClassLoader.newInstance(new URL[] { findDerbyJar() });
-            final Driver driver = (Driver) Class.forName(EMBEDDED_JAVADB_DRIVER_NAME, true, loader).newInstance();
+            final Driver driver = (Driver) Class.forName(EMBEDDED_JAVADB_DRIVER_NAME, true, loader).getConstructor().newInstance();
 
             // DriverManager does not register any drivers from from outside the class path
             // Thus we create a little proxy / delegate, the resulting anonymous class is automatically

@@ -37,8 +37,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 /**
  * Miscellaneous utilities
@@ -47,11 +49,7 @@ import java.util.logging.Logger;
  */
 public final class MiscUtils {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(MiscUtils.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(MiscUtils.class);
     /**
      * JVM start time in nanoseconds (estimated, for delta calculation)
      */
@@ -477,8 +475,8 @@ public final class MiscUtils {
                     closeable.close();
                 }
                 catch (Throwable ex) {
-                    if (logLevel != null && LOGGER.isLoggable(logLevel)) {
-                        LOGGER.log(logLevel, "Error closing resource.", ex);
+                    if (logLevel != null && LogUtils.isLogginEnabled(LOGGER, logLevel)) {
+                        LogUtils.log(LOGGER, logLevel, "Error closing resource.", ex);
                     }
                 }
             }
@@ -491,7 +489,7 @@ public final class MiscUtils {
      * @param closeables resource(s) to be closed, null elements will be silently ignored
      */
     public static void closeResourceCatch(Closeable... closeables) {
-        closeResourceCatch(Level.OFF, closeables);
+        closeResourceCatch(null, closeables);
     }
 
     /**
@@ -505,8 +503,8 @@ public final class MiscUtils {
             Thread.sleep(millis);
         }
         catch (InterruptedException ex) {
-            if (logLevel != null && LOGGER.isLoggable(logLevel)) {
-                LOGGER.log(logLevel, "Interrupted while sleeping.", ex);
+            if (logLevel != null && LogUtils.isLogginEnabled(LOGGER, logLevel)) {
+                LOGGER.warn("Interrupted while sleeping.", ex);
             }
         }
     }
@@ -518,7 +516,7 @@ public final class MiscUtils {
      * @param millis time in milliseconds to sleep
      */
     public static void sleepIgnoreException(long millis) {
-        sleep(Level.OFF, millis);
+        sleep(null, millis);
     }
 
     /**

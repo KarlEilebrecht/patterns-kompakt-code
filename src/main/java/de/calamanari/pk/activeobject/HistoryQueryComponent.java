@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.activeobject;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * History Query Component - the api from the client's point of view, it provides asynchronous access to the underlying engine to perform queries possibly
@@ -29,10 +30,7 @@ import java.util.logging.Logger;
  */
 public class HistoryQueryComponent {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(HistoryQueryComponent.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HistoryQueryComponent.class);
 
     /**
      * underlying engine (injected by constructor)
@@ -65,7 +63,7 @@ public class HistoryQueryComponent {
      * @return Future for communication and result retrieval
      */
     public QueryRequestFuture queryHistoryData(String firstName, String lastName, String birthday) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".queryHistoryData('" + firstName + "', '" + lastName + "', '" + birthday + "') called");
+        LOGGER.debug("{}.queryHistoryData('{}', '{}', '{}') called", this.getClass().getSimpleName(), firstName, lastName, birthday);
         QueryRequest objectifiedRequest = new QueryRequest(engine, firstName, lastName, birthday);
         QueryRequestFuture future = new QueryRequestFuture(objectifiedRequest);
         scheduler.schedule(objectifiedRequest);

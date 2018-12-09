@@ -84,4 +84,48 @@ public final class LogUtils {
         }
     }
 
+    public static boolean isLogginEnabled(org.slf4j.Logger logger, org.slf4j.event.Level level) {
+        boolean res = false;
+        if (level != null) {
+            //@formatter:off
+            switch (level) {
+                case TRACE: res = logger.isTraceEnabled(); break;
+                case DEBUG: res = logger.isDebugEnabled(); break;
+                case INFO: res = logger.isInfoEnabled(); break;
+                case WARN: res = logger.isWarnEnabled(); break;
+                case ERROR:  res = logger.isErrorEnabled(); break;
+            }
+            //@formatter:on
+        }
+        return res;
+    }
+
+    public static void log(org.slf4j.Logger logger, org.slf4j.event.Level level, String message) {
+        if (level != null) {
+            //@formatter:off
+            switch (level) {
+                case TRACE: logger.trace(message); break;
+                case DEBUG: logger.debug(message); break;
+                case INFO: logger.info(message); break;
+                case WARN: logger.warn(message); break;
+                case ERROR:  logger.error(message); break;
+            }
+            //@formatter:on
+        }
+    }
+
+    public static void log(org.slf4j.Logger logger, org.slf4j.event.Level level, String message, Throwable t) {
+        if (level != null) {
+            //@formatter:off
+            switch (level) {
+                case TRACE: logger.trace(message, t); break;
+                case DEBUG: logger.debug(message, t); break;
+                case INFO: logger.info(message, t); break;
+                case WARN: logger.warn(message, t); break;
+                case ERROR:  logger.error(message, t); break;
+            }
+            //@formatter:on
+        }
+    }
+
 }

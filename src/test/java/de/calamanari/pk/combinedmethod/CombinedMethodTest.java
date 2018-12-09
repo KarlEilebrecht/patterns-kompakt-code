@@ -24,15 +24,14 @@ import static org.junit.Assert.assertNull;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -43,15 +42,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class CombinedMethodTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(CombinedMethodTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CombinedMethodTest.class);
 
     /**
      * The port out private RMI-registry shall use.
@@ -60,16 +51,8 @@ public class CombinedMethodTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, CombinedMethodTest.class);
-
         // an external java-process, the product manager server
-        if (Level.FINE.equals(LOG_LEVEL)) {
-            ExternalProcessManager.getInstance().startExternal(ProductManagerServer.class, LOGGER, "" + REGISTRY_PORT, "logfine");
-        }
-        else {
-            ExternalProcessManager.getInstance().startExternal(ProductManagerServer.class, LOGGER, "" + REGISTRY_PORT);
-        }
+        ExternalProcessManager.getInstance().startExternal(ProductManagerServer.class, LOGGER, "" + REGISTRY_PORT);
 
         // to be sure the server is up, wait 8 seconds
         Thread.sleep(8000);
@@ -124,8 +107,9 @@ public class CombinedMethodTest {
         long elapsed = (System.nanoTime() - startTimeNanos);
 
         Thread.sleep(1000);
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(elapsed);
 
-        LOGGER.info("Test without combined method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test without combined method successful! Elapsed time: {} s", elapsedSeconds);
     }
 
     @Test
@@ -169,7 +153,8 @@ public class CombinedMethodTest {
 
         Thread.sleep(1000);
 
-        LOGGER.info("Test with combined method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(elapsed);
+        LOGGER.info("Test with combined method successful! Elapsed time: {} s", elapsedSeconds);
 
     }
 

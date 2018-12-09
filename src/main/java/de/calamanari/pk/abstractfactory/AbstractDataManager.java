@@ -19,19 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.abstractfactory;
 
-import java.util.logging.Logger;
-
 /**
  * Abstract data manager is the abstract base class (aka ABSTRACT FACTORY)
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractDataManager {
-
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(AbstractDataManager.class.getName());
 
     /**
      * name of data manager, textual description

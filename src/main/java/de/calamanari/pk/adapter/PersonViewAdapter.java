@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.adapter;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Person view adapter implements the target system person view interface and acts as an ADAPTER for SourceSystemPersonView items.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class PersonViewAdapter implements TargetSystemPersonView {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(PersonViewAdapter.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersonViewAdapter.class);
 
     /**
      * The adaptee
@@ -52,31 +50,31 @@ public class PersonViewAdapter implements TargetSystemPersonView {
 
     @Override
     public String getId() {
-        LOGGER.fine("Id requested - returning stringified number from adaptee.");
+        LOGGER.debug("Id requested - returning stringified number from adaptee.");
         return "" + sourceSystemPersonView.number;
     }
 
     @Override
     public String getName() {
-        LOGGER.fine("Name requested - returning first name and last name from adaptee.");
+        LOGGER.debug("Name requested - returning first name and last name from adaptee.");
         return sourceSystemPersonView.firstName + " " + sourceSystemPersonView.lastName;
     }
 
     @Override
     public String getDescription() {
-        LOGGER.fine("Description requested - returning comment from adaptee.");
+        LOGGER.debug("Description requested - returning comment from adaptee.");
         return sourceSystemPersonView.comment;
     }
 
     @Override
     public boolean isValid() {
-        LOGGER.fine("Validity state requested - returning inverted invalid-state from adaptee.");
+        LOGGER.debug("Validity state requested - returning inverted invalid-state from adaptee.");
         return !sourceSystemPersonView.isInvalid();
     }
 
     @Override
     public boolean setValid(boolean valid) {
-        LOGGER.fine("setValid(" + valid + ") called ...");
+        LOGGER.debug("setValid({}) called ...", valid);
         if (valid) {
             sourceSystemPersonView.setValid();
         }
@@ -85,14 +83,14 @@ public class PersonViewAdapter implements TargetSystemPersonView {
         }
         // now check whether the operation succeeded
         boolean success = (sourceSystemPersonView.isInvalid() != valid);
-        LOGGER.fine("Checking operation success ...");
-        LOGGER.fine("setValid(" + valid + ") was" + (success ? "" : " not") + " successful.");
+        LOGGER.debug("Checking operation success ...");
+        LOGGER.debug("setValid({}) was{} successful.", valid, (success ? "" : " not"));
         return success;
     }
 
     @Override
     public void remove() {
-        LOGGER.fine("remove() called.");
+        LOGGER.debug("remove() called.");
         sourceSystemPersonView.delete();
     }
 

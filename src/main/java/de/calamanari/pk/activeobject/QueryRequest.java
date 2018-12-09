@@ -22,7 +22,9 @@ package de.calamanari.pk.activeobject;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Query Request - objectified request
@@ -31,10 +33,7 @@ import java.util.logging.Logger;
  */
 public class QueryRequest extends FutureTask<List<String[]>> {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(QueryRequest.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryRequest.class);
 
     /**
      * first name filter, parameter of the initial call
@@ -71,7 +70,7 @@ public class QueryRequest extends FutureTask<List<String[]>> {
         this.paramFirstName = paramFirstName;
         this.paramLastName = paramLastName;
         this.paramBirthday = paramBirthday;
-        LOGGER.fine(this.toString() + " created");
+        LOGGER.debug("{} created", this);
     }
 
     /**
@@ -103,7 +102,7 @@ public class QueryRequest extends FutureTask<List<String[]>> {
 
     @Override
     public void run() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".run() called for " + this.toString());
+        LOGGER.debug("{}.run() called for {}", this.getClass().getSimpleName(), this);
         super.run();
     }
 

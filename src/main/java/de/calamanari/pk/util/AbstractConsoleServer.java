@@ -20,8 +20,9 @@
 package de.calamanari.pk.util;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This abstract class can be sub-classed to easily create simple servers running on the console.<br>
@@ -31,10 +32,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractConsoleServer {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(AbstractConsoleServer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractConsoleServer.class);
 
     /**
      * monitor used for internal wait operations
@@ -137,7 +135,7 @@ public abstract class AbstractConsoleServer {
                         cleanUp();
                     }
                     catch (Throwable t) {
-                        LOGGER.log(Level.WARNING, "Unexpected Error during cleanUp.", t);
+                        LOGGER.warn("Unexpected Error during cleanUp.", t);
                     }
                     // inform the thread waiting inside the start()-method
                     synchronized (monitor) {
@@ -165,7 +163,7 @@ public abstract class AbstractConsoleServer {
                     monitor.wait();
                 }
                 catch (InterruptedException ex) {
-                    LOGGER.warning("Unexpected interruption during startup - server " + this.getServerName() + " up?!");
+                    LOGGER.warn("Unexpected interruption during startup - server {} up?!", this.getServerName());
                 }
             }
         }
@@ -186,8 +184,8 @@ public abstract class AbstractConsoleServer {
     public void stop() {
         synchronized (monitor) {
             if (serverState != ServerState.ONLINE) {
-                throw new IllegalStateException("Cannot shutdown " + this.getServerName() + ", server is in state " + serverState + ", expected: "
-                        + ServerState.ONLINE);
+                throw new IllegalStateException(
+                        "Cannot shutdown " + this.getServerName() + ", server is in state " + serverState + ", expected: " + ServerState.ONLINE);
             }
             serverState = ServerState.SHUT_DOWN;
         }
@@ -201,7 +199,7 @@ public abstract class AbstractConsoleServer {
                         monitor.wait();
                     }
                     catch (InterruptedException ex) {
-                        LOGGER.warning("Unexpected interruption during shutdown - server " + this.getServerName() + " down?!");
+                        LOGGER.warn("Unexpected interruption during shutdown - server {} down?!", this.getServerName());
                     }
                 }
                 if (serverState == ServerState.OFFLINE) {
@@ -213,7 +211,7 @@ public abstract class AbstractConsoleServer {
             }
         }
         catch (Throwable ex) {
-            LOGGER.log(Level.SEVERE, "Error stopping server - server " + this.getServerName() + " down?", ex);
+            LOGGER.error("Error stopping server - server {} down?", this.getServerName(), ex);
         }
     }
 
