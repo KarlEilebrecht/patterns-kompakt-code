@@ -19,19 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.objectpool;
 
-import java.util.logging.Logger;
-
 /**
  * Managed thread for pooling.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PoolThread extends Thread {
-
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(PoolThread.class.getName());
 
     /**
      * number of digits in hashcode

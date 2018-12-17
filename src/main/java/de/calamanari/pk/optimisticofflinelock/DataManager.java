@@ -23,9 +23,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ConcurrentModificationException;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Data Manager - handles persistence in this OPTIMISTIC OFFLINE LOCK example<br>
@@ -35,10 +37,7 @@ import javax.sql.DataSource;
  */
 public class DataManager {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(DataManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class);
 
     /**
      * prepared statement to store a customer: <code>{@value}</code>
@@ -127,17 +126,17 @@ public class DataManager {
      * @return Customer or null if not found
      */
     public Customer findCustomerById(int customerId) {
-        LOGGER.fine(Thread.currentThread().getName() + ": " + DataManager.class.getSimpleName() + ".findCustomerById('" + customerId + "') called");
+        LOGGER.debug("{}: {}.findCustomerById('{}') called", Thread.currentThread().getName(), DataManager.class.getSimpleName(), customerId);
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + "Performing transactional select on database ...");
+        LOGGER.debug("{}: Performing transactional select on database ...", Thread.currentThread().getName());
 
         Customer res = findCustomerByIdInternal(customerId);
 
         if (res != null) {
-            LOGGER.fine(Thread.currentThread().getName() + ": " + "Found customer, record version: " + res.getVersion());
+            LOGGER.debug("{}: Found customer, record version: {}", Thread.currentThread().getName(), res.getVersion());
         }
         else {
-            LOGGER.fine(Thread.currentThread().getName() + ": " + "Customer not found.");
+            LOGGER.debug("{}: Customer not found.", Thread.currentThread().getName());
         }
         return res;
     }
@@ -148,25 +147,25 @@ public class DataManager {
      * @param customer instance to be stored in the database
      */
     public void storeCustomer(Customer customer) {
-        LOGGER.fine(Thread.currentThread().getName() + ": " + DataManager.class.getSimpleName() + ".storeCustomer(" + customer + ") called");
+        LOGGER.debug("{}: {}.storeCustomer({}) called", Thread.currentThread().getName(), DataManager.class.getSimpleName(), customer);
 
-        LOGGER.fine(Thread.currentThread().getName() + ": " + "Performing transactional update on database, expecting record version: " + customer.getVersion());
+        LOGGER.debug("{}: Performing transactional update on database, expecting record version: {}", Thread.currentThread().getName(), customer.getVersion());
 
         int numberOfUpdatedRecords = updateCustomer(customer);
 
         if (numberOfUpdatedRecords == 1) {
             customer.setVersion(customer.getVersion() + 1);
-            LOGGER.fine(Thread.currentThread().getName() + ": " + "Database update successful, new record version: " + customer.getVersion());
+            LOGGER.debug("{}: Database update successful, new record version: {}", Thread.currentThread().getName(), customer.getVersion());
         }
         else {
             Customer currentCustomerVersion = findCustomerByIdInternal(customer.getCustomerId());
             if (currentCustomerVersion == null) {
-                LOGGER.fine(Thread.currentThread().getName() + ": " + "Database update failed, record deletion detected, throwing exception");
+                LOGGER.debug("{}: Database update failed, record deletion detected, throwing exception", Thread.currentThread().getName());
                 throw new ConcurrentModificationException("Customer could not be updated: " + customer + " (deleted)");
             }
             else {
-                LOGGER.fine(Thread.currentThread().getName() + ": " + "Database update failed, concurrent update detected (version mismatch, current version: "
-                        + currentCustomerVersion.getVersion() + ", expected: " + customer.getVersion() + "), throwing exception");
+                LOGGER.debug("{}: Database update failed, concurrent update detected (version mismatch, current version: {}, expected: {}), throwing exception",
+                        Thread.currentThread().getName(), currentCustomerVersion.getVersion(), customer.getVersion());
                 throw new ConcurrentModificationException("Customer could not be updated: " + customer + " (version mismatch, current version: "
                         + currentCustomerVersion.getVersion() + ", expected: " + customer.getVersion() + ")");
             }

@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.flyweight;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Concrete Counter Flyweight - a concrete FLYWEIGHT implementation.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class ConcreteCounterFlyweight implements CounterFlyweight {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ConcreteCounterFlyweight.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConcreteCounterFlyweight.class);
 
     /**
      * The flyweight's intrinsic state, here the first character is the character to be counted, rest of it simulates workload
@@ -50,7 +48,7 @@ public class ConcreteCounterFlyweight implements CounterFlyweight {
 
     @Override
     public int count(String extrinsicState) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".count('" + extrinsicState + "') called, counting occurrences of '" + intrinsicState.charAt(0) + "' ...");
+        LOGGER.debug("{}.count('{}') called, counting occurrences of '{}' ...", this.getClass().getSimpleName(), extrinsicState, intrinsicState.charAt(0));
         int count = 0;
         for (int i = 0, size = extrinsicState.length(); i < size; i++) {
             if (extrinsicState.charAt(i) == intrinsicState.charAt(0)) {

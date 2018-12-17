@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component With Interface Injection - demonstrates INTERFACE INJECTION
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class ComponentWithInterfaceInjection implements Component, PrintServiceInjectable {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ComponentWithInterfaceInjection.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComponentWithInterfaceInjection.class);
 
     /**
      * A reference to the print service injected via interface method
@@ -47,12 +45,12 @@ public class ComponentWithInterfaceInjection implements Component, PrintServiceI
      * Default constructor
      */
     public ComponentWithInterfaceInjection() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created, service not yet injected!");
+        LOGGER.debug("{} created, service not yet injected!", this.getClass().getSimpleName());
     }
 
     @Override
     public void injectPrintService(PrintService printService) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".injectPrintService(...) called, service injected by interface method!");
+        LOGGER.debug("{}.injectPrintService(...) called, service injected by interface method!", this.getClass().getSimpleName());
         this.printService = printService;
     }
 
@@ -68,7 +66,7 @@ public class ComponentWithInterfaceInjection implements Component, PrintServiceI
 
     @Override
     public void printData() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".printData() called, using injected print service!");
+        LOGGER.debug("{}.printData() called, using injected print service!", this.getClass().getSimpleName());
         this.printService.print(this.getClass().getSimpleName() + ": " + data);
     }
 

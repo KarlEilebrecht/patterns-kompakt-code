@@ -20,7 +20,9 @@
 package de.calamanari.pk.nullobject;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Host Name Data Provider - supplementary class in this example, uses NULL OBJECT to tell a caller about missing HostNameData instances
@@ -29,10 +31,7 @@ import java.util.logging.Logger;
  */
 public final class HostNameDataProvider {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(HostNameDataProvider.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostNameDataProvider.class);
 
     /**
      * for this key we have something to return
@@ -42,8 +41,8 @@ public final class HostNameDataProvider {
     /**
      * Data to be returned by the provider
      */
-    private static final HostNameData EXISTING_DATA = new ConcreteHostNameData("TEST", Arrays.asList(new String[] { "XENOS", "TREADSTONE", "ANDROMEDA",
-            "GALAXY1" }));
+    private static final HostNameData EXISTING_DATA = new ConcreteHostNameData("TEST",
+            Arrays.asList(new String[] { "XENOS", "TREADSTONE", "ANDROMEDA", "GALAXY1" }));
 
     /**
      * Utility class
@@ -60,12 +59,12 @@ public final class HostNameDataProvider {
      * @return HostNameData instance or {@link HostNameDataNullObject#INSTANCE}, never null
      */
     public static final HostNameData getHostNameData(String key) {
-        LOGGER.fine(HostNameDataProvider.class.getSimpleName() + ".getHostNameData('" + key + "') called.");
+        LOGGER.debug("{}.getHostNameData('{}') called.", HostNameDataProvider.class.getSimpleName(), key);
         if (EXISTING_DATA_KEY.equals(key)) {
-            LOGGER.fine("Known key -> return corresponding instance");
+            LOGGER.debug("Known key -> return corresponding instance");
             return EXISTING_DATA;
         }
-        LOGGER.fine("Unknown key -> return NULL OBJECT");
+        LOGGER.debug("Unknown key -> return NULL OBJECT");
         return HostNameDataNullObject.INSTANCE;
     }
 

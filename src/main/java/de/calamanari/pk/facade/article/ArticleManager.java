@@ -21,7 +21,9 @@ package de.calamanari.pk.facade.article;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Article Manager - class of the component we create a FACADE for.
@@ -30,10 +32,7 @@ import java.util.logging.Logger;
  */
 public class ArticleManager {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ArticleManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleManager.class);
 
     /**
      * the article "database"
@@ -47,7 +46,7 @@ public class ArticleManager {
      * @return found article instance or null if not found
      */
     public Article findArticleById(String articleId) {
-        LOGGER.fine("" + this.getClass().getSimpleName() + ".findArticleById() called");
+        LOGGER.debug("{}.findArticleById() called", this.getClass().getSimpleName());
         Article article = null;
         Object[] data = dataStore.get(articleId);
         if (data != null) {
@@ -62,7 +61,7 @@ public class ArticleManager {
      * @param article to be stored
      */
     public void storeArticle(Article article) {
-        LOGGER.fine("" + this.getClass().getSimpleName() + ".storeArticle() called");
+        LOGGER.debug("{}.storeArticle() called", this.getClass().getSimpleName());
         Object[] data = new Object[] { article.getId(), article.getName(), article.getPrice() };
         dataStore.put(article.getId(), data);
     }

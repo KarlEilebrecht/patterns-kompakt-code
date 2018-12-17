@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.factorymethod;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * MoronStore Voucher Creator is a concrete creator in this FACTORY METHOD example scenario.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class MoronStoreVoucherCreator extends AbstractVoucherCreator {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(MoronStoreVoucherCreator.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MoronStoreVoucherCreator.class);
 
     /**
      * Numbers will start at {@value} + 1;
@@ -45,7 +43,7 @@ public class MoronStoreVoucherCreator extends AbstractVoucherCreator {
 
     @Override
     public AbstractVoucher createVoucher(String firstName, String lastName, double value) {
-        LOGGER.fine("createVoucher() on concrete creator " + this.getClass().getSimpleName() + " called.");
+        LOGGER.debug("createVoucher() on concrete creator {} called.", this.getClass().getSimpleName());
         AbstractVoucher voucher = new MoronStoreVoucher("" + lastNumber, Integer.toHexString(lastNumber), firstName, lastName, value);
         lastNumber++;
         return voucher;

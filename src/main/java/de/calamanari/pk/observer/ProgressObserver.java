@@ -20,7 +20,9 @@
 package de.calamanari.pk.observer;
 
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Progress Observer is a concrete OBSERVER implementation, writing a progress message to log channel.
@@ -29,10 +31,7 @@ import java.util.logging.Logger;
  */
 public class ProgressObserver implements OutputObserver {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ProgressObserver.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProgressObserver.class);
 
     /**
      * Constant 100 for progress calculation.
@@ -71,7 +70,7 @@ public class ProgressObserver implements OutputObserver {
     @Override
     public void handleBytesWritten(int id, long numberOfBytes) {
 
-        LOGGER.fine(this.getClass().getSimpleName() + ".handleBytesWritten() called from worker " + id);
+        LOGGER.debug("{}.handleBytesWritten() called from worker {}", this.getClass().getSimpleName(), id);
         long newVal = counter.addAndGet(numberOfBytes);
         if (newVal >= expectedSize) {
             LOGGER.info("100% (DONE)");
@@ -102,7 +101,7 @@ public class ProgressObserver implements OutputObserver {
             // we want to report progress in defined steps
             if (progressNew >= (lastProgressWritten + PROGRESS_PERCENT_INCREMENT)) {
                 lastProgressWritten = progressNew;
-                LOGGER.info("" + progressNew + "% ...");
+                LOGGER.info("{}% ...", progressNew);
             }
         }
     }

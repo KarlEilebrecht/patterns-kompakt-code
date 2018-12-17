@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.objectpool;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -30,10 +31,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ExampleReusableObject {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(ExampleReusableObject.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleReusableObject.class);
 
     /**
      * load simulation delay
@@ -49,12 +47,12 @@ public class ExampleReusableObject {
      * Creates an object and performs expensive initialization
      */
     public ExampleReusableObject() {
-        LOGGER.fine("Creating new ExampleReusableObject ...");
+        LOGGER.debug("Creating new ExampleReusableObject ...");
 
         // expensive setup, such as open files, create connection or
         // compute seeds
         MiscUtils.sleepIgnoreException(CREATION_DELAY_MILLIS);
-        LOGGER.fine("New ExampleReusableObject created.");
+        LOGGER.debug("New ExampleReusableObject created.");
     }
 
     /**
@@ -63,11 +61,11 @@ public class ExampleReusableObject {
      * @return result of operation
      */
     public String computeResult() {
-        LOGGER.fine("computeResult called ...");
+        LOGGER.debug("computeResult called ...");
 
         intrinsicState++;
         MiscUtils.sleepIgnoreException(1);
-        LOGGER.fine("computeResult completed.");
+        LOGGER.debug("computeResult completed.");
         return "X" + intrinsicState;
     }
 
@@ -75,8 +73,8 @@ public class ExampleReusableObject {
      * clears the state of the pooled instance
      */
     public void reset() {
-        LOGGER.fine("reset called ...");
+        LOGGER.debug("reset called ...");
         this.intrinsicState = 0;
-        LOGGER.fine("reset completed.");
+        LOGGER.debug("reset completed.");
     }
 }

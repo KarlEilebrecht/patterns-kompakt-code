@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.identityfield;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Entity - compound key carrying entity in IDENTITY FIELD pattern
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class Entity {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(Entity.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Entity.class);
 
     /**
      * The IDENTITY FIELD
@@ -113,19 +111,19 @@ public class Entity {
 
     @Override
     public int hashCode() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".hashCode() called, delegating to compound key ...");
+        LOGGER.debug("{}.hashCode() called, delegating to compound key ...", this.getClass().getSimpleName());
         return id.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".equals(...) called ...");
+        LOGGER.debug("{}.equals(...) called ...", this.getClass().getSimpleName());
         boolean res = false;
         if (obj instanceof Entity) {
-            LOGGER.fine("Comparing compound keys");
+            LOGGER.debug("Comparing compound keys");
             res = this.id.equals(((Entity) obj).id);
         }
-        LOGGER.fine("Returning " + res);
+        LOGGER.debug("Returning {}", res);
         return res;
     }
 

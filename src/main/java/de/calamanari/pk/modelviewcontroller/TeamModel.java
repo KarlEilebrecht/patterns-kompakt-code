@@ -21,7 +21,9 @@ package de.calamanari.pk.modelviewcontroller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Team Model - the MODEL in this MVC-example holding the member data of a team.
@@ -31,10 +33,7 @@ import java.util.logging.Logger;
  */
 public class TeamModel {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(TeamModel.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeamModel.class);
 
     /**
      * maximum number of members (usually this should be configurable)
@@ -55,7 +54,7 @@ public class TeamModel {
      * Creates new empty model
      */
     public TeamModel() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created");
+        LOGGER.debug("{} created", this.getClass().getSimpleName());
     }
 
     /**
@@ -63,7 +62,7 @@ public class TeamModel {
      */
     private void fireModelChanged() {
         if (observer != null) {
-            LOGGER.fine(this.getClass().getSimpleName() + ".fireModelChange!");
+            LOGGER.debug("{}.fireModelChange!", this.getClass().getSimpleName());
             observer.handleModelChanged();
         }
     }
@@ -74,7 +73,7 @@ public class TeamModel {
      * @param observer model observer (replaces existing)
      */
     public void setModelObserver(TeamModelObserver observer) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setModelObserver(...) called");
+        LOGGER.debug("{}.setModelObserver(...) called", this.getClass().getSimpleName());
         this.observer = observer;
     }
 
@@ -84,7 +83,7 @@ public class TeamModel {
      * @param member the member to add
      */
     public void add(String member) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".add('" + member + "') called");
+        LOGGER.debug("{}.add('{}') called", this.getClass().getSimpleName(), member);
         if (member != null && member.trim().length() > 0 && !members.contains(member)) {
             if (members.size() > MAX_NUMBER_OF_MEMBERS) {
                 throw new IndexOutOfBoundsException("Only 5 members allowed.");
@@ -93,7 +92,7 @@ public class TeamModel {
             fireModelChanged();
         }
         else {
-            LOGGER.fine("Request ignored.");
+            LOGGER.debug("Request ignored.");
         }
     }
 
@@ -104,12 +103,12 @@ public class TeamModel {
      * @return member or null if the member does not exist
      */
     public String getMember(int idx) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getMember(" + idx + ") called");
+        LOGGER.debug("{}.getMember({}) called", this.getClass().getSimpleName(), idx);
         if (idx < members.size()) {
             return members.get(idx);
         }
         else {
-            LOGGER.fine("Request ignored.");
+            LOGGER.debug("Request ignored.");
         }
         return null;
     }
@@ -120,7 +119,7 @@ public class TeamModel {
      * @param idx member position, 0-based
      */
     public void remove(int idx) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".remove(" + idx + ") called");
+        LOGGER.debug("{}.remove({}) called", this.getClass().getSimpleName(), idx);
         members.remove(idx);
         fireModelChanged();
     }

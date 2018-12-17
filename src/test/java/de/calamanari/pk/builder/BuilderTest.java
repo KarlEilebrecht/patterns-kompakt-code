@@ -54,7 +54,7 @@ public class BuilderTest {
     @Test
     public void testBuilder() throws Exception {
 
-        // hint: adjust the log-levels above to FINE to see BUILDER working
+        // hint: adjust the log-levels in logback.xml to DEBUG to see BUILDER working
 
         LOGGER.info("Test Builder ...");
         long startTimeNanos = System.nanoTime();

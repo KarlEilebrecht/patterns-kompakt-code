@@ -22,14 +22,12 @@ package de.calamanari.pk.factorymethod;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,15 +37,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class FactoryMethodTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(FactoryMethodTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FactoryMethodTest.class);
 
     /**
      * for the testcases we simulate some kind of registry.
@@ -64,13 +54,6 @@ public class FactoryMethodTest {
      */
     private static final String COMPANY_KEY_FREAKLIES = "Freaklies Shop";
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, FactoryMethodTest.class, AbstractVoucher.class, AbstractVoucherCreator.class, FreakliesShopVoucher.class,
-                FreakliesShopVoucherCreator.class, MoronStoreVoucher.class, MoronStoreVoucherCreator.class);
-    }
-
     @Before
     public void setUp() throws Exception {
         SYSTEM_REGISTRY.put(COMPANY_KEY_MORONSTORE, new MoronStoreVoucherCreator());
@@ -80,7 +63,7 @@ public class FactoryMethodTest {
     @Test
     public void testFactoryMethod() {
 
-        // Hint: set the log-level above to FINE to see FACTORY METHOD at work.
+        // Hint: set the log-level in logback.xml to DEBUG to see FACTORY METHOD at work.
 
         LOGGER.info("Test Factory Method ...");
         long startTimeNanos = System.nanoTime();

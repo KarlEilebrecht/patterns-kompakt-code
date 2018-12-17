@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.factorymethod;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * MoronStore Voucher (Voucher from the MoronStore Worldwide Company) is a concrete product in this FACTORY METHOD example scenario.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class MoronStoreVoucher extends AbstractVoucher {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(MoronStoreVoucher.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MoronStoreVoucher.class);
 
     /**
      * id of this voucher
@@ -56,18 +54,18 @@ public class MoronStoreVoucher extends AbstractVoucher {
         super(firstName, lastName, value);
         this.id = id;
         this.displayCode = displayCode;
-        LOGGER.fine("Concrete Product " + this.getClass().getSimpleName() + " created.");
+        LOGGER.debug("Concrete Product {} created.", this.getClass().getSimpleName());
     }
 
     @Override
     public String getId() {
-        LOGGER.fine("getId() on concrete product " + this.getClass().getSimpleName() + " called.");
+        LOGGER.debug("getId() on concrete product {} called.", this.getClass().getSimpleName());
         return this.id;
     }
 
     @Override
     public String getVoucherDisplayCode() {
-        LOGGER.fine("getVoucherDisplayCode() on concrete product " + this.getClass().getSimpleName() + " called.");
+        LOGGER.debug("getVoucherDisplayCode() on concrete product {} called.", this.getClass().getSimpleName());
         return this.displayCode;
     }
 

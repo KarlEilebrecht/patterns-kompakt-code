@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.observer;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -30,10 +31,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class OutputWorker extends Thread implements OutputObservable {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(OutputWorker.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OutputWorker.class);
 
     /**
      * load simulation delay
@@ -72,7 +70,7 @@ public class OutputWorker extends Thread implements OutputObservable {
         while (bytesWritten < bytesToWrite) {
             MiscUtils.sleepThrowRuntimeException(WAIT_DELAY_MILLIS);
             if (observer != null) {
-                LOGGER.fine(this.getClass().getSimpleName() + " no. " + this.workerNumber + " notifies observer!");
+                LOGGER.debug("{} no. {} notifies observer!", this.getClass().getSimpleName(), this.workerNumber);
                 observer.handleBytesWritten(this.workerNumber, 1L);
             }
             bytesWritten++;
@@ -95,13 +93,13 @@ public class OutputWorker extends Thread implements OutputObservable {
      */
     @Override
     public void addOutputObserver(OutputObserver outputObserver) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".addOutputObserver called.");
+        LOGGER.debug("{}.addOutputObserver called.", this.getClass().getSimpleName());
         this.observer = outputObserver;
     }
 
     @Override
     public void removeOutputObserver(OutputObserver outputObserver) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".removeOutputObserver called.");
+        LOGGER.debug("{}.removeOutputObserver called.", this.getClass().getSimpleName());
         this.observer = null;
     }
 

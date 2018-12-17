@@ -95,7 +95,7 @@ public class BridgeTest {
     @Test
     public void testBridge() {
 
-        // hint: set the log-level above to FINE to watch BRIDGE working.
+        // hint: set the log-level in logback.xml to DEBUG to watch BRIDGE working.
 
         LOGGER.info("Test Bridge ...");
         long startTimeNanos = System.nanoTime();

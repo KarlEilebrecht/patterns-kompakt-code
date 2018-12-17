@@ -15,13 +15,20 @@
     <logger name="de.calamanari.pk.builder" level="INFO"/>
     <logger name="de.calamanari.pk.coarsegrainedlock" level="INFO"/>
     <logger name="de.calamanari.pk.combinedmethod" level="INFO"/>
-    
-    
-    
+    <logger name="de.calamanari.pk.command" level="INFO"/>
+    <logger name="de.calamanari.pk.commandprocessor" level="INFO"/>
+    <logger name="de.calamanari.pk.composite" level="INFO"/>
     <logger name="de.calamanari.pk.datatransferobject" level="INFO"/>
-    
-    
+    <logger name="de.calamanari.pk.decorator" level="INFO"/>
+    <logger name="de.calamanari.pk.dependencyinjection" level="INFO"/>
+    <logger name="de.calamanari.pk.facade" level="INFO"/>
+    <logger name="de.calamanari.pk.factorymethod" level="INFO"/>
+    <logger name="de.calamanari.pk.flyweight" level="INFO"/>
     <logger name="de.calamanari.pk.gateway" level="INFO"/>
+
+
+
+
 
     <logger name="de.calamanari.pk.templatemethod" level="INFO"/>
 

@@ -21,7 +21,9 @@ package de.calamanari.pk.identityfield;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Data Manager - supplementary class in IDENTITY FIELD pattern
@@ -30,10 +32,7 @@ import java.util.logging.Logger;
  */
 public class DataManager {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(DataManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class);
 
     /**
      * mocks the database in this example
@@ -60,17 +59,17 @@ public class DataManager {
      * @return entity or null if not found
      */
     public Entity findEntityByXY(String x, String y) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findByXY('" + x + "', '" + y + "') called ...");
+        LOGGER.debug("{}.findByXY('{}', '{}') called ...", this.getClass().getSimpleName(), x, y);
         Entity res = null;
         for (String[] data : database) {
             if (((data[2] == null && x == null) || (data[2] != null && data[2].equals(x)))
                     && ((data[3] == null && y == null) || (data[3] != null && data[3].equals(y)))) {
-                LOGGER.fine("found data, creating compound key from '" + data[0] + "' and '" + data[1] + "' ...");
+                LOGGER.debug("found data, creating compound key from '{}' and '{}' ...", data[0], data[1]);
                 CompoundKey key = new CompoundKey(data[0], data[1]);
-                LOGGER.fine("created: " + key);
-                LOGGER.fine("creating entity with compound key id ...");
+                LOGGER.debug("created: {}", key);
+                LOGGER.debug("creating entity with compound key id ...");
                 res = new Entity(key, data[2], data[3]);
-                LOGGER.fine("Returning entity " + res);
+                LOGGER.debug("Returning entity {}", res);
                 break;
             }
         }

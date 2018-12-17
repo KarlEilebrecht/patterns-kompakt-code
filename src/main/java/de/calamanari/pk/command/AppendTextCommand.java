@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.command;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Text Command - a concrete COMMAND.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class AppendTextCommand extends InputCommand {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(AppendTextCommand.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppendTextCommand.class);
 
     /**
      * characters to be appended by this command
@@ -46,19 +44,19 @@ public class AppendTextCommand extends InputCommand {
      */
     public AppendTextCommand(TextComponent receiver, String text) {
         super(receiver);
-        LOGGER.fine("New " + this.getClass().getSimpleName() + " created to append '" + text + "'.");
+        LOGGER.debug("New {} created to append '{}'.", this.getClass().getSimpleName(), text);
         this.text = text;
     }
 
     @Override
     public void execute() {
-        LOGGER.fine("Executing " + this.getClass().getSimpleName() + " to append '" + text + "'.");
+        LOGGER.debug("Executing {} to append '{}'.", this.getClass().getSimpleName(), text);
         receiver.append(text);
     }
 
     @Override
     public void executeUndo() {
-        LOGGER.fine("Undoing " + this.getClass().getSimpleName() + " to remove '" + text + "'.");
+        LOGGER.debug("Undoing {} to remove '{}'.", this.getClass().getSimpleName(), text);
         receiver.setLength(receiver.length() - text.length());
     }
 

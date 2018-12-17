@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.command;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Delete Text Command - a concrete COMMAND.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class DeleteTextCommand extends InputCommand {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(DeleteTextCommand.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteTextCommand.class);
 
     /**
      * Number of characters to be deleted
@@ -51,13 +49,13 @@ public class DeleteTextCommand extends InputCommand {
      */
     public DeleteTextCommand(TextComponent receiver, int size) {
         super(receiver);
-        LOGGER.fine("New " + this.getClass().getSimpleName() + " created to delete " + size + " character(s).");
+        LOGGER.debug("New {} created to delete {} character(s).", this.getClass().getSimpleName(), size);
         this.numberOfCharactersToBeDeleted = size;
     }
 
     @Override
     public void execute() {
-        LOGGER.fine("Executing " + this.getClass().getSimpleName() + " to delete " + this.numberOfCharactersToBeDeleted + " character(s).");
+        LOGGER.debug("Executing {} to delete {} character(s).", this.getClass().getSimpleName(), this.numberOfCharactersToBeDeleted);
         int newLength = receiver.length() - this.numberOfCharactersToBeDeleted;
         removedCharacters = receiver.substring(newLength);
         receiver.setLength(newLength);
@@ -65,7 +63,7 @@ public class DeleteTextCommand extends InputCommand {
 
     @Override
     public void executeUndo() {
-        LOGGER.fine("Undoing " + this.getClass().getSimpleName() + " to undelete " + this.numberOfCharactersToBeDeleted + " character(s).");
+        LOGGER.debug("Undoing {} to undelete {} character(s).", this.getClass().getSimpleName(), this.numberOfCharactersToBeDeleted);
         receiver.append(removedCharacters);
     }
 

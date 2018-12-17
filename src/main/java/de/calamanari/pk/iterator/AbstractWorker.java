@@ -32,7 +32,7 @@ public abstract class AbstractWorker {
     /**
      * Default comparator, only compares the names for bringing workers into a natural order.
      */
-    public static final Comparator<AbstractWorker> BY_NAME_COMPARATOR = new Comparator<AbstractWorker>() {
+    public static final Comparator<AbstractWorker> BY_NAME_COMPARATOR = new Comparator<>() {
 
         @Override
         public int compare(AbstractWorker o1, AbstractWorker o2) {

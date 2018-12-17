@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -36,10 +38,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class PersistenceSession {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(PersistenceSession.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceSession.class);
 
     /**
      * our "database"
@@ -77,13 +76,13 @@ public class PersistenceSession {
      * @return invoice or null if not found
      */
     public Invoice findInvoice(String invoiceId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findInvoice('" + invoiceId + "') called");
+        LOGGER.debug("{}.findInvoice('{}') called", this.getClass().getSimpleName(), invoiceId);
         ensureValidSession();
         simulateDatabaseDelay();
         Invoice res = null;
         String[] invoiceData = database.get(invoiceId);
         if (invoiceData != null) {
-            LOGGER.fine("Creating lazy-load invoice instance ...");
+            LOGGER.debug("Creating lazy-load invoice instance ...");
             res = new Invoice(this, invoiceData[0], invoiceData[1]);
         }
         return res;
@@ -96,17 +95,17 @@ public class PersistenceSession {
      * @return list of invoice instances
      */
     public List<Invoice> findAllInvoices(boolean lazy) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findAllInvoices(" + lazy + ") called ...");
+        LOGGER.debug("{}.findAllInvoices({}) called ...", this.getClass().getSimpleName(), lazy);
         ensureValidSession();
         simulateDatabaseDelay();
         List<Invoice> res = new ArrayList<>(database.size());
         for (String[] invoiceData : database.values()) {
             if (lazy) {
-                LOGGER.fine("Creating lazy-load invoice instance ...");
+                LOGGER.debug("Creating lazy-load invoice instance ...");
                 res.add(new Invoice(this, invoiceData[0], invoiceData[1]));
             }
             else {
-                LOGGER.fine("Creating complete invoice instance ...");
+                LOGGER.debug("Creating complete invoice instance ...");
                 res.add(new Invoice(this, invoiceData[0], invoiceData[1], invoiceData[2], invoiceData[3], invoiceData[4], invoiceData[5]));
             }
         }
@@ -129,7 +128,7 @@ public class PersistenceSession {
      * @param invoice instance of the invoice to be loaded
      */
     public void loadLazyFields(Invoice invoice) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".loadLazyFields(" + invoice.toString() + ") called ...");
+        LOGGER.debug("{}.loadLazyFields({}) called ...", this.getClass().getSimpleName(), invoice);
         ensureValidSession();
         simulateDatabaseDelay();
         String[] invoiceData = database.get(invoice.getInvoiceId());
@@ -149,9 +148,9 @@ public class PersistenceSession {
      * Checks whether the session is valid or not
      */
     private void ensureValidSession() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".ensureValidSession() called ...");
+        LOGGER.debug("{}.ensureValidSession() called ...", this.getClass().getSimpleName());
         if (closed) {
-            LOGGER.fine("Found closed session, cannot load, throwing exception");
+            LOGGER.debug("Found closed session, cannot load, throwing exception");
             throw new IllegalStateException("Session closed!");
         }
     }
@@ -160,7 +159,7 @@ public class PersistenceSession {
      * closes the persistence session
      */
     public void close() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".close() called ...");
+        LOGGER.debug("{}.close() called ...", this.getClass().getSimpleName());
         this.closed = true;
     }
 

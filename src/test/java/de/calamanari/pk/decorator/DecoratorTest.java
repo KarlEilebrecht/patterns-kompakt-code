@@ -25,14 +25,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.sequenceblock.SequenceBlockCache;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,15 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class DecoratorTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(DecoratorTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DecoratorTest.class);
 
     /**
      * name of test sequence
@@ -62,15 +51,6 @@ public class DecoratorTest {
      */
     private static final int NUMBER_OF_RUNS = 100_000;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, DecoratorTest.class, SimpleNumberSequence.class, ShufflingSequenceDecorator.class);
-
-        // suppress details we don't want to see in the log here
-        LogUtils.setLogLevel(Level.SEVERE, SequenceBlockCache.class);
-    }
-
     @Test
     public void testShuffle() {
 
@@ -79,7 +59,7 @@ public class DecoratorTest {
         // which will bijectively replace each value with another from
         // a defined range, so that the result sequence seems to be random.
 
-        // Hints: - set the log-level above to FINE or FINEST (will take some time) to see details.
+        // Hints: - set the log-level in logback.xml to DEBUG or TRACE (will take some time) to see details.
         //
         // - see the sequenceblock example and decorate it like in the SimpleNumberSequence example
 
@@ -110,13 +90,13 @@ public class DecoratorTest {
      * @param usedIdsInOrder
      */
     private void logUsedIds(List<Long> usedIdsInOrder) {
-        if (LOGGER.isLoggable(Level.FINE)) {
+        if (LOGGER.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder();
             sb.append("All used IDs:");
             for (Long l : usedIdsInOrder) {
                 sb.append("\n" + l);
             }
-            LOGGER.fine(sb.toString());
+            LOGGER.debug(sb.toString());
         }
     }
 

@@ -21,7 +21,9 @@ package de.calamanari.pk.mapper;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.mapper.firstsys.Address;
 import de.calamanari.pk.mapper.firstsys.Person;
@@ -34,10 +36,7 @@ import de.calamanari.pk.mapper.secondsys.Customer;
  */
 public class DataManager {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(DataManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class);
 
     /**
      * simulated database table with persons
@@ -69,17 +68,17 @@ public class DataManager {
      * @return customer or null if not found
      */
     public Customer findCustomer(Session session, String customerId) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".findCustomer('" + customerId + "') called");
+        LOGGER.debug("{}.findCustomer('{}') called", this.getClass().getSimpleName(), customerId);
 
         Customer customer = null;
         Person person = persons.get(customerId);
         if (person != null) {
             Address address = addresses.get(customerId);
-            LOGGER.fine("Person and Address found, preparing customer");
+            LOGGER.debug("Person and Address found, preparing customer");
             customer = new Customer(customerId);
             CustomerMapper mapper = new CustomerMapper(person, address, customer);
 
-            LOGGER.fine("Adding Mapper to session");
+            LOGGER.debug("Adding Mapper to session");
             session.add(mapper);
 
         }

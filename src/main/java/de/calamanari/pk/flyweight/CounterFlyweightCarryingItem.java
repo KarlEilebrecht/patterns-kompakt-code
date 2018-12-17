@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.flyweight;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Counter Flyweight Carrying Item - demonstrates a FLYWEIGHT carrying item.<br>
@@ -29,10 +30,7 @@ import java.util.logging.Logger;
  */
 public class CounterFlyweightCarryingItem {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CounterFlyweightCarryingItem.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CounterFlyweightCarryingItem.class);
 
     /**
      * the item's data
@@ -63,9 +61,9 @@ public class CounterFlyweightCarryingItem {
      */
     public String getCounterInfo() {
 
-        LOGGER.fine(this.getClass().getSimpleName() + ".getCounterInfo() called.");
+        LOGGER.debug("7}.getCounterInfo() called.", this.getClass().getSimpleName());
 
-        LOGGER.fine("Using flyweight to do the job.");
+        LOGGER.debug("Using flyweight to do the job.");
         // the itemdata gets passed to the flyweight, from the viewpoint of the flyweight this is extrinsic state
         return "Counter-Info: " + this.counterFlyweight.count(itemData);
     }

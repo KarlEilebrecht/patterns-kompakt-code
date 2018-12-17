@@ -23,8 +23,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Counter Flyweight Factory - demonstrates a FLYWEIGHT factory.
@@ -33,10 +34,7 @@ import java.util.logging.Logger;
  */
 public class CounterFlyweightFactory {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CounterFlyweightFactory.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CounterFlyweightFactory.class);
 
     /**
      * wait time between status messages
@@ -80,7 +78,7 @@ public class CounterFlyweightFactory {
      * @param forceUnshared if true, this factory will only return unshared flyweights
      */
     public CounterFlyweightFactory(String workload, boolean forceUnshared) {
-        LOGGER.fine(CounterFlyweightFactory.class.getSimpleName() + "(len=" + workload.length() + ", forceUnshared=" + forceUnshared + " ) created.");
+        LOGGER.debug("{}(len={}, forceUnshared={}) created.", CounterFlyweightFactory.class.getSimpleName(), workload.length(), forceUnshared);
         this.workload = workload;
         this.forceUnshared = forceUnshared;
     }
@@ -109,13 +107,13 @@ public class CounterFlyweightFactory {
             }
         }
         outputCounter.incrementAndGet();
-        if (LOGGER.isLoggable(Level.FINE)) {
+        if (LOGGER.isDebugEnabled()) {
             long last = lastLogMessageTimeMillis.get();
             long current = System.currentTimeMillis();
             if (current >= last + INTERVAL_MILLIS_100) {
                 boolean success = lastLogMessageTimeMillis.compareAndSet(last, current);
                 if (success) {
-                    LOGGER.fine("--> created: " + createdCounter.get() + ", returned: " + outputCounter.get());
+                    LOGGER.debug("--> created: {}, returned: {}", createdCounter.get(), outputCounter.get());
                 }
             }
         }

@@ -21,7 +21,9 @@ package de.calamanari.pk.identitymap;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Identity Map - demonstrates IDENTITY MAP
@@ -32,10 +34,7 @@ import java.util.logging.Logger;
  */
 public class IdentityMap<K, E extends Entity<K>> {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(IdentityMap.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityMap.class);
 
     /**
      * internal map to maintain entities
@@ -63,7 +62,7 @@ public class IdentityMap<K, E extends Entity<K>> {
      */
     public void add(E entity) {
         if (entity != null) {
-            LOGGER.fine(this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName() + ").add() called");
+            LOGGER.debug("{}(entityType={}).add() called", this.getClass().getSimpleName(), entityType.getSimpleName());
             instances.put(entity.getId(), entity);
         }
     }
@@ -75,7 +74,7 @@ public class IdentityMap<K, E extends Entity<K>> {
      * @return entity or null if unknown
      */
     public E get(K id) {
-        LOGGER.fine(this.getClass().getSimpleName() + "(entityType=" + entityType.getSimpleName() + ").get('" + id + "') called");
+        LOGGER.debug("{}(entityType={}).get('" + id + "') called", this.getClass().getSimpleName(), entityType.getSimpleName());
         return instances.get(id);
     }
 

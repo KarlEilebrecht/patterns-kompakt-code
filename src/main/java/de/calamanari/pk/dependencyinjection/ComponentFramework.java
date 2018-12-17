@@ -23,9 +23,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component Framework - supplementary class in DEPENDENCY INJECTION example<br>
@@ -35,10 +37,7 @@ import javax.annotation.Resource;
  */
 public final class ComponentFramework {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ComponentFramework.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComponentFramework.class);
 
     /**
      * constant in this example to obtain component 1
@@ -80,7 +79,7 @@ public final class ComponentFramework {
      * @throws Exception on any error
      */
     public static Component createComponent(String componentIdentifier) throws Exception {
-        LOGGER.fine(ComponentFramework.class.getSimpleName() + ".createComponent(" + componentIdentifier + ") called");
+        LOGGER.debug("{}.createComponent({}) called", ComponentFramework.class.getSimpleName(), componentIdentifier);
         Component component = null;
         Class<? extends Component> componentClass = resolveComponentClass(componentIdentifier);
 
@@ -108,25 +107,26 @@ public final class ComponentFramework {
      * @throws InstantiationException if component could not be created
      * @throws IllegalAccessException injection method or field could not be accessed
      * @throws InvocationTargetException injection method or field could not be invoked
+     * @throws NoSuchMethodException if constructor unavailable
      */
     private static Component createAndPerformSetterOrAnnotationBasedInjection(String componentIdentifier, Class<? extends Component> componentClass)
-            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Component component = null;
         Method method = getInjectionMethod(componentClass);
         Field field = getInjectionField(componentClass);
         if (method != null) {
-            component = componentClass.newInstance();
-            LOGGER.fine("Executing setter injection ...");
+            component = componentClass.getConstructor().newInstance();
+            LOGGER.debug("Executing setter injection ...");
             method.invoke(component, THE_PRINT_SERVICE);
         }
         else if (field != null) {
-            component = componentClass.newInstance();
-            LOGGER.fine("Executing annotation based injection ...");
+            component = componentClass.getConstructor().newInstance();
+            LOGGER.debug("Executing annotation based injection ...");
             field.set(component, THE_PRINT_SERVICE);
         }
         else {
-            throw new IllegalArgumentException("Unable to inject reference into component: " + componentIdentifier + ", which was resolved to "
-                    + componentClass.getName());
+            throw new IllegalArgumentException(
+                    "Unable to inject reference into component: " + componentIdentifier + ", which was resolved to " + componentClass.getName());
         }
         return component;
     }
@@ -140,10 +140,10 @@ public final class ComponentFramework {
      * @throws IllegalAccessException injection method or field could not be accessed
      * @throws InvocationTargetException injection method or field could not be invoked
      */
-    private static Component createAndPerformConstructorInjection(Constructor<? extends Component> constructor) throws InstantiationException,
-            IllegalAccessException, InvocationTargetException {
+    private static Component createAndPerformConstructorInjection(Constructor<? extends Component> constructor)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
         Component component = null;
-        LOGGER.fine("Executing constructor injection ...");
+        LOGGER.debug("Executing constructor injection ...");
         component = constructor.newInstance(THE_PRINT_SERVICE);
         return component;
     }
@@ -155,12 +155,14 @@ public final class ComponentFramework {
      * @return component with injected reference
      * @throws InstantiationException if component could not be created
      * @throws IllegalAccessException injection method or field could not be accessed
+     * @throws InvocationTargetException injection method or field could not be invoked
+     * @throws NoSuchMethodException if constructor unavailable
      */
-    private static Component createAndPerformInterfaceInjection(Class<? extends Component> componentClass) throws InstantiationException,
-            IllegalAccessException {
+    private static Component createAndPerformInterfaceInjection(Class<? extends Component> componentClass)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Component component = null;
-        component = componentClass.newInstance();
-        LOGGER.fine("Executing interface injection ...");
+        component = componentClass.getConstructor().newInstance();
+        LOGGER.debug("Executing interface injection ...");
         ((PrintServiceInjectable) component).injectPrintService(THE_PRINT_SERVICE);
         return component;
     }

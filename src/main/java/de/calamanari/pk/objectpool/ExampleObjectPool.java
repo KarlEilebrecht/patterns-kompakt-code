@@ -22,7 +22,9 @@ package de.calamanari.pk.objectpool;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Example Object Pool - demonstrates an OBJECT POOL.
@@ -31,10 +33,7 @@ import java.util.logging.Logger;
  */
 public class ExampleObjectPool {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(ExampleObjectPool.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleObjectPool.class);
 
     /**
      * maximum pool size
@@ -72,7 +71,7 @@ public class ExampleObjectPool {
      */
     public ExampleReusableObject acquireInstance() {
         ExampleReusableObject res = null;
-        LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + ").acquireInstance called ...");
+        LOGGER.debug("{}({}).acquireInstance called ...", this.getClass().getSimpleName(), Thread.currentThread().getName());
 
         try {
             poolUsageSemaphore.acquire();
@@ -81,12 +80,12 @@ public class ExampleObjectPool {
             throw new RuntimeException("Pool error", ex);
         }
 
-        LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): accessing pool ...");
+        LOGGER.debug("{}({}): accessing pool ...", this.getClass().getSimpleName(), Thread.currentThread().getName());
 
         poolLock.lock();
         try {
             if (idleInstances.size() > 0) {
-                LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): idle instance available.");
+                LOGGER.debug("{}({}): idle instance available.", this.getClass().getSimpleName(), Thread.currentThread().getName());
                 res = idleInstances.remove(0);
             }
         }
@@ -94,10 +93,10 @@ public class ExampleObjectPool {
             poolLock.unlock();
         }
         if (res == null) {
-            LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): no idle instance available, increasing pool size.");
+            LOGGER.debug("{}({}): no idle instance available, increasing pool size.", this.getClass().getSimpleName(), Thread.currentThread().getName());
             res = new ExampleReusableObject();
         }
-        LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): instance successfully acquired.");
+        LOGGER.debug("{}({}): instance successfully acquired.", this.getClass().getSimpleName(), Thread.currentThread().getName());
         return res;
     }
 
@@ -107,9 +106,9 @@ public class ExampleObjectPool {
      * @param instance an object to be cleaned after returning
      */
     private void cleanReturnedInstance(ExampleReusableObject instance) {
-        LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): cleanReturnedInstance called ...");
+        LOGGER.debug("{}({}): cleanReturnedInstance called ...", this.getClass().getSimpleName(), Thread.currentThread().getName());
         instance.reset();
-        LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): returned instance cleaned.");
+        LOGGER.debug("{}({}): returned instance cleaned.", this.getClass().getSimpleName(), Thread.currentThread().getName());
 
     }
 
@@ -119,12 +118,12 @@ public class ExampleObjectPool {
      * @param instance idle instance for recycling
      */
     public void returnInstance(ExampleReusableObject instance) {
-        LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): returnInstance called ...");
+        LOGGER.debug("{}({}): returnInstance called ...", this.getClass().getSimpleName(), Thread.currentThread().getName());
         cleanReturnedInstance(instance);
         poolLock.lock();
         try {
             idleInstances.add(instance);
-            LOGGER.fine(this.getClass().getSimpleName() + "(" + Thread.currentThread().getName() + "): returned instance back in idle pool.");
+            LOGGER.debug("{}({}): returned instance back in idle pool.", this.getClass().getSimpleName(), Thread.currentThread().getName());
             poolUsageSemaphore.release();
         }
         finally {

@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -38,6 +37,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Team View - the VIEW in this MVC-example. This is a so-called PASSIVE VIEW, it does not hold a reference to the model. The controller observes the model as
  * well as the view and exclusively updates the view after model changes.<br>
@@ -46,10 +48,7 @@ import javax.swing.SwingConstants;
  */
 public class TeamView extends JFrame {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(TeamView.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeamView.class);
 
     /**
      * for serialization
@@ -182,7 +181,7 @@ public class TeamView extends JFrame {
     public TeamView() {
         super("Team Manager");
 
-        LOGGER.fine(this.getClass().getSimpleName() + " created, building the components");
+        LOGGER.debug("{} created, building the components", this.getClass().getSimpleName());
         setupWindow();
 
     }
@@ -310,14 +309,14 @@ public class TeamView extends JFrame {
     public void setVisible(boolean b) {
         super.setVisible(b);
         startUpLatch.countDown();
-        LOGGER.fine(this.getClass().getSimpleName() + " is now " + (b ? "" : "in") + "visible");
+        LOGGER.debug("{} is now {}visible", this.getClass().getSimpleName(), (b ? "" : "in"));
     }
 
     @Override
     public void dispose() {
         super.dispose();
         shutDownLatch.countDown();
-        LOGGER.fine(this.getClass().getSimpleName() + " has been disposed");
+        LOGGER.debug("{} has been disposed", this.getClass().getSimpleName());
     }
 
 }

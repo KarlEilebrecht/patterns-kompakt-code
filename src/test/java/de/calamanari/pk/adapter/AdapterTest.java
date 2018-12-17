@@ -52,7 +52,7 @@ public class AdapterTest {
     @Test
     public void testProperties() {
 
-        // Adjust the log-level above to FINE to see the ADAPTER working
+        // Adjust the log-level in logback.xml to DEBUG to see the ADAPTER working
 
         LOGGER.info("Test Adapter properties ...");
         long startTimeNanos = System.nanoTime();

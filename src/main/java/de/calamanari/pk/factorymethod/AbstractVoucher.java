@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.factorymethod;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract Voucher is the abstract product in this FACTORY METHOD example scenario.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractVoucher {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(AbstractVoucher.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractVoucher.class);
 
     /**
      * The last name of the voucher's owner
@@ -135,8 +133,8 @@ public abstract class AbstractVoucher {
 
     @Override
     public String toString() {
-        LOGGER.fine("toString() on " + this.getClass().getSimpleName() + " called.");
-        return this.getClass().getSimpleName() + "({id=" + this.getId() + ", displayCode=" + this.getVoucherDisplayCode() + ", firstName="
-                + this.getFirstName() + ", lastName=" + this.getLastName() + ", value=" + this.getValue() + "})";
+        LOGGER.debug("toString() on {} called.", this.getClass().getSimpleName());
+        return this.getClass().getSimpleName() + "({id=" + this.getId() + ", displayCode=" + this.getVoucherDisplayCode() + ", firstName=" + this.getFirstName()
+                + ", lastName=" + this.getLastName() + ", value=" + this.getValue() + "})";
     }
 }

@@ -21,7 +21,9 @@ package de.calamanari.pk.decorator;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple Number sequence is a concrete component to be decorated applying the DECORATOR pattern<br>
@@ -31,10 +33,7 @@ import java.util.logging.Logger;
  */
 public class SimpleNumberSequence implements NumberSequence {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(SimpleNumberSequence.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleNumberSequence.class);
 
     /**
      * simulates a sequence management
@@ -66,7 +65,7 @@ public class SimpleNumberSequence implements NumberSequence {
             }
         }
         long id = counter.incrementAndGet();
-        LOGGER.finest("created id=" + id);
+        LOGGER.trace("created id={}", id);
         return id;
     }
 

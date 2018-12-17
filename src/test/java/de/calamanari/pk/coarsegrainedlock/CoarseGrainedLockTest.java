@@ -96,8 +96,7 @@ public class CoarseGrainedLockTest {
         // In some situations this makes sense, but often this kind of locking
         // is too coarse and may slow-down user's work.
 
-        // Adjust the log-level above to FINE to see the COARSE GRAINED LOCK
-        // working
+        // Adjust the log-level in logback.xml to DEBUG to see the COARSE GRAINED LOCK working
 
         LOGGER.info("Test Coarse Grained Lock ...");
         long startTimeNanos = System.nanoTime();

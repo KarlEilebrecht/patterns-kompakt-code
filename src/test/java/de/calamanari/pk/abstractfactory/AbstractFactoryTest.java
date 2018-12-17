@@ -94,7 +94,7 @@ public class AbstractFactoryTest {
     @Test
     public void testWithConfig1() {
 
-        // Adjust the log-level above to FINE to see the ABSTRACT FACTORY working
+        // Adjust the log-level in logback.xml to DEBUG to see the ABSTRACT FACTORY working
 
         LOGGER.info("Performing test with configuration 1 ...");
         long startTimeNanos = System.nanoTime();

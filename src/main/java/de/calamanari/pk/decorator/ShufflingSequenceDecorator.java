@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.decorator;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.OrbOfConfusion;
 
@@ -30,10 +31,7 @@ import de.calamanari.pk.util.OrbOfConfusion;
  */
 public class ShufflingSequenceDecorator implements NumberSequence {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ShufflingSequenceDecorator.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShufflingSequenceDecorator.class);
 
     /**
      * The decorated instance
@@ -58,11 +56,11 @@ public class ShufflingSequenceDecorator implements NumberSequence {
 
     @Override
     public long getNextId() {
-        LOGGER.finest("getNextId() called, taking id from decorated sequence ...");
+        LOGGER.trace("getNextId() called, taking id from decorated sequence ...");
         long rawId = decoratedInstance.getNextId();
-        LOGGER.finest("now decorating ...");
+        LOGGER.trace("now decorating ...");
         long shuffledId = shuffleId(rawId);
-        LOGGER.finest("decoration done: id " + rawId + " transformed to " + shuffledId);
+        LOGGER.trace("decoration done: id {} transformed to {}", rawId, shuffledId);
         return shuffledId;
     }
 
@@ -78,7 +76,7 @@ public class ShufflingSequenceDecorator implements NumberSequence {
      * @return transformed id
      */
     protected long shuffleId(long rawId) {
-        LOGGER.finest("shuffleId(" + rawId + ") called ...");
+        LOGGER.trace("shuffleId({}) called ...", rawId);
         long shuffledId = orbOfConfusion.transform(rawId);
         return shuffledId;
     }

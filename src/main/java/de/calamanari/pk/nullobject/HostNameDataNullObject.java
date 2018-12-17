@@ -22,7 +22,9 @@ package de.calamanari.pk.nullobject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Host Name Data Null Object - NULL OBJECT implementation for HostNameList
@@ -31,15 +33,9 @@ import java.util.logging.Logger;
  */
 public final class HostNameDataNullObject implements HostNameData {
 
-    /**
-     * for serialization
-     */
     private static final long serialVersionUID = 7701315306173959234L;
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(HostNameDataNullObject.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostNameDataNullObject.class);
 
     /**
      * The only instance of this NULL OBJECT
@@ -66,62 +62,62 @@ public final class HostNameDataNullObject implements HostNameData {
 
     @Override
     public Iterator<String> iterator() {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".iterator() called.");
+        LOGGER.debug("{}.iterator() called.", HostNameDataNullObject.class.getSimpleName());
         return STRING_ITERATOR_NULL_OBJECT;
     }
 
     @Override
     public int getNumberOfEntries() {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".getNumberOfEntries() called.");
+        LOGGER.debug("{}.getNumberOfEntries() called.", HostNameDataNullObject.class.getSimpleName());
         return 0;
     }
 
     @Override
     public String getPurpose() {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".getPurpose() called.");
+        LOGGER.debug("{}.getPurpose() called.", HostNameDataNullObject.class.getSimpleName());
         return "<NONE>";
     }
 
     @Override
     public boolean contains(String name) {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".contains('" + name + "') called.");
+        LOGGER.debug("{}.contains('{}') called.", HostNameDataNullObject.class.getSimpleName(), name);
         return false;
     }
 
     @Override
     public int indexOf(String name) {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".indexOf('" + name + "') called.");
+        LOGGER.debug("{}.indexOf('{}') called.", HostNameDataNullObject.class.getSimpleName(), name);
         return -1;
     }
 
     @Override
     public boolean containsAll(Collection<? extends String> names) {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".containsAll(" + names + ") called.");
+        LOGGER.debug("{}.containsAll({}) called.", HostNameDataNullObject.class.getSimpleName(), names);
         return false;
     }
 
     @Override
     public String[] toArray() {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".toArray() called.");
+        LOGGER.debug("{}.toArray() called.", HostNameDataNullObject.class.getSimpleName());
         return STRING_ARRAY_NULL_OBJECT;
     }
 
     @Override
     public String get(int index) {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".get(" + index + ") called.");
+        LOGGER.debug("{}.get({}) called.", HostNameDataNullObject.class.getSimpleName(), index);
         return null;
     }
 
     @Override
     public boolean addHostName(String name) {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".addHostName('" + name + "') called.");
+        LOGGER.debug("{}.addHostName('{}') called.", HostNameDataNullObject.class.getSimpleName(), name);
         return false;
     }
 
     @Override
     public Object clone() {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".clone() called.");
-        LOGGER.fine("Returning the singleton instance of NULL OBJECT, no duplicate!");
+        LOGGER.debug("{}.clone() called.", HostNameDataNullObject.class.getSimpleName());
+        LOGGER.debug("Returning the singleton instance of NULL OBJECT, no duplicate!");
         return HostNameDataNullObject.INSTANCE;
     }
 
@@ -131,8 +127,8 @@ public final class HostNameDataNullObject implements HostNameData {
      * @return {@link #INSTANCE}
      */
     public Object readResolve() {
-        LOGGER.fine(HostNameDataNullObject.class.getSimpleName() + ".readResolve() during de-serialization called.");
-        LOGGER.fine("Returning the singleton instance of NULL OBJECT, no duplicate!");
+        LOGGER.debug("{}.readResolve() during de-serialization called.", HostNameDataNullObject.class.getSimpleName());
+        LOGGER.debug("Returning the singleton instance of NULL OBJECT, no duplicate!");
         return HostNameDataNullObject.INSTANCE;
     }
 

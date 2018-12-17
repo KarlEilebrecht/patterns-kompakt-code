@@ -21,14 +21,12 @@ package de.calamanari.pk.flyweight;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -38,15 +36,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class FlyweightTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(FlyweightTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlyweightTest.class);
 
     /**
      * number of counter flyweight carrying items, each carrying a flyweight instance
@@ -104,9 +94,6 @@ public class FlyweightTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, FlyweightTest.class, ConcreteCounterFlyweight.class, UnsharedConcreteCounterFlyweight.class,
-                CounterFlyweightFactory.class, CounterFlyweightCarryingItem.class);
         memInitial = getApproxMemory();
     }
 
@@ -124,7 +111,7 @@ public class FlyweightTest {
     public void testFlyweight() {
 
         // HINTS:
-        // * adjust the log-level above to watch FLYWEIGHT details
+        // * adjust the log-level in logback.xml to DEBUG to watch FLYWEIGHT details
         // * compare the (not very exact!) information about memory usage from this test and the second
         // one which only uses unshared flyweights, causing high memory consumption
         // * compare the elapsed time values

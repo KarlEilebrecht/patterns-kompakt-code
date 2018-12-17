@@ -20,7 +20,6 @@
 package de.calamanari.pk.objectpool;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 /**
  * Simple Thread-Pool implementation using worker pool threads.<br>
@@ -31,11 +30,6 @@ import java.util.logging.Logger;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class SimpleThreadPool {
-
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(SimpleThreadPool.class.getName());
 
     /**
      * Default value for maximum number of threads ({@value} )

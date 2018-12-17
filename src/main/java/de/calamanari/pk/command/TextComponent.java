@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.command;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Text Component - the RECEIVER in this COMMAND example.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class TextComponent {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(TextComponent.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteTextCommand.class);
 
     /**
      * To keep example simple we just wrap a string builder
@@ -53,7 +51,7 @@ public class TextComponent {
      * @param newLength length to be set
      */
     public void setLength(int newLength) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setLength(" + newLength + ") called.");
+        LOGGER.debug("{}.setLength({}) called.", this.getClass().getSimpleName(), newLength);
         stringBuilder.setLength(newLength);
     }
 
@@ -64,7 +62,7 @@ public class TextComponent {
      * @return this instance
      */
     public TextComponent append(String str) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".append('" + str + "') called.");
+        LOGGER.debug("{}.append('{}') called.", this.getClass().getSimpleName(), str);
         stringBuilder.append(str);
         return this;
     }

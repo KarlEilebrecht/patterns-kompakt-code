@@ -21,7 +21,9 @@ package de.calamanari.pk.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Session - supplementary class for MAPPER demonstration<br>
@@ -33,10 +35,7 @@ import java.util.logging.Logger;
  */
 public class Session {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Session.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Session.class);
 
     /**
      * all mappers created during the session
@@ -47,7 +46,7 @@ public class Session {
      * Creates new session
      */
     public Session() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created");
+        LOGGER.debug("{} created");
     }
 
     /**
@@ -56,8 +55,8 @@ public class Session {
      * @param mapper session-managed mapper instance
      */
     public void add(AbstractMapper mapper) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".add(...) called ");
-        LOGGER.fine("Triggering Mapper to map data forward");
+        LOGGER.debug("{}.add(...) called ", this.getClass().getSimpleName());
+        LOGGER.debug("Triggering Mapper to map data forward");
         mapper.map();
         mappers.add(mapper);
     }
@@ -66,7 +65,7 @@ public class Session {
      * Write-back any changes and close session, instances obtained within this session are no longer valid
      */
     public void confirm() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".confirm() called ");
+        LOGGER.debug("{}.confirm() called ", this.getClass().getSimpleName());
         flush();
         mappers.clear();
     }
@@ -75,9 +74,9 @@ public class Session {
      * Flush changes, instances obtained within this session remain valid
      */
     public void flush() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".flush() called ");
+        LOGGER.debug("{}.flush() called ", this.getClass().getSimpleName());
         for (AbstractMapper mapper : mappers) {
-            LOGGER.fine("Triggering mapper to map data backwards");
+            LOGGER.debug("Triggering mapper to map data backwards");
             mapper.mapBack();
         }
     }
@@ -86,15 +85,9 @@ public class Session {
      * Discard any changes and close session, instances obtained within this session are no longer valid
      */
     public void discard() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".clear() called ");
-        LOGGER.fine("Invalidating all manged mappers");
+        LOGGER.debug("{}.clear() called ", this.getClass().getSimpleName());
+        LOGGER.debug("Invalidating all manged mappers");
         mappers.clear();
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        discard();
-        super.finalize();
     }
 
 }

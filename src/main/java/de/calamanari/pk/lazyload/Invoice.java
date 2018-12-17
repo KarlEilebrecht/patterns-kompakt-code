@@ -23,7 +23,9 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Locale;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Invoice - supplementary class to demonstrate LAZY LOAD pattern.<br>
@@ -33,10 +35,12 @@ import java.util.logging.Logger;
  */
 public class Invoice implements Serializable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Invoice.class);
+
     /**
      * Compares the ids, for sorting
      */
-    public static final Comparator<Invoice> BY_ID_COMPARATOR = new Comparator<Invoice>() {
+    public static final Comparator<Invoice> BY_ID_COMPARATOR = new Comparator<>() {
 
         @Override
         public int compare(Invoice o1, Invoice o2) {
@@ -44,11 +48,6 @@ public class Invoice implements Serializable {
         }
 
     };
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Invoice.class.getName());
 
     /**
      * for serialization
@@ -106,9 +105,10 @@ public class Invoice implements Serializable {
      * @param zipCode address field
      * @param city address field
      */
-    public Invoice(PersistenceSession persistenceSession, String invoiceId, String amountClaimed, String debtorName, String street, String zipCode, String city) {
-        LOGGER.fine(this.getClass().getSimpleName() + "({invoiceId=" + invoiceId + ", amountClaimed=" + amountClaimed + ", debtorName=" + debtorName
-                + ", street=" + street + ", zipCode=" + zipCode + ", city=" + city + "}) created.");
+    public Invoice(PersistenceSession persistenceSession, String invoiceId, String amountClaimed, String debtorName, String street, String zipCode,
+            String city) {
+        LOGGER.debug("{}({invoiceId={}, amountClaimed={}, debtorName={}, street={}, zipCode={}, city={}}) created.", this.getClass().getSimpleName(), invoiceId,
+                amountClaimed, debtorName, street, zipCode, city);
         double amount = 0;
         try {
             amount = Double.parseDouble(amountClaimed);
@@ -142,11 +142,11 @@ public class Invoice implements Serializable {
      * If not loaded yet, use the underlying persistence to fill all the fields.
      */
     private void ensureInstanceCompletelyLoaded() {
-        LOGGER.fine(this.getClass().getSimpleName() + ",ensureInstanceCompletelyLoaded() called");
+        LOGGER.debug("{}.ensureInstanceCompletelyLoaded() called", this.getClass().getSimpleName());
         if (!dataComplete) {
-            LOGGER.fine("Loading missing fields ...");
+            LOGGER.debug("Loading missing fields ...");
             if (this.persistenceSession == null) {
-                LOGGER.fine("No session available, cannot load, throwing exception");
+                LOGGER.debug("No session available, cannot load, throwing exception");
                 throw new IllegalStateException("Cannot load data, entity detached!");
             }
             this.persistenceSession.loadLazyFields(this);
@@ -163,7 +163,7 @@ public class Invoice implements Serializable {
      * @param city address field
      */
     public void setLazyFields(String debtorName, String street, String zipCode, String city) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setLazyFields('" + debtorName + "', '" + street + "', '" + zipCode + "', '" + city + "') called.");
+        LOGGER.debug("{}.setLazyFields('{}', '{}', '{}', '{}') called.", this.getClass().getSimpleName(), debtorName, street, zipCode, city);
         this.debtorName = debtorName;
         this.street = street;
         this.zipCode = zipCode;
@@ -176,7 +176,7 @@ public class Invoice implements Serializable {
      * @return invoiceId
      */
     public String getInvoiceId() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getInvoiceId() called.");
+        LOGGER.debug("{}.getInvoiceId() called.", this.getClass().getSimpleName());
         return invoiceId;
     }
 
@@ -186,7 +186,7 @@ public class Invoice implements Serializable {
      * @return amount of invoice
      */
     public double getAmountClaimed() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getAmountClaimed() called.");
+        LOGGER.debug("{}.getAmountClaimed() called.", this.getClass().getSimpleName());
         return amountClaimed;
     }
 
@@ -196,7 +196,7 @@ public class Invoice implements Serializable {
      * @return debtor name
      */
     public String getDebtorName() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getDebtorName() called.");
+        LOGGER.debug("{}.getDebtorName() called.", this.getClass().getSimpleName());
         ensureInstanceCompletelyLoaded();
         return debtorName;
     }
@@ -207,7 +207,7 @@ public class Invoice implements Serializable {
      * @return street
      */
     public String getStreet() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getStreet() called.");
+        LOGGER.debug("{}.getStreet() called.", this.getClass().getSimpleName());
         ensureInstanceCompletelyLoaded();
         return street;
     }
@@ -218,7 +218,7 @@ public class Invoice implements Serializable {
      * @return zipCoe
      */
     public String getZipCode() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getZipCode() called.");
+        LOGGER.debug("{}.getZipCode() called.", this.getClass().getSimpleName());
         ensureInstanceCompletelyLoaded();
         return zipCode;
     }
@@ -229,7 +229,7 @@ public class Invoice implements Serializable {
      * @return city
      */
     public String getCity() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getCity() called.");
+        LOGGER.debug("{}.getCity() called.", this.getClass().getSimpleName());
         ensureInstanceCompletelyLoaded();
         return city;
     }

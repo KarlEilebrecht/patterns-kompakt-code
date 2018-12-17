@@ -20,7 +20,9 @@
 package de.calamanari.pk.mapper;
 
 import java.util.Date;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.mapper.firstsys.Address;
 import de.calamanari.pk.mapper.firstsys.Person;
@@ -38,10 +40,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class CustomerMapper extends AbstractMapper {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CustomerMapper.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerMapper.class);
 
     /**
      * customer reference
@@ -66,7 +65,7 @@ public class CustomerMapper extends AbstractMapper {
      * @param customer the customer to be mapped
      */
     public CustomerMapper(Person person, Address address, Customer customer) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created");
+        LOGGER.debug("{} created", this.getClass().getSimpleName());
         this.person = person;
         this.address = address;
         this.customer = customer;
@@ -74,9 +73,9 @@ public class CustomerMapper extends AbstractMapper {
 
     @Override
     public void map() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".map() called");
+        LOGGER.debug("{}.map() called", this.getClass().getSimpleName());
 
-        LOGGER.fine("Mapping data from subsystem1 (Person+Address) to subsystem2 structure (Customer[customerId='" + customer.getCustomerId() + "'])");
+        LOGGER.debug("Mapping data from subsystem1 (Person+Address) to subsystem2 structure (Customer[customerId='{}'])", customer.getCustomerId());
         customer.setFirstName(person.getFirstName());
         customer.setLastName(person.getLastName());
 
@@ -95,9 +94,9 @@ public class CustomerMapper extends AbstractMapper {
 
     @Override
     public void mapBack() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".mapBack() called");
+        LOGGER.debug("{}.mapBack() called", this.getClass().getSimpleName());
 
-        LOGGER.fine("Mapping data from subsystem2 (Customer[customerId='" + customer.getCustomerId() + "']) back to subsystem1 structures (Person+Address)");
+        LOGGER.debug("Mapping data from subsystem2 (Customer[customerId='{}']) back to subsystem1 structures (Person+Address)", customer.getCustomerId());
 
         // here a merge strategy could be placed as there might
         // be scenarios allowing concurrent changes in both subsystems

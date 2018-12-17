@@ -86,7 +86,7 @@ public class DataTransferObjectTest {
     public void testWithoutDataTransferObject() throws Exception {
 
         // HINTS:
-        // * Adjust the log-level above to FINE to see the DATA TRANSFER OBJECT working
+        // * Adjust the log-level in logback.xml to DEBUG to see the DATA TRANSFER OBJECT working
         // * Compare the runtime values of the two tests, the difference results from remoting overhead
 
         LOGGER.info("Test without data transfer object  ...");

@@ -23,18 +23,16 @@ import static org.junit.Assert.assertEquals;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.facade.article.Article;
 import de.calamanari.pk.facade.article.ArticleManager;
 import de.calamanari.pk.facade.article.ArticleViewFacade;
 import de.calamanari.pk.facade.article.history.ArticleHistory;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,15 +42,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class FacadeTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(FacadeTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FacadeTest.class);
 
     /**
      * article manager (part of article component)
@@ -69,12 +59,6 @@ public class FacadeTest {
      */
     ArticleViewFacade articleViewfacade = null;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, FacadeTest.class, ArticleViewFacade.class, Article.class, ArticleManager.class, ArticleHistory.class);
-    }
-
     @Before
     public void setUp() throws Exception {
         articleManager = new ArticleManager();
@@ -90,7 +74,7 @@ public class FacadeTest {
     @Test
     public void testFacade() {
 
-        // Hint: set the log-level above to FINE to watch FACADE working.
+        // Hint: set the log-level in logback.xml to DEBUG to watch FACADE working.
 
         LOGGER.info("Test Facade ...");
         long startTimeNanos = System.nanoTime();

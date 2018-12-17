@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component With Constructor Injection - demonstrates CONSTRUCTOR INJECTION
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class ComponentWithConstructorInjection implements Component {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ComponentWithConstructorInjection.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComponentWithConstructorInjection.class);
 
     /**
      * A reference to the print service injected by constructor
@@ -49,7 +47,7 @@ public class ComponentWithConstructorInjection implements Component {
      * @param printService injected reference to print service
      */
     public ComponentWithConstructorInjection(PrintService printService) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created, service injected by constructor!");
+        LOGGER.debug("{} created, service injected by constructor!", this.getClass().getSimpleName());
         this.printService = printService;
     }
 
@@ -65,7 +63,7 @@ public class ComponentWithConstructorInjection implements Component {
 
     @Override
     public void printData() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".printData() called, using injected print service!");
+        LOGGER.debug("{}.printData() called, using injected print service!", this.getClass().getSimpleName());
         this.printService.print(this.getClass().getSimpleName() + ": " + data);
     }
 }

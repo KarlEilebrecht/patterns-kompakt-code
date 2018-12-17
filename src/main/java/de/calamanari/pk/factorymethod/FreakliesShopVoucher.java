@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.factorymethod;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FreakliesShop Voucher (Voucher from the little shop owned by Mrs. Freakly in Chicago) is a concrete product in this FACTORY METHOD example scenario.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class FreakliesShopVoucher extends AbstractVoucher {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(FreakliesShopVoucher.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(FreakliesShopVoucher.class);
 
     /**
      * identifier for this voucher
@@ -49,18 +47,18 @@ public class FreakliesShopVoucher extends AbstractVoucher {
     public FreakliesShopVoucher(int serialNumber, String firstName, String lastName, double value) {
         super(firstName, lastName, value);
         this.serialNumber = serialNumber;
-        LOGGER.fine("Concrete Product " + this.getClass().getSimpleName() + " created.");
+        LOGGER.debug("Concrete Product {} created.", this.getClass().getSimpleName());
     }
 
     @Override
     public String getId() {
-        LOGGER.fine("getId() on concrete product " + this.getClass().getSimpleName() + " called.");
+        LOGGER.debug("getId() on concrete product {} called.", this.getClass().getSimpleName());
         return "S" + serialNumber;
     }
 
     @Override
     public String getVoucherDisplayCode() {
-        LOGGER.fine("getVoucherDisplayCode() on concrete product " + this.getClass().getSimpleName() + " called.");
+        LOGGER.debug("getVoucherDisplayCode() on concrete product {} called.", this.getClass().getSimpleName());
         return "v" + this.getFirstName().toLowerCase().charAt(0) + this.getLastName().toLowerCase().charAt(0) + serialNumber;
     }
 

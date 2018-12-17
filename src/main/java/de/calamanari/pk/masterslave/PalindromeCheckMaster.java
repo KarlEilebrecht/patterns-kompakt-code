@@ -26,7 +26,9 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
@@ -40,10 +42,7 @@ import de.calamanari.pk.util.itfa.ItfaConfiguration;
  */
 public class PalindromeCheckMaster {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(PalindromeCheckMaster.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PalindromeCheckMaster.class);
 
     /**
      * simulated load
@@ -85,7 +84,7 @@ public class PalindromeCheckMaster {
      * While waiting the MASTER can do other things
      */
     private void doOtherStuff() {
-        LOGGER.fine("MASTER does other stuff while waiting ...");
+        LOGGER.debug("MASTER does other stuff while waiting ...");
         MiscUtils.sleepIgnoreException(OTHER_TASK_DELAY_MILLIS);
     }
 
@@ -100,7 +99,7 @@ public class PalindromeCheckMaster {
      * @throws ExecutionException on any error during execution
      */
     public PalindromeCheckResult performPalindromeFileTest(File file, String charsetName) throws IOException, InterruptedException, ExecutionException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".performPalindromeFileTest({file=" + file + ", charsetName=" + charsetName + "}) called");
+        LOGGER.debug("{}.performPalindromeFileTest({file={}, charsetName={}}) called", this.getClass().getSimpleName(), file, charsetName);
         PalindromeCheckResult res = PalindromeCheckResult.UNKNOWN;
 
         LOGGER.info("Scanning input file (create index) ... ");
@@ -118,7 +117,7 @@ public class PalindromeCheckMaster {
             LOGGER.info("Preparation completed, MASTER is waiting for SLAVE-results ...");
             waitForSlavesToComplete(future);
 
-            LOGGER.fine("Palindrome check finished!");
+            LOGGER.debug("Palindrome check finished!");
             res = future.get();
 
             if (res == PalindromeCheckResult.ERROR) {
@@ -139,10 +138,10 @@ public class PalindromeCheckMaster {
         nf.setMaximumFractionDigits(0);
         nf.setMinimumFractionDigits(0);
         do {
-            LOGGER.fine("MASTER polls for result ...");
+            LOGGER.debug("MASTER polls for result ...");
             done = future.isDone();
             if (!done) {
-                LOGGER.info("" + nf.format(future.getProgressPerc()) + "% completed, MASTER is still waiting for SLAVE-results ...");
+                LOGGER.info("{}% completed, MASTER is still waiting for SLAVE-results ...", nf.format(future.getProgressPerc()));
                 doOtherStuff();
             }
         } while (!done);

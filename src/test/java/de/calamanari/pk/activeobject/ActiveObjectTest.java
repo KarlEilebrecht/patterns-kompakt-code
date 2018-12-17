@@ -67,7 +67,7 @@ public class ActiveObjectTest {
     public void testActiveObject() throws Exception {
 
         // HINTS:
-        // * Adjust the log-level above to FINE to see the ACTIVE OBJECT working
+        // * Adjust the log-level in logback.xml to DEBUG to see the ACTIVE OBJECT working
         // * Play with the settings for CALL_DURATION / NUMBER_OF_WORKERS and watch execution time
 
         LOGGER.info("Test Active Object ...");

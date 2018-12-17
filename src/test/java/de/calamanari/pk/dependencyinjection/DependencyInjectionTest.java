@@ -19,13 +19,10 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -35,22 +32,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class DependencyInjectionTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(DependencyInjectionTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, DependencyInjectionTest.class, ComponentFramework.class, ComponentWithConstructorInjection.class,
-                ComponentWithSetterInjection.class, ComponentWithInterfaceInjection.class, ComponentWithAnnotationBasedInjection.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(DependencyInjectionTest.class);
 
     @Test
     public void testDependencyInjection() throws Exception {

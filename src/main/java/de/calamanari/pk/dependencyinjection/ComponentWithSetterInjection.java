@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component With Setter Injection - demonstrates SETTER INJECTION
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class ComponentWithSetterInjection implements Component {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ComponentWithSetterInjection.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComponentWithSetterInjection.class);
 
     /**
      * A reference to the print service injected via setter
@@ -47,7 +45,7 @@ public class ComponentWithSetterInjection implements Component {
      * Default constructor
      */
     public ComponentWithSetterInjection() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created, service not yet injected!");
+        LOGGER.debug("{} created, service not yet injected!", this.getClass().getSimpleName());
     }
 
     /**
@@ -59,7 +57,7 @@ public class ComponentWithSetterInjection implements Component {
      * @param printService service to be injected
      */
     public void setPrintService(PrintService printService) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setPrintService(...) called, service injected by setter!");
+        LOGGER.debug("{}.setPrintService(...) called, service injected by setter!", this.getClass().getSimpleName());
         this.printService = printService;
     }
 
@@ -75,7 +73,7 @@ public class ComponentWithSetterInjection implements Component {
 
     @Override
     public void printData() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".printData() called, using injected print service!");
+        LOGGER.debug("{}.printData() called, using injected print service!", this.getClass().getSimpleName());
         this.printService.print(this.getClass().getSimpleName() + ": " + data);
     }
 

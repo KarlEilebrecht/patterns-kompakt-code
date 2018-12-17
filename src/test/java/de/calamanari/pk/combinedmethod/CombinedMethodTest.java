@@ -115,7 +115,7 @@ public class CombinedMethodTest {
     @Test
     public void testWithCombinedMethod() throws Exception {
 
-        // Adjust the log-level above to FINE to see the COMBINED METHOD working
+        // Adjust the log-level in logback.xml to DEBUG to see the COMBINED METHOD working
 
         LOGGER.info("Test with combined method  ...");
         long startTimeNanos = System.nanoTime();

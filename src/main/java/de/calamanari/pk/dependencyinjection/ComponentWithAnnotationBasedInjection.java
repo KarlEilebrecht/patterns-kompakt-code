@@ -19,9 +19,10 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import java.util.logging.Logger;
-
 import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component With annotation based Injection
@@ -30,10 +31,7 @@ import javax.annotation.Resource;
  */
 public class ComponentWithAnnotationBasedInjection implements Component {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ComponentWithAnnotationBasedInjection.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComponentWithAnnotationBasedInjection.class);
 
     /**
      * A reference to the print service injected by framework
@@ -50,7 +48,7 @@ public class ComponentWithAnnotationBasedInjection implements Component {
      * Default constructor
      */
     public ComponentWithAnnotationBasedInjection() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created, service not yet injected!");
+        LOGGER.debug("{} created, service not yet injected!", this.getClass().getSimpleName());
     }
 
     @Override
@@ -65,7 +63,7 @@ public class ComponentWithAnnotationBasedInjection implements Component {
 
     @Override
     public void printData() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".printData() called, using injected print service!");
+        LOGGER.debug("{}, printData() called, using injected print service!", this.getClass().getSimpleName());
         this.printService.print(this.getClass().getSimpleName() + ": " + data);
     }
 

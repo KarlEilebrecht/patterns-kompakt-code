@@ -23,13 +23,15 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractButton;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Team Controller - the CONTROLLER in this MVC-example.
@@ -38,10 +40,7 @@ import javax.swing.event.ChangeListener;
  */
 public class TeamController {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(TeamController.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeamController.class);
 
     /**
      * reference to the model
@@ -71,7 +70,7 @@ public class TeamController {
      */
     public TeamController(TeamModel teamModel, TeamView teamView) {
 
-        LOGGER.fine(this.getClass().getSimpleName() + " created, holding refences to model and view");
+        LOGGER.debug("{} created, holding refences to model and view", this.getClass().getSimpleName());
 
         this.model = teamModel;
         this.view = teamView;
@@ -81,11 +80,11 @@ public class TeamController {
         registerRemoveButtonActionListener();
         registerRadioButtonChangeListener();
 
-        LOGGER.fine("Controls from view are now under surveillance of controller");
+        LOGGER.debug("Controls from view are now under surveillance of controller");
 
         registerTeamModelObserver();
 
-        LOGGER.fine("Model is now under surveillance of controller");
+        LOGGER.debug("Model is now under surveillance of controller");
 
         // initialize view status
         SwingUtilities.invokeLater(updateViewTask);
@@ -100,7 +99,7 @@ public class TeamController {
         model.setModelObserver(new TeamModel.TeamModelObserver() {
             @Override
             public void handleModelChanged() {
-                LOGGER.fine(TeamController.class.getSimpleName() + " - model changed, updating view.");
+                LOGGER.debug("{} - model changed, updating view.", TeamController.class.getSimpleName());
                 SwingUtilities.invokeLater(updateViewTask);
             }
         });
@@ -114,7 +113,7 @@ public class TeamController {
 
             @Override
             public void stateChanged(ChangeEvent e) {
-                LOGGER.fine(TeamController.class.getSimpleName() + " - selection changed, updating view.");
+                LOGGER.debug("{} - selection changed, updating view.", TeamController.class.getSimpleName());
                 updateView();
             }
 
@@ -137,7 +136,7 @@ public class TeamController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.fine(TeamController.class.getSimpleName() + " - [Remove] clicked.");
+                LOGGER.debug("{} - [Remove] clicked.", TeamController.class.getSimpleName());
                 int radioButtonIndex = 0;
                 int selectedIdx = -1;
                 for (Enumeration<AbstractButton> en = view.radioGroup.getElements(); en.hasMoreElements();) {
@@ -148,11 +147,11 @@ public class TeamController {
                     radioButtonIndex++;
                 }
                 if (selectedIdx >= 0) {
-                    LOGGER.fine(TeamController.class.getSimpleName() + " - entry " + (selectedIdx + 1) + " was selected, removing.");
+                    LOGGER.debug("{} - entry {} was selected, removing.", TeamController.class.getSimpleName(), (selectedIdx + 1));
                     model.remove(selectedIdx);
                 }
                 else {
-                    LOGGER.fine(TeamController.class.getSimpleName() + " - no entry selected, request ignored.");
+                    LOGGER.debug("{} - no entry selected, request ignored.", TeamController.class.getSimpleName());
                 }
                 view.radioGroup.clearSelection();
                 view.txtInput.setText("");
@@ -169,15 +168,15 @@ public class TeamController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.fine(TeamController.class.getSimpleName() + " - [Add] clicked.");
+                LOGGER.debug("{} - [Add] clicked.", TeamController.class.getSimpleName());
                 String newMember = view.txtInput.getText().trim();
                 view.txtInput.setText("");
                 if (newMember.length() > 0) {
-                    LOGGER.fine("Adding member to model");
+                    LOGGER.debug("Adding member to model");
                     model.add(newMember);
                 }
                 else {
-                    LOGGER.fine("Invalid input ignored");
+                    LOGGER.debug("Invalid input ignored");
                 }
             }
         });
@@ -191,7 +190,7 @@ public class TeamController {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                LOGGER.fine(TeamController.class.getSimpleName() + " - [Close] clicked.");
+                LOGGER.debug("{} - [Close] clicked.", TeamController.class.getSimpleName());
                 shutDown();
             }
         });
@@ -202,11 +201,11 @@ public class TeamController {
      */
     private void updateView() {
 
-        LOGGER.fine(this.getClass().getSimpleName() + ".updateView called ...");
+        LOGGER.debug("{}.updateView called ...", this.getClass().getSimpleName());
 
         updateLabels();
 
-        LOGGER.fine("Controller has updated data on view");
+        LOGGER.debug("Controller has updated data on view");
 
         updateMemberControlStatus();
 
@@ -214,7 +213,7 @@ public class TeamController {
 
         updateSignalBar();
 
-        LOGGER.fine("Controller has updated the status (enabled/disabled/signal color) of controls on view");
+        LOGGER.debug("Controller has updated the status (enabled/disabled/signal color) of controls on view");
 
     }
 
@@ -302,7 +301,7 @@ public class TeamController {
      * Close view and shutdown
      */
     public void shutDown() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".shutDown() called.");
+        LOGGER.debug("{}.shutDown() called.", this.getClass().getSimpleName());
         this.view.setVisible(false);
         this.view.dispose();
     }

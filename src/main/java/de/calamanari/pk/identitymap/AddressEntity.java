@@ -19,19 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.identitymap;
 
-import java.util.logging.Logger;
-
 /**
  * Address Entity - one of the business entities in this example.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class AddressEntity implements Entity<String>, Cloneable {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(AddressEntity.class.getName());
 
     /**
      * address identifier

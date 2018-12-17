@@ -19,19 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.factorymethod;
 
-import java.util.logging.Logger;
-
 /**
  * Abstract Voucher Creator is the abstract creator in this FACTORY METHOD example scenario.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public abstract class AbstractVoucherCreator {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(AbstractVoucherCreator.class.getName());
 
     /**
      * Central method in this FACTORY METHOD example.<br>

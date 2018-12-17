@@ -20,7 +20,9 @@
 package de.calamanari.pk.commandprocessor;
 
 import java.util.Stack;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.command.InputCommand;
 
@@ -31,10 +33,7 @@ import de.calamanari.pk.command.InputCommand;
  */
 public class InputCommandProcessor {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(InputCommandProcessor.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(InputCommandProcessor.class);
 
     /**
      * Stack to put executed commands
@@ -52,7 +51,7 @@ public class InputCommandProcessor {
      * @param command input command to be executed
      */
     public void execute(InputCommand command) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".execute() called");
+        LOGGER.debug("{}.execute() called", this.getClass().getSimpleName());
         command.execute();
         this.undoStack.push(command);
     }
@@ -63,16 +62,16 @@ public class InputCommandProcessor {
      * @return true if an operation was undone
      */
     public boolean undo() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".undo() called");
+        LOGGER.debug("{}.undo() called", this.getClass().getSimpleName());
         boolean canUndo = !undoStack.isEmpty();
         if (canUndo) {
-            LOGGER.fine("Undoing last command.");
+            LOGGER.debug("Undoing last command.");
             InputCommand ic = undoStack.pop();
             ic.executeUndo();
             redoStack.push(ic);
         }
         else {
-            LOGGER.fine("Nothing to undo.");
+            LOGGER.debug("Nothing to undo.");
         }
         return canUndo;
     }
@@ -83,16 +82,16 @@ public class InputCommandProcessor {
      * @return true if an operation was re-done
      */
     public boolean redo() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".redo() called");
+        LOGGER.debug("{}.redo() called", this.getClass().getSimpleName());
         boolean canRedo = !redoStack.isEmpty();
         if (canRedo) {
-            LOGGER.fine("Redoing last command.");
+            LOGGER.debug("Redoing last command.");
             InputCommand ic = redoStack.pop();
             ic.execute();
             undoStack.push(ic);
         }
         else {
-            LOGGER.fine("Nothing to redo.");
+            LOGGER.debug("Nothing to redo.");
         }
         return canRedo;
     }

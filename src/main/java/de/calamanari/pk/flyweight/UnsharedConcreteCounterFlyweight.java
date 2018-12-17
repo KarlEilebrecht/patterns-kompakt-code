@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.flyweight;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Unshared Concrete Counter Flyweight - unshared flyweights can be returned by a factory - transparently from the client's point of view.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class UnsharedConcreteCounterFlyweight extends ConcreteCounterFlyweight {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(UnsharedConcreteCounterFlyweight.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(UnsharedConcreteCounterFlyweight.class);
 
     /**
      * Creates an unshared concrete counter flyweight, in this example there is no special behaviour.
@@ -45,7 +43,7 @@ public class UnsharedConcreteCounterFlyweight extends ConcreteCounterFlyweight {
 
     @Override
     public int count(String extrinsicState) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".count('" + extrinsicState + "') called, counting occurrences of '" + intrinsicState.charAt(0) + "' ...");
+        LOGGER.debug("{}.count('{}') called, counting occurrences of '{}' ...", this.getClass().getSimpleName(), extrinsicState, intrinsicState.charAt(0));
 
         int count = 0;
         for (int i = 0, size = extrinsicState.length(); i < size; i++) {

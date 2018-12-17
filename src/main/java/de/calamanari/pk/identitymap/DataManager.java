@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.identitymap;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Data Manager - provides finder methods in this example, placeholder for whatever persistence framework/strategies may be in use. <br>
@@ -34,10 +35,7 @@ import java.util.logging.Logger;
  */
 public final class DataManager {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(DataManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class);
 
     /**
      * Utility class
@@ -54,28 +52,28 @@ public final class DataManager {
      */
     public static CustomerEntity findCustomerById(String customerId) {
 
-        LOGGER.fine(DataManager.class.getSimpleName() + ".findCustomerById('" + customerId + "') called");
+        LOGGER.debug("{}.findCustomerById('{}') called", DataManager.class.getSimpleName(), customerId);
 
         CustomerEntity res = null;
 
         Session session = Session.getCurrentSession();
 
-        LOGGER.fine("Getting Identity Map for Type: " + CustomerEntity.class.getSimpleName());
+        LOGGER.debug("Getting Identity Map for Type: {}", CustomerEntity.class.getSimpleName());
 
         IdentityMap<String, CustomerEntity> identityMap = session.getIdentityMap(CustomerEntity.class);
 
-        LOGGER.fine("Performing lookup on " + identityMap.toString() + "");
+        LOGGER.debug("Performing lookup on {}", identityMap.toString());
 
         res = identityMap.get(customerId);
 
         if (res == null) {
-            LOGGER.fine("Instance not in " + identityMap.toString() + " yet!");
+            LOGGER.debug("Instance not in {} yet!", identityMap);
             res = findCustomerByIdInDatabase(customerId);
-            LOGGER.fine("Putting Instance @" + Integer.toHexString(res.hashCode()) + " into " + identityMap.toString());
+            LOGGER.debug("Putting Instance @{} into {}", Integer.toHexString(res.hashCode()), identityMap);
             identityMap.add(res);
         }
         else {
-            LOGGER.fine("Instance found: @" + Integer.toHexString(res.hashCode()));
+            LOGGER.debug("Instance found: @{}", Integer.toHexString(res.hashCode()));
         }
 
         return res;
@@ -89,7 +87,7 @@ public final class DataManager {
      */
     private static CustomerEntity findCustomerByIdInDatabase(String customerId) {
 
-        LOGGER.fine(DataManager.class.getSimpleName() + ".findCustomerByIdInDatabase('" + customerId + "') called");
+        LOGGER.debug("{}.findCustomerByIdInDatabase('{}') called", DataManager.class.getSimpleName(), customerId);
 
         CustomerEntity entity = Database.CUSTOMERS.get(customerId);
 
@@ -110,28 +108,28 @@ public final class DataManager {
      */
     public static AddressEntity findAddressById(String addressId) {
 
-        LOGGER.fine(DataManager.class.getSimpleName() + ".findAddressById('" + addressId + "') called");
+        LOGGER.debug("{}.findAddressById('{}') called", DataManager.class.getSimpleName(), addressId);
 
         AddressEntity res = null;
 
         Session session = Session.getCurrentSession();
 
-        LOGGER.fine("Getting Identity Map for Type: " + AddressEntity.class.getSimpleName());
+        LOGGER.debug("Getting Identity Map for Type: {}", AddressEntity.class.getSimpleName());
 
         IdentityMap<String, AddressEntity> identityMap = session.getIdentityMap(AddressEntity.class);
 
-        LOGGER.fine("Performing lookup on " + identityMap.toString() + "");
+        LOGGER.debug("Performing lookup on {}", identityMap.toString());
 
         res = identityMap.get(addressId);
 
         if (res == null) {
-            LOGGER.fine("Instance not in " + identityMap.toString() + " yet!");
+            LOGGER.debug("Instance not in {} yet!", identityMap);
             res = findAddressByIdInDatabase(addressId);
-            LOGGER.fine("Putting Instance @" + Integer.toHexString(res.hashCode()) + " into " + identityMap.toString());
+            LOGGER.debug("Putting Instance @{} into {}", Integer.toHexString(res.hashCode()), identityMap);
             identityMap.add(res);
         }
         else {
-            LOGGER.fine("Instance found: @" + Integer.toHexString(res.hashCode()));
+            LOGGER.debug("Instance found: @{}", Integer.toHexString(res.hashCode()));
         }
 
         return res;
@@ -145,7 +143,7 @@ public final class DataManager {
      */
     private static AddressEntity findAddressByIdInDatabase(String addressId) {
 
-        LOGGER.fine(DataManager.class.getSimpleName() + ".findAddressByIdInDatabase('" + addressId + "') called");
+        LOGGER.debug("{}.findAddressByIdInDatabase('{}') called", DataManager.class.getSimpleName(), addressId);
 
         AddressEntity entity = Database.ADDRESSES.get(addressId);
 

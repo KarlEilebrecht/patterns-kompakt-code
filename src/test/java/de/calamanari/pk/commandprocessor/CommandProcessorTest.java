@@ -23,17 +23,15 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.command.AppendTextCommand;
 import de.calamanari.pk.command.DeleteTextCommand;
 import de.calamanari.pk.command.InputCommand;
 import de.calamanari.pk.command.TextComponent;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -43,26 +41,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class CommandProcessorTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CommandProcessorTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, CommandProcessorTest.class, InputCommandProcessor.class, AppendTextCommand.class, DeleteTextCommand.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandProcessorTest.class);
 
     @Test
     public void testCommandProcessor() {
 
-        // hint: set the log-level above to FINE to watch COMMAND PROCESSOR working.
+        // hint: set the log-level in logback.xml to FINE to watch COMMAND PROCESSOR working.
 
         LOGGER.info("Test Commmand Processor ...");
         long startTimeNanos = System.nanoTime();
@@ -73,7 +57,7 @@ public class CommandProcessorTest {
 
         List<InputCommand> commandList = Arrays.asList(new InputCommand[] {
 
-        new AppendTextCommand(textComponent, "The"), new AppendTextCommand(textComponent, "quick"), new DeleteTextCommand(textComponent, 1),
+                new AppendTextCommand(textComponent, "The"), new AppendTextCommand(textComponent, "quick"), new DeleteTextCommand(textComponent, 1),
                 new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1), new DeleteTextCommand(textComponent, 1),
                 new DeleteTextCommand(textComponent, 1), new AppendTextCommand(textComponent, " "), new AppendTextCommand(textComponent, "quick"),
                 new AppendTextCommand(textComponent, " "), new AppendTextCommand(textComponent, "brown"), new AppendTextCommand(textComponent, " "),

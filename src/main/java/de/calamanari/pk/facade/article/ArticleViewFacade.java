@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.facade.article;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.facade.article.history.ArticleHistory;
 
@@ -30,10 +31,7 @@ import de.calamanari.pk.facade.article.history.ArticleHistory;
  */
 public class ArticleViewFacade {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ArticleViewFacade.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleViewFacade.class);
 
     /**
      * Reference to the article manager
@@ -52,7 +50,7 @@ public class ArticleViewFacade {
      * @param articleHistory history system reference
      */
     public ArticleViewFacade(ArticleManager articleManager, ArticleHistory articleHistory) {
-        LOGGER.fine("Creating new " + this.getClass().getSimpleName());
+        LOGGER.debug("Creating new {}" + this.getClass().getSimpleName());
         this.articleManager = articleManager;
         this.articleHistory = articleHistory;
     }
@@ -64,7 +62,7 @@ public class ArticleViewFacade {
      * @return found article or null if not found
      */
     public Article findArticleById(String articleId) {
-        LOGGER.fine("" + this.getClass().getSimpleName() + ".findArticleById() called, delegating to internal manager ...");
+        LOGGER.debug("{}.findArticleById() called, delegating to internal manager ...", this.getClass().getSimpleName());
         return this.articleManager.findArticleById(articleId);
     }
 
@@ -75,7 +73,7 @@ public class ArticleViewFacade {
      * @return current mark down price or -1 to indicate unknown
      */
     public double getMarkDownPrice(String articleId) {
-        LOGGER.fine("" + this.getClass().getSimpleName() + ".getMarkDownPrice() called, delegating to internal history ...");
+        LOGGER.debug("{}.getMarkDownPrice() called, delegating to internal history ...", this.getClass().getSimpleName());
         double res = -1;
         Article article = findArticleById(articleId);
         if (article != null) {
@@ -85,7 +83,7 @@ public class ArticleViewFacade {
                 res = markDownPrice;
             }
             else {
-                LOGGER.fine("Current price is less than proposed mark down price, ignoring mark down price!");
+                LOGGER.debug("Current price is less than proposed mark down price, ignoring mark down price!");
             }
         }
         return res;

@@ -21,7 +21,6 @@ package de.calamanari.pk.identitymap;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Session - supplementary class, the place where the IDENTITY MAPs reside in this example.
@@ -31,11 +30,6 @@ import java.util.logging.Logger;
 public class Session {
 
     /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Session.class.getName());
-
-    /**
      * The session maintains session-local identity maps in this example
      */
     private final Map<Class<?>, IdentityMap<?, ?>> identityMaps = new HashMap<>();
@@ -43,7 +37,7 @@ public class Session {
     /**
      * This simulates some kind of session management
      */
-    private static final ThreadLocal<Session> SESSION = new ThreadLocal<Session>() {
+    private static final ThreadLocal<Session> SESSION = new ThreadLocal<>() {
 
         @Override
         protected Session initialValue() {

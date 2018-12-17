@@ -22,14 +22,12 @@ package de.calamanari.pk.composite;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,26 +37,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class CompositeTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CompositeTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompositeTest.class);
 
     /**
      * some different nodes
      */
     private ArrayList<EnterpriseNode> testNodes = new ArrayList<>();
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, CompositeTest.class, AbstractEnterpriseUnit.class, Holding.class, Company.class, Division.class, StaffMember.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -84,25 +68,28 @@ public class CompositeTest {
 
     @Test
     public void testComposite() {
+
+        // hint: set the log-level in logback.xml to FINE to watch COMPOSITE working.
+
         LOGGER.info("Test Composite ...");
         long startTimeNanos = System.nanoTime();
 
         for (EnterpriseNode enterpriseNode : testNodes) {
 
             // here we handle all nodes equally, we do not know their real nature
-            LOGGER.info(enterpriseNode.getDescription());
+            LOGGER.debug(enterpriseNode.getDescription());
 
             // however sometimes an explicit type-check becomes necessary:
             if (enterpriseNode instanceof StaffMember) {
                 StaffMember member = (StaffMember) enterpriseNode;
-                LOGGER.info(member.getFirstName() + " " + member.getLastName() + " is a staff member!");
+                LOGGER.debug(member.getFirstName() + " " + member.getLastName() + " is a staff member!");
                 if (enterpriseNode.getParentNode() == null) {
-                    LOGGER.info("No enterprise unit assigned for " + member.getFirstName() + " " + member.getLastName() + "!");
+                    LOGGER.debug("No enterprise unit assigned for " + member.getFirstName() + " " + member.getLastName() + "!");
                 }
             }
             else if (enterpriseNode instanceof AbstractEnterpriseUnit) {
                 AbstractEnterpriseUnit unit = (AbstractEnterpriseUnit) enterpriseNode;
-                LOGGER.info(unit.getName() + " is an organizational unit!");
+                LOGGER.debug(unit.getName() + " is an organizational unit!");
                 assertEquals(1, unit.getChildNodes().size());
             }
 

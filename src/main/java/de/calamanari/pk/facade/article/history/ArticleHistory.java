@@ -21,7 +21,9 @@ package de.calamanari.pk.facade.article.history;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Article History - another class of the component we create a FACADE for.<br>
@@ -31,10 +33,7 @@ import java.util.logging.Logger;
  */
 public class ArticleHistory {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ArticleHistory.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleHistory.class);
 
     /**
      * In this example the history is a little featureless :-) Only markdown prices are provided.
@@ -48,7 +47,7 @@ public class ArticleHistory {
      * @return current mark down price or -1 to indicate unknown
      */
     public double getCurrentMarkDownPrice(String articleId) {
-        LOGGER.fine("" + this.getClass().getSimpleName() + ".getCurrentMarkDownPrice() called");
+        LOGGER.debug("{}.getCurrentMarkDownPrice() called", this.getClass().getSimpleName());
         double res = -1; // unknown
         Double markDownPrice = articleMarkDownPrices.get(articleId);
         if (markDownPrice != null) {

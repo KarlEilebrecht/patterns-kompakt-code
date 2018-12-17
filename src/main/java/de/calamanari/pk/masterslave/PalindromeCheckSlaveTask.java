@@ -21,8 +21,9 @@ package de.calamanari.pk.masterslave;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 
@@ -34,10 +35,7 @@ import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
  */
 public class PalindromeCheckSlaveTask implements Runnable {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(PalindromeCheckSlaveTask.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PalindromeCheckSlaveTask.class);
 
     /**
      * test result: the source was a palindrome
@@ -84,8 +82,7 @@ public class PalindromeCheckSlaveTask implements Runnable {
         this.startIdx2 = startIdx2;
         this.partitionSize = partitionSize;
         this.future = future;
-        LOGGER.fine(this.getClass().getSimpleName() + "({startIdx1=" + startIdx1 + ", startIdx2=" + startIdx2 + ", partitionSize=" + partitionSize
-                + "}) created.");
+        LOGGER.debug("{}({startIdx1={}, startIdx2={}, partitionSize={}}) created.", this.getClass().getSimpleName(), startIdx1, startIdx2, partitionSize);
     }
 
     @Override
@@ -93,8 +90,8 @@ public class PalindromeCheckSlaveTask implements Runnable {
         PalindromeCheckResult result = PalindromeCheckResult.UNKNOWN;
         try {
             if (!future.isAborted()) {
-                LOGGER.fine("SLAVE-Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + " executes " + this.getClass().getSimpleName()
-                        + "({startIdx1=" + startIdx1 + ", startIdx2=" + startIdx2 + ", partitionSize=" + partitionSize + "}).");
+                LOGGER.debug("SLAVE-Thread @{} executes {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
+                        Integer.toHexString(Thread.currentThread().hashCode()), this.getClass().getSimpleName(), startIdx1, startIdx2, partitionSize);
                 char[] partition1 = getPartition(startIdx1);
                 char[] partition2 = getPartition(startIdx2);
                 int[] partialResult = performPalindromeTest(partition1, partition2);
@@ -106,18 +103,18 @@ public class PalindromeCheckSlaveTask implements Runnable {
                 }
             }
             else {
-                LOGGER.fine("SLAVE-Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + " skips " + this.getClass().getSimpleName()
-                        + "({startIdx1=" + startIdx1 + ", startIdx2=" + startIdx2 + ", partitionSize=" + partitionSize + "}).");
+                LOGGER.debug("SLAVE-Thread @{} skips {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
+                        Integer.toHexString(Thread.currentThread().hashCode()), this.getClass().getSimpleName(), startIdx1, startIdx2, partitionSize);
             }
         }
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Error while checking partitions [" + startIdx1 + ", " + (startIdx1 + partitionSize) + ") vs. [" + startIdx2 + ", "
-                    + (startIdx2 + partitionSize) + ")", ex);
+            LOGGER.error("Error while checking partitions [{}, {}) vs. [{}, {})", startIdx1, (startIdx1 + partitionSize), startIdx2,
+                    (startIdx2 + partitionSize), ex);
             // tell the MASTER about the problem
             result = PalindromeCheckResult.ERROR;
         }
         finally {
-            LOGGER.fine("SLAVE-Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + " reports to MASTER via Future: " + result.toString());
+            LOGGER.debug("SLAVE-Thread @{} reports to MASTER via Future: {}", Integer.toHexString(Thread.currentThread().hashCode()), result);
             future.reportSlaveResult(result);
         }
     }

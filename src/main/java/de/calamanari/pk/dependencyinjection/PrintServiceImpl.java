@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Print service - supplementary concrete service implementation, creates log message
@@ -28,14 +29,11 @@ import java.util.logging.Logger;
  */
 public class PrintServiceImpl implements PrintService {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(PrintServiceImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrintServiceImpl.class);
 
     @Override
     public void print(String s) {
-        LOGGER.info(s);
+        LOGGER.debug(s);
     }
 
 }
