@@ -25,8 +25,9 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -51,10 +52,7 @@ public final class Tracer2 implements Serializable {
      */
     private static final long serialVersionUID = -6359333920241183969L;
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Tracer2.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Tracer2.class);
 
     /**
      * This class is only pseudo-synchronization
@@ -67,7 +65,7 @@ public final class Tracer2 implements Serializable {
         private static final Tracer2 INSTANCE;
 
         static {
-            LOGGER.fine("No instance of " + Tracer2.class.getSimpleName() + " exists, yet. Creating one...");
+            LOGGER.debug("No instance of {} exists, yet. Creating one...", Tracer2.class.getSimpleName());
 
             // here could for example take place a system registry lookup to determine the output directory
             // and the configured file name.
@@ -99,9 +97,9 @@ public final class Tracer2 implements Serializable {
      * @return the tracer2 instance
      */
     public static final Tracer2 getInstance() {
-        LOGGER.fine(Tracer2.class.getSimpleName() + ".getInstance() called.");
+        LOGGER.debug("{}.getInstance() called.", Tracer2.class.getSimpleName());
         Tracer2 res = Internal.INSTANCE;
-        LOGGER.fine("Returning " + Tracer2.class.getSimpleName() + " singleton instance.");
+        LOGGER.debug("Returning {} singleton instance.", Tracer2.class.getSimpleName());
         return res;
     }
 
@@ -118,7 +116,7 @@ public final class Tracer2 implements Serializable {
         catch (Exception ex) {
             throw new RuntimeException("Unexpected error creating tracer output file " + outputFile, ex);
         }
-        LOGGER.fine("New instance of " + Tracer2.class.getSimpleName() + " created, using file: " + outputFile);
+        LOGGER.debug("New instance of {} created, using file: ", Tracer2.class.getSimpleName(), outputFile);
     }
 
     /**
@@ -171,12 +169,12 @@ public final class Tracer2 implements Serializable {
             }
         }
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Could not close tracer file.", ex);
+            LOGGER.error("Could not close tracer file.", ex);
         }
         finally {
             fileAccessLock.unlock();
         }
-        LOGGER.fine(Tracer2.class.getSimpleName() + " singelton destroyed");
+        LOGGER.debug("{} singelton destroyed", Tracer2.class.getSimpleName());
     }
 
     /**

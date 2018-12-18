@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.proxy;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.SimpleAccessManager;
 
@@ -30,10 +31,7 @@ import de.calamanari.pk.util.SimpleAccessManager;
  */
 public class DocumentManagerSecurityProxy implements DocumentManager {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(DocumentManagerSecurityProxy.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DocumentManagerSecurityProxy.class);
 
     /**
      * The instance we protect
@@ -46,32 +44,33 @@ public class DocumentManagerSecurityProxy implements DocumentManager {
      * @param instanceToBeProtected protected object
      */
     public DocumentManagerSecurityProxy(DocumentManager instanceToBeProtected) {
-        LOGGER.fine("Creating new " + this.getClass().getSimpleName() + " for " + instanceToBeProtected.getClass().getSimpleName());
+        LOGGER.debug("Creating new {} for {}", this.getClass().getSimpleName(), instanceToBeProtected.getClass().getSimpleName());
         this.protectedInstance = instanceToBeProtected;
     }
 
     @Override
     public String findDocumentByName(String documentName) {
-        LOGGER.fine("findDocumentByName(...) called on " + this.getClass().getSimpleName() + " called - checking permission ...");
+        LOGGER.debug("findDocumentByName(...) called on {} called - checking permission ...", this.getClass().getSimpleName());
         if (SimpleAccessManager.getInstance().checkPermission()) {
-            LOGGER.fine("Permission granted - Delegating findDocumentByName(...) to concrete document manager " + protectedInstance.getClass().getSimpleName());
+            LOGGER.debug("Permission granted - Delegating findDocumentByName(...) to concrete document manager {}",
+                    protectedInstance.getClass().getSimpleName());
             return protectedInstance.findDocumentByName(documentName);
         }
         else {
-            LOGGER.fine("Permission denied, call will not be delegated to concrete document manager " + protectedInstance.getClass().getSimpleName());
+            LOGGER.debug("Permission denied, call will not be delegated to concrete document manager {}", protectedInstance.getClass().getSimpleName());
             throw new RuntimeException("Access denied!");
         }
     }
 
     @Override
     public void storeDocument(String documentName, String document) {
-        LOGGER.fine("storeDocument(...) called on " + this.getClass().getSimpleName() + " called - checking permission ...");
+        LOGGER.debug("storeDocument(...) called on {} called - checking permission ...", this.getClass().getSimpleName());
         if (SimpleAccessManager.getInstance().checkPermission()) {
-            LOGGER.fine("Permission granted - Delegating storeDocument(...) to concrete document manager " + protectedInstance.getClass().getSimpleName());
+            LOGGER.debug("Permission granted - Delegating storeDocument(...) to concrete document manager {}", protectedInstance.getClass().getSimpleName());
             protectedInstance.storeDocument(documentName, document);
         }
         else {
-            LOGGER.fine("Permission denied, call will not be delegated to concrete document manager " + protectedInstance.getClass().getSimpleName());
+            LOGGER.debug("Permission denied, call will not be delegated to concrete document manager {}", protectedInstance.getClass().getSimpleName());
             throw new RuntimeException("Access denied!");
         }
     }

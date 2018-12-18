@@ -20,7 +20,9 @@
 package de.calamanari.pk.sequenceblock;
 
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The sequence block holds a chunk of sequence numbers (a unique range)
@@ -29,10 +31,7 @@ import java.util.logging.Logger;
  */
 public class SequenceBlock {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(SequenceBlock.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SequenceBlock.class);
 
     /**
      * Current value of this block
@@ -60,7 +59,7 @@ public class SequenceBlock {
             throw new IllegalArgumentException("Unable to create sequence block with negative or conflicting arguments (initialValue: " + startOfBlock
                     + ", maxValue: " + endOfBlock + ").");
         }
-        LOGGER.fine(this.getClass().getSimpleName() + " created (" + startOfBlock + " <= val < " + endOfBlock + " ).");
+        LOGGER.debug("{} created ({} <= val < {} ).", this.getClass().getSimpleName(), startOfBlock, endOfBlock);
         this.startOfBlock = startOfBlock;
         this.lastReturnedValue = new AtomicLong(startOfBlock - 1);
         this.endOfBlock = endOfBlock;
@@ -73,7 +72,7 @@ public class SequenceBlock {
      * @return next long id or -1 to indicate exhausted block
      */
     public long getNextId() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getNextId() called.");
+        LOGGER.debug("{}.getNextId() called.", this.getClass().getSimpleName());
         long res = lastReturnedValue.addAndGet(1);
         if (res >= endOfBlock) {
             res = -1;

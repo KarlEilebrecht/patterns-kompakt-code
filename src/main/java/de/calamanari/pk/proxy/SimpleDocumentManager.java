@@ -21,7 +21,9 @@ package de.calamanari.pk.proxy;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Simple Document Manager is a concrete document manager. In this PROXY example we will protect it using a SECURITY PROXY.
@@ -30,10 +32,7 @@ import java.util.logging.Logger;
  */
 public class SimpleDocumentManager implements DocumentManager {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(SimpleDocumentManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleDocumentManager.class);
 
     /**
      * here we "store" the documents
@@ -42,13 +41,13 @@ public class SimpleDocumentManager implements DocumentManager {
 
     @Override
     public String findDocumentByName(String documentName) {
-        LOGGER.fine("findDocumentByName(...) called on " + this.getClass().getSimpleName() + "");
+        LOGGER.debug("findDocumentByName(...) called on {}", this.getClass().getSimpleName());
         return documentStore.get(documentName);
     }
 
     @Override
     public void storeDocument(String documentName, String document) {
-        LOGGER.fine("storeDocument(...) called on " + this.getClass().getSimpleName() + "");
+        LOGGER.debug("storeDocument(...) called on {}", this.getClass().getSimpleName());
         documentStore.put(documentName, document);
     }
 

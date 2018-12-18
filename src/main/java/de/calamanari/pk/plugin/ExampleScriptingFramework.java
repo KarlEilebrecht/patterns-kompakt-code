@@ -28,7 +28,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This minimum framework demonstrates the usage of the PLUGIN pattern.
@@ -37,10 +39,7 @@ import java.util.logging.Logger;
  */
 public class ExampleScriptingFramework implements MacroPluginFramework {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(ExampleScriptingFramework.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleScriptingFramework.class);
 
     /**
      * simulates some kind of system registry (JNDI or whatever)
@@ -54,25 +53,25 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
 
     @Override
     public Object getProperty(String propertyName) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getProperty('" + propertyName + "') called.");
+        LOGGER.debug("{}.getProperty('{}') called.", this.getClass().getSimpleName(), propertyName);
         return properties.get(propertyName.toLowerCase());
     }
 
     @Override
     public void setProperty(String propertyName, Object value) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setProperty('" + propertyName + "', '" + value + "') called.");
+        LOGGER.debug("{}.setProperty('{}', '{}') called.", this.getClass().getSimpleName(), propertyName, value);
         properties.put(propertyName.toLowerCase(), value);
     }
 
     @Override
     public boolean isPropertyAvailable(String propertyName) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".isPropertyAvailable('" + propertyName + "') called.");
+        LOGGER.debug("{}.isPropertyAvailable('{}') called.", this.getClass().getSimpleName(), propertyName);
         return properties.containsKey(propertyName.toLowerCase());
     }
 
     @Override
     public void addProtocolMessage(String source, String message) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".addProtocolMessage() called.");
+        LOGGER.debug("{}.addProtocolMessage() called.", this.getClass().getSimpleName());
         protocol.append(source);
         protocol.append(": ");
         protocol.append(message);
@@ -96,7 +95,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
      * @param pluginFactory factory for retrieving plugins for macro execution
      */
     public void executeScriptFile(File scriptFile, MacroPluginFactory pluginFactory) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".executeScriptFile(" + scriptFile + ") called.");
+        LOGGER.debug("{}.executeScriptFile({}) called.", this.getClass().getSimpleName(), scriptFile);
         List<String> lines = null;
         try {
             lines = Files.readAllLines(scriptFile.toPath(), Charset.forName("ISO-8859-1"));
@@ -108,7 +107,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
         for (String line : lines) {
             line = line.trim();
             if (line.length() > 0 && !line.startsWith("#")) {
-                LOGGER.fine("Script line: " + line);
+                LOGGER.debug("Script line: {}", line);
             }
             else {
                 continue;

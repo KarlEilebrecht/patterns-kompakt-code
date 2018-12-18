@@ -20,13 +20,16 @@
 package de.calamanari.pk.plugin;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Macro plugin factory finds, initializes and manages plugins.
@@ -35,10 +38,7 @@ import java.util.logging.Logger;
  */
 public class MacroPluginFactory {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(MacroPluginFactory.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MacroPluginFactory.class);
 
     /**
      * framework reference
@@ -61,7 +61,7 @@ public class MacroPluginFactory {
      * @param frameworkReference reference to the framework which will be passed to the plugins
      */
     public MacroPluginFactory(MacroPluginFramework frameworkReference) {
-        LOGGER.fine(this.getClass().getSimpleName() + " created.");
+        LOGGER.debug("{} created.", this.getClass().getSimpleName());
         this.frameworkReference = frameworkReference;
         collectAvailablePlugins();
         initializeMacroPluginLookup();
@@ -74,7 +74,7 @@ public class MacroPluginFactory {
      * @return plugin for the macro
      */
     public MacroPluginRuntime getPluginForMacro(String macroName) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getPluginForMacro('" + macroName + "') called.");
+        LOGGER.debug("{}.getPluginForMacro('{}') called.", this.getClass().getSimpleName(), macroName);
         MacroPluginRuntime plugin = macroPluginLookup.get(macroName.toLowerCase());
         if (plugin == null) {
             List<String> allMacros = new ArrayList<>(macroPluginLookup.keySet());
@@ -122,7 +122,7 @@ public class MacroPluginFactory {
             throw new RuntimeException("No Plugin found at " + pluginFolder);
         }
         else {
-            LOGGER.info("" + availablePlugins.size() + " plugins installed.");
+            LOGGER.info("{} plugins installed.", availablePlugins.size());
         }
 
     }
@@ -154,23 +154,24 @@ public class MacroPluginFactory {
      * @throws ClassNotFoundException if specified class could not be found
      * @throws InstantiationException if plugin-class could not be instantiated
      * @throws IllegalAccessException if there was a problem with the accessibility of the plugin's methods or properties
+     * @throws InvocationTargetException if the constructor could not be invoked
+     * @throws NoSuchMethodException if the constructor could not be found
      */
-    private void installPlugins(String pluginPackageName, ArrayList<String> pluginNames) throws ClassNotFoundException, InstantiationException,
-            IllegalAccessException {
+    private void installPlugins(String pluginPackageName, ArrayList<String> pluginNames)
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Collections.sort(pluginNames);
         ClassLoader loader = getThisClassLoader();
         for (String pluginName : pluginNames) {
             String pluginFullClassName = pluginPackageName + "." + pluginName;
             Class<?> pluginClass = Class.forName(pluginFullClassName, true, loader);
             if (!pluginClass.isInterface() && MacroPlugin.class.isAssignableFrom(pluginClass)) {
-                MacroPlugin plugin = (MacroPlugin) pluginClass.newInstance();
+                MacroPlugin plugin = (MacroPlugin) pluginClass.getConstructor().newInstance();
                 if (plugin.getMacros().length > 0) {
                     availablePlugins.add(plugin);
-                    LOGGER.info("Plugin installed: name=" + plugin.getName() + ",  version=" + plugin.getVersion() + ", vendor=" + plugin.getVendor());
+                    LOGGER.info("Plugin installed: name={},  version={}, vendor={}", plugin.getName(), plugin.getVersion(), plugin.getVendor());
                 }
                 else {
-                    LOGGER.warning("Plugin skipped (no makros): name=" + plugin.getName() + ",  version=" + plugin.getVersion() + ", vendor="
-                            + plugin.getVendor());
+                    LOGGER.warn("Plugin skipped (no makros): name={},  version={}, vendor={}", plugin.getName(), plugin.getVersion(), plugin.getVendor());
                 }
             }
         }

@@ -25,10 +25,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The sequence block cache manages an arbitrary number of sequences using the SEQUENCE BLOCK pattern.
@@ -38,10 +39,7 @@ import javax.sql.DataSource;
  */
 public class SequenceBlockCache {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(SequenceBlockCache.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SequenceBlockCache.class);
 
     /**
      * block size (number of keys to cache before accessing database table again)<br>
@@ -75,7 +73,7 @@ public class SequenceBlockCache {
     /**
      * Maps sequence names to the locks for synchronization
      */
-    private final ConcurrentHashMap<String, Integer> sequenceLockMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Object> sequenceLockMap = new ConcurrentHashMap<>();
 
     /**
      * data source for accessing database via JDBC
@@ -99,10 +97,10 @@ public class SequenceBlockCache {
      * @return lock object for sychronization
      */
     private Object getSequenceLockObject(String sequenceName) {
-        Integer lockObject = sequenceLockMap.get(sequenceName);
+        Object lockObject = sequenceLockMap.get(sequenceName);
         if (lockObject == null) {
-            lockObject = new Integer(0);
-            Integer prevLockObject = sequenceLockMap.putIfAbsent(sequenceName, lockObject);
+            lockObject = new Object();
+            Object prevLockObject = sequenceLockMap.putIfAbsent(sequenceName, lockObject);
             if (prevLockObject != null) {
                 lockObject = prevLockObject;
             }
@@ -117,12 +115,12 @@ public class SequenceBlockCache {
      * @return current value of sequence or null to indicate a missing sequence
      */
     private Long getCurrentSequenceNumberFromDb(String sequenceName) {
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": " + this.getClass().getSimpleName()
-                + ".getCurrentSequenceNumberFromDb('" + sequenceName + "') called.");
+        LOGGER.debug("Thread @{}: {}.getCurrentSequenceNumberFromDb('{}') called.", Integer.toHexString(Thread.currentThread().hashCode()),
+                this.getClass().getSimpleName(), sequenceName);
         Long res = null;
 
         // START NEW TRANSACTION --->
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Transaction.begin()");
+        LOGGER.debug("Thread @{}: Transaction.begin()", Integer.toHexString(Thread.currentThread().hashCode()));
         try (Connection con = dataSource.getConnection(); PreparedStatement stmt = con.prepareStatement(SQL_SELECT_CURRENT_SEQ_ID)) {
             stmt.setString(1, sequenceName);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -132,7 +130,7 @@ public class SequenceBlockCache {
             }
 
             // <--- END OF TRANSACTION (implicit, auto-commit)
-            LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Transaction.commit()");
+            LOGGER.debug("Thread @{}: Transaction.commit()", Integer.toHexString(Thread.currentThread().hashCode()));
         }
         catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -147,23 +145,22 @@ public class SequenceBlockCache {
      * @return generic Value of type SequenceValueItem
      */
     private Long createAndGetCurrentSequenceValue(String sequenceName) {
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": " + this.getClass().getSimpleName()
-                + ".createAndGetCurrentSequenceValue('" + sequenceName + "') called.");
+        LOGGER.debug("Thread @{}: {}.createAndGetCurrentSequenceValue('{}') called.", Integer.toHexString(Thread.currentThread().hashCode()),
+                this.getClass().getSimpleName(), sequenceName);
 
         // START NEW TRANSACTION --->
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Transaction.begin()");
+        LOGGER.debug("Thread @{}: Transaction.begin()", Integer.toHexString(Thread.currentThread().hashCode()));
 
         try (Connection con = dataSource.getConnection(); PreparedStatement stmt = con.prepareStatement(SQL_INSERT_NEW_SEQUENCE)) {
             stmt.setString(1, sequenceName);
             stmt.executeUpdate();
 
             // <--- END OF TRANSACTION (implicit, auto-commit)
-            LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Transaction.commit()");
+            LOGGER.debug("Thread @{}: Transaction.commit()", Integer.toHexString(Thread.currentThread().hashCode()));
         }
         catch (SQLException ex) {
             // probably a race condition, silently ignored
-            LOGGER.log(Level.WARNING, "Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Could not create new sequence record ('"
-                    + sequenceName + "').", ex);
+            LOGGER.warn("Thread @{}: Could not create new sequence record ('{}').", Integer.toHexString(Thread.currentThread().hashCode()), sequenceName, ex);
         }
 
         // call other service to return the result of our insert or concurrent
@@ -180,8 +177,8 @@ public class SequenceBlockCache {
      * @return new sequence block or null to indicate that caller must try again
      */
     private SequenceBlock reserveNextSequenceBlock(String sequenceName, long lastUsedValue, int blockIncrement) {
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": " + this.getClass().getSimpleName()
-                + ".reserveNextSequenceBlock('" + sequenceName + "', lastUsedValue=" + lastUsedValue + ", blockIncrement=" + blockIncrement + ") called.");
+        LOGGER.debug("Thread @{}: {}.reserveNextSequenceBlock('{}', lastUsedValue={}, blockIncrement={}) called.",
+                Integer.toHexString(Thread.currentThread().hashCode()), this.getClass().getSimpleName(), sequenceName, lastUsedValue, blockIncrement);
 
         SequenceBlock res = null;
         if (blockIncrement < 1) {
@@ -192,7 +189,7 @@ public class SequenceBlockCache {
         long updCount = 0;
 
         // START NEW TRANSACTION --->
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Transaction.begin()");
+        LOGGER.debug("Thread @{}: Transaction.begin()", Integer.toHexString(Thread.currentThread().hashCode()));
         try (Connection con = dataSource.getConnection(); PreparedStatement stmt = con.prepareStatement(SQL_UPDATE_SEQ_ID)) {
 
             stmt.setLong(1, endOfBlock - 1);
@@ -202,7 +199,7 @@ public class SequenceBlockCache {
             updCount = stmt.executeUpdate();
 
             // <--- END OF TRANSACTION (implicit, auto-commit)
-            LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Transaction.commit()");
+            LOGGER.debug("Thread @{}: Transaction.commit()", Integer.toHexString(Thread.currentThread().hashCode()));
         }
         catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -234,8 +231,8 @@ public class SequenceBlockCache {
                 // As many implementations we automatically create a
                 // missing sequence, however this is HIGHLY QUESTIONABLE
                 // since typos might lead to heavy trouble ...
-                LOGGER.info("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Creating new sequence record for sequenceName='"
-                        + sequenceName + "'.");
+                LOGGER.info("Thread @{}: Creating new sequence record for sequenceName='{}'.", Integer.toHexString(Thread.currentThread().hashCode()),
+                        sequenceName);
                 currentValue = createAndGetCurrentSequenceValue(sequenceName);
                 if (currentValue == null) {
                     throw new RuntimeException("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": The sequence '" + sequenceName
@@ -249,8 +246,8 @@ public class SequenceBlockCache {
             }
             sequenceBlock = reserveNextSequenceBlock(sequenceName, currentValue, blockIncrement);
             if (sequenceBlock == null) {
-                LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode())
-                        + ": chosen as victim during concurrent block reservation - going to try again ...");
+                LOGGER.debug("Thread @{}: chosen as victim during concurrent block reservation - going to try again ...",
+                        Integer.toHexString(Thread.currentThread().hashCode()));
             }
         }
         return sequenceBlock;
@@ -264,23 +261,23 @@ public class SequenceBlockCache {
      * @return sequence block, never null (instead throws RuntimeException)
      */
     private SequenceBlock getSequenceBlock(String sequenceName, int blockIncrement) {
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": " + this.getClass().getSimpleName() + ".getSequenceBlock('"
-                + sequenceName + "', blockIncrement=" + blockIncrement + ") called.");
+        LOGGER.debug("Thread @{}: {}.getSequenceBlock('{}', blockIncrement={}) called.", Integer.toHexString(Thread.currentThread().hashCode()),
+                this.getClass().getSimpleName(), sequenceName, blockIncrement);
         SequenceBlock sequenceBlock = cachedSequenceBlocksMap.get(sequenceName);
         if (sequenceBlock == null || sequenceBlock.isExhausted()) {
             // do not synchronize globally but per sequence!
             synchronized (getSequenceLockObject(sequenceName)) {
-                LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Performing lookup in sequence block cache");
+                LOGGER.debug("Thread @{}: Performing lookup in sequence block cache", Integer.toHexString(Thread.currentThread().hashCode()));
                 sequenceBlock = cachedSequenceBlocksMap.get(sequenceName);
                 if (sequenceBlock == null || sequenceBlock.isExhausted()) {
 
-                    LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": New sequence block required!");
+                    LOGGER.debug("Thread @{}: New sequence block required!", Integer.toHexString(Thread.currentThread().hashCode()));
                     sequenceBlock = reserveNextSequenceBlock(sequenceName, blockIncrement);
 
                     cachedSequenceBlocksMap.put(sequenceName, sequenceBlock);
                 }
                 else {
-                    LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": Found existing sequence block, no need for db-access.");
+                    LOGGER.debug("Thread @{}: Found existing sequence block, no need for db-access.", Integer.toHexString(Thread.currentThread().hashCode()));
                 }
             }
         }
@@ -296,8 +293,8 @@ public class SequenceBlockCache {
      * @return sequence value as Long
      */
     public long getNextId(String sequenceName, int blockIncrement) {
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": " + this.getClass().getSimpleName() + ".getNextId('"
-                + sequenceName + "', blockIncrement=" + blockIncrement + ") called.");
+        LOGGER.debug("Thread @{}: {}.getNextId('{}', blockIncrement={}) called.", Integer.toHexString(Thread.currentThread().hashCode()),
+                this.getClass().getSimpleName(), sequenceName, blockIncrement);
         if (blockIncrement < 1) {
             blockIncrement = DEFAULT_SEQUENCE_BLOCK_INCREMENT;
         }
@@ -316,8 +313,8 @@ public class SequenceBlockCache {
      * @return sequence value as Long
      */
     public long getNextId(String sequenceName) {
-        LOGGER.fine("Thread @" + Integer.toHexString(Thread.currentThread().hashCode()) + ": " + this.getClass().getSimpleName() + ".getNextId('"
-                + sequenceName + "') called.");
+        LOGGER.debug("Thread @{}: {}.getNextId('{}') called.", Integer.toHexString(Thread.currentThread().hashCode()), this.getClass().getSimpleName(),
+                sequenceName);
         return getNextId(sequenceName, DEFAULT_SEQUENCE_BLOCK_INCREMENT);
     }
 

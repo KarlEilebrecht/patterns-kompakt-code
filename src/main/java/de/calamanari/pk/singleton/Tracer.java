@@ -24,8 +24,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -36,10 +37,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public final class Tracer {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Tracer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Tracer.class);
 
     /**
      * This will be the SINGLETON instance
@@ -72,11 +70,11 @@ public final class Tracer {
      * @return the tracer instance
      */
     public static Tracer getInstance() {
-        LOGGER.fine(Tracer.class.getSimpleName() + ".getInstance() called.");
+        LOGGER.debug("{}.getInstance() called.", Tracer.class.getSimpleName());
         LOCK.lock();
         try {
             if (instance == null) {
-                LOGGER.fine("No instance of " + Tracer.class.getSimpleName() + " exists, yet. Creating one...");
+                LOGGER.debug("No instance of {} exists, yet. Creating one...", Tracer.class.getSimpleName());
 
                 // here could for example take place a system registry lookup to determine the output directory
                 // and the configured file name.
@@ -89,7 +87,7 @@ public final class Tracer {
         finally {
             LOCK.unlock();
         }
-        LOGGER.fine("Returning " + Tracer.class.getSimpleName() + " singleton instance.");
+        LOGGER.debug("Returning {} singleton instance.", Tracer.class.getSimpleName());
         return instance;
     }
 
@@ -106,7 +104,7 @@ public final class Tracer {
         catch (Exception ex) {
             throw new RuntimeException("Unexpected error creating tracer output file " + outputFile, ex);
         }
-        LOGGER.fine("New instance of " + Tracer.class.getSimpleName() + " created, using file: " + outputFile);
+        LOGGER.debug("New instance of {} created, using file: {}", Tracer.class.getSimpleName(), outputFile);
     }
 
     /**
@@ -168,12 +166,12 @@ public final class Tracer {
             }
         }
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Could not close tracer file.", ex);
+            LOGGER.error("Could not close tracer file.", ex);
         }
         finally {
             fileAccessLock.unlock();
         }
-        LOGGER.fine(Tracer.class.getSimpleName() + " singleton destroyed");
+        LOGGER.debug("{} singleton destroyed", Tracer.class.getSimpleName());
     }
 
 }

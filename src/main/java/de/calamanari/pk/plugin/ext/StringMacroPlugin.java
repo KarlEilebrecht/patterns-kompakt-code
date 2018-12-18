@@ -20,7 +20,9 @@
 package de.calamanari.pk.plugin.ext;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.plugin.MacroPlugin;
 import de.calamanari.pk.plugin.MacroPluginFramework;
@@ -32,10 +34,7 @@ import de.calamanari.pk.plugin.MacroPluginFramework;
  */
 public class StringMacroPlugin implements MacroPlugin {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(StringMacroPlugin.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringMacroPlugin.class);
 
     /**
      * reference to the execution framework
@@ -46,42 +45,42 @@ public class StringMacroPlugin implements MacroPlugin {
      * Constructor
      */
     public StringMacroPlugin() {
-        LOGGER.fine(this.getClass().getSimpleName() + " created.");
+        LOGGER.debug("{} created.", this.getClass().getSimpleName());
     }
 
     @Override
     public String getName() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getName() called.");
+        LOGGER.debug("{}.getName() called.", this.getClass().getSimpleName());
         return "String Macro Plugin";
     }
 
     @Override
     public String getVendor() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getVendor() called.");
+        LOGGER.debug("{}.getVendor() called.", this.getClass().getSimpleName());
         return "Crap IT-Systems Inc.";
     }
 
     @Override
     public String getVersion() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getVersion() called.");
+        LOGGER.debug("{}.getVersion() called.", this.getClass().getSimpleName());
         return "0.2";
     }
 
     @Override
     public String[] getMacros() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getMacros() called.");
+        LOGGER.debug("{}.getMacros() called.", this.getClass().getSimpleName());
         return new String[] { "concat", "length", "reverse", "newString" };
     }
 
     @Override
     public void setFrameworkReference(MacroPluginFramework frameworkReference) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setFrameworkReference() called.");
+        LOGGER.debug("{}.setFrameworkReference() called.", this.getClass().getSimpleName());
         this.frameworkReference = frameworkReference;
     }
 
     @Override
     public Object executeMacro(String macroName, Object[] args) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".executeMacro('" + macroName + "', ...) called.");
+        LOGGER.debug("{}.executeMacro('{}', ...) called.", this.getClass().getSimpleName(), macroName);
         if (args == null) {
             frameworkReference.addProtocolMessage(this.getName() + "." + macroName, "args=null");
         }

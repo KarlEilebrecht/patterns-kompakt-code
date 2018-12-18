@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.servicestub;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.servicestub.adrchk.AddressValidatorService;
 
@@ -31,10 +32,7 @@ import de.calamanari.pk.servicestub.adrchk.AddressValidatorService;
  */
 public class AccountManager {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(AccountManager.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountManager.class);
 
     /**
      * reference to service for validating addresses
@@ -53,10 +51,10 @@ public class AccountManager {
      */
     public AccountManager(AddressValidatorService addressValidatorService) {
         if (addressValidatorService == null) {
-            LOGGER.fine(this.getClass().getSimpleName() + "(null) created.");
+            LOGGER.debug("{}(null) created.", this.getClass().getSimpleName());
         }
         else {
-            LOGGER.fine(this.getClass().getSimpleName() + "(instance of " + addressValidatorService.getClass() + ") created.");
+            LOGGER.debug("{}(instance of {}) created.", this.getClass().getSimpleName(), addressValidatorService.getClass());
         }
         this.addressValidatorService = addressValidatorService;
     }
@@ -73,23 +71,22 @@ public class AccountManager {
      * @throws AccountValidationException if account could not be created
      */
     public Account createAccount(String firstName, String lastName, String street, String zipCode, String city) throws AccountValidationException {
-        LOGGER.fine(this.getClass().getSimpleName() + ".createAccount('" + firstName + "', '" + lastName + "', '" + street + "', '" + zipCode + "', '" + city
-                + "') called ...");
+        LOGGER.debug("{}.createAccount('{}', '{}', '{}', '{}', '{}') called ...", this.getClass().getSimpleName(), firstName, lastName, street, zipCode, city);
         if (firstName == null || firstName.trim().length() == 0 || lastName == null || lastName.trim().length() == 0) {
             throw new AccountValidationException("Could not create account, invalid name.");
         }
-        LOGGER.fine("Validating address ...");
+        LOGGER.debug("Validating address ...");
         if (addressValidatorService == null) {
-            LOGGER.fine("Improperly initilized AccountManager causes NullPointer");
+            LOGGER.debug("Improperly initilized AccountManager causes NullPointer");
             throw new NullPointerException("addressValidatorService null");
         }
         else {
             if (!addressValidatorService.validateAddress(street, zipCode, city)) {
-                LOGGER.fine("Validation failed, throwing exception.");
+                LOGGER.debug("Validation failed, throwing exception.");
                 throw new AccountValidationException("Could not create account, invalid address.");
             }
         }
-        LOGGER.fine("Data validated, creating account.");
+        LOGGER.debug("Data validated, creating account.");
         lastAccountNumber++;
         return new Account("ID_" + lastAccountNumber, firstName.trim(), lastName.trim(), street, zipCode, city);
     }

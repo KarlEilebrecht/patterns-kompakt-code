@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Property Registry - a simple registry: safe to be accessed concurrently with minimum synchronization, providing the ability to be refreshed at any time.
@@ -35,10 +37,7 @@ import java.util.logging.Logger;
  */
 public final class PropertyRegistry {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(PropertyRegistry.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyRegistry.class);
 
     /**
      * Maintains the current registry instance, which can be exchanged by the surrounding framework
@@ -57,14 +56,14 @@ public final class PropertyRegistry {
      * @return registry instance
      */
     public static PropertyRegistry getInstance() {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + ".getInstance() called ...");
+        LOGGER.debug("{}.getInstance() called ...", PropertyRegistry.class.getSimpleName());
         PropertyRegistry instance = REGISTRY_INSTANCE.get();
         if (instance == null) {
-            LOGGER.fine("No instance, throwing exception.");
+            LOGGER.debug("No instance, throwing exception.");
             throw new IllegalStateException("Registry not initialized.");
         }
         else {
-            LOGGER.fine("Returning registry instance");
+            LOGGER.debug("Returning registry instance");
         }
         return instance;
     }
@@ -76,9 +75,9 @@ public final class PropertyRegistry {
      * @param properties set of initial properties
      */
     public static void initialize(Properties properties) {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + ".initialize(...) called");
+        LOGGER.debug("{}.initialize(...) called", PropertyRegistry.class.getSimpleName());
         PropertyRegistry newInstance = new PropertyRegistry(properties);
-        LOGGER.fine("Setting new registry instance @" + Integer.toHexString(newInstance.hashCode()));
+        LOGGER.debug("Setting new registry instance @", Integer.toHexString(newInstance.hashCode()));
         REGISTRY_INSTANCE.set(newInstance);
     }
 
@@ -87,8 +86,8 @@ public final class PropertyRegistry {
      * Any further request to {@link #getInstance()} will produce an exception.
      */
     public static void uninitialize() {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + ".initialize(...) called");
-        LOGGER.fine("Removing registry instance");
+        LOGGER.debug("{}.initialize(...) called", PropertyRegistry.class.getSimpleName());
+        LOGGER.debug("Removing registry instance");
         REGISTRY_INSTANCE.set(null);
     }
 
@@ -98,7 +97,7 @@ public final class PropertyRegistry {
      * @param properties set of initial properties
      */
     private PropertyRegistry(Properties properties) {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "-instance created");
+        LOGGER.debug("{}-instance created", PropertyRegistry.class.getSimpleName());
         Map<String, String> map = new HashMap<>(properties.size());
         for (Enumeration<?> en = properties.propertyNames(); en.hasMoreElements();) {
             String propertyName = (String) en.nextElement();
@@ -130,7 +129,7 @@ public final class PropertyRegistry {
      * @return property value or empty string if not found
      */
     public String getProperty(String propertyName) {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode()) + ".getProperty('" + propertyName + "') called");
+        LOGGER.debug("{}@{}.getProperty('{}') called", PropertyRegistry.class.getSimpleName(), Integer.toHexString(this.hashCode()), propertyName);
         return getProperty(propertyName, "");
     }
 
@@ -141,7 +140,7 @@ public final class PropertyRegistry {
      * @return true if property exists, otherwise false
      */
     public boolean containsProperty(String propertyName) {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode()) + ".containsProperty('" + propertyName + "') called");
+        LOGGER.debug("{}@{}.containsProperty('{}') called", PropertyRegistry.class.getSimpleName(), Integer.toHexString(this.hashCode()), propertyName);
         return propertyMap.containsKey(propertyName);
     }
 
@@ -151,7 +150,7 @@ public final class PropertyRegistry {
      * @return set of names (unmodifiable)
      */
     public Set<String> getPropertyNames() {
-        LOGGER.fine(PropertyRegistry.class.getSimpleName() + "@" + Integer.toHexString(this.hashCode()) + ".getPropertyNames() called");
+        LOGGER.debug("{}@{}.getPropertyNames() called", PropertyRegistry.class.getSimpleName(), Integer.toHexString(this.hashCode()));
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 }
