@@ -25,6 +25,18 @@
     <logger name="de.calamanari.pk.factorymethod" level="INFO"/>
     <logger name="de.calamanari.pk.flyweight" level="INFO"/>
     <logger name="de.calamanari.pk.gateway" level="INFO"/>
+    <logger name="de.calamanari.pk.identityfield" level="INFO"/>
+    <logger name="de.calamanari.pk.identitymap" level="INFO"/>
+    <logger name="de.calamanari.pk.iterator" level="INFO"/>
+    <logger name="de.calamanari.pk.lazyload" level="INFO"/>
+    <logger name="de.calamanari.pk.mapper" level="INFO"/>
+    <logger name="de.calamanari.pk.masterslave" level="INFO"/>
+    <logger name="de.calamanari.pk.modelviewcontroller" level="INFO"/>
+    <logger name="de.calamanari.pk.money" level="INFO"/>
+    <logger name="de.calamanari.pk.nullobject" level="INFO"/>
+    <logger name="de.calamanari.pk.objectpool" level="INFO"/>
+    <logger name="de.calamanari.pk.observer" level="INFO"/>
+    <logger name="de.calamanari.pk.optimisticofflinelock" level="INFO"/>
 
 
 

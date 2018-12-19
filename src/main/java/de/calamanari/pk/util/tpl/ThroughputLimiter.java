@@ -417,14 +417,4 @@ public final class ThroughputLimiter {
         return numberOfSlots;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        try {
-            removeAllThroughputListeners();
-        }
-        finally {
-            super.finalize();
-        }
-    }
-
 }

@@ -21,7 +21,9 @@ package de.calamanari.pk.transferobjectassembler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer Dwh Info Entity - one of the business entities in this example.<br>
@@ -31,10 +33,7 @@ import java.util.logging.Logger;
  */
 public class CustomerDwhInfoEntity {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CustomerDwhInfoEntity.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDwhInfoEntity.class);
 
     /**
      * ID of customer
@@ -214,7 +213,7 @@ public class CustomerDwhInfoEntity {
      * @param dueInvoice true indicates an open invoice not payed yet
      */
     public void setDueInvoice(boolean dueInvoice) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".toDto() called");
+        LOGGER.debug("{}.toDto() called", this.getClass().getSimpleName());
         this.dueInvoice = dueInvoice;
     }
 

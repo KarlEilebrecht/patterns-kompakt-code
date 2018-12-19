@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.visitor;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer Division - part of customer structure, a customer's business division may carry a special discount negotiated between us (seller) and the division
@@ -29,10 +30,7 @@ import java.util.logging.Logger;
  */
 public class CustomerDivision {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(CustomerDivision.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDivision.class);
 
     /**
      * Division name
@@ -113,8 +111,8 @@ public class CustomerDivision {
      * @param visitor current visitor
      */
     public void accept(EnterpriseVisitor visitor) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".accept(" + visitor.getClass().getSimpleName() + ") called");
-        LOGGER.fine("DOUBLE DISPATCH");
+        LOGGER.debug("{}.accept({}) called", this.getClass().getSimpleName(), visitor.getClass().getSimpleName());
+        LOGGER.debug("DOUBLE DISPATCH");
         visitor.visit(this);
     }
 

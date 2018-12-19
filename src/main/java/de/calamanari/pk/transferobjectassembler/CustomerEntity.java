@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer Entity - one of the business entities in this example.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class CustomerEntity {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CustomerEntity.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerEntity.class);
 
     /**
      * id of customer
@@ -230,7 +228,7 @@ public class CustomerEntity {
      * @return dto
      */
     public CustomerDto toDto() {
-        LOGGER.fine(this.getClass().getSimpleName() + ".toDto() called");
+        LOGGER.debug("{}.toDto() called", this.getClass().getSimpleName());
         return new CustomerDto(customerId, title, lastName, firstName, phone, email, promotionOptIn);
     }
 

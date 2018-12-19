@@ -22,7 +22,9 @@ package de.calamanari.pk.wrapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Legacy Customer Info - a WRAPPER for the OldSys legacy system
@@ -32,10 +34,7 @@ import java.util.logging.Logger;
  */
 public class LegacyCustomerInfo implements CustomerInfo {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(LegacyCustomerInfo.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(LegacyCustomerInfo.class);
 
     /**
      * legacy id field
@@ -74,31 +73,31 @@ public class LegacyCustomerInfo implements CustomerInfo {
      * @param legacyHistoryData may be null
      */
     public LegacyCustomerInfo(String[] legacyCustomerData, String[] legacyHistoryData) {
-        LOGGER.fine("creating new Legacy Customer Info ...");
+        LOGGER.debug("creating new Legacy Customer Info ...");
         this.legacyCustomerData = legacyCustomerData;
         this.legacyHistoryData = legacyHistoryData;
-        LOGGER.fine("returning Legacy Customer Info.");
+        LOGGER.debug("returning Legacy Customer Info.");
     }
 
     @Override
     public String getId() {
-        LOGGER.fine("getId() called");
+        LOGGER.debug("getId() called");
         String id = getValue(legacyCustomerData, KEY_ID);
-        LOGGER.fine("returning id=" + id);
+        LOGGER.debug("returning id=" + id);
         return id;
     }
 
     @Override
     public String getName() {
-        LOGGER.fine("getName() called");
+        LOGGER.debug("getName() called");
         String name = getValue(legacyCustomerData, KEY_NAME);
-        LOGGER.fine("returning name=" + name);
+        LOGGER.debug("returning name=" + name);
         return name;
     }
 
     @Override
     public int getCustomerSegment() {
-        LOGGER.fine("getCustomerSegment() called");
+        LOGGER.debug("getCustomerSegment() called");
         String sSegment = getValue(legacyCustomerData, KEY_SEGMENT);
         int segment = 0;
         if (sSegment != null) {
@@ -109,13 +108,13 @@ public class LegacyCustomerInfo implements CustomerInfo {
                 throw new RuntimeException(ex);
             }
         }
-        LOGGER.fine("returning segment=" + segment);
+        LOGGER.debug("returning segment=" + segment);
         return segment;
     }
 
     @Override
     public Date getLastOrderDate() {
-        LOGGER.fine("getLastOrderDate() called");
+        LOGGER.debug("getLastOrderDate() called");
         String sLod = getValue(legacyHistoryData, KEY_LAST_ORDER_DATE);
         Date lod = null;
         if (sLod != null) {
@@ -127,7 +126,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
                 throw new RuntimeException(ex);
             }
         }
-        LOGGER.fine("returning lastOrderDate=" + lod);
+        LOGGER.debug("returning lastOrderDate=" + lod);
         return lod;
     }
 
@@ -139,7 +138,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
      * @return value
      */
     private String getValue(String[] record, String key) {
-        LOGGER.fine("Interpreting legacy data structure ...");
+        LOGGER.debug("Interpreting legacy data structure ...");
         String res = null;
         if (record != null) {
             int len = record.length;
@@ -150,7 +149,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
                 }
             }
         }
-        LOGGER.fine("Returning converted legacy data.");
+        LOGGER.debug("Returning converted legacy data.");
         return res;
     }
 

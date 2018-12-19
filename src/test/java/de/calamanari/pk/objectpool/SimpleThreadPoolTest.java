@@ -25,14 +25,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,15 +40,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class SimpleThreadPoolTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(SimpleThreadPoolTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleThreadPoolTest.class);
 
     /**
      * number of test runs (threaded calls)
@@ -77,20 +67,14 @@ public class SimpleThreadPoolTest {
         public void run() {
 
             int no = THREAD_NO.incrementAndGet() + 1;
-            LOGGER.fine("Thread " + no + ": " + Integer.toHexString(Thread.currentThread().hashCode()) + " working ...");
+            LOGGER.debug("Thread {}: {} working ...", no, Integer.toHexString(Thread.currentThread().hashCode()));
 
             // test takes some time, no random
             MiscUtils.sleepIgnoreException(((no * 73) % 13) * 10);
             doneCount.countDown();
-            LOGGER.fine("Thread " + no + " completed!");
+            LOGGER.debug("Thread {} completed!", no);
         }
     };
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, SimpleThreadPoolTest.class, SimpleThreadPool.class, PoolThread.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -120,7 +104,8 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test without pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test without pool successful! Elapsed time: {} s", elapsedTimeString);
     }
 
     /**
@@ -137,7 +122,7 @@ public class SimpleThreadPoolTest {
         for (int i = 0; i < NUMBER_OF_RUNS; i++) {
             Thread thread = growingPool.createThread(WORK_SAMPLE);
             thread.start();
-            LOGGER.fine("Number of threads: " + growingPool.getThreadCount());
+            LOGGER.debug("Number of threads: {}", growingPool.getThreadCount());
         }
         LOGGER.info("Waiting for results ...");
 
@@ -145,11 +130,12 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test with empty growing pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with empty growing pool successful! Elapsed time: {} s", elapsedTimeString);
         int countBefore = growingPool.getThreadCount();
 
         int[] poolInfo = growingPool.getPoolInfo();
-        LOGGER.info("Number of threads: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle=" + poolInfo[2]);
+        LOGGER.info("Number of threads: total={}, working={}, idle={}", poolInfo[0], poolInfo[1], poolInfo[2]);
 
         // test whether the pool correctly shrinks
         growingPool.createThread(null).start();
@@ -158,7 +144,7 @@ public class SimpleThreadPoolTest {
         assertEquals(growingPool.getThreadCount(), countBefore - 10);
 
         poolInfo = growingPool.getPoolInfo();
-        LOGGER.info("Number of threads after shrink: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle=" + poolInfo[2]);
+        LOGGER.info("Number of threads after shrink: total={}, working={}, idle={}", poolInfo[0], poolInfo[1], poolInfo[2]);
 
     }
 
@@ -183,10 +169,11 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test with small restricted pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with small restricted pool successful! Elapsed time: {} s", elapsedTimeString);
 
         int[] poolInfo = smallPool.getPoolInfo();
-        LOGGER.info("Number of threads: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle=" + poolInfo[2]);
+        LOGGER.info("Number of threads: total={}, working={}, idle={}", poolInfo[0], poolInfo[1], poolInfo[2]);
 
         // Hint: Look at the runtime, synchronization comes at a cost
         // Try to leverage java.util.concurrent.Executors framework
@@ -214,10 +201,11 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Test with large pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with large pool successful! Elapsed time: {} s", elapsedTimeString);
 
         int[] poolInfo = largeWarmPool.getPoolInfo();
-        LOGGER.info("Number of threads: total=" + poolInfo[0] + ", working=" + poolInfo[1] + ", idle=" + poolInfo[2]);
+        LOGGER.info("Number of threads: total={}, working={}, idle={}", poolInfo[0], poolInfo[1], poolInfo[2]);
 
     }
 

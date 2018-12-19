@@ -20,7 +20,9 @@
 package de.calamanari.pk.transferobjectassembler;
 
 import java.io.Serializable;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer DTO - one of the data transfer objects in this example.
@@ -29,10 +31,7 @@ import java.util.logging.Logger;
  */
 public class CustomerDto implements Serializable {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CustomerDto.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDto.class);
 
     /**
      * for serialization
@@ -102,7 +101,7 @@ public class CustomerDto implements Serializable {
         this.phone = phone;
         this.email = email;
         this.promotionOptIn = promotionOptIn;
-        LOGGER.fine(this.getClass().getSimpleName() + " created: " + this.toString());
+        LOGGER.debug("{} created: {}", this.getClass().getSimpleName(), this);
     }
 
     /**

@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.visitor;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Effective Discount Visitor - a VISITOR collecting information to determine the effective discount.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(EffectiveDiscountVisitor.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(EffectiveDiscountVisitor.class);
 
     /**
      * Const for percentage calculation: {@value}
@@ -70,7 +68,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerHolding holding) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".visit(" + CustomerHolding.class.getSimpleName() + ") called");
+        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerHolding.class.getSimpleName());
         holdingDiscountPerc = holding.getHoldingDiscountPerc();
     }
 
@@ -81,7 +79,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerCompany company) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".visit(" + CustomerCompany.class.getSimpleName() + ") called");
+        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerCompany.class.getSimpleName());
         companyDiscountPerc = company.getDiscountPerc();
         CustomerHolding holding = company.getHolding();
         if (holding != null) {
@@ -96,7 +94,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerDivision division) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".visit(" + CustomerDivision.class.getSimpleName() + ") called");
+        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerDivision.class.getSimpleName());
         divisionDiscountPerc = division.getDivisionDiscountPerc();
         CustomerCompany company = division.getCompany();
         if (company != null) {
@@ -111,7 +109,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerOrder order) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".visit(" + CustomerOrder.class.getSimpleName() + ") called");
+        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerOrder.class.getSimpleName());
         this.orderDiscountPerc = order.getSpecialDiscountPerc();
         this.promotionOrderDiscountPerc = calculateEffectivePromotionDiscountPerc(order);
 

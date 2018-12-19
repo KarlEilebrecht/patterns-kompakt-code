@@ -24,13 +24,10 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -40,26 +37,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class NullObjectTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(NullObjectTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, NullObjectTest.class, ConcreteHostNameData.class, HostNameDataNullObject.class, HostNameDataProvider.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(NullObjectTest.class);
 
     @Test
     public void testNullObject() throws Exception {
 
-        // Adjust the log-level above to FINE to see NULL OBJECT working
+        // Adjust the log-level in logback.xml to DEBUG to see NULL OBJECT working
 
         LOGGER.info("Test Null Object ...");
         long startTimeNanos = System.nanoTime();
@@ -101,7 +84,8 @@ public class NullObjectTest {
         HostNameData nameData3 = MiscUtils.passByValue(nameData);
         assertSame(nameData, nameData3);
 
-        LOGGER.info("Test Null Object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Null Object successful! Elapsed time: {} s", elapsedTimeString);
     }
 
     /**

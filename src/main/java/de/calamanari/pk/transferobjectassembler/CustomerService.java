@@ -22,7 +22,9 @@ package de.calamanari.pk.transferobjectassembler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -36,10 +38,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class CustomerService {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CustomerService.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
     /**
      * some simulated network delay
@@ -61,7 +60,7 @@ public class CustomerService {
      */
     public CustomerDto findCustomerById(String customerId) {
         simulateNetworkDelay();
-        LOGGER.fine(this.getClass().getSimpleName() + ".findCustomerById('" + customerId + "') called");
+        LOGGER.debug("{}.findCustomerById('{}') called", this.getClass().getSimpleName(), customerId);
         CustomerEntity entity = Database.CUSTOMERS.get(customerId);
         return entity == null ? null : entity.toDto();
     }
@@ -74,7 +73,7 @@ public class CustomerService {
      */
     public AddressDto findAddressByCustomerId(String customerId) {
         simulateNetworkDelay();
-        LOGGER.fine(this.getClass().getSimpleName() + ".findAddressByCustomerId('" + customerId + "') called");
+        LOGGER.debug("{}.findAddressByCustomerId('{}') called", this.getClass().getSimpleName(), customerId);
         AddressEntity entity = Database.ADDRESSES.get(customerId);
         return entity == null ? null : entity.toDto();
     }
@@ -87,7 +86,7 @@ public class CustomerService {
      */
     public CustomerDwhInfoDto findDwhInfoByCustomerId(String customerId) {
         simulateNetworkDelay();
-        LOGGER.fine(this.getClass().getSimpleName() + ".findDwhInfoByCustomerId('" + customerId + "') called");
+        LOGGER.debug("{}.findDwhInfoByCustomerId('{}') called", this.getClass().getSimpleName(), customerId);
         CustomerDwhInfoEntity entity = Database.CUSTOMER_DWH_INFOS.get(customerId);
         return entity == null ? null : entity.toDto();
     }
@@ -99,12 +98,12 @@ public class CustomerService {
      */
     public List<CustomerDwhInfoDto> findBadPayerDwhInfos() {
         simulateNetworkDelay();
-        LOGGER.fine(this.getClass().getSimpleName() + ".findBadPayerDwhInfos() called");
+        LOGGER.debug("{}.findBadPayerDwhInfos() called", this.getClass().getSimpleName());
         List<CustomerDwhInfoDto> result = new ArrayList<>();
         for (CustomerDwhInfoEntity entity : Database.CUSTOMER_DWH_INFOS.values()) {
             if (entity.isBadPayer()) {
                 CustomerDwhInfoDto dto = entity.toDto();
-                LOGGER.fine("Adding " + dto.toString() + " to result");
+                LOGGER.debug("Adding {} to result", dto);
                 result.add(dto);
             }
         }
@@ -119,7 +118,7 @@ public class CustomerService {
      */
     public List<GeoBadPayerInfoDto> findGeoBadPayerInfos() {
         simulateNetworkDelay();
-        LOGGER.fine(this.getClass().getSimpleName() + ".findBadPayerDwhInfos() called");
+        LOGGER.debug("{}.findBadPayerDwhInfos() called", this.getClass().getSimpleName());
         List<GeoBadPayerInfoDto> result = new ArrayList<>();
         GeoBadPayerInfoDtoAssembler assembler = new GeoBadPayerInfoDtoAssembler();
 
@@ -129,7 +128,7 @@ public class CustomerService {
         for (String customerId : orderedCustomerIds) {
             GeoBadPayerInfoDto info = assembler.assembleDto(customerId);
             if (info != null) {
-                LOGGER.fine("Adding " + info.toString() + " to result");
+                LOGGER.debug("Adding {} to result", info);
                 result.add(info);
             }
         }

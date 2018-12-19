@@ -22,17 +22,14 @@ package de.calamanari.pk.modelviewcontroller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.swing.AbstractButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,21 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ModelViewControllerTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ModelViewControllerTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ModelViewControllerTest.class, TeamModel.class, TeamView.class, TeamController.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModelViewControllerTest.class);
 
     @Test
     public void testModelViewController() throws Exception {
@@ -84,7 +67,7 @@ public class ModelViewControllerTest {
         // Runnables not to break the law :-)
 
         // HINTS:
-        // * Adjust the log-level above to FINE to see the MODEL VIEW CONTROLLER working
+        // * Adjust the log-level in logback.xml to DEBUG to see the MODEL VIEW CONTROLLER working
 
         LOGGER.info("Test Model View Controller ...");
         long startTimeNanos = System.nanoTime();
@@ -96,7 +79,7 @@ public class ModelViewControllerTest {
 
         TeamController controller = new TeamController(model, view);
 
-        LOGGER.fine("Controller " + controller.getClass().getSimpleName() + " connected, application ready to use.");
+        LOGGER.debug("Controller {} connected, application ready to use.", controller.getClass().getSimpleName());
 
         assertEquals(0, model.size());
 
@@ -165,7 +148,8 @@ public class ModelViewControllerTest {
 
         view.shutDownLatch.await();
 
-        LOGGER.info("Test Model View Controller successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Model View Controller successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

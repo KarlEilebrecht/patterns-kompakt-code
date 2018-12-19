@@ -23,7 +23,9 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer Dwh Info DTO - one of the data transfer objects in this example.
@@ -32,10 +34,12 @@ import java.util.logging.Logger;
  */
 public class CustomerDwhInfoDto implements Serializable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDwhInfoDto.class);
+
     /**
      * Default comparator (by id), null-safe, nulls to the bottom
      */
-    public static final Comparator<CustomerDwhInfoDto> BY_ID_COMPARATOR = new Comparator<CustomerDwhInfoDto>() {
+    public static final Comparator<CustomerDwhInfoDto> BY_ID_COMPARATOR = new Comparator<>() {
 
         @Override
         public int compare(CustomerDwhInfoDto o1, CustomerDwhInfoDto o2) {
@@ -55,11 +59,6 @@ public class CustomerDwhInfoDto implements Serializable {
         }
 
     };
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(CustomerDwhInfoDto.class.getName());
 
     /**
      * for serialization
@@ -137,7 +136,7 @@ public class CustomerDwhInfoDto implements Serializable {
         this.dueInvoice = dueInvoice;
         this.fraudSuspicion = fraudSuspicion;
         this.badPayer = badPayer;
-        LOGGER.fine(this.getClass().getSimpleName() + " created: " + this.toString());
+        LOGGER.debug("{} created: {}", this.getClass().getSimpleName(), this);
     }
 
     /**

@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.visitor;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer Holding - part of customer structure, there can be a holding discount which applies to all orders from any company related to this holding. This
@@ -29,10 +30,7 @@ import java.util.logging.Logger;
  */
 public class CustomerHolding {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(CustomerHolding.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerHolding.class);
 
     /**
      * Holding name
@@ -97,8 +95,8 @@ public class CustomerHolding {
      * @param visitor current visitor
      */
     public void accept(EnterpriseVisitor visitor) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".accept(" + visitor.getClass().getSimpleName() + ") called");
-        LOGGER.fine("DOUBLE DISPATCH");
+        LOGGER.debug("{}.accept({}) called", this.getClass().getSimpleName(), visitor.getClass().getSimpleName());
+        LOGGER.debug("DOUBLE DISPATCH");
         visitor.visit(this);
     }
 

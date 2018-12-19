@@ -19,8 +19,6 @@
 //@formatter:on
 package de.calamanari.pk.wrapper.legacy;
 
-import java.util.logging.Logger;
-
 /**
  * OldSys Customer Manager - part of the fictional legacy system, we want to create a WRAPPER for. <br>
  * This class provides access to the customer database.<br>
@@ -28,11 +26,6 @@ import java.util.logging.Logger;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OldSysCustomerMgr {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(OldSysCustomerMgr.class.getName());
 
     /**
      * Returns an array with customer record:<br>

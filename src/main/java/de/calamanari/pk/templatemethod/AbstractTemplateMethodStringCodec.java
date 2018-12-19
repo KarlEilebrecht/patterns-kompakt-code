@@ -40,13 +40,13 @@ public abstract class AbstractTemplateMethodStringCodec {
      */
     public String processText(String text) {
         String res = null;
-        LOGGER.debug("Using subclass operation to encode input!");
+        LOGGER.debug("{}: Using subclass operation to encode input!", this.getClass().getSimpleName());
         if (this.checkValid(text)) {
-            LOGGER.debug("Using subclass operation to decode input!");
+            LOGGER.debug("{}: Using subclass operation to decode input!", this.getClass().getSimpleName());
             res = this.decode(text);
         }
         else {
-            LOGGER.debug("Using subclass operation to encode input!");
+            LOGGER.debug("{}: Using subclass operation to encode input!", this.getClass().getSimpleName());
             res = this.encode(text);
         }
         return res;

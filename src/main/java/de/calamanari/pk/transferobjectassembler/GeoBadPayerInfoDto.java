@@ -20,7 +20,6 @@
 package de.calamanari.pk.transferobjectassembler;
 
 import java.io.Serializable;
-import java.util.logging.Logger;
 
 /**
  * Geo Bad Payer Info Dto - data transfer object to be assembled, contains information to be collected from different business entities.<br>
@@ -29,11 +28,6 @@ import java.util.logging.Logger;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class GeoBadPayerInfoDto implements Serializable {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(GeoBadPayerInfoDto.class.getName());
 
     /**
      * for serialization (DTOs are typically serializable)

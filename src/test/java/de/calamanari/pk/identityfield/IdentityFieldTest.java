@@ -26,14 +26,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -43,15 +41,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class IdentityFieldTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(IdentityFieldTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityFieldTest.class);
 
     /**
      * number of test runs
@@ -63,12 +53,6 @@ public class IdentityFieldTest {
      */
     private DataManager dataManager = null;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, IdentityFieldTest.class, CompoundKey.class, Entity.class, DataManager.class);
-    }
-
     @Before
     public void setUp() {
         this.dataManager = new DataManager();
@@ -79,7 +63,7 @@ public class IdentityFieldTest {
     @Test
     public void testIdentityField() {
 
-        // Hint: adjust the log-level above to see IDENTITY FIELD working
+        // Hint: adjust the log-level in logback.xml to DEBUG to see IDENTITY FIELD working
 
         LOGGER.info("Test identity field ...");
         long startTimeNanos = System.nanoTime();
@@ -88,7 +72,8 @@ public class IdentityFieldTest {
         assertFalse(e4711.equals(e4799));
         assertEquals("Entity({id=CompoundKey([47, 11]), x='Marty', y='McFly'})", e4711.toString());
         assertEquals("Entity({id=CompoundKey([47, 99]), x='Ernie', y='Bert'})", e4799.toString());
-        LOGGER.info("Test identity field successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test identity field successful! Elapsed time: {} s", elapsedTimeString);
     }
 
     @Test
@@ -141,8 +126,8 @@ public class IdentityFieldTest {
             CompoundKey key = keyList.get(i);
             assertEquals(i, keyMap.get(key).intValue());
         }
-
-        LOGGER.info("Test compound key successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test compound key successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

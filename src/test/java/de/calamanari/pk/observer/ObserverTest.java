@@ -28,13 +28,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.tpl.ThroughputEvent;
 import de.calamanari.pk.util.tpl.ThroughputLimiter;
@@ -47,15 +45,7 @@ import de.calamanari.pk.util.tpl.ThroughputListener;
  */
 public class ObserverTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ObserverTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObserverTest.class);
 
     /**
      * number of bytes each worker will "write"
@@ -87,16 +77,10 @@ public class ObserverTest {
      */
     private final AtomicInteger observedCallDeniedCounter = new AtomicInteger();
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ObserverTest.class, OutputWorker.class, ProgressObserver.class);
-    }
-
     @Test
     public void testObserver() throws Exception {
 
-        // Hint: set the log-level above to FINE to watch OBSERVER working.
+        // Hint: set the log-level in logback.xml to DEBUG to watch OBSERVER working.
 
         LOGGER.info("Test Observer ...");
         long startTimeNanos = System.nanoTime();
@@ -121,7 +105,8 @@ public class ObserverTest {
 
         assertEquals(bytesAllInAll, progressObserver.getCounterValue());
 
-        LOGGER.info("Test Observer successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Observer successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -151,7 +136,7 @@ public class ObserverTest {
 
             @Override
             public void handleListenerDied(Throwable problem) {
-                LOGGER.log(Level.SEVERE, "Listener died.", problem);
+                LOGGER.error("Listener died.", problem);
             }
         };
 
@@ -186,7 +171,8 @@ public class ObserverTest {
         assertEquals(this.serviceCallAttemptCounter.get(), (observedCallDeniedCounter.get() + observedCallSuccessCounter.get()));
         assertEquals(this.serviceCallSuccessCounter.get(), observedCallSuccessCounter.get());
 
-        LOGGER.info("Test with asynchronous Observer successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with asynchronous Observer successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -248,7 +234,7 @@ public class ObserverTest {
                     Thread.sleep(0, 1);
                 }
                 catch (InterruptedException ex) {
-                    LOGGER.severe("interrupted");
+                    LOGGER.error("interrupted");
                     break;
                 }
 

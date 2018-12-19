@@ -70,7 +70,7 @@ public abstract class AbstractConsoleServer {
         this.start();
 
         if (this.getServerState() == ServerState.ONLINE) {
-            System.out.println("\nPress 'q' <ENTER> to stop server");
+            LOGGER.info("\nPress 'q' <ENTER> to stop server");
             while (true) {
                 int input = 0;
                 try {

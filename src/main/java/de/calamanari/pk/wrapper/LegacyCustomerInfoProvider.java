@@ -21,7 +21,9 @@ package de.calamanari.pk.wrapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
 import de.calamanari.pk.wrapper.legacy.OldSysHistoryMgr;
@@ -33,10 +35,7 @@ import de.calamanari.pk.wrapper.legacy.OldSysHistoryMgr;
  */
 public class LegacyCustomerInfoProvider {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(LegacyCustomerInfoProvider.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(LegacyCustomerInfoProvider.class);
 
     /**
      * The new system uses string-IDs with this prefix, such customers are not in the legacy system.
@@ -71,7 +70,7 @@ public class LegacyCustomerInfoProvider {
      * @return customer info or null if not found
      */
     public CustomerInfo getCustomerInfo(String id) {
-        LOGGER.fine("getCustomerInfo(" + id + ") called ...");
+        LOGGER.debug("getCustomerInfo({}) called ...", id);
         CustomerInfo res = null;
         if (id != null && !(id.startsWith(STRING_ID_PREFIX))) {
             int legacyId = 0;
@@ -81,14 +80,14 @@ public class LegacyCustomerInfoProvider {
             catch (Exception ex) {
                 throw new IllegalArgumentException("Unable to parse the given ID!");
             }
-            LOGGER.fine("calling Legacy API ...");
+            LOGGER.debug("calling Legacy API ...");
             String[] legacyCustomerData = customerMgr.getCustomerData(legacyId);
             String[] legacyHistoryData = historyMgr.getHistory(legacyId);
             if (legacyCustomerData != null) {
                 res = new LegacyCustomerInfo(legacyCustomerData, legacyHistoryData);
             }
         }
-        LOGGER.fine("returning customer info");
+        LOGGER.debug("returning customer info");
         return res;
     }
 
@@ -99,16 +98,16 @@ public class LegacyCustomerInfoProvider {
      * @return list of customer infos NEVER NULL
      */
     public List<CustomerInfo> findCustomerInfosOfSegment(int customerSegment) {
-        LOGGER.fine("findCustomerInfosOfSegment(" + customerSegment + ") called ...");
+        LOGGER.debug("findCustomerInfosOfSegment({}) called ...", customerSegment);
         List<CustomerInfo> res = new ArrayList<>();
-        LOGGER.fine("calling Legacy API ...");
+        LOGGER.debug("calling Legacy API ...");
         int[] ids = customerMgr.findCustomerByExample(new String[] { LegacyCustomerInfo.KEY_SEGMENT, "" + customerSegment });
         int len = ids.length;
         for (int i = 0; i < len; i++) {
             CustomerInfo customerInfo = getCustomerInfo("" + ids[i]);
             res.add(customerInfo);
         }
-        LOGGER.fine("returning list");
+        LOGGER.debug("returning list");
         return res;
     }
 

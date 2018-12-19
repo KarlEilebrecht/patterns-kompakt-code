@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Database - static placeholder for any kind of persistence in this example
@@ -31,11 +30,6 @@ import java.util.logging.Logger;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class Database {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Database.class.getName());
 
     /**
      * The "database table" for customers

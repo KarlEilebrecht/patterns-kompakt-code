@@ -28,13 +28,11 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,21 +42,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class MoneyTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(MoneyTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, MoneyTest.class, Money.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTest.class);
 
     @Test
     public void testMoneyTechBasics() {
@@ -190,7 +174,8 @@ public class MoneyTest {
         // Methods allowing to specify the SCALE (like BigDecimal.divide) will be your
         // friends if you try to define the number of digits AFTER the decimal point.
 
-        LOGGER.info("Test Money Technical Basics successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Money Technical Basics successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -253,7 +238,8 @@ public class MoneyTest {
         // ok, now it works
         assertEquals("4.00 EUR", valueTogether.toString());
 
-        LOGGER.info("Test Money successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Money successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

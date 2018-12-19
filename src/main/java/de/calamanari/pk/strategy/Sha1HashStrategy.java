@@ -20,7 +20,9 @@
 package de.calamanari.pk.strategy;
 
 import java.security.MessageDigest;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Sha1HashStrategy - concrete hash STRATEGY using SHA-1.
@@ -29,10 +31,7 @@ import java.util.logging.Logger;
  */
 public class Sha1HashStrategy extends HashStrategy {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Sha1HashStrategy.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Sha1HashStrategy.class);
 
     /**
      * name (key) of this strategy
@@ -53,7 +52,7 @@ public class Sha1HashStrategy extends HashStrategy {
 
     @Override
     public String computeHash(String text) {
-        LOGGER.fine("Concrete Strategy " + STRATEGY_NAME + " computes hash ...");
+        LOGGER.debug("Concrete Strategy {} computes hash ...", STRATEGY_NAME);
         return computeSecureHash(text);
     }
 

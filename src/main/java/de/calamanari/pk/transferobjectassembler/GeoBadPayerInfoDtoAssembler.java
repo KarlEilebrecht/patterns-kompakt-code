@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Geo Bad Payer Info DTO Assembler - the TRANSFER OBJECT ASSEMBLER<br>
@@ -29,10 +30,7 @@ import java.util.logging.Logger;
  */
 public class GeoBadPayerInfoDtoAssembler {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(GeoBadPayerInfoDtoAssembler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(GeoBadPayerInfoDtoAssembler.class);
 
     /**
      * Creates new data transfer object for the customer
@@ -42,7 +40,7 @@ public class GeoBadPayerInfoDtoAssembler {
      */
     public GeoBadPayerInfoDto assembleDto(String customerId) {
 
-        LOGGER.fine(this.getClass().getSimpleName() + ".assembleDto('" + customerId + "' called");
+        LOGGER.debug("{}.assembleDto('{}' called", this.getClass().getSimpleName(), customerId);
 
         GeoBadPayerInfoDto res = null;
         CustomerDwhInfoEntity dwhInfoEntity = Database.CUSTOMER_DWH_INFOS.get(customerId);
@@ -53,7 +51,7 @@ public class GeoBadPayerInfoDtoAssembler {
 
             if (dwhInfoEntity.isBadPayer()) {
                 if (customerEntity != null && addressEntity != null) {
-                    LOGGER.fine("Creating data transfer object from entities customer, address and dwh information");
+                    LOGGER.debug("Creating data transfer object from entities customer, address and dwh information");
                     res = new GeoBadPayerInfoDto(customerEntity.getCustomerId(), customerEntity.getTitle(), customerEntity.getLastName(),
                             customerEntity.getFirstName(), addressEntity.getZipCode(), addressEntity.getCity(), addressEntity.getCountry(),
                             dwhInfoEntity.getCustomerType(), dwhInfoEntity.isDueInvoice());
@@ -61,7 +59,7 @@ public class GeoBadPayerInfoDtoAssembler {
             }
         }
         if (res == null) {
-            LOGGER.fine("No data transfer object created.");
+            LOGGER.debug("No data transfer object created.");
         }
         return res;
     }

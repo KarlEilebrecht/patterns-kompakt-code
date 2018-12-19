@@ -23,13 +23,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,22 +37,10 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class IdentityMapTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(IdentityMapTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityMapTest.class);
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, IdentityMapTest.class, CustomerEntity.class, AddressEntity.class, DataManager.class, IdentityMap.class, Session.class,
-                Database.class);
-
         Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true, "ADR00091", "Quark-Street 70", "91827",
                 "Gotham City", "USA", "Dear Mr.");
         Database.addTestData("ID0002", "Mrs.", "Clark", "Petula", "0817-871", "Petula.Clark@neversend.com", false, "ADR01071", "Black Owl Way 34", "1217",
@@ -67,6 +53,9 @@ public class IdentityMapTest {
 
     @Test
     public void testIdentityMap() {
+
+        // Hint: adjust the log-level in logback.xml to DEBUG to see IDENTITY MAP working
+
         LOGGER.info("Test identity map ...");
         long startTimeNanos = System.nanoTime();
 
@@ -90,7 +79,8 @@ public class IdentityMapTest {
         // the identity map ensures we won't get a duplicate but the same instance again
         assertSame(customer1, customer2);
 
-        LOGGER.info("Test identity map successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test identity map successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

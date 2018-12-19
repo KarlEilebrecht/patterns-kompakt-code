@@ -24,7 +24,9 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -36,10 +38,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 final class ReaderThread extends Thread {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ReaderThread.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReaderThread.class);
 
     /**
      * The queue for communication from main thread to the reader The reader will not read a new buffer before being requested.
@@ -130,9 +129,14 @@ final class ReaderThread extends Thread {
                 t.printStackTrace();
                 bufferDeliveryQueue.put(bufferEvent);
             }
+            catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                // this is extremely fatal, hope this will never happen
+                LOGGER.error("Interrupted during critical queue operation, maybe consumer hangs now.", ex);
+            }
             catch (Throwable ex) {
                 // this is extremely fatal, hope this will never happen
-                LOGGER.severe("Unexpected error during critical queue operation, maybe consumer hangs now.");
+                LOGGER.error("Unexpected error during critical queue operation, maybe consumer hangs now.", ex);
             }
         }
         finally {

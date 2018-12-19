@@ -19,8 +19,10 @@
 //@formatter:on
 package de.calamanari.pk.strategy;
 
-import java.util.logging.Logger;
 import java.util.zip.CRC32;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
 
@@ -31,10 +33,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class Crc32HashStrategy extends HashStrategy {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Crc32HashStrategy.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Crc32HashStrategy.class);
 
     /**
      * name (key) of this strategy
@@ -50,7 +49,7 @@ public class Crc32HashStrategy extends HashStrategy {
 
     @Override
     public String computeHash(String text) {
-        LOGGER.fine("Concrete Strategy " + STRATEGY_NAME + " computes hash ...");
+        LOGGER.debug("Concrete Strategy {} computes hash ...", STRATEGY_NAME);
         CRC32 crc32 = new CRC32();
         crc32.update(MiscUtils.getUtf8Bytes(text));
         return Long.toHexString(crc32.getValue());

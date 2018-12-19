@@ -40,7 +40,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * This <i>view behavior</i> must not be implemented in {@link Fraction#compareTo(Fraction)} due to the <i><b>{@linkplain Comparable} interface
      * contract</b></i> which requires <code>equals()</code> and <code>compareTo()</code> to be implemented <i>consistently</i>.
      */
-    public static final Comparator<Fraction> VIEW_COMPARATOR = new Comparator<Fraction>() {
+    public static final Comparator<Fraction> VIEW_COMPARATOR = new Comparator<>() {
 
         @Override
         public int compare(Fraction o1, Fraction o2) {

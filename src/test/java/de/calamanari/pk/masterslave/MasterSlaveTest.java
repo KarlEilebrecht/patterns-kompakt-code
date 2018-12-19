@@ -31,13 +31,11 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 import de.calamanari.pk.util.itfa.ItfaConfiguration;
@@ -49,10 +47,7 @@ import de.calamanari.pk.util.itfa.ItfaConfiguration;
  */
 public class MasterSlaveTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(MasterSlaveTest.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MasterSlaveTest.class);
 
     /**
      * Character set for the test
@@ -75,11 +70,6 @@ public class MasterSlaveTest {
     private static final int PALINDROME_SIZE = 1_111_111; // 1GB = 1_073_741_824;
 
     /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    /**
      * number of slaves (worker threads)
      */
     private static final int NUMBER_OF_SLAVES = Runtime.getRuntime().availableProcessors();
@@ -100,18 +90,11 @@ public class MasterSlaveTest {
      */
     private PalindromeCheckMaster palindromeCheckMaster = new PalindromeCheckMaster(NUMBER_OF_SLAVES, SLAVE_PARTITION_SIZE, MAX_NUMBER_OF_CHAR_INDEX_ENTRIES);
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, MasterSlaveTest.class, PalindromeCheckMaster.class, PalindromeCheckSlaveTask.class, PalindromeCheckFuture.class,
-                PalindromeCheckResult.class);
-    }
-
     @Test
     public void testMasterSlavePalindrome() throws Exception {
 
         // HINTS:
-        // * Adjust the log-level above to FINE to see the MASTER SLAVE working
+        // * Adjust the log-level in logback.xml to DEBUG to see the MASTER SLAVE working
         // * Play with the settings for PALINDROME_SIZE / NUMBER_OF_SLAVES / SLAVE_PARTITION_SIZE and watch execution
         // time and memory consumption
         // * Palindrome creation (below) uses the same approach, try to improve it!
@@ -167,7 +150,8 @@ public class MasterSlaveTest {
 
         assertEquals(PalindromeCheckResult.CONFIRMED, checkResult);
 
-        LOGGER.info("Test Master Slave Palindrome successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Master Slave Palindrome successful! Elapsed time: {} s", elapsedTimeString);
 
         testFile.delete();
 
@@ -187,7 +171,8 @@ public class MasterSlaveTest {
 
         assertEquals(PalindromeCheckResult.createFailedResult(errorPositionLeft, errorPositionRight), checkResult);
 
-        LOGGER.info("Test Master Slave Non Palindrome successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Master Slave Non Palindrome successful! Elapsed time: {} s", elapsedTimeString);
 
         testFile.delete();
 
@@ -211,7 +196,7 @@ public class MasterSlaveTest {
         File res = null;
         res = new File(MiscUtils.getHomeDirectory(), "palindrome_test_" + CHARSET_NAME + "_" + size + "_err=" + numberOfErrorPositions + ".txt");
 
-        LOGGER.info("Creating palindrome test file " + res + " ...");
+        LOGGER.info("Creating palindrome test file {} ...", res);
 
         int halfSize = size / 2;
 

@@ -22,14 +22,12 @@ package de.calamanari.pk.iterator;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,26 +37,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class IteratorTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(IteratorTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(IteratorTest.class);
 
     /**
      * Entry point for test worker hierarchy (the concrete AGGREGATE)
      */
     private AbstractWorker rootWorker = null;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, IteratorTest.class, AbstractWorker.class, Worker.class, WorkerIterator.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -96,10 +80,11 @@ public class IteratorTest {
         }
 
         String res = sb.toString();
-        LOGGER.info("All subordinates of " + rootWorker.getName() + " are: " + res);
+        LOGGER.info("All subordinates of {} are: {}", rootWorker.getName(), res);
         assertEquals("Hans, Jake, John, Larry, Linda", res);
 
-        LOGGER.info("Test Iterator successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Iterator successful! Elapsed time: {} s", elapsedTimeString);
     }
 
 }

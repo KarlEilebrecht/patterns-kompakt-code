@@ -26,13 +26,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,21 +41,10 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class LazyLoadTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(LazyLoadTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LazyLoadTest.class);
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, LazyLoadTest.class, Invoice.class, PersistenceSession.class);
-
         PersistenceSession.addInvoice("INV-001", "154.23", "Charly Brown", "Dogstreet 12", "64354", "Pumpkin Lake");
         PersistenceSession.addInvoice("INV-002", "623.98", "Sandy Bridge", "Paganini Pines 1", "44323", "Lost Hills");
         PersistenceSession.addInvoice("INV-003", "788.11", "Song Lan Yi", "Subway 7", "72632", "Shocking");
@@ -72,7 +60,7 @@ public class LazyLoadTest {
 
     @Test
     public void testLazyLoad() {
-        // Adjust the log-level above to FINE to see LAZY LOAD working
+        // Adjust the log-level in logback.xml to DEBUG to see LAZY LOAD working
 
         LOGGER.info("Test Lazy Load ...");
         long startTimeNanos = System.nanoTime();
@@ -89,7 +77,8 @@ public class LazyLoadTest {
         assertEquals("Invoice({invoiceId=INV-001, amountClaimed=154.23, debtorName=Charly Brown, street=Dogstreet 12, "
                 + "zipCode=64354, city=Pumpkin Lake, dataComplete=true, detached=false})", invoice.toString());
 
-        LOGGER.info("Test Lazy Load successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Lazy Load successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -117,7 +106,8 @@ public class LazyLoadTest {
         // PersistenceManager.findAllInvoices(false);
         // and compare runtimes!
 
-        LOGGER.info("Test Lazy Load Show Ripple Effect successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Lazy Load Show Ripple Effect successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -150,8 +140,8 @@ public class LazyLoadTest {
         }
         assertEquals("Session closed!", (caughtEx == null ? "" : caughtEx.getMessage()));
 
-        LOGGER.info("Test Lazy Load Show Closed Session Effect successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Lazy Load Show Closed Session Effect successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -181,8 +171,8 @@ public class LazyLoadTest {
         }
         assertEquals("Cannot load data, entity detached!", (caughtEx == null ? "" : caughtEx.getMessage()));
 
-        LOGGER.info("Test Lazy Load Show Lost Session Effect successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Lazy Load Show Lost Session Effect successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

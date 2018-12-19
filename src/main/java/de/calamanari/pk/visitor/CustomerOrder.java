@@ -22,7 +22,9 @@ package de.calamanari.pk.visitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Customer Order - each order can carry a special discount. This discount can be added to a company or division discount but it is not applicable to order
@@ -32,10 +34,7 @@ import java.util.logging.Logger;
  */
 public class CustomerOrder {
 
-    /**
-     * logger
-     */
-    public static final Logger LOGGER = Logger.getLogger(CustomerOrder.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerOrder.class);
 
     /**
      * optional reference to a company division the order is related to
@@ -177,8 +176,8 @@ public class CustomerOrder {
      * @param visitor current visitor
      */
     public void accept(EnterpriseVisitor visitor) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".accept(" + visitor.getClass().getSimpleName() + ") called");
-        LOGGER.fine("DOUBLE DISPATCH");
+        LOGGER.debug("{}.accept({}) called", this.getClass().getSimpleName(), visitor.getClass().getSimpleName());
+        LOGGER.debug("DOUBLE DISPATCH");
         visitor.visit(this);
     }
 

@@ -49,7 +49,7 @@ import javax.sql.DataSource;
 public final class EmbeddedJavaDbDataSource implements DataSource {
 
     /**
-     * logger
+     * logger from java.util.logging due to compatibility reasons (Driver interface)
      */
     private static final Logger LOGGER = Logger.getLogger(EmbeddedJavaDbDataSource.class.getName());
 

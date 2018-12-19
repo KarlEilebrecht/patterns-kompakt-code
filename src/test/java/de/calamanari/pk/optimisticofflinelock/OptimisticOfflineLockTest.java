@@ -26,15 +26,14 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
 
@@ -45,15 +44,7 @@ import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
  */
 public class OptimisticOfflineLockTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(OptimisticOfflineLockTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptimisticOfflineLockTest.class);
 
     /**
      * for thread coordination
@@ -67,8 +58,6 @@ public class OptimisticOfflineLockTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, OptimisticOfflineLockTest.class, DataManager.class);
         LOGGER.info("Database setup ... ");
         DataSource dataSource = EmbeddedJavaDbDataSource.getInstance();
         try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
@@ -93,7 +82,7 @@ public class OptimisticOfflineLockTest {
     @Test
     public void testOptimisticOfflineLock() throws Exception {
 
-        // Hints: - Adjust the log-level above to FINE to see the OPTIMISTIC OFFLINE LOCK working
+        // Hints: - Adjust the log-level in logback.xml to DEBUG to see the OPTIMISTIC OFFLINE LOCK working
         //
         // - You can easily replace the data source above with a real one
 
@@ -108,7 +97,8 @@ public class OptimisticOfflineLockTest {
         assertEquals("Customer({customerId='4711', lastName='Miller', firstName='Jane', street='19, Lucky Road', "
                 + "zipCode='286736', city='Lemon Village', version=2})", dataManager.findCustomerById(4711).toString());
 
-        LOGGER.info("Test Optimistic Offline Lock successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Optimistic Offline Lock successful! Elapsed time: {} s", elapsedTimeString);
     }
 
     /**

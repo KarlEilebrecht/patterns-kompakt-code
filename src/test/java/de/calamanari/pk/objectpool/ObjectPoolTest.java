@@ -24,13 +24,11 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -41,21 +39,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ObjectPoolTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ObjectPoolTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ObjectPoolTest.class, ExampleObjectPool.class, ExampleReusableObject.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectPoolTest.class);
 
     /**
      * This one shows the result without pooling.
@@ -64,7 +48,7 @@ public class ObjectPoolTest {
     public void testWithoutPool() {
 
         // HINTS:
-        // * adjust the log-level above to FINE and see OBJECT POOL working
+        // * adjust the log-level in logback.xml to DEBUG and see OBJECT POOL working
 
         LOGGER.info("Test without pool started ... ");
 
@@ -102,7 +86,8 @@ public class ObjectPoolTest {
         assertEquals(callResult11, "X3");
         assertEquals(callResult12, "X4");
 
-        LOGGER.info("Test without pool successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test without pool successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -155,7 +140,8 @@ public class ObjectPoolTest {
         assertEquals(callResult11, "X3");
         assertEquals(callResult12, "X4");
 
-        LOGGER.info("Test with pool (no warm-up) successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with pool (no warm-up) successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -213,7 +199,8 @@ public class ObjectPoolTest {
         assertEquals(callResult11, "X3");
         assertEquals(callResult12, "X4");
 
-        LOGGER.info("Test with pool (warm-up) successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with pool (warm-up) successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -278,7 +265,8 @@ public class ObjectPoolTest {
         // give some time for log output
         Thread.sleep(1000);
 
-        LOGGER.info("Test with pool concurrent successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(endNanos - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(endNanos - startTimeNanos);
+        LOGGER.info("Test with pool concurrent successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

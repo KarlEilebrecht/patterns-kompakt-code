@@ -234,6 +234,7 @@ public final class ParallelFileInputStream extends InputStream {
      * @param bufferType the type of buffer to be used, see {@link BufferType}
      * @throws IOException on file access error
      */
+    @SuppressWarnings("resource")
     private ParallelFileInputStream(File file, int maxBufferSize, BufferType bufferType) throws IOException {
         if (maxBufferSize <= 0) {
             maxBufferSize = DEFAULT_MAX_BUFFER_SIZE;
@@ -597,16 +598,6 @@ public final class ParallelFileInputStream extends InputStream {
         }
         else {
             return singleByte[0];
-        }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        try {
-            this.close();
-        }
-        finally {
-            super.finalize();
         }
     }
 

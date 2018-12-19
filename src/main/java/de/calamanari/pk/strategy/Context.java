@@ -22,7 +22,9 @@ package de.calamanari.pk.strategy;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Context - some kind of system registry in this STRATEGY demonstration.
@@ -31,10 +33,7 @@ import java.util.logging.Logger;
  */
 public class Context {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(Context.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Context.class);
 
     /**
      * holds the available strategies.
@@ -58,7 +57,7 @@ public class Context {
      * @return strategy or null if not found
      */
     public HashStrategy getHashStrategy(String strategyName) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".getHashStrategy('" + strategyName + "') called ...");
+        LOGGER.debug("{}.getHashStrategy('{}') called ...", this.getClass().getSimpleName(), strategyName);
         return hashStrategies.get(strategyName);
     }
 
