@@ -23,13 +23,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,15 +38,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class TransferObjectAssemblerTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(TransferObjectAssemblerTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransferObjectAssemblerTest.class);
 
     /**
      * customer service for testing, usually this would involve remoting
@@ -56,10 +47,6 @@ public class TransferObjectAssemblerTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, TransferObjectAssemblerTest.class, CustomerEntity.class, CustomerDto.class, AddressEntity.class, AddressDto.class,
-                CustomerDwhInfoEntity.class, CustomerDwhInfoDto.class, CustomerService.class, Database.class, GeoBadPayerInfoDto.class,
-                GeoBadPayerInfoDtoAssembler.class);
 
         Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true, "ADR00091", "Quark-Street 70", "91827",
                 "Gotham City", "USA", "Dear Mr.", "Active Multi Buyer", 82, "2009-09-12", "2011-10-01", false, false, false);
@@ -100,8 +87,8 @@ public class TransferObjectAssemblerTest {
                 + "{customerId=ID0004, title=Mr., lastName=De-Vil, firstName=Sa Tan, zipCode=666666, "
                 + "city=Blackhole, country=USA, customerType=Active Multi Buyer, dueInvoice=true}]", display.toString());
 
-        LOGGER.info("Test without transfer object assembler successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test without transfer object assembler successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -109,7 +96,7 @@ public class TransferObjectAssemblerTest {
     public void testWithTransferObjectAssembler() {
 
         // HINTS:
-        // * Adjust the log-levels above to FINE to see TRANSFER OBJECT ASSEMBLER working
+        // * Adjust the log-level in logback.xml to DEBUG to see TRANSFER OBJECT ASSEMBLER working
         // * Compare the runtime values of the two tests
 
         LOGGER.info("Test with transfer object assembler ...");
@@ -132,8 +119,8 @@ public class TransferObjectAssemblerTest {
                 + "{customerId=ID0004, title=Mr., lastName=De-Vil, firstName=Sa Tan, zipCode=666666, "
                 + "city=Blackhole, country=USA, customerType=Active Multi Buyer, dueInvoice=true}]", display.toString());
 
-        LOGGER.info("Test with transfer object assembler successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with transfer object assembler successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

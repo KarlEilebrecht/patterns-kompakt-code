@@ -37,12 +37,21 @@
     <logger name="de.calamanari.pk.objectpool" level="INFO"/>
     <logger name="de.calamanari.pk.observer" level="INFO"/>
     <logger name="de.calamanari.pk.optimisticofflinelock" level="INFO"/>
-
-
-
-
-
+    <logger name="de.calamanari.pk.pessimisticofflinelock" level="INFO"/>
+    <logger name="de.calamanari.pk.plugin" level="INFO"/>
+    <logger name="de.calamanari.pk.proxy" level="INFO"/>
+    <logger name="de.calamanari.pk.registry" level="INFO"/>
+    <logger name="de.calamanari.pk.sequenceblock" level="INFO"/>
+    <logger name="de.calamanari.pk.servicestub" level="INFO"/>
+    <logger name="de.calamanari.pk.singleton" level="INFO"/>
+    <logger name="de.calamanari.pk.strategy" level="INFO"/>
     <logger name="de.calamanari.pk.templatemethod" level="INFO"/>
+    <logger name="de.calamanari.pk.transferobjectassembler" level="INFO"/>
+    <logger name="de.calamanari.pk.util" level="INFO"/>
+    <logger name="de.calamanari.pk.uuid" level="INFO"/>
+    <logger name="de.calamanari.pk.valueobject" level="INFO"/>
+    <logger name="de.calamanari.pk.visitor" level="INFO"/>
+    <logger name="de.calamanari.pk.wrapper" level="INFO"/>
 
 
     <root level="INFO">

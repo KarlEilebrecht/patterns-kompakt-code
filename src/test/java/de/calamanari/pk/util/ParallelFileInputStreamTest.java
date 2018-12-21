@@ -23,8 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -39,16 +37,6 @@ import de.calamanari.pk.util.pfis.ParallelFileInputStream;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ParallelFileInputStreamTest {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ParallelFileInputStreamTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
 
     /**
      * empty File
@@ -82,8 +70,6 @@ public class ParallelFileInputStreamTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ParallelFileInputStreamTest.class, ParallelFileInputStream.class);
         emptyFile = createBytesFile(0);
         oneByteFile = createBytesFile(1);
         twoBytesFile = createBytesFile(2);

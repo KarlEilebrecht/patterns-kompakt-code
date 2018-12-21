@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.strategy;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Message mock supports testing the hash STRATEGY.
@@ -28,10 +29,7 @@ import java.util.logging.Logger;
  */
 public class MessageMock {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(MessageMock.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageMock.class);
 
     /**
      * Name of hash strategy (KEY)
@@ -57,9 +55,9 @@ public class MessageMock {
     public MessageMock(String text, HashStrategy hashStrategy) {
         this.text = text;
         this.hashMethodName = hashStrategy.getName();
-        LOGGER.fine("Message mock uses hash strategy ... ");
+        LOGGER.debug("Message mock uses hash strategy ... ");
         this.messageHash = hashStrategy.computeHash(text);
-        LOGGER.fine("Hash computed: " + this.messageHash);
+        LOGGER.debug("Hash computed: {}", this.messageHash);
     }
 
     /**
@@ -87,9 +85,9 @@ public class MessageMock {
      * @return true if hash matches otherwise false
      */
     public boolean validate(HashStrategy hashStrategy) {
-        LOGGER.fine("Message mock uses hash strategy ... ");
+        LOGGER.debug("Message mock uses hash strategy ... ");
         String hash = hashStrategy.computeHash(this.getText());
-        LOGGER.fine("Hash computed: " + hash);
+        LOGGER.debug("Hash computed: {}", hash);
         return hash.equals(this.getMessageHash());
     }
 

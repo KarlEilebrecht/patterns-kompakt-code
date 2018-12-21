@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
 
@@ -33,11 +32,6 @@ import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(OldSysCustomerMgrMock.class.getName());
 
     /**
      * stores the test data for system test

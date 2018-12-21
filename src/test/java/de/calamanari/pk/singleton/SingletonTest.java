@@ -27,14 +27,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -44,15 +42,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class SingletonTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(SingletonTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SingletonTest.class);
 
     /**
      * number of runs for averaging runtime
@@ -69,12 +59,6 @@ public class SingletonTest {
      */
     private static final boolean DELETE_LOG_FILES_AFTER_TEST = true;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, SingletonTest.class, Tracer.class, Tracer2.class);
-    }
-
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
         Tracer.shutdown(DELETE_LOG_FILES_AFTER_TEST);
@@ -85,7 +69,7 @@ public class SingletonTest {
     public void testSingleton() throws Exception {
 
         // HINTS:
-        // * set the log-level above to FINE to see SINGLETON details.
+        // * set the log-level in logback.xml to DEBUG to see SINGLETON details.
         // * set DELETE_LOG_FILES_AFTER_TEST=false to control the order threads have processed
 
         LOGGER.info("Test Singleton ...");
@@ -117,8 +101,8 @@ public class SingletonTest {
             }
         }
 
-        LOGGER.info("Test Singleton successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS)) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS));
+        LOGGER.info("Test Singleton successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -165,8 +149,8 @@ public class SingletonTest {
         // several times and also change the order of the tests for the
         // different implementations.
 
-        LOGGER.info("Test Singleton2 successful! Elapsed time: "
-                + MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS)) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS));
+        LOGGER.info("Test Singleton2 successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
@@ -188,8 +172,8 @@ public class SingletonTest {
         Tracer2 restored = (Tracer2) ois.readObject();
 
         assertSame(firstCallResult, restored);
-
-        LOGGER.info("Test Singleton3 successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Singleton3 successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

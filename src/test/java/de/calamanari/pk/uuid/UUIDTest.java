@@ -25,13 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -43,26 +41,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class UUIDTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(UUIDTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UUIDTest.class);
 
     /**
      * Number of example requests in this test
      */
     private static final int NUMBER_OF_RUNS = 25;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, UUIDTest.class, Request.class);
-    }
 
     @Test
     public void testUUID() throws Exception {
@@ -95,7 +79,8 @@ public class UUIDTest {
 
         // Hint: Modify the Request.compareTo()-method to include requestTimeNanos.
 
-        LOGGER.info("Test UUID successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test UUID successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

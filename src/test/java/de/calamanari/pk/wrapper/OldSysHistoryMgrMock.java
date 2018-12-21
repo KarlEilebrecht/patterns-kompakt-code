@@ -21,7 +21,6 @@ package de.calamanari.pk.wrapper;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import de.calamanari.pk.wrapper.legacy.OldSysHistoryMgr;
 
@@ -31,11 +30,6 @@ import de.calamanari.pk.wrapper.legacy.OldSysHistoryMgr;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class OldSysHistoryMgrMock extends OldSysHistoryMgr {
-
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(OldSysHistoryMgrMock.class.getName());
 
     /**
      * stores the test data for system test

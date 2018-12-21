@@ -46,7 +46,7 @@ public class CommandProcessorTest {
     @Test
     public void testCommandProcessor() {
 
-        // hint: set the log-level in logback.xml to FINE to watch COMMAND PROCESSOR working.
+        // hint: set the log-level in logback.xml to DEBUG to watch COMMAND PROCESSOR working.
 
         LOGGER.info("Test Commmand Processor ...");
         long startTimeNanos = System.nanoTime();

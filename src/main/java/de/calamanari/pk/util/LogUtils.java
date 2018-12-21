@@ -19,10 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
 
 /**
  * Some utility methods related to java logging.
@@ -38,53 +36,7 @@ public final class LogUtils {
         // no instances
     }
 
-    /**
-     * Adjust the console handler's log level, especially useful in some IDEs.
-     * 
-     * @param level required level
-     */
-    public static void setConsoleHandlerLogLevel(Level level) {
-        Logger rootLogger = java.util.logging.Logger.getLogger("");
-
-        // find console handler, if any
-        for (Handler handler : rootLogger.getHandlers()) {
-            if (handler instanceof ConsoleHandler) {
-                handler.setLevel(level);
-                return;
-            }
-        }
-
-        // ok, we need a new console handler
-        ConsoleHandler consoleHandler = new ConsoleHandler();
-        rootLogger.addHandler(consoleHandler);
-        consoleHandler.setLevel(level);
-    }
-
-    /**
-     * Sets the log level related to multiple loggers.
-     * 
-     * @param level new level to set
-     * @param loggers one or more loggers
-     */
-    public static void setLogLevel(Level level, Logger... loggers) {
-        for (Logger logger : loggers) {
-            logger.setLevel(level);
-        }
-    }
-
-    /**
-     * Sets the log level related to multiple classes assuming the class name as the related logger's name.
-     * 
-     * @param level new level to set
-     * @param classes one or more classes
-     */
-    public static void setLogLevel(Level level, Class<?>... classes) {
-        for (Class<?> cls : classes) {
-            Logger.getLogger(cls.getName()).setLevel(level);
-        }
-    }
-
-    public static boolean isLogginEnabled(org.slf4j.Logger logger, org.slf4j.event.Level level) {
+    public static boolean isLogginEnabled(Logger logger, Level level) {
         boolean res = false;
         if (level != null) {
             //@formatter:off
@@ -100,7 +52,7 @@ public final class LogUtils {
         return res;
     }
 
-    public static void log(org.slf4j.Logger logger, org.slf4j.event.Level level, String message) {
+    public static void log(Logger logger, Level level, String message) {
         if (level != null) {
             //@formatter:off
             switch (level) {
@@ -114,7 +66,7 @@ public final class LogUtils {
         }
     }
 
-    public static void log(org.slf4j.Logger logger, org.slf4j.event.Level level, String message, Throwable t) {
+    public static void log(Logger logger, Level level, String message, Throwable t) {
         if (level != null) {
             //@formatter:off
             switch (level) {

@@ -22,13 +22,11 @@ package de.calamanari.pk.registry;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -38,26 +36,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class RegistryTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(RegistryTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, RegistryTest.class, PropertyRegistry.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistryTest.class);
 
     @Test
     public void testRegistry() {
 
-        // Hint: set the log-level above to FINE to watch REGISTRY working.
+        // Hint: set the log-level in logback.xml to DEBUG to watch REGISTRY working.
 
         LOGGER.info("Test Registry ...");
         long startTimeNanos = System.nanoTime();
@@ -98,7 +82,8 @@ public class RegistryTest {
 
         assertEquals("Host: TREADSTONE, secure: true", s);
 
-        LOGGER.info("Test Registry successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Registry successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

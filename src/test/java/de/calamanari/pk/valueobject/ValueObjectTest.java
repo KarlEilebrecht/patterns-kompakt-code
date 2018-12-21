@@ -26,13 +26,11 @@ import static org.junit.Assert.assertSame;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,21 +40,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ValueObjectTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ValueObjectTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ValueObjectTest.class, Fraction.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValueObjectTest.class);
 
     @Test
     public void testValueObject() throws Exception {
@@ -123,7 +107,8 @@ public class ValueObjectTest {
         Arrays.sort(fractions, Fraction.VIEW_COMPARATOR);
         assertEquals("[(0/1), (1/3), (2/2), (4/4), (25/5)]", Arrays.asList(fractions).toString());
 
-        LOGGER.info("Test Value Object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Value Object successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

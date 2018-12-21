@@ -23,13 +23,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -39,27 +37,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class VisitorTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(VisitorTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, VisitorTest.class, EffectiveDiscountVisitor.class, CustomerCompany.class, CustomerDivision.class,
-                CustomerHolding.class, CustomerOrder.class, OrderItem.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(VisitorTest.class);
 
     @Test
     public void testVisitor() {
 
-        // HINT: Adjust the log-level above to FINE to see the VISITOR working
+        // HINT: Adjust the log-level in lockback.xml to DEBUG to see the VISITOR working
 
         LOGGER.info("Test Visitor ...");
         long startTimeNanos = System.nanoTime();
@@ -104,7 +87,8 @@ public class VisitorTest {
         order1.accept(visitor6);
         assertEquals("5.50", nf.format(visitor6.getEffectiveDiscountPerc()));
 
-        LOGGER.info("Test Visitor successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Visitor successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

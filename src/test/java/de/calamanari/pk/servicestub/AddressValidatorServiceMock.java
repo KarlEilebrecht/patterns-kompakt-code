@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.servicestub;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.servicestub.adrchk.AddressValidatorService;
 
@@ -32,10 +33,7 @@ import de.calamanari.pk.servicestub.adrchk.AddressValidatorService;
  */
 public class AddressValidatorServiceMock implements AddressValidatorService {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(AddressValidatorServiceMock.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddressValidatorServiceMock.class);
 
     /**
      * The predefined result
@@ -48,14 +46,14 @@ public class AddressValidatorServiceMock implements AddressValidatorService {
      * @param validationResult result to be returned
      */
     public AddressValidatorServiceMock(boolean validationResult) {
-        LOGGER.fine(this.getClass().getSimpleName() + "(" + validationResult + ") created.");
+        LOGGER.debug("{}({}) created.", this.getClass().getSimpleName(), validationResult);
         this.validationResult = validationResult;
     }
 
     @Override
     public boolean validateAddress(String street, String zipCode, String city) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".validateAddress('" + street + "', '" + zipCode + "', '" + city + "') called.");
-        LOGGER.fine("Returning " + validationResult);
+        LOGGER.debug(this.getClass().getSimpleName() + ".validateAddress('" + street + "', '" + zipCode + "', '" + city + "') called.");
+        LOGGER.debug("Returning {}", validationResult);
         return validationResult;
     }
 
@@ -65,7 +63,7 @@ public class AddressValidatorServiceMock implements AddressValidatorService {
      * @param validationResult result of the validation process
      */
     public void setValidationResult(boolean validationResult) {
-        LOGGER.fine(this.getClass().getSimpleName() + ".setValidationResult(" + validationResult + ") called.");
+        LOGGER.debug("{}.setValidationResult({}) called.", this.getClass().getSimpleName(), validationResult);
         this.validationResult = validationResult;
     }
 

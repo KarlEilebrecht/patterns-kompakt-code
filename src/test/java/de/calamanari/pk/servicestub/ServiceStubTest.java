@@ -22,13 +22,10 @@ package de.calamanari.pk.servicestub;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -38,26 +35,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class ServiceStubTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(ServiceStubTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ServiceStubTest.class, Account.class, AccountManager.class);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceStubTest.class);
 
     @Test
     public void testServiceStub() throws Exception {
 
-        // Hint: set the log-level above to FINE to watch SERVICE STUB working.
+        // Hint: set the log-level in logback.xml to DEBUG to watch SERVICE STUB working.
 
         LOGGER.info("Test service stub ...");
         long startTimeNanos = System.nanoTime();
@@ -107,7 +90,8 @@ public class ServiceStubTest {
         assertTrue(caughtEx instanceof AccountValidationException);
         assertEquals("Could not create account, invalid address.", caughtEx.getMessage());
 
-        LOGGER.info("Test service stub successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test service stub successful! Elapsed time: {} s", elapsedTimeString);
     }
 
 }

@@ -25,14 +25,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,27 +40,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class StrategyTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(StrategyTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(StrategyTest.class);
 
     /**
      * Mocks the system context/registry
      */
     private static final Context CONTEXT = new Context();
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, Context.class, StrategyTest.class, HashStrategy.class, MessageMock.class, Crc32HashStrategy.class,
-                Sha1HashStrategy.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -76,7 +59,7 @@ public class StrategyTest {
     @Test
     public void testStrategy() {
 
-        // hint: adjust the log-levels above to FINE to see STRATEGY working
+        // hint: adjust the log-level in logback.xml to DEBUG to see STRATEGY working
 
         LOGGER.info("Test Strategy ...");
         long startTimeNanos = System.nanoTime();
@@ -92,14 +75,15 @@ public class StrategyTest {
         }
 
         for (MessageMock messageMock : messageList) {
-            LOGGER.fine(messageMock.toString());
+            LOGGER.debug(messageMock.toString());
             String hashStrategyName = messageMock.getHashMethodName();
             HashStrategy hashStrategy = CONTEXT.getHashStrategy(hashStrategyName);
             assertTrue(messageMock.validate(hashStrategy));
             assertEquals(messageText, messageMock.getText());
         }
 
-        LOGGER.info("Test Strategy successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Strategy successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

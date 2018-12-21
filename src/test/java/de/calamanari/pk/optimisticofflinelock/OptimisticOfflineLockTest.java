@@ -33,6 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
@@ -58,11 +59,13 @@ public class OptimisticOfflineLockTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
         LOGGER.info("Database setup ... ");
         DataSource dataSource = EmbeddedJavaDbDataSource.getInstance();
         try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
             // There is no "IF EXISTS", thus brute-force drop.
-            // However, the cleaner way was using DatabaseMetaData to check for existence in advance.
+            // However, the cleaner way would be using DatabaseMetaData to check for existence in advance.
             stmt.executeUpdate("drop table CUSTOMER");
         }
         catch (Exception ex) {

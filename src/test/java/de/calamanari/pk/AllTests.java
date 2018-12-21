@@ -19,14 +19,13 @@
 //@formatter:on
 package de.calamanari.pk;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.abstractfactory.AbstractFactoryTest;
 import de.calamanari.pk.activeobject.ActiveObjectTest;
@@ -69,7 +68,6 @@ import de.calamanari.pk.strategy.StrategyTest;
 import de.calamanari.pk.templatemethod.TemplateMethodTest;
 import de.calamanari.pk.transferobjectassembler.TransferObjectAssemblerTest;
 import de.calamanari.pk.util.IndexedTextFileAccessorTest;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.ParallelFileInputStreamTest;
 import de.calamanari.pk.uuid.UUIDTest;
@@ -135,10 +133,7 @@ import de.calamanari.pk.wrapper.WrapperTest;
 })
 public final class AllTests {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(AllTests.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AllTests.class);
 
     /**
      * Time tests began
@@ -157,8 +152,6 @@ public final class AllTests {
      */
     @BeforeClass
     public static void beforeAll() {
-        LogUtils.setConsoleHandlerLogLevel(Level.INFO);
-        LogUtils.setLogLevel(Level.INFO, AllTests.class);
         startTimeNanos = System.nanoTime();
         LOGGER.info("Running AllTests ...");
     }
@@ -168,7 +161,8 @@ public final class AllTests {
      */
     @AfterClass
     public static void afterAll() {
-        LOGGER.info("AllTests completed. Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("AllTests completed. Elapsed time: {} s", elapsedTimeString);
     }
 
 }

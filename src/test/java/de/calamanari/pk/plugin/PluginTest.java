@@ -22,16 +22,12 @@ package de.calamanari.pk.plugin;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.plugin.ext.FileMacroPlugin;
-import de.calamanari.pk.plugin.ext.StringMacroPlugin;
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -41,27 +37,12 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class PluginTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(PluginTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PluginTest.class);
 
     /**
      * By default the files will be deleted after test, set this to true if you want to take a look into
      */
     private static final boolean KEEP_FILES_AFTER_TEST = false;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, PluginTest.class, ExampleScriptingFramework.class, MacroPluginFactory.class, FileMacroPlugin.class,
-                StringMacroPlugin.class);
-    }
 
     @AfterClass
     public static void setUpAfterClass() throws Exception {
@@ -80,7 +61,7 @@ public class PluginTest {
     @Test
     public void testPlugin() {
 
-        // Hint: set the log-level above to FINE to watch PLUGIN working.
+        // Hint: set the log-level in logback.xml to DEBUG to watch PLUGIN working.
 
         // Suggestions for refactoring/experiments:
         // - find a way to avoid literals for the macro names in the plugin-classes
@@ -98,8 +79,9 @@ public class PluginTest {
         String result = MiscUtils.readFileToString(new File(MiscUtils.getHomeDirectory(), "plugin-test-script.out"));
         assertEquals(expectedResult, result);
 
-        LOGGER.info("Test plugin successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
-        LOGGER.fine(framework.getProtocol());
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test plugin successful! Elapsed time: {} s", elapsedTimeString);
+        LOGGER.debug(framework.getProtocol());
     }
 
 }

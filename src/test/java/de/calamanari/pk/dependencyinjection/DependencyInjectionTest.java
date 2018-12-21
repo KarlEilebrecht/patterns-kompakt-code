@@ -37,7 +37,7 @@ public class DependencyInjectionTest {
     @Test
     public void testDependencyInjection() throws Exception {
 
-        // Hint: set the log-level above to FINE to see DEPENDENCY INJECTION working.
+        // Hint: set the log-level in logback.xml to DEBUG to see DEPENDENCY INJECTION working.
 
         String[] componentTypes = new String[] { ComponentFramework.COMPONENT_1, ComponentFramework.COMPONENT_2, ComponentFramework.COMPONENT_3,
                 ComponentFramework.COMPONENT_4 };

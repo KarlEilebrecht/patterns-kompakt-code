@@ -22,16 +22,13 @@ package de.calamanari.pk.wrapper;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
-import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
 
 /**
  * Wrapper Test - demonstrates WRAPPER pattern
@@ -40,27 +37,12 @@ import de.calamanari.pk.wrapper.legacy.OldSysCustomerMgr;
  */
 public class WrapperTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(WrapperTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(WrapperTest.class);
 
     /**
      * Legacy Customer Info Provider for testing the wrapper
      */
     private LegacyCustomerInfoProvider legacyCustomerInfoProvider = null;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, WrapperTest.class, OldSysCustomerMgrMock.class, OldSysHistoryMgrMock.class, OldSysCustomerMgr.class,
-                OldSysHistoryMgrMock.class, LegacyCustomerInfo.class, LegacyCustomerInfoProvider.class);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -69,16 +51,16 @@ public class WrapperTest {
 
         testCustomerManager = new OldSysCustomerMgrMock();
         testHistoryManager = new OldSysHistoryMgrMock();
-        testCustomerManager.addTestRecord(1, new String[] { LegacyCustomerInfo.KEY_ID, "1", LegacyCustomerInfo.KEY_NAME, "John Doe",
-                LegacyCustomerInfo.KEY_SEGMENT, "67" });
-        testCustomerManager.addTestRecord(2, new String[] { LegacyCustomerInfo.KEY_ID, "2", LegacyCustomerInfo.KEY_NAME, "Lara Crofft",
-                LegacyCustomerInfo.KEY_SEGMENT, "67" });
-        testCustomerManager.addTestRecord(3, new String[] { LegacyCustomerInfo.KEY_ID, "3", LegacyCustomerInfo.KEY_NAME, "Sandy Bridge",
-                LegacyCustomerInfo.KEY_SEGMENT, "11" });
-        testCustomerManager.addTestRecord(4, new String[] { LegacyCustomerInfo.KEY_ID, "4", LegacyCustomerInfo.KEY_NAME, "Jack Miller",
-                LegacyCustomerInfo.KEY_SEGMENT, "11" });
-        testCustomerManager.addTestRecord(5, new String[] { LegacyCustomerInfo.KEY_ID, "5", LegacyCustomerInfo.KEY_NAME, "Ren Stimpy",
-                LegacyCustomerInfo.KEY_SEGMENT, "20" });
+        testCustomerManager.addTestRecord(1,
+                new String[] { LegacyCustomerInfo.KEY_ID, "1", LegacyCustomerInfo.KEY_NAME, "John Doe", LegacyCustomerInfo.KEY_SEGMENT, "67" });
+        testCustomerManager.addTestRecord(2,
+                new String[] { LegacyCustomerInfo.KEY_ID, "2", LegacyCustomerInfo.KEY_NAME, "Lara Crofft", LegacyCustomerInfo.KEY_SEGMENT, "67" });
+        testCustomerManager.addTestRecord(3,
+                new String[] { LegacyCustomerInfo.KEY_ID, "3", LegacyCustomerInfo.KEY_NAME, "Sandy Bridge", LegacyCustomerInfo.KEY_SEGMENT, "11" });
+        testCustomerManager.addTestRecord(4,
+                new String[] { LegacyCustomerInfo.KEY_ID, "4", LegacyCustomerInfo.KEY_NAME, "Jack Miller", LegacyCustomerInfo.KEY_SEGMENT, "11" });
+        testCustomerManager.addTestRecord(5,
+                new String[] { LegacyCustomerInfo.KEY_ID, "5", LegacyCustomerInfo.KEY_NAME, "Ren Stimpy", LegacyCustomerInfo.KEY_SEGMENT, "20" });
 
         testHistoryManager.addTestRecord(1, new String[] { LegacyCustomerInfo.KEY_ID, "1", LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-12-11" });
         testHistoryManager.addTestRecord(2, new String[] { LegacyCustomerInfo.KEY_ID, "2", LegacyCustomerInfo.KEY_LAST_ORDER_DATE, "2010-02-01" });
@@ -93,14 +75,14 @@ public class WrapperTest {
     @Test
     public void testWrapper() {
 
-        // hint: adjust the log-levels above to FINE to see the Wrapper working
+        // hint: adjust the log-level in lockback.xml to DEBUG to see the Wrapper working
 
         LOGGER.info("Test Wrapper ...");
         long startTimeNanos = System.nanoTime();
 
         CustomerInfo info3 = legacyCustomerInfoProvider.getCustomerInfo("3");
         String sInfo3 = info3.toString();
-        LOGGER.fine(sInfo3);
+        LOGGER.debug(sInfo3);
 
         assertEquals("3", info3.getId());
         assertEquals("Sandy Bridge", info3.getName());
@@ -109,16 +91,17 @@ public class WrapperTest {
 
         List<CustomerInfo> list = legacyCustomerInfoProvider.findCustomerInfosOfSegment(11);
         assertEquals(2, list.size());
-        LOGGER.fine("" + list);
+        LOGGER.debug("" + list);
 
         List<CustomerInfo> list2 = legacyCustomerInfoProvider.findCustomerInfosOfSegment(20);
         assertEquals(1, list2.size());
         CustomerInfo info5 = list2.get(0);
         String sInfo5 = info5.toString();
         assertEquals("LegacyCustomerInfo({ID='5', Name='Ren Stimpy', Segment=20, Last Order Date='2010-12-20'})", sInfo5);
-        LOGGER.fine(sInfo5);
+        LOGGER.debug(sInfo5);
 
-        LOGGER.info("Test Wrapper successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Wrapper successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 

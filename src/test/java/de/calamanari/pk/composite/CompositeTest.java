@@ -69,7 +69,7 @@ public class CompositeTest {
     @Test
     public void testComposite() {
 
-        // hint: set the log-level in logback.xml to FINE to watch COMPOSITE working.
+        // hint: set the log-level in logback.xml to DEBUG to watch COMPOSITE working.
 
         LOGGER.info("Test Composite ...");
         long startTimeNanos = System.nanoTime();

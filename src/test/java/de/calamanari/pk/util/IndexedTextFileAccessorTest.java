@@ -30,12 +30,12 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 
@@ -46,15 +46,7 @@ import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
  */
 public class IndexedTextFileAccessorTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(IndexedTextFileAccessorTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexedTextFileAccessorTest.class);
 
     /**
      * Defines whether the huge file (ca. 1GB) should be created for testing or not
@@ -153,8 +145,6 @@ public class IndexedTextFileAccessorTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, IndexedTextFileAccessorTest.class, IndexedTextFileAccessor.class);
 
         emptyFile = createTextFile("emptyFile_" + CHARSET_NAME + ".txt", null, CHARSET_NAME);
         onlyEmptyLines3File = createTextFile("onlyEmptyLines3File_" + CHARSET_NAME + ".txt", Arrays.asList(new String[] { "", "\r" }), CHARSET_NAME);
@@ -187,7 +177,8 @@ public class IndexedTextFileAccessorTest {
             long startTimeNanos = System.nanoTime();
             LOGGER.info("Creating huge file ... ");
             huge1000000LinesFile = createHugeFile("hugeFile1000000_" + CHARSET_NAME + ".txt");
-            LOGGER.info("Huge file '" + huge1000000LinesFile + "' created after " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s.");
+            String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+            LOGGER.info("Huge file '{}' created after {} s.", huge1000000LinesFile, elapsedTimeString);
         }
 
     }
@@ -209,7 +200,6 @@ public class IndexedTextFileAccessorTest {
         trailingSurrogatePairFile.delete();
         miscSurrogatePairFile.delete();
         if (HUGE_TEST_ALLOWED) {
-            System.gc();
             Thread.sleep(5000);
             huge1000000LinesFile.delete();
             huge1000000LinesFile = null;
@@ -389,12 +379,13 @@ public class IndexedTextFileAccessorTest {
             long startTimeNanos = System.nanoTime();
             LOGGER.info("Creating IndexedTextFileAccessor ... ");
             IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(huge1000000LinesFile, CHARSET_NAME);
-            LOGGER.info("Index ready after " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s.");
+            String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+            LOGGER.info("Index ready after {} s.", elapsedTimeString);
             assertEquals(1146888889, ifa.getFileSize());
             assertEquals(1056888889, ifa.getNumberOfCharacters());
             assertEquals(1000000, ifa.getNumberOfLines());
             assertTrue(9990 < ifa.getNumberOfCharacterIndexEntries());
-            assertTrue(9980 < ifa.getNumberOfLineIndexEntries());
+            assertTrue(9970 < ifa.getNumberOfLineIndexEntries());
             assertEquals("---> \u00C4\u00D6\u00DC!01234567890123456789", readLineAndClose(ifa.createInputStreamReaderAtChar(999052)));
             String s = readLineAndClose(ifa.createInputStreamReaderAtLine(999999));
             assertEquals(1056, s.length());

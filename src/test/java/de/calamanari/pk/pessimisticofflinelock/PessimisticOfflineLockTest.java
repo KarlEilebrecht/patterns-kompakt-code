@@ -25,14 +25,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -42,15 +40,7 @@ import de.calamanari.pk.util.MiscUtils;
  */
 public class PessimisticOfflineLockTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(PessimisticOfflineLockTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PessimisticOfflineLockTest.class);
 
     /**
      * for thread coordination
@@ -62,12 +52,6 @@ public class PessimisticOfflineLockTest {
      */
     private final Map<String, Customer> customerDb = new ConcurrentHashMap<>();
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, PessimisticOfflineLockTest.class, LockManager.class);
-    }
-
     @Before
     public void setUp() throws Exception {
         customerDb.clear();
@@ -77,7 +61,7 @@ public class PessimisticOfflineLockTest {
     @Test
     public void testPessimisticOfflineLock() throws Exception {
 
-        // Hints: - Adjust the log-level above to FINE to see the PESSIMISTIC OFFLINE LOCK working
+        // Hints: - Adjust the log-level in lockback.xml to DEBUG to see the PESSIMISTIC OFFLINE LOCK working
         //
         // - Re-implement the LockManager with real database access (see EmbeddedJavaDbDataSource.getInstance())
 
@@ -94,11 +78,11 @@ public class PessimisticOfflineLockTest {
 
         assertEquals("LockInfo({elementId='4711', lockType='NONE', ownerIds=[]})", LockManager.getLockInfo("4711").toString());
 
-        assertEquals(
-                "Customer({customerId='4711', lastName='Miller', firstName='Jack', street='19, Lucky Road', " + "zipCode='286736', city='Lemon Village'})",
+        assertEquals("Customer({customerId='4711', lastName='Miller', firstName='Jack', street='19, Lucky Road', " + "zipCode='286736', city='Lemon Village'})",
                 customerDb.get("4711").toString());
 
-        LOGGER.info("Test Pessimistic Offline Lock successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Pessimistic Offline Lock successful! Elapsed time: {} s", elapsedTimeString);
     }
 
     /**
@@ -118,7 +102,7 @@ public class PessimisticOfflineLockTest {
 
                     Customer customer = customerDb.get("4711");
 
-                    LOGGER.fine("User_1 displays: " + customer.toString());
+                    LOGGER.debug("User_1 displays: {}", customer);
 
                     MiscUtils.sleepIgnoreException(5000);
 
@@ -162,7 +146,7 @@ public class PessimisticOfflineLockTest {
                 try {
 
                     Customer customer = customerDb.get("4711");
-                    LOGGER.fine("User_2 displays: " + customer.toString());
+                    LOGGER.debug("User_2 displays: {}", customer);
 
                     MiscUtils.sleepIgnoreException(2000);
 
@@ -191,7 +175,7 @@ public class PessimisticOfflineLockTest {
 
                 assertTrue(lockFailed);
 
-                LOGGER.fine("User_3 failed to get write lock! - Existing Lock found: " + LockManager.getLockInfo("4711"));
+                LOGGER.debug("User_3 failed to get write lock! - Existing Lock found: {}", LockManager.getLockInfo("4711"));
 
                 countDown.countDown();
             }
@@ -214,7 +198,7 @@ public class PessimisticOfflineLockTest {
 
                 assertTrue(lockFailed);
 
-                LOGGER.fine("User_4 failed to get read lock! - Existing Lock found: " + LockManager.getLockInfo("4711"));
+                LOGGER.debug("User_4 failed to get read lock! - Existing Lock found: {}", LockManager.getLockInfo("4711"));
 
                 countDown.countDown();
             }
@@ -240,7 +224,7 @@ public class PessimisticOfflineLockTest {
                 try {
 
                     Customer customer = customerDb.get("4711");
-                    LOGGER.fine("User_5 displays: " + customer.toString());
+                    LOGGER.debug("User_5 displays: {}", customer);
 
                 }
                 finally {

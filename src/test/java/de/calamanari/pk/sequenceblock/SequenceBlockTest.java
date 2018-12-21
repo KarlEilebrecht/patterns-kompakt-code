@@ -29,16 +29,16 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
 
@@ -49,15 +49,7 @@ import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
  */
 public class SequenceBlockTest {
 
-    /**
-     * logger
-     */
-    private static final Logger LOGGER = Logger.getLogger(SequenceBlockTest.class.getName());
-
-    /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SequenceBlockTest.class);
 
     /**
      * number of test runs (threaded calls)
@@ -104,7 +96,7 @@ public class SequenceBlockTest {
         public void run() {
 
             int no = THREAD_NO.incrementAndGet() + 1;
-            LOGGER.fine("Thread " + no + ": " + Integer.toHexString(Thread.currentThread().hashCode()) + " working ...");
+            LOGGER.debug("Thread {}: {} working ...", no, Integer.toHexString(Thread.currentThread().hashCode()));
 
             // no random, but avoid the same value for all threads
             int magic = ((no * 73) % 23);
@@ -112,14 +104,14 @@ public class SequenceBlockTest {
 
                 long id = globalCache.getNextId(TEST_SEQUENCE_NAME);
 
-                LOGGER.finest("Thread " + no + ": " + Integer.toHexString(Thread.currentThread().hashCode()) + " retrieved ID=" + id + ".");
+                LOGGER.trace("Thread {}: {} retrieved ID={}.", no, Integer.toHexString(Thread.currentThread().hashCode()), id);
 
                 collectId(id);
 
                 MiscUtils.sleepThrowRuntimeException(magic);
             }
             doneCount.countDown();
-            LOGGER.fine("Thread " + no + " completed!");
+            LOGGER.debug("Thread {} completed!", no);
         }
     };
 
@@ -132,7 +124,7 @@ public class SequenceBlockTest {
         public void run() {
 
             int no = THREAD_NO.incrementAndGet() + 1;
-            LOGGER.fine("Thread " + no + ": " + Integer.toHexString(Thread.currentThread().hashCode()) + " working ...");
+            LOGGER.debug("Thread {}: {} working ...", no, Integer.toHexString(Thread.currentThread().hashCode()));
 
             SequenceBlockCache localSequenceBlockCache = new SequenceBlockCache(dataSource);
 
@@ -142,14 +134,14 @@ public class SequenceBlockTest {
 
                 long id = localSequenceBlockCache.getNextId(TEST_SEQUENCE_NAME);
 
-                LOGGER.finest("Thread " + no + ": " + Integer.toHexString(Thread.currentThread().hashCode()) + " retrieved ID=" + id + ".");
+                LOGGER.trace("Thread {}: {} retrieved ID={}.", no, Integer.toHexString(Thread.currentThread().hashCode()), id);
 
                 collectId(id);
 
                 MiscUtils.sleepThrowRuntimeException(magic);
             }
             doneCount.countDown();
-            LOGGER.fine("Thread " + no + " completed!");
+            LOGGER.debug("Thread {} completed!", no);
         }
     };
 
@@ -167,8 +159,8 @@ public class SequenceBlockTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, SequenceBlockTest.class, SequenceBlock.class, SequenceBlockCache.class);
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
         LOGGER.info("Database setup ... ");
         dataSource = EmbeddedJavaDbDataSource.getInstance();
         try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
@@ -199,7 +191,7 @@ public class SequenceBlockTest {
     @Test
     public void testGlobalSequenceBlockCache() throws Exception {
 
-        // Hints: - set the log-level above to FINE to watch SEQUENCE BLOCK working.
+        // Hints: - set the log-level in logback.xml to DEBUG or TRACE to watch SEQUENCE BLOCK working.
         // before, you should redirect console output to a file, it's a lot of stuff ...
         //
         // - You can easily replace the embedded JavaDB dataSource (Derby) by a real one:
@@ -217,13 +209,11 @@ public class SequenceBlockTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Number of used ids: " + USED_ID_SET.size() + ", next ID=" + globalCache.getNextId(TEST_SEQUENCE_NAME));
-        LOGGER.info("Test with global sequence block cache successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                + " s");
+        LOGGER.info("Number of used ids: {}, next ID={}", USED_ID_SET.size(), globalCache.getNextId(TEST_SEQUENCE_NAME));
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with global sequence block cache successful! Elapsed time: {} s", elapsedTimeString);
 
-        if (LOGGER.isLoggable(Level.FINEST)) {
-            LOGGER.finest("All used ids: " + USED_ID_SET);
-        }
+        LOGGER.trace("All used ids: {}", USED_ID_SET);
     }
 
     @Test
@@ -240,8 +230,8 @@ public class SequenceBlockTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        LOGGER.info("Number of used ids: " + USED_ID_SET.size() + ", next independent block starts with ID="
-                + (new SequenceBlockCache(dataSource)).getNextId(TEST_SEQUENCE_NAME));
+        LOGGER.info("Number of used ids: {}, next independent block starts with ID={}", USED_ID_SET.size(),
+                (new SequenceBlockCache(dataSource)).getNextId(TEST_SEQUENCE_NAME));
         // Hint: The database is not cleared between tests calls in the test case.
         // Please have a look at the "next independent block starts with" message. Although we have requested exactly
         // the same
@@ -251,12 +241,11 @@ public class SequenceBlockTest {
         // In fact in this example most blocks will be thrown away before getting exhausted.
         // This is no error but shows a typical side effect, when multiple servers (here the threads) work on the same
         // database.
-        LOGGER.info("Test with local sequence block caches successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos)
-                + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test with local sequence block caches successful! Elapsed time: {} s", elapsedTimeString);
 
-        if (LOGGER.isLoggable(Level.FINEST)) {
-            LOGGER.finest("All used ids: " + USED_ID_SET);
-        }
+        LOGGER.trace("All used ids: {}", USED_ID_SET);
+
     }
 
 }

@@ -64,7 +64,7 @@ public class TemplateMethodTest {
     @Test
     public void testExample() {
 
-        // Hint: set the log level above to FINE to see TEMPLATE METHODs at work.
+        // Hint: set the log level in logback.xml to DEBUG to see TEMPLATE METHODs at work.
 
         LOGGER.info("Test ExampleTemplateMethodStringCodec ...");
         long startTimeNanos = System.nanoTime();

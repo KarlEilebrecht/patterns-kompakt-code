@@ -27,13 +27,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.LogUtils;
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.SimpleAccessManager;
 
@@ -44,10 +42,7 @@ import de.calamanari.pk.util.SimpleAccessManager;
  */
 public class ProxyTest {
 
-    /**
-     * logger
-     */
-    protected static final Logger LOGGER = Logger.getLogger(ProxyTest.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProxyTest.class);
 
     /**
      * Name (key) for testing
@@ -60,11 +55,6 @@ public class ProxyTest {
     private static final String TEST_DOCUMENT_NAME2 = "testDocument2";
 
     /**
-     * Log-level for this test
-     */
-    private static final Level LOG_LEVEL = Level.INFO;
-
-    /**
      * Mocks some kind of system registry
      */
     private static final Map<String, DocumentManager> SYSTEM_REGISTRY = new ConcurrentHashMap<>();
@@ -74,16 +64,10 @@ public class ProxyTest {
      */
     private static final String DOCUMENT_MANAGER_KEY = "documentMgr";
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        LogUtils.setConsoleHandlerLogLevel(LOG_LEVEL);
-        LogUtils.setLogLevel(LOG_LEVEL, ProxyTest.class, DocumentManagerSecurityProxy.class, SimpleDocumentManager.class);
-    }
-
     @Test
     public void testProxy() throws Exception {
 
-        // Hint: set the log-level above to FINE to watch PROXY working.
+        // Hint: set the log-level in logback.xml to DEBUG to watch PROXY working.
 
         LOGGER.info("Test Proxy ...");
         long startTimeNanos = System.nanoTime();
@@ -176,7 +160,8 @@ public class ProxyTest {
         assertEquals("All the time, the fat yellow cow flew over the rotton lake.", concreteDocumentManager.findDocumentByName(TEST_DOCUMENT_NAME));
         assertEquals(null, concreteDocumentManager.findDocumentByName(TEST_DOCUMENT_NAME2));
 
-        LOGGER.info("Test Proxy successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        LOGGER.info("Test Proxy successful! Elapsed time: {} s", elapsedTimeString);
 
     }
 
