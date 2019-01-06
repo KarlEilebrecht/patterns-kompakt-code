@@ -49,7 +49,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
     /**
      * allows protocol messages from macro
      */
-    private final StringBuffer protocol = new StringBuffer();
+    private final StringBuilder protocol = new StringBuilder();
 
     @Override
     public Object getProperty(String propertyName) {
@@ -70,7 +70,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
     }
 
     @Override
-    public void addProtocolMessage(String source, String message) {
+    public synchronized void addProtocolMessage(String source, String message) {
         LOGGER.debug("{}.addProtocolMessage() called.", this.getClass().getSimpleName());
         protocol.append(source);
         protocol.append(": ");
@@ -84,7 +84,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
      * 
      * @return protocol as a string
      */
-    public String getProtocol() {
+    public synchronized String getProtocol() {
         return this.protocol.toString();
     }
 

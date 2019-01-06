@@ -147,7 +147,7 @@ public class FileMacroPlugin implements MacroPlugin {
         if (arg1 instanceof String) {
             arg1 = new File((String) arg1);
         }
-        if (arg1 == null || !(arg1 instanceof File) || (arg2 != null && !(arg2 instanceof String))) {
+        if (!(arg1 instanceof File) || (arg2 != null && !(arg2 instanceof String))) {
             throw new RuntimeException("Could not execute macro 'readFileToString' - illegal arguments.");
         }
         return MiscUtils.readFileToString((File) arg1, (String) arg2);
@@ -172,7 +172,7 @@ public class FileMacroPlugin implements MacroPlugin {
         if (arg2 instanceof String) {
             arg2 = new File((String) arg2);
         }
-        if (arg1 == null || !(arg1 instanceof String) || arg2 == null || !(arg2 instanceof File) || (arg3 != null && !(arg3 instanceof String))) {
+        if (!(arg1 instanceof String) || !(arg2 instanceof File) || (arg3 != null && !(arg3 instanceof String))) {
             throw new RuntimeException("Could not execute macro 'writeStringToFile' - illegal arguments.");
         }
         return Long.valueOf(MiscUtils.writeStringToFile((String) arg1, (File) arg2, (String) arg3));

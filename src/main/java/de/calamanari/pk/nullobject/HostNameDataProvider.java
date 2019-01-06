@@ -41,8 +41,7 @@ public final class HostNameDataProvider {
     /**
      * Data to be returned by the provider
      */
-    private static final HostNameData EXISTING_DATA = new ConcreteHostNameData("TEST",
-            Arrays.asList(new String[] { "XENOS", "TREADSTONE", "ANDROMEDA", "GALAXY1" }));
+    private static final HostNameData EXISTING_DATA = new ConcreteHostNameData("TEST", Arrays.asList("XENOS", "TREADSTONE", "ANDROMEDA", "GALAXY1"));
 
     /**
      * Utility class

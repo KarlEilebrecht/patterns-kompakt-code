@@ -25,6 +25,9 @@ import static de.calamanari.pk.util.CharsetUtils.LINE_BREAK_CODE;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.calamanari.pk.util.CharsetUtils;
 
 /**
@@ -37,35 +40,37 @@ import de.calamanari.pk.util.CharsetUtils;
  */
 final class IndexerSlave implements Runnable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexerSlave.class);
+
     /**
      * Number of index entries this slave may use for characters
      */
-    public int maxNumberOfCharEntries;
+    int maxNumberOfCharEntries;
 
     /**
      * Number of index entries this slave may use for lines
      */
-    public int maxNumberOfLineEntries;
+    int maxNumberOfLineEntries;
 
     /**
      * Position within the partition where the slave shall start indexing
      */
-    public int startIdx;
+    int startIdx;
 
     /**
      * Size of the slaves workspace within the partition
      */
-    public int subPartitionSize;
+    int subPartitionSize;
 
     /**
      * Current partition
      */
-    public char[] partition;
+    char[] partition;
 
     /**
      * Result of this slave
      */
-    public final AtomicReference<IndexerSlaveResult> result = new AtomicReference<>();
+    final AtomicReference<IndexerSlaveResult> result = new AtomicReference<>();
 
     /**
      * lookup to re-calculate the length in bytes of a particular character
@@ -75,12 +80,12 @@ final class IndexerSlave implements Runnable {
     /**
      * Errors will be memorized here to be propagated to/by the master
      */
-    public final AtomicReference<Throwable> propagateError = new AtomicReference<>();
+    final AtomicReference<Throwable> propagateError = new AtomicReference<>();
 
     /**
      * The countdown latch is a slave-to-master signal, the master waits until all slaves have completed
      */
-    public CountDownLatch latch;
+    CountDownLatch latch;
 
     /**
      * Creates new slave
@@ -94,151 +99,195 @@ final class IndexerSlave implements Runnable {
     @Override
     public void run() {
 
-        // This method is pretty long, of course you could extract smaller methods
-        // if you created a new IndexerSlaveState object covering all the flags
-        // and position data required/modified during the run.
-        // Good starting points to try extraction are the if-blocks inside the for-loop.
-        //
-        // But be careful:
-        //
-        // (1) The for-loop below runs per PER CHARACTER!
-        // One or more calls to extracted methods million times will have
-        // an impact on performance. Try it out ...
-        //
-        // (2) The computation below is not trivial, be sure not to scatter
-        // logic for the sake of short methods. If you cannot find any
-        // reasonable name for an extracted method, you are probably
-        // just going to obfuscate your code!
-        //
-        // Conclusion: This is a classical dilemma, the method looks ugly,
-        // but refactoring may have a bad impact on performance
-        // and readability.
-
         try {
-            // copy instructions from master and prepare local data structures
-            final int currentMaxNumberOfCharEntries = (this.maxNumberOfCharEntries <= subPartitionSize ? this.maxNumberOfCharEntries : this.subPartitionSize);
-            final int currentMaxNumberOfLineEntries = (this.maxNumberOfLineEntries <= subPartitionSize ? this.maxNumberOfLineEntries : this.subPartitionSize);
-            final int currentStartIdx = this.startIdx;
-            final int currentSubPartitionSize = this.subPartitionSize;
-            final char[] currentPartition = this.partition;
-            final long[][] charIndex = new long[currentMaxNumberOfCharEntries][];
-            final long[][] lineIndex = new long[currentMaxNumberOfLineEntries][];
-            final int charEntryDistance = currentMaxNumberOfCharEntries == 0 ? 0 : (int) Math.floor((double) currentSubPartitionSize
-                    / (double) currentMaxNumberOfCharEntries);
-            final int lineEntryDistance = currentMaxNumberOfLineEntries == 0 ? 0 : (int) Math.floor((double) currentSubPartitionSize
-                    / (double) currentMaxNumberOfLineEntries);
 
-            int availableCharEntries = charEntryDistance == 0 ? 0 : currentSubPartitionSize / charEntryDistance;
-            int availableLineEntries = lineEntryDistance == 0 ? 0 : currentSubPartitionSize / lineEntryDistance;
+            // copy instructions from master (config) and prepare state
 
-            int backupCharEntries = currentMaxNumberOfCharEntries - availableCharEntries;
-            int backupLineEntries = currentMaxNumberOfLineEntries - availableLineEntries;
+            // immutable settings
+            SlaveConfig conf = createSlaveConfig();
 
-            // Line breaks may consist of a carriage return optionally followed by a line feed.
-            // To handle both options, a flag helps.
-            boolean lastCharWasCR = false;
-            long bytePosAfterCR = 0L;
-            boolean lastCharWasIndexed = false;
+            // processing state
+            SlaveState state = createSlaveState(conf);
 
-            int charEntryCount = 0;
-            int lineEntryCount = 0;
-            long numberOfCharactersRead = 0L;
-            long numberOfLinesRead = 0L;
-
-            long currentBytePos = 0L;
-            long lastBytePos = 0L;
-            long beforeLastBytePos = 0L;
-
-            long lastIndexedLineStartCharNumber = 0L;
-
-            long lastIndexedCharNumber = 0L;
-
-            int read = 0;
-            for (int i = 0; i < currentSubPartitionSize; i++) {
-                read = currentPartition[currentStartIdx + i];
-
-                // increase the byte position using reverse lookup
-                currentBytePos = currentBytePos + charLengthLookup[read];
-
-                lastCharWasIndexed = false;
-
-                if (read == LINE_BREAK_CODE || lastCharWasCR) {
-                    // new Line
-                    numberOfLinesRead++;
-                    long newLineStart = currentBytePos;
-                    long newLineStartCharNumber = numberOfCharactersRead;
-
-                    if (read != LINE_BREAK_CODE) {
-                        // this position WAS already the line start
-                        newLineStart = bytePosAfterCR;
-                        newLineStartCharNumber--;
-                    }
-                    if (currentMaxNumberOfLineEntries > lineEntryCount
-                            && (newLineStartCharNumber == 0 || (newLineStartCharNumber - lastIndexedLineStartCharNumber >= lineEntryDistance) || (backupLineEntries > 0 && (newLineStartCharNumber
-                                    - lastIndexedLineStartCharNumber >= lineEntryDistance / 2)))) {
-                        if (newLineStartCharNumber - lastIndexedLineStartCharNumber < lineEntryDistance) {
-                            backupLineEntries--;
-                        }
-                        lineEntryCount++;
-                        lineIndex[lineEntryCount - 1] = new long[] { numberOfLinesRead, newLineStart };
-                        // lastLineStartPos = newLineStart;
-                        lastIndexedLineStartCharNumber = newLineStartCharNumber;
-                    }
-                }
-                if (read == CARRIAGE_RETURN_CODE) {
-                    lastCharWasCR = true;
-                    bytePosAfterCR = currentBytePos;
-                }
-                else {
-                    lastCharWasCR = false;
-                }
-                // never create entries for low surrogate characters (56320-57343), because it is impossible to
-                // directly read (decode) them without reading the mandatory high surrogate before;
-                // low surrogates don't have any absolute position
-                if ((read < CharsetUtils.MIN_HIGH_SURROGATE_CODE || read > CharsetUtils.MAX_SURROGATE_CODE)
-                        && currentMaxNumberOfCharEntries > charEntryCount
-                        && (numberOfCharactersRead == 0 || numberOfCharactersRead - lastIndexedCharNumber >= charEntryDistance || (backupCharEntries > 0 && numberOfCharactersRead
-                                - lastIndexedCharNumber >= charEntryDistance / 2))) {
-                    if (numberOfCharactersRead - lastIndexedCharNumber < charEntryDistance) {
-                        backupCharEntries--;
-                    }
-                    charEntryCount++;
-                    charIndex[charEntryCount - 1] = new long[] { numberOfCharactersRead, lastBytePos };
-                    // lastCharPos = lastBytePos;
-                    lastCharWasIndexed = true;
-                    lastIndexedCharNumber = numberOfCharactersRead;
-                }
-                numberOfCharactersRead++;
-                beforeLastBytePos = lastBytePos;
-                lastBytePos = currentBytePos;
+            for (int i = 0; i < conf.currentSubPartitionSize; i++) {
+                processNextPartitionCharacter(conf, state, i);
             }
 
-            if (!lastCharWasIndexed && charEntryCount < currentMaxNumberOfCharEntries
-                    && (read < CharsetUtils.MIN_HIGH_SURROGATE_CODE || read > CharsetUtils.MAX_SURROGATE_CODE)) {
-                charEntryCount++;
-                charIndex[charEntryCount - 1] = new long[] { numberOfCharactersRead - 1, beforeLastBytePos };
+            if (!state.lastCharWasIndexed && state.charEntryCount < conf.currentMaxNumberOfCharEntries
+                    && (state.read < CharsetUtils.MIN_HIGH_SURROGATE_CODE || state.read > CharsetUtils.MAX_SURROGATE_CODE)) {
+                state.charEntryCount++;
+                state.charIndex[state.charEntryCount - 1] = new long[] { state.numberOfCharactersRead - 1, state.beforeLastBytePos };
             }
-            if (lastCharWasCR) {
-                numberOfLinesRead++;
-                if (lineEntryCount < currentMaxNumberOfLineEntries) {
-                    lineEntryCount++;
-                    lineIndex[lineEntryCount - 1] = new long[] { numberOfLinesRead, bytePosAfterCR };
+            if (state.lastCharWasCR) {
+                state.numberOfLinesRead++;
+                if (state.lineEntryCount < conf.currentMaxNumberOfLineEntries) {
+                    state.lineEntryCount++;
+                    state.lineIndex[state.lineEntryCount - 1] = new long[] { state.numberOfLinesRead, state.bytePosAfterCR };
                 }
             }
 
             // slave results for master
-            IndexerSlaveResult localResult = new IndexerSlaveResult(charIndex, lineIndex, currentBytePos, numberOfCharactersRead, numberOfLinesRead,
-                    charEntryCount, lineEntryCount);
+            IndexerSlaveResult localResult = new IndexerSlaveResult(state.charIndex, state.lineIndex, state.currentBytePos, state.numberOfCharactersRead,
+                    state.numberOfLinesRead, state.charEntryCount, state.lineEntryCount);
             this.result.set(localResult);
         }
-        catch (Throwable e) {
-            e.printStackTrace();
-            this.propagateError.set(e);
+        catch (RuntimeException ex) {
+            LOGGER.debug("Unexpected error while indexing", ex);
+            this.propagateError.set(ex);
         }
         finally {
             this.latch.countDown();
         }
 
+    }
+
+    private void processNextPartitionCharacter(SlaveConfig conf, SlaveState state, int idx) {
+        state.read = conf.currentPartition[conf.currentStartIdx + idx];
+
+        // increase the byte position using reverse lookup
+        state.currentBytePos = state.currentBytePos + charLengthLookup[state.read];
+
+        state.lastCharWasIndexed = false;
+
+        if (state.read == LINE_BREAK_CODE || state.lastCharWasCR) {
+            updateLineIndex(conf, state);
+        }
+        if (state.read == CARRIAGE_RETURN_CODE) {
+            state.lastCharWasCR = true;
+            state.bytePosAfterCR = state.currentBytePos;
+        }
+        else {
+            state.lastCharWasCR = false;
+        }
+        updateCharacterIndex(conf, state);
+        state.numberOfCharactersRead++;
+        state.beforeLastBytePos = state.lastBytePos;
+        state.lastBytePos = state.currentBytePos;
+    }
+
+    private void updateLineIndex(SlaveConfig conf, SlaveState state) {
+        // new Line
+        state.numberOfLinesRead++;
+        long newLineStart = state.currentBytePos;
+        long newLineStartCharNumber = state.numberOfCharactersRead;
+
+        if (state.read != LINE_BREAK_CODE) {
+            // this position WAS already the line start
+            newLineStart = state.bytePosAfterCR;
+            newLineStartCharNumber--;
+        }
+        if (conf.currentMaxNumberOfLineEntries > state.lineEntryCount
+                && (newLineStartCharNumber == 0 || (newLineStartCharNumber - state.lastIndexedLineStartCharNumber >= conf.lineEntryDistance)
+                        || (state.backupLineEntries > 0 && (newLineStartCharNumber - state.lastIndexedLineStartCharNumber >= conf.lineEntryDistance / 2)))) {
+            if (newLineStartCharNumber - state.lastIndexedLineStartCharNumber < conf.lineEntryDistance) {
+                state.backupLineEntries--;
+            }
+            state.lineEntryCount++;
+            state.lineIndex[state.lineEntryCount - 1] = new long[] { state.numberOfLinesRead, newLineStart };
+            // lastLineStartPos = newLineStart;
+            state.lastIndexedLineStartCharNumber = newLineStartCharNumber;
+        }
+    }
+
+    private void updateCharacterIndex(SlaveConfig conf, SlaveState state) {
+        // never create entries for low surrogate characters (56320-57343), because it is impossible to
+        // directly read (decode) them without reading the mandatory high surrogate before;
+        // low surrogates don't have any absolute position
+        if ((state.read < CharsetUtils.MIN_HIGH_SURROGATE_CODE || state.read > CharsetUtils.MAX_SURROGATE_CODE)
+                && conf.currentMaxNumberOfCharEntries > state.charEntryCount
+                && (state.numberOfCharactersRead == 0 || state.numberOfCharactersRead - state.lastIndexedCharNumber >= conf.charEntryDistance
+                        || (state.backupCharEntries > 0 && state.numberOfCharactersRead - state.lastIndexedCharNumber >= conf.charEntryDistance / 2))) {
+            if (state.numberOfCharactersRead - state.lastIndexedCharNumber < conf.charEntryDistance) {
+                state.backupCharEntries--;
+            }
+            state.charEntryCount++;
+            state.charIndex[state.charEntryCount - 1] = new long[] { state.numberOfCharactersRead, state.lastBytePos };
+            // lastCharPos = lastBytePos;
+            state.lastCharWasIndexed = true;
+            state.lastIndexedCharNumber = state.numberOfCharactersRead;
+        }
+    }
+
+    private SlaveState createSlaveState(SlaveConfig conf) {
+        SlaveState state = new SlaveState();
+
+        state.backupCharEntries = conf.currentMaxNumberOfCharEntries - conf.availableCharEntries;
+        state.backupLineEntries = conf.currentMaxNumberOfLineEntries - conf.availableLineEntries;
+
+        // Line breaks may consist of a carriage return optionally followed by a line feed.
+        // To handle both options, a flag helps.
+        state.lastCharWasCR = false;
+        state.bytePosAfterCR = 0L;
+        state.lastCharWasIndexed = false;
+
+        state.charEntryCount = 0;
+        state.lineEntryCount = 0;
+        state.numberOfCharactersRead = 0L;
+        state.numberOfLinesRead = 0L;
+
+        state.currentBytePos = 0L;
+        state.lastBytePos = 0L;
+        state.beforeLastBytePos = 0L;
+
+        state.lastIndexedLineStartCharNumber = 0L;
+
+        state.lastIndexedCharNumber = 0L;
+
+        state.read = 0;
+
+        state.charIndex = new long[conf.currentMaxNumberOfCharEntries][];
+        state.lineIndex = new long[conf.currentMaxNumberOfLineEntries][];
+        return state;
+    }
+
+    private SlaveConfig createSlaveConfig() {
+        SlaveConfig conf = new SlaveConfig();
+        conf.currentMaxNumberOfCharEntries = (maxNumberOfCharEntries <= subPartitionSize ? maxNumberOfCharEntries : subPartitionSize);
+        conf.currentMaxNumberOfLineEntries = (maxNumberOfLineEntries <= subPartitionSize ? maxNumberOfLineEntries : subPartitionSize);
+        conf.currentStartIdx = startIdx;
+        conf.currentSubPartitionSize = subPartitionSize;
+        conf.currentPartition = partition;
+        conf.charEntryDistance = conf.currentMaxNumberOfCharEntries == 0 ? 0
+                : (int) Math.floor((double) conf.currentSubPartitionSize / (double) conf.currentMaxNumberOfCharEntries);
+        conf.lineEntryDistance = conf.currentMaxNumberOfLineEntries == 0 ? 0
+                : (int) Math.floor((double) conf.currentSubPartitionSize / (double) conf.currentMaxNumberOfLineEntries);
+        conf.availableCharEntries = conf.charEntryDistance == 0 ? 0 : conf.currentSubPartitionSize / conf.charEntryDistance;
+        conf.availableLineEntries = conf.lineEntryDistance == 0 ? 0 : conf.currentSubPartitionSize / conf.lineEntryDistance;
+        return conf;
+    }
+
+    private static class SlaveConfig {
+
+        int currentMaxNumberOfCharEntries;
+        int currentMaxNumberOfLineEntries;
+        int currentStartIdx;
+        int currentSubPartitionSize;
+        char[] currentPartition;
+        int charEntryDistance;
+        int lineEntryDistance;
+        int availableCharEntries;
+        int availableLineEntries;
+
+    }
+
+    private static class SlaveState {
+        int backupCharEntries;
+        int backupLineEntries;
+        boolean lastCharWasCR;
+        long bytePosAfterCR;
+        boolean lastCharWasIndexed;
+        int charEntryCount;
+        int lineEntryCount;
+        long numberOfCharactersRead;
+        long numberOfLinesRead;
+        long currentBytePos;
+        long lastBytePos;
+        long beforeLastBytePos;
+        long lastIndexedLineStartCharNumber;
+        long lastIndexedCharNumber;
+        int read;
+        long[][] charIndex;
+        long[][] lineIndex;
     }
 
 }

@@ -61,7 +61,7 @@ public class CounterFlyweightCarryingItem {
      */
     public String getCounterInfo() {
 
-        LOGGER.debug("7}.getCounterInfo() called.", this.getClass().getSimpleName());
+        LOGGER.debug("{}.getCounterInfo() called.", this.getClass().getSimpleName());
 
         LOGGER.debug("Using flyweight to do the job.");
         // the itemdata gets passed to the flyweight, from the viewpoint of the flyweight this is extrinsic state

@@ -48,14 +48,97 @@ public class TransferObjectAssemblerTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 
-        Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true, "ADR00091", "Quark-Street 70", "91827",
-                "Gotham City", "USA", "Dear Mr.", "Active Multi Buyer", 82, "2009-09-12", "2011-10-01", false, false, false);
-        Database.addTestData("ID0002", "Mrs.", "Clark", "Petula", "0817-871", "Petula.Clark@neversend.com", false, "ADR01071", "Black Owl Way 34", "1217",
-                "Pork Town", "USA", "Dear Mrs.", "New Customer", 31, "2011-08-21", "2011-08-21", false, false, true);
-        Database.addTestData("ID0003", "Mrs.", "Blum", "Shanya", "089 8172 2123", "Shanya.Blum@neversend.com", true, "ADR00912", "Hauptstrasse 11", "71622",
-                "Blasenhain", "GER", "Sehr gehrte Frau", "Inactive Multi Buyer", 57, "2005-09-21", "2010-12-17", false, false, false);
-        Database.addTestData("ID0004", "Mr.", "De-Vil", "Sa Tan", "666 666 666", "souleater@neversend.com", false, "ADR00666", "Road to Hell 666", "666666",
-                "Blackhole", "USA", "Your Majesty", "Active Multi Buyer", 20, "2006-06-06", "2011-08-30", true, true, true);
+        // @formatter:off
+
+        Database.prepareCustomer("ID0001")
+            .withTitle("Mr.")
+            .withLastName("McFlurry")
+            .withFirstName("Dick")
+            .withPhone("0815-987")
+            .withEmail("Dick.Flurry@neversend.com")
+            .withPromotionOptIn(true)
+            .withAddressId("ADR00091")
+            .withStreet("Quark-Street 70")
+            .withZipCode("91827")
+            .withCity("Gotham City")
+            .withCountry("USA")
+            .withSalutation("Dear Mr.")
+            .withCustomerType("Active Multi Buyer")
+            .withScorePoints(82)
+            .withFirstOrderDate("2009-09-12")
+            .withLastOrderDate("2011-10-01")
+            .withDueInvoice(false)
+            .withFraudSuspicion(false)
+            .withBadPayer(false)
+        .commit();
+        
+        Database.prepareCustomer("ID0002")
+            .withTitle("Mrs.")
+            .withLastName("Clark")
+            .withFirstName("Petula")
+            .withPhone("0817-871")
+            .withEmail("Petula.Clark@neversend.com")
+            .withPromotionOptIn(false)
+            .withAddressId("ADR01071")
+            .withStreet("Black Owl Way 34")
+            .withZipCode("1217")
+            .withCity("Pork Town")
+            .withCountry("USA")
+            .withSalutation("Dear Mrs.")
+            .withCustomerType("New Customer")
+            .withScorePoints(31)
+            .withFirstOrderDate("2011-08-21")
+            .withLastOrderDate("2011-08-21")
+            .withDueInvoice(false)
+            .withFraudSuspicion(false)
+            .withBadPayer(true)
+        .commit();
+
+        Database.prepareCustomer("ID0003")
+            .withTitle("Mrs.")
+            .withLastName("Blum")
+            .withFirstName("Shanya")
+            .withPhone("089 8172 2123")
+            .withEmail("Shanya.Blum@neversend.com")
+            .withPromotionOptIn(true)
+            .withAddressId("ADR00912")
+            .withStreet("Hauptstrasse 11")
+            .withZipCode("71622")
+            .withCity("Blasenhain")
+            .withCountry("GER")
+            .withSalutation("Sehr gehrte Frau")
+            .withCustomerType("Inactive Multi Buyer")
+            .withScorePoints(57)
+            .withFirstOrderDate("2005-09-21")
+            .withLastOrderDate("2010-12-17")
+            .withDueInvoice(false)
+            .withFraudSuspicion(false)
+            .withBadPayer(false)
+        .commit();
+
+        Database.prepareCustomer("ID0004")
+            .withTitle("Mr.")
+            .withLastName("De-Vil")
+            .withFirstName("Sa Tan")
+            .withPhone("666 666 666")
+            .withEmail("souleater@neversend.com")
+            .withPromotionOptIn(false)
+            .withAddressId("ADR00666")
+            .withStreet("Road to Hell 666")
+            .withZipCode("666666")
+            .withCity("Blackhole")
+            .withCountry("USA")
+            .withSalutation("Your Majesty")
+            .withCustomerType("Active Multi Buyer")
+            .withScorePoints(20)
+            .withFirstOrderDate("2006-06-06")
+            .withLastOrderDate("2011-08-30")
+            .withDueInvoice(true)
+            .withFraudSuspicion(true)
+            .withBadPayer(true)
+        .commit();
+        
+        // @formatter:off
     }
 
     @Test

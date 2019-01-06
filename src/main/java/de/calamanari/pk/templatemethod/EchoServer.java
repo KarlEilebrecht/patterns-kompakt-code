@@ -70,7 +70,7 @@ public class EchoServer extends AbstractThreadedSocketServer {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 
-            LOGGER.info("Connected to " + socket.getInetAddress());
+            LOGGER.info("Connected to {}", socket.getInetAddress());
 
             String inputLine = null;
 
@@ -86,7 +86,7 @@ public class EchoServer extends AbstractThreadedSocketServer {
             }
             bw.write("Goodby!");
             bw.flush();
-            LOGGER.info("Closing connection to " + socket.getInetAddress());
+            LOGGER.info("Closing connection to {}", socket.getInetAddress());
 
             bw.flush();
         }

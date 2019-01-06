@@ -87,7 +87,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @return factor multiplication factor to calculate smallest unit of currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    private static final BigDecimal determineDefaultUnitFactor(Currency currency) throws IllegalArgumentException {
+    private static final BigDecimal determineDefaultUnitFactor(Currency currency) {
         if (CURRENCY_EUR.equals(currency) || CURRENCY_USD.equals(currency)) {
             return BD_100;
         }
@@ -113,7 +113,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @return monetary value
      * @throws IllegalArgumentException if the currency is not supported
      */
-    private static final BigDecimal parseValue(String value) throws IllegalArgumentException {
+    private static final BigDecimal parseValue(String value) {
         int pos = value.lastIndexOf(' ');
         String sValue = value.substring(0, pos);
         return new BigDecimal(sValue);
@@ -141,7 +141,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(BigDecimal value, String currencyCode) throws IllegalArgumentException {
+    public Money(BigDecimal value, String currencyCode) {
         this(value, Currency.getInstance(currencyCode));
     }
 
@@ -152,7 +152,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currency the value's currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(double value, Currency currency) throws IllegalArgumentException {
+    public Money(double value, Currency currency) {
         this(BigDecimal.valueOf(value), currency);
     }
 
@@ -163,7 +163,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(double value, String currencyCode) throws IllegalArgumentException {
+    public Money(double value, String currencyCode) {
         this(BigDecimal.valueOf(value), currencyCode);
     }
 
@@ -174,7 +174,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(long value, Currency currency) throws IllegalArgumentException {
+    public Money(long value, Currency currency) {
         this(BigDecimal.valueOf(value), currency);
     }
 
@@ -185,7 +185,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(long value, String currencyCode) throws IllegalArgumentException {
+    public Money(long value, String currencyCode) {
         this(BigDecimal.valueOf(value), currencyCode);
     }
 
@@ -196,7 +196,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    private Money(BigInteger valueOfSmallestUnit, Currency currency) throws IllegalArgumentException {
+    private Money(BigInteger valueOfSmallestUnit, Currency currency) {
         this.currency = currency;
         BigDecimal defaultUnitFactor = determineDefaultUnitFactor(currency);
         this.valueOfSmallestUnit = valueOfSmallestUnit;
@@ -232,7 +232,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param value stringified Money instance
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(String value) throws IllegalArgumentException {
+    public Money(String value) {
         this(parseValue(value), parseCurrency(value));
     }
 
@@ -532,7 +532,7 @@ public class Money implements Serializable, Comparable<Money> {
         int len = weights.length;
         BigDecimal[] bdWeights = new BigDecimal[len];
         for (int i = 0; i < len; i++) {
-            bdWeights[i] = new BigDecimal(weights[i]);
+            bdWeights[i] = BigDecimal.valueOf(weights[i]);
         }
         return distribute(bdWeights);
     }

@@ -58,7 +58,7 @@ public class HistoryQueryScheduler {
      */
     public void schedule(QueryRequest task) {
         LOGGER.debug("{}.schedule() called.", this.getClass().getSimpleName());
-        LOGGER.debug("enqueuing objectified request: {}", task.toString());
+        LOGGER.debug("enqueuing objectified request: {}", task);
         executor.execute(task);
     }
 

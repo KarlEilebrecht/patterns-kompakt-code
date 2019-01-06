@@ -84,7 +84,7 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
      * @return URL to derby.jar
      * @throws DerbyJarNotFoundException derby.jar not found
      */
-    private static final URL findDerbyJar() throws DerbyJarNotFoundException {
+    private static final URL findDerbyJar() {
         URL res = null;
         URL url = ClassLoader.getSystemClassLoader().getResource("org/apache/derby/jdbc/EmbeddedDriver.class");
         if (url != null) {

@@ -95,6 +95,7 @@ public interface HostNameData extends Iterable<String>, Cloneable, Serializable 
      * 
      * @return clone
      */
+    @SuppressWarnings("squid:S2975")
     public Object clone();
 
 }

@@ -59,6 +59,8 @@ public final class MiscUtils {
         STARTUP_NANO_TIME = System.nanoTime() - deltaNanosSinceJvmStart;
     }
 
+    private static final String UTF_8 = "UTF-8";
+
     /**
      * one million
      */
@@ -124,7 +126,7 @@ public final class MiscUtils {
      * @return file size
      */
     public static long writeStringToFile(String str, File destinationFile) {
-        return writeStringToFile(str, destinationFile, "UTF-8");
+        return writeStringToFile(str, destinationFile, UTF_8);
     }
 
     /**
@@ -137,7 +139,7 @@ public final class MiscUtils {
      */
     public static long writeStringToFile(String str, File destinationFile, String charsetName) {
         if (charsetName == null) {
-            charsetName = "UTF-8";
+            charsetName = UTF_8;
         }
         try {
             Files.write(destinationFile.toPath(), str.getBytes(charsetName));
@@ -155,7 +157,7 @@ public final class MiscUtils {
      * @return String with file content
      */
     public static String readFileToString(File sourceFile) {
-        return readFileToString(sourceFile, "UTF-8");
+        return readFileToString(sourceFile, UTF_8);
     }
 
     /**
@@ -167,7 +169,7 @@ public final class MiscUtils {
      */
     public static String readFileToString(File sourceFile, String charsetName) {
         if (charsetName == null) {
-            charsetName = "UTF-8";
+            charsetName = UTF_8;
         }
         StringBuilder res = null;
         try {
@@ -290,7 +292,7 @@ public final class MiscUtils {
     public static byte[] getUtf8Bytes(String text) {
         byte[] bytes = null;
         try {
-            bytes = text.getBytes("UTF-8");
+            bytes = text.getBytes(UTF_8);
         }
         catch (UnsupportedEncodingException ex) {
             // should not happen
@@ -397,60 +399,28 @@ public final class MiscUtils {
         int len = Array.getLength(primitiveArray);
         Object[] wrapperArray = null;
         if (byte.class.equals(primitiveType)) {
-            byte[] byteArray = (byte[]) primitiveArray;
-            wrapperArray = new Byte[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Byte.valueOf(byteArray[i]);
-            }
+            wrapperArray = boxByteArray(primitiveArray, len);
         }
         else if (short.class.equals(primitiveType)) {
-            short[] shortArray = (short[]) primitiveArray;
-            wrapperArray = new Short[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Short.valueOf(shortArray[i]);
-            }
+            wrapperArray = boxShortArray(primitiveArray, len);
         }
         else if (int.class.equals(primitiveType)) {
-            int[] intArray = (int[]) primitiveArray;
-            wrapperArray = new Integer[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Integer.valueOf(intArray[i]);
-            }
+            wrapperArray = boxIntArray(primitiveArray, len);
         }
         else if (long.class.equals(primitiveType)) {
-            long[] longArray = (long[]) primitiveArray;
-            wrapperArray = new Long[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Long.valueOf(longArray[i]);
-            }
+            wrapperArray = boxLongArray(primitiveArray, len);
         }
         else if (float.class.equals(primitiveType)) {
-            float[] floatArray = (float[]) primitiveArray;
-            wrapperArray = new Float[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Float.valueOf(floatArray[i]);
-            }
+            wrapperArray = boxFloatArray(primitiveArray, len);
         }
         else if (double.class.equals(primitiveType)) {
-            double[] doubleArray = (double[]) primitiveArray;
-            wrapperArray = new Double[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Double.valueOf(doubleArray[i]);
-            }
+            wrapperArray = boxDoubleArray(primitiveArray, len);
         }
         else if (boolean.class.equals(primitiveType)) {
-            boolean[] booleanArray = (boolean[]) primitiveArray;
-            wrapperArray = new Boolean[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Boolean.valueOf(booleanArray[i]);
-            }
+            wrapperArray = boxBooleanArray(primitiveArray, len);
         }
         else if (char.class.equals(primitiveType)) {
-            char[] charArray = (char[]) primitiveArray;
-            wrapperArray = new Character[len];
-            for (int i = 0; i < len; i++) {
-                wrapperArray[i] = Character.valueOf(charArray[i]);
-            }
+            wrapperArray = boxCharArray(primitiveArray, len);
         }
         else {
             // should not happen :-)
@@ -460,6 +430,86 @@ public final class MiscUtils {
         @SuppressWarnings({ "unchecked" })
         T[] res = (T[]) wrapperArray;
         return res;
+    }
+
+    private static Object[] boxCharArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        char[] charArray = (char[]) primitiveArray;
+        wrapperArray = new Character[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Character.valueOf(charArray[i]);
+        }
+        return wrapperArray;
+    }
+
+    private static Object[] boxBooleanArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        boolean[] booleanArray = (boolean[]) primitiveArray;
+        wrapperArray = new Boolean[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Boolean.valueOf(booleanArray[i]);
+        }
+        return wrapperArray;
+    }
+
+    private static Object[] boxDoubleArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        double[] doubleArray = (double[]) primitiveArray;
+        wrapperArray = new Double[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Double.valueOf(doubleArray[i]);
+        }
+        return wrapperArray;
+    }
+
+    private static Object[] boxFloatArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        float[] floatArray = (float[]) primitiveArray;
+        wrapperArray = new Float[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Float.valueOf(floatArray[i]);
+        }
+        return wrapperArray;
+    }
+
+    private static Object[] boxLongArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        long[] longArray = (long[]) primitiveArray;
+        wrapperArray = new Long[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Long.valueOf(longArray[i]);
+        }
+        return wrapperArray;
+    }
+
+    private static Object[] boxIntArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        int[] intArray = (int[]) primitiveArray;
+        wrapperArray = new Integer[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Integer.valueOf(intArray[i]);
+        }
+        return wrapperArray;
+    }
+
+    private static Object[] boxShortArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        short[] shortArray = (short[]) primitiveArray;
+        wrapperArray = new Short[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Short.valueOf(shortArray[i]);
+        }
+        return wrapperArray;
+    }
+
+    private static Object[] boxByteArray(Object primitiveArray, int len) {
+        Object[] wrapperArray;
+        byte[] byteArray = (byte[]) primitiveArray;
+        wrapperArray = new Byte[len];
+        for (int i = 0; i < len; i++) {
+            wrapperArray[i] = Byte.valueOf(byteArray[i]);
+        }
+        return wrapperArray;
     }
 
     /**
@@ -474,7 +524,7 @@ public final class MiscUtils {
                 try {
                     closeable.close();
                 }
-                catch (Throwable ex) {
+                catch (IOException | RuntimeException ex) {
                     if (logLevel != null && LogUtils.isLogginEnabled(LOGGER, logLevel)) {
                         LogUtils.log(LOGGER, logLevel, "Error closing resource.", ex);
                     }
@@ -503,6 +553,7 @@ public final class MiscUtils {
             Thread.sleep(millis);
         }
         catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
             if (logLevel != null && LogUtils.isLogginEnabled(LOGGER, logLevel)) {
                 LOGGER.warn("Interrupted while sleeping.", ex);
             }
@@ -530,6 +581,7 @@ public final class MiscUtils {
             Thread.sleep(millis);
         }
         catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(ex);
         }
     }

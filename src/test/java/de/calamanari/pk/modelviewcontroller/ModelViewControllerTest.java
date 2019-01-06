@@ -173,7 +173,7 @@ public class ModelViewControllerTest {
                     button.doClick(100);
                 }
             });
-            Thread.sleep(120);
+            MiscUtils.sleepThrowRuntimeException(120);
         }
         catch (Exception ex) {
             throw new RuntimeException("Unexpected Problem during dispatch!", ex);

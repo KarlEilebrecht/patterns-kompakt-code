@@ -75,12 +75,12 @@ public abstract class AbstractConsoleServer {
                 int input = 0;
                 try {
                     input = System.in.read();
+                    if (input == 'q') {
+                        break;
+                    }
                 }
                 catch (IOException ex) {
-                    continue;
-                }
-                if (input == 'q') {
-                    break;
+                    LOGGER.trace("Ignored IOException while reading input", ex);
                 }
             }
             this.stop();
@@ -90,15 +90,9 @@ public abstract class AbstractConsoleServer {
     /**
      * Starts the mock server using the configured port <br>
      * This method will return immediately after having started the server thread.<br>
-     * This TEMPLATE METHOD uses operations implemented by subclasses.
+     * This TEMPLATE METHOD uses operations implemented by subclasses (see the ServerThread implementation).
      */
     public void start() {
-
-        // Note: To provide a better overview I kept all the stuff in a single large method.
-        // Usually you would split it into smaller methods, as for example:
-        // - move the server thread to a private sub-class
-        // - move the code from inside the try-block to a method prepareAndRun()
-        // - move the code from inside the finally-block to a method completeShutDown()
 
         synchronized (monitor) {
             if (serverState != ServerState.OFFLINE) {
@@ -107,51 +101,7 @@ public abstract class AbstractConsoleServer {
             serverState = ServerState.START_UP;
         }
 
-        // setup the server thread
-        Thread serverThread = new Thread() {
-
-            @Override
-            public void run() {
-                try {
-
-                    prepare();
-
-                    // inform the thread waiting inside the start()-method
-                    synchronized (monitor) {
-                        boolean mustNotify = (serverState == ServerState.START_UP_WAITING);
-                        if (serverState == ServerState.START_UP || serverState == ServerState.START_UP_WAITING) {
-                            serverState = ServerState.ONLINE;
-                            if (mustNotify) {
-                                monitor.notifyAll();
-                            }
-                        }
-                    }
-
-                    doRequestProcessing();
-
-                }
-                finally {
-                    try {
-                        cleanUp();
-                    }
-                    catch (Throwable t) {
-                        LOGGER.warn("Unexpected Error during cleanUp.", t);
-                    }
-                    // inform the thread waiting inside the start()-method
-                    synchronized (monitor) {
-                        boolean mustNotify = (serverState == ServerState.SHUT_DOWN_WAITING);
-                        if (serverState == ServerState.SHUT_DOWN || serverState == ServerState.SHUT_DOWN_WAITING) {
-                            serverState = ServerState.OFFLINE;
-                            if (mustNotify) {
-                                monitor.notifyAll();
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        serverThread.setDaemon(true);
+        Thread serverThread = new ServerThread();
         serverThread.start();
 
         // the thread start method above returns immediately, may be initialization has
@@ -160,19 +110,23 @@ public abstract class AbstractConsoleServer {
             if (serverState == ServerState.START_UP) {
                 try {
                     serverState = ServerState.START_UP_WAITING;
-                    monitor.wait();
+                    while (serverState == ServerState.START_UP_WAITING) {
+                        monitor.wait();
+                    }
                 }
                 catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
                     LOGGER.warn("Unexpected interruption during startup - server {} up?!", this.getServerName());
                 }
             }
         }
         synchronized (monitor) {
             if (serverState == ServerState.ONLINE) {
-                LOGGER.info(createStartupCompletedMessage());
+                String message = createStartupCompletedMessage();
+                LOGGER.info(message);
             }
             else {
-                LOGGER.info(this.getServerName() + " startup failed!");
+                LOGGER.info("{} startup failed!", this.getServerName());
             }
         }
     }
@@ -192,26 +146,33 @@ public abstract class AbstractConsoleServer {
 
         try {
             initiateShutdown();
-            synchronized (monitor) {
-                if (serverState == ServerState.SHUT_DOWN) {
-                    try {
-                        serverState = ServerState.SHUT_DOWN_WAITING;
+            waitForShutdown();
+        }
+        catch (RuntimeException ex) {
+            LOGGER.error("Error stopping server - server {} down?", this.getServerName(), ex);
+        }
+    }
+
+    private void waitForShutdown() {
+        synchronized (monitor) {
+            if (serverState == ServerState.SHUT_DOWN) {
+                try {
+                    serverState = ServerState.SHUT_DOWN_WAITING;
+                    while (serverState == ServerState.SHUT_DOWN_WAITING) {
                         monitor.wait();
                     }
-                    catch (InterruptedException ex) {
-                        LOGGER.warn("Unexpected interruption during shutdown - server {} down?!", this.getServerName());
-                    }
                 }
-                if (serverState == ServerState.OFFLINE) {
-                    LOGGER.info(this.getServerName() + " stopped!");
-                }
-                else {
-                    LOGGER.info(this.getServerName() + " shutdown failed!");
+                catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    LOGGER.warn("Unexpected interruption during shutdown - server {} down?!", this.getServerName());
                 }
             }
-        }
-        catch (Throwable ex) {
-            LOGGER.error("Error stopping server - server {} down?", this.getServerName(), ex);
+            if (serverState == ServerState.OFFLINE) {
+                LOGGER.info("{} stopped!", this.getServerName());
+            }
+            else {
+                LOGGER.info("{} shutdown failed!", this.getServerName());
+            }
         }
     }
 
@@ -279,13 +240,65 @@ public abstract class AbstractConsoleServer {
     protected abstract void cleanUp();
 
     /**
+     * This inner class uses operations implemented by subclasses of the surrounding class.
+     * 
+     */
+    private class ServerThread extends Thread {
+
+        ServerThread() {
+            this.setDaemon(true);
+            this.setName(ServerThread.class.getSimpleName() + "(" + serverName + ")");
+        }
+
+        @Override
+        public void run() {
+            try {
+
+                prepare();
+
+                // inform the thread waiting inside the start()-method
+                synchronized (monitor) {
+                    boolean mustNotify = (serverState == ServerState.START_UP_WAITING);
+                    if (serverState == ServerState.START_UP || serverState == ServerState.START_UP_WAITING) {
+                        serverState = ServerState.ONLINE;
+                        if (mustNotify) {
+                            monitor.notifyAll();
+                        }
+                    }
+                }
+
+                doRequestProcessing();
+
+            }
+            finally {
+                try {
+                    cleanUp();
+                }
+                catch (RuntimeException t) {
+                    LOGGER.warn("Unexpected error during cleanUp.", t);
+                }
+                // inform the thread waiting inside the start()-method
+                synchronized (monitor) {
+                    boolean mustNotify = (serverState == ServerState.SHUT_DOWN_WAITING);
+                    if (serverState == ServerState.SHUT_DOWN || serverState == ServerState.SHUT_DOWN_WAITING) {
+                        serverState = ServerState.OFFLINE;
+                        if (mustNotify) {
+                            monitor.notifyAll();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * States for a server's state machine<br>
      * Why so many states?<br>
      * Reason: whenever multiple threads come into play using monitors (wait/notify) there is a risk of race conditions (notify before wait). By leveraging a
      * monitor synchronization as a guard for state changes, we can design the code so that the normal case AND the rare race-condition case will be handled
      * properly.
      */
-    public static enum ServerState {
+    public enum ServerState {
         /**
          * during startup
          */

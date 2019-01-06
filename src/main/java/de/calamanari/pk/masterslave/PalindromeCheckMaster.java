@@ -75,8 +75,8 @@ public class PalindromeCheckMaster {
         this.partitionSize = partitionSize;
         this.executor = Executors.newFixedThreadPool(numberOfSlaves);
         ItfaConfiguration indexerConfig = new ItfaConfiguration();
-        indexerConfig.maxNumberOfCharIndexEntries = maxNumberOfCharIndexEntries;
-        indexerConfig.maxNumberOfLineIndexEntries = 1;
+        indexerConfig.setMaxNumberOfCharIndexEntries(maxNumberOfCharIndexEntries);
+        indexerConfig.setMaxNumberOfLineIndexEntries(1);
         this.checkMasterIndexerConfiguration = indexerConfig;
     }
 

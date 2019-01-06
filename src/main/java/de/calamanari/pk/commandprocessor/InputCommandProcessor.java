@@ -19,7 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.commandprocessor;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +39,12 @@ public class InputCommandProcessor {
     /**
      * Stack to put executed commands
      */
-    private final Stack<InputCommand> undoStack = new Stack<>();
+    private final Deque<InputCommand> undoStack = new ArrayDeque<>();
 
     /**
      * Stack to put undone commands
      */
-    private final Stack<InputCommand> redoStack = new Stack<>();
+    private final Deque<InputCommand> redoStack = new ArrayDeque<>();
 
     /**
      * executes the given command

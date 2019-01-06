@@ -19,16 +19,16 @@ import de.calamanari.other.SourceLineInterpreter.Phrase;
 
 public class JavaDocSourceTransformer {
 
-    private static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList(new String[] { "abstract", "assert", "boolean", "break", "byte", "case",
-            "catch", "char", "class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if",
-            "goto", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return",
-            "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while" }));
+    private static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList("abstract", "assert", "boolean", "break", "byte", "case", "catch", "char",
+            "class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "goto", "implements",
+            "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return", "short", "static",
+            "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while"));
 
     private final File baseDir;
 
     private final Map<String, JavaDocSourceHolder> classIndex = new ConcurrentHashMap<>();
 
-    public JavaDocSourceTransformer(File baseDir) throws Exception {
+    public JavaDocSourceTransformer(File baseDir) {
         this.baseDir = baseDir;
 
     }
@@ -43,13 +43,8 @@ public class JavaDocSourceTransformer {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                try {
-                    JavaDocSourceHolder holder = new JavaDocSourceHolder(baseDir, file.toFile());
-                    classIndex.put(holder.className, holder);
-                }
-                catch (ClassNotFoundException ex) {
-                    ex.printStackTrace();
-                }
+                JavaDocSourceHolder holder = new JavaDocSourceHolder(baseDir, file.toFile());
+                classIndex.put(holder.className, holder);
                 return FileVisitResult.CONTINUE;
             }
 

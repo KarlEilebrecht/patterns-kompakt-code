@@ -145,7 +145,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
             LOGGER.info("RMI-Registry ready.");
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Unexpected communication exception", ex);
             throw new RuntimeException(ex);
         }
     }
@@ -223,12 +223,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
                 registry.unbind("CustomerManager");
                 UnicastRemoteObject.unexportObject(this, true);
                 for (CustomerEntity entity : database.values()) {
-                    try {
-                        UnicastRemoteObject.unexportObject(entity, true);
-                    }
-                    catch (NoSuchObjectException ex) {
-                        // we can ignore that
-                    }
+                    unexportCustomerEntity(entity);
                 }
             }
         }
@@ -236,6 +231,15 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
             LOGGER.error("Error during clean-up!", t);
         }
         shutdownRmiRegistry();
+    }
+
+    private void unexportCustomerEntity(CustomerEntity entity) {
+        try {
+            UnicastRemoteObject.unexportObject(entity, true);
+        }
+        catch (NoSuchObjectException ex) {
+            LOGGER.trace("Cleanup of non-existing object", ex);
+        }
     }
 
     /**

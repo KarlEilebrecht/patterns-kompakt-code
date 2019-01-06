@@ -39,25 +39,20 @@ public class CustomerDwhInfoDto implements Serializable {
     /**
      * Default comparator (by id), null-safe, nulls to the bottom
      */
-    public static final Comparator<CustomerDwhInfoDto> BY_ID_COMPARATOR = new Comparator<>() {
-
-        @Override
-        public int compare(CustomerDwhInfoDto o1, CustomerDwhInfoDto o2) {
-            int res = 0;
-            if (o1 != null || o2 != null) {
-                if (o1 == null) {
-                    res = 1;
-                }
-                else if (o2 == null) {
-                    res = -1;
-                }
-                else {
-                    res = o1.getCustomerId().compareTo(o2.getCustomerId());
-                }
+    public static final Comparator<CustomerDwhInfoDto> BY_ID_COMPARATOR = (CustomerDwhInfoDto o1, CustomerDwhInfoDto o2) -> {
+        int res = 0;
+        if (o1 != null || o2 != null) {
+            if (o1 == null) {
+                res = 1;
             }
-            return res;
+            else if (o2 == null) {
+                res = -1;
+            }
+            else {
+                res = o1.getCustomerId().compareTo(o2.getCustomerId());
+            }
         }
-
+        return res;
     };
 
     /**
@@ -107,36 +102,8 @@ public class CustomerDwhInfoDto implements Serializable {
 
     // more flags and infos
 
-    /**
-     * Creates new data warehouse info data transfer object
-     */
-    public CustomerDwhInfoDto() {
-
-    }
-
-    /**
-     * Creates new data warehouse info data transfer object from the given data
-     * 
-     * @param customerId identifier
-     * @param customerType type of customer
-     * @param scorePoints value from scoring process
-     * @param firstOrderDate date of the first order the customer placed
-     * @param lastOrderDate least recent order date of the customer
-     * @param dueInvoice flag to indicate unpaid bill
-     * @param fraudSuspicion flag to indicate that we suspect illegal activities
-     * @param badPayer flag to indicate a customer paying late or has unpaid bills
-     */
-    public CustomerDwhInfoDto(String customerId, String customerType, int scorePoints, Date firstOrderDate, Date lastOrderDate, boolean dueInvoice,
-            boolean fraudSuspicion, boolean badPayer) {
-        this.customerId = customerId;
-        this.customerType = customerType;
-        this.scorePoints = scorePoints;
-        this.firstOrderDate = firstOrderDate;
-        this.lastOrderDate = lastOrderDate;
-        this.dueInvoice = dueInvoice;
-        this.fraudSuspicion = fraudSuspicion;
-        this.badPayer = badPayer;
-        LOGGER.debug("{} created: {}", this.getClass().getSimpleName(), this);
+    public static Builder forCustomerId(String customerId) {
+        return new Builder(customerId);
     }
 
     /**
@@ -293,4 +260,92 @@ public class CustomerDwhInfoDto implements Serializable {
                 + ", badPayer=" + badPayer + "})";
     }
 
+    /**
+     * Fluent builder to prevent too many constructor arguments
+     *
+     */
+    public static final class Builder {
+
+        private final CustomerDwhInfoDto result = new CustomerDwhInfoDto();
+
+        /**
+         * Creates new builder for a DTO regarding the given customer-ID
+         * 
+         * @param customerId
+         */
+        Builder(String customerId) {
+            result.setCustomerId(customerId);
+        }
+
+        /**
+         * @param customerType type of customer
+         * @return builder
+         */
+        public Builder withCustomerType(String customerType) {
+            result.setCustomerType(customerType);
+            return this;
+        }
+
+        /**
+         * @param scorePoints value from scoring
+         * @return builder
+         */
+        public Builder withScorePoints(int scorePoints) {
+            result.setScorePoints(scorePoints);
+            return this;
+        }
+
+        /**
+         * @param firstOrderDate date of first order
+         * @return builder
+         */
+        public Builder withFirstOrderDate(Date firstOrderDate) {
+            result.setFirstOrderDate(firstOrderDate);
+            return this;
+        }
+
+        /**
+         * @param lastOrderDate date of least recent order
+         * @return builder
+         */
+        public Builder withLastOrderDate(Date lastOrderDate) {
+            result.setLastOrderDate(lastOrderDate);
+            return this;
+        }
+
+        /**
+         * @param dueInvoice true indicates an open invoice not payed yet
+         * @return builder
+         */
+        public Builder withDueInvoice(boolean dueInvoice) {
+            result.setDueInvoice(dueInvoice);
+            return this;
+        }
+
+        /**
+         * @param fraudSuspicion flag to indicate that we suspect illegal activities
+         * @return builder
+         */
+        public Builder withFraudSuspicion(boolean fraudSuspicion) {
+            result.setFraudSuspicion(fraudSuspicion);
+            return this;
+        }
+
+        /**
+         * @param badPayer flag to indicate a customer who pays late or only after reminding
+         * @return builder
+         */
+        public Builder withBadPayer(boolean badPayer) {
+            result.setBadPayer(badPayer);
+            return this;
+        }
+
+        /**
+         * @return the DTO
+         */
+        public CustomerDwhInfoDto build() {
+            LOGGER.debug("{} created: {}", CustomerDwhInfoDto.class.getSimpleName(), this);
+            return result;
+        }
+    }
 }

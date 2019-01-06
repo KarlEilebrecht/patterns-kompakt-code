@@ -216,6 +216,7 @@ public class IndexedTextFileAccessor {
      * @return new InputStreamReader, MUST BE CLOSED BY CALLER!
      * @throws IOException on file access problems
      */
+    @SuppressWarnings("squid:S2093")
     public InputStreamReader createInputStreamReaderAtFilePosition(long filePosition) throws IOException {
         InputStreamReader isr = null;
         FileChannel channel = null;
@@ -242,6 +243,7 @@ public class IndexedTextFileAccessor {
      * @return input stream reader
      * @throws IOException on file access problems
      */
+    @SuppressWarnings("squid:S2093")
     public Reader createInputStreamReaderAtFilePosition(long filePosition, int bufferSize) throws IOException {
         Reader isr = null;
         boolean ok = false;
@@ -460,7 +462,7 @@ public class IndexedTextFileAccessor {
      * @return new Channel to sourceFile, MUST BE CLOSED by caller!
      * @throws FileNotFoundException if file was not available
      */
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "squid:S2095" })
     protected FileChannel createChannel() throws FileNotFoundException {
         return new RandomAccessFile(sourceFile, "r").getChannel();
     }
@@ -478,8 +480,8 @@ public class IndexedTextFileAccessor {
         long realPosition = channel.position();
         if (realPosition != filePosition) {
             MiscUtils.closeResourceCatch(channel);
-            throw new IndexOutOfBoundsException("Specified filePosition=" + filePosition
-                    + " is greater than the file size - file truncated after index creation?");
+            throw new IndexOutOfBoundsException(
+                    "Specified filePosition=" + filePosition + " is greater than the file size - file truncated after index creation?");
         }
         return channel;
     }

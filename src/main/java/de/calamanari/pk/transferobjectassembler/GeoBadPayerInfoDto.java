@@ -79,37 +79,8 @@ public class GeoBadPayerInfoDto implements Serializable {
      */
     private boolean dueInvoice = false;
 
-    /**
-     * Creates new data transfer object
-     */
-    public GeoBadPayerInfoDto() {
-
-    }
-
-    /**
-     * Creates new data transfer object from the given data
-     * 
-     * @param customerId identifier
-     * @param title person's title
-     * @param lastName person's last name
-     * @param firstName person's first name
-     * @param zipCode address field
-     * @param city address field
-     * @param country address field
-     * @param customerType type of customer
-     * @param dueInvoice flag to indicate unpaid bill
-     */
-    public GeoBadPayerInfoDto(String customerId, String title, String lastName, String firstName, String zipCode, String city, String country,
-            String customerType, boolean dueInvoice) {
-        this.customerId = customerId;
-        this.title = title;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.zipCode = zipCode;
-        this.city = city;
-        this.country = country;
-        this.customerType = customerType;
-        this.dueInvoice = dueInvoice;
+    public static Builder forCustomer(String customerId) {
+        return new Builder(customerId);
     }
 
     /**
@@ -280,4 +251,95 @@ public class GeoBadPayerInfoDto implements Serializable {
                 + ", zipCode=" + zipCode + ", city=" + city + ", country=" + country + ", customerType=" + customerType + ", dueInvoice=" + dueInvoice + "})";
     }
 
+    /**
+     * Builder to avoid over-parameterized constructor
+     */
+    public static class Builder {
+
+        private final GeoBadPayerInfoDto result;
+
+        Builder(String customerId) {
+            result = new GeoBadPayerInfoDto();
+            result.setCustomerId(customerId);
+        }
+
+        /**
+         * @param title
+         * @return builder
+         */
+        public Builder withTitle(String title) {
+            result.setTitle(title);
+            return this;
+        }
+
+        /**
+         * @param lastName
+         * @return builder
+         */
+        public Builder withLastName(String lastName) {
+            result.setLastName(lastName);
+            return this;
+        }
+
+        /**
+         * @param firstName
+         * @return builder
+         */
+        public Builder withFirstName(String firstName) {
+            result.setFirstName(firstName);
+            return this;
+        }
+
+        /**
+         * @param zipCode
+         * @return builder
+         */
+        public Builder withZipCode(String zipCode) {
+            result.setZipCode(zipCode);
+            return this;
+        }
+
+        /**
+         * @param city
+         * @return builder
+         */
+        public Builder withCity(String city) {
+            result.setCity(city);
+            return this;
+        }
+
+        /**
+         * @param country
+         * @return builder
+         */
+        public Builder withCountry(String country) {
+            result.setCountry(country);
+            return this;
+        }
+
+        /**
+         * @param customerType
+         * @return builder
+         */
+        public Builder withCustomerType(String customerType) {
+            result.setCustomerType(customerType);
+            return this;
+        }
+
+        /**
+         * @param dueInvoice
+         * @return builder
+         */
+        public Builder withDueInvoice(boolean dueInvoice) {
+            result.setDueInvoice(dueInvoice);
+            return this;
+        }
+
+        /**
+         * @return dto with all information
+         */
+        public GeoBadPayerInfoDto build() {
+            return result;
+        }
+    }
 }

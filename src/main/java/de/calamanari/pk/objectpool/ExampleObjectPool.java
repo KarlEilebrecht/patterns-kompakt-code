@@ -56,12 +56,6 @@ public class ExampleObjectPool {
     private final Semaphore poolUsageSemaphore = new Semaphore(MAX_POOL_SIZE, true);
 
     /**
-     * Creates the initially empty pool
-     */
-    public ExampleObjectPool() {
-    }
-
-    /**
      * Acquires a free pooled instance from the pool and returns it.<br>
      * The pool will auto-resize until the maximum number of instances is reached. If the maximum number has already been reached, a call to this method blocks
      * until an instance will be returned.<br>
@@ -77,7 +71,8 @@ public class ExampleObjectPool {
             poolUsageSemaphore.acquire();
         }
         catch (InterruptedException ex) {
-            throw new RuntimeException("Pool error", ex);
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Fatal Pool error!", ex);
         }
 
         LOGGER.debug("{}({}): accessing pool ...", this.getClass().getSimpleName(), Thread.currentThread().getName());

@@ -55,13 +55,6 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
      */
     private final CRC32 crc32 = new CRC32();
 
-    /**
-     * Creates new checksum builder
-     */
-    public Crc32ChecksumBuilder() {
-
-    }
-
     @Override
     public void addString(String text) {
         LOGGER.debug("addString('{}')", text);

@@ -34,6 +34,7 @@ import de.calamanari.pk.datatransferobject.CustomerRemote;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("squid:S2160")
 public class CustomerEntity extends UnicastRemoteObject implements CustomerRemote {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerEntity.class);

@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.util.MiscUtils;
+
 /**
  * History Query Engine Mock - in this example this is a component implementation for executing queries that may take some time.
  * 
@@ -94,13 +96,7 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
         if (result == null) {
             result = new ArrayList<>();
         }
-        try {
-            Thread.sleep(queryDurationMillis);
-        }
-        catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            LOGGER.debug("{}.queryHistoryData('{}', '{}', '{}') was interrupted!", this.getClass().getSimpleName(), firstName, lastName, birthday);
-        }
+        MiscUtils.sleepThrowRuntimeException(queryDurationMillis);
         return result;
     }
 

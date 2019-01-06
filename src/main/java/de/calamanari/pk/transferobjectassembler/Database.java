@@ -34,17 +34,17 @@ public final class Database {
     /**
      * The "database table" for customers
      */
-    public static final Map<String, CustomerEntity> CUSTOMERS = new HashMap<>();
+    static final Map<String, CustomerEntity> CUSTOMERS = new HashMap<>();
 
     /**
      * The "database table" for customer addresses
      */
-    public static final Map<String, AddressEntity> ADDRESSES = new HashMap<>();
+    static final Map<String, AddressEntity> ADDRESSES = new HashMap<>();
 
     /**
      * The "database table" for dwh data
      */
-    public static final Map<String, CustomerDwhInfoEntity> CUSTOMER_DWH_INFOS = new HashMap<>();
+    static final Map<String, CustomerDwhInfoEntity> CUSTOMER_DWH_INFOS = new HashMap<>();
 
     /**
      * Utility class
@@ -53,54 +53,228 @@ public final class Database {
         // no instances
     }
 
-    /**
-     * For testing this allows to feed the "database"
-     * 
-     * @param customerId identifier
-     * @param title person's title
-     * @param lastName person's last name
-     * @param firstName person's first name
-     * @param phone telephone number
-     * @param email email-address
-     * @param promotionOptIn opt-in-flag for promotion events
-     * @param addressId address identifier
-     * @param street address field
-     * @param zipCode address field
-     * @param city address field
-     * @param country address field
-     * @param salutation address field
-     * @param customerType type of customer
-     * @param scorePoints value from scoring process
-     * @param firstOrderDateISO date of first oder, 'yyyy-MM-dd'
-     * @param lastOrderDateISO date of least recent order, 'yyyy-MM-dd'
-     * @param dueInvoice flag to indicate unpaid bill
-     * @param fraudSuspicion flag to indicate that we suspect illegal activities
-     * @param badPayer flag to indicate a customer who pays late or only after reminding
-     */
-    public static void addTestData(String customerId, String title, String lastName, String firstName, String phone, String email, boolean promotionOptIn,
-            String addressId, String street, String zipCode, String city, String country, String salutation, String customerType, int scorePoints,
-            String firstOrderDateISO, String lastOrderDateISO, boolean dueInvoice, boolean fraudSuspicion, boolean badPayer) {
-
-        Date firstOrderDate = null;
-        Date lastOrderDate = null;
-
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            firstOrderDate = (firstOrderDateISO == null ? null : sdf.parse(firstOrderDateISO));
-            lastOrderDate = (lastOrderDateISO == null ? null : sdf.parse(lastOrderDateISO));
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
-        CustomerEntity customer = new CustomerEntity(customerId, title, lastName, firstName, phone, email, promotionOptIn);
-        CUSTOMERS.put(customerId, customer);
-        AddressEntity address = new AddressEntity(addressId, customerId, street, zipCode, city, country, salutation);
-        ADDRESSES.put(customerId, address);
-
-        CustomerDwhInfoEntity customerDwhInfo = new CustomerDwhInfoEntity(customerId, customerType, scorePoints, firstOrderDate, lastOrderDate, dueInvoice,
-                fraudSuspicion, badPayer);
-        CUSTOMER_DWH_INFOS.put(customerId, customerDwhInfo);
+    public static Builder prepareCustomer(String customerId) {
+        return new Builder(customerId);
     }
 
+    /**
+     * Builder to avoid huge constructor
+     *
+     */
+    public static class Builder {
+
+        private final CustomerEntity customerEntity;
+        private final AddressEntity addressEntity;
+        private final CustomerDwhInfoEntity.Builder customerBuilder;
+
+        Builder(String customerId) {
+            this.customerEntity = new CustomerEntity();
+            customerEntity.setCustomerId(customerId);
+            this.addressEntity = new AddressEntity();
+            addressEntity.setCustomerId(customerId);
+            this.customerBuilder = CustomerDwhInfoEntity.forCustomerId(customerId);
+        }
+
+        /**
+         * @param title
+         * @return builder
+         */
+        public Builder withTitle(String title) {
+            customerEntity.setTitle(title);
+            return this;
+        }
+
+        /**
+         * @param lastName
+         * @return builder
+         */
+        public Builder withLastName(String lastName) {
+            customerEntity.setLastName(lastName);
+            return this;
+        }
+
+        /**
+         * @param firstName
+         * @return builder
+         */
+        public Builder withFirstName(String firstName) {
+            customerEntity.setFirstName(firstName);
+            return this;
+        }
+
+        /**
+         * @param phone
+         * @return builder
+         */
+        public Builder withPhone(String phone) {
+            customerEntity.setPhone(phone);
+            return this;
+        }
+
+        /**
+         * @param email
+         * @return builder
+         */
+        public Builder withEmail(String email) {
+            customerEntity.setEmail(email);
+            return this;
+        }
+
+        /**
+         * @param promotionOptIn
+         * @return builder
+         */
+        public Builder withPromotionOptIn(boolean promotionOptIn) {
+            customerEntity.setPromotionOptIn(promotionOptIn);
+            return this;
+        }
+
+        /**
+         * @param addressId
+         * @return builder
+         */
+        public Builder withAddressId(String addressId) {
+            addressEntity.setAddressId(addressId);
+            return this;
+        }
+
+        /**
+         * @param street
+         * @return builder
+         */
+        public Builder withStreet(String street) {
+            addressEntity.setStreet(street);
+            return this;
+        }
+
+        /**
+         * @param zipCode
+         * @return builder
+         */
+        public Builder withZipCode(String zipCode) {
+            addressEntity.setZipCode(zipCode);
+            return this;
+        }
+
+        /**
+         * @param city
+         * @return builder
+         */
+        public Builder withCity(String city) {
+            addressEntity.setCity(city);
+            return this;
+        }
+
+        /**
+         * @param country
+         * @return builder
+         */
+        public Builder withCountry(String country) {
+            addressEntity.setCountry(country);
+            return this;
+        }
+
+        /**
+         * @param salutation
+         * @return builder
+         */
+        public Builder withSalutation(String salutation) {
+            addressEntity.setSalutation(salutation);
+            return this;
+        }
+
+        /**
+         * @param customerType
+         * @return builder
+         */
+        public Builder withCustomerType(String customerType) {
+            customerBuilder.withCustomerType(customerType);
+            return this;
+        }
+
+        /**
+         * @param scorePoints
+         * @return builder
+         */
+        public Builder withScorePoints(int scorePoints) {
+            customerBuilder.withScorePoints(scorePoints);
+            return this;
+        }
+
+        /**
+         * @param firstOrderDateISO as 'yyyy-MM-dd' or null
+         * @return builder
+         */
+        public Builder withFirstOrderDate(String firstOrderDateISO) {
+            Date firstOrderDate = parseOrderDate(firstOrderDateISO);
+            customerBuilder.withFirstOrderDate(firstOrderDate);
+            return this;
+        }
+
+        /**
+         * @param lastOrderDateISO as 'yyyy-MM-dd' or null
+         * @return builder
+         */
+        public Builder withLastOrderDate(String lastOrderDateISO) {
+            Date lastOrderDate = parseOrderDate(lastOrderDateISO);
+            customerBuilder.withLastOrderDate(lastOrderDate);
+            return this;
+        }
+
+        /**
+         * @param dueInvoice
+         * @return builder
+         */
+        public Builder withDueInvoice(boolean dueInvoice) {
+            customerBuilder.withDueInvoice(dueInvoice);
+            return this;
+        }
+
+        /**
+         * @param fraudSuspicion
+         * @return builder
+         */
+        public Builder withFraudSuspicion(boolean fraudSuspicion) {
+            customerBuilder.withFraudSuspicion(fraudSuspicion);
+            return this;
+        }
+
+        /**
+         * @param badPayer
+         * @return builder
+         */
+        public Builder withBadPayer(boolean badPayer) {
+            customerBuilder.withBadPayer(badPayer);
+            return this;
+        }
+
+        /**
+         * Adds the customer with all information to the database
+         */
+        public void commit() {
+            CUSTOMERS.put(customerEntity.getCustomerId(), customerEntity);
+            ADDRESSES.put(customerEntity.getCustomerId(), addressEntity);
+            CUSTOMER_DWH_INFOS.put(customerEntity.getCustomerId(), customerBuilder.build());
+        }
+
+        /**
+         * Parses the order date from String to Date
+         * 
+         * @param orderDateISO 'yyyy-MM-dd' or null
+         * @return parsed date, can be null
+         * @throws RuntimeException if the date was in wrong format
+         */
+        private Date parseOrderDate(String orderDateISO) {
+            Date orderDate = null;
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                orderDate = (orderDateISO == null ? null : sdf.parse(orderDateISO));
+            }
+            catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+            return orderDate;
+        }
+
+    }
 }

@@ -80,50 +80,50 @@ public class ItfaConfiguration implements Cloneable, Serializable {
      * Maximum numbers of entries in the file index for character positions <br>
      * see {@link #DEFAULT_MAX_NUMBER_OF_CHAR_INDEX_ENTRIES}
      */
-    public int maxNumberOfCharIndexEntries = DEFAULT_MAX_NUMBER_OF_CHAR_INDEX_ENTRIES;
+    int maxNumberOfCharIndexEntries = DEFAULT_MAX_NUMBER_OF_CHAR_INDEX_ENTRIES;
 
     /**
      * Maximum numbers of entries in the file index for line positions <br>
      * see {@link #DEFAULT_MAX_NUMBER_OF_LINE_INDEX_ENTRIES}
      */
-    public int maxNumberOfLineIndexEntries = DEFAULT_MAX_NUMBER_OF_LINE_INDEX_ENTRIES;
+    int maxNumberOfLineIndexEntries = DEFAULT_MAX_NUMBER_OF_LINE_INDEX_ENTRIES;
 
     /**
      * Buffer size in bytes for readers returned by the textfile accessor.<br>
      * see {@link #DEFAULT_CHILD_READER_BUFFER_SIZE}
      */
-    public int childReaderBufferSize = DEFAULT_CHILD_READER_BUFFER_SIZE;
+    int childReaderBufferSize = DEFAULT_CHILD_READER_BUFFER_SIZE;
 
     /**
      * Buffer for character reading (number of characters) <br>
      * see {@link #DEFAULT_CHAR_BUFFER_SIZE}
      */
-    public int charBufferSize = DEFAULT_CHAR_BUFFER_SIZE;
+    int charBufferSize = DEFAULT_CHAR_BUFFER_SIZE;
 
     /**
      * Threshold (file size in bytes) for using multiple threads<br>
      * see {@link #DEFAULT_MULTI_THREADING_THRESHOLD}
      */
-    public int multiThreadingThreshold = DEFAULT_MULTI_THREADING_THRESHOLD;
+    int multiThreadingThreshold = DEFAULT_MULTI_THREADING_THRESHOLD;
 
     /**
      * Maximum buffer size in bytes while indexing.<br>
      * see {@link #DEFAULT_INDEXER_READ_BUFFER_SIZE}
      */
-    public int indexerReadBufferSize = DEFAULT_INDEXER_READ_BUFFER_SIZE;
+    int indexerReadBufferSize = DEFAULT_INDEXER_READ_BUFFER_SIZE;
 
     /**
      * Buffer type to be used by the indexer.<br>
      * see {@link #DEFAULT_INDEXER_READ_BUFFER_TYPE}
      */
-    public BufferType indexerReadBufferType = DEFAULT_INDEXER_READ_BUFFER_TYPE;
+    BufferType indexerReadBufferType = DEFAULT_INDEXER_READ_BUFFER_TYPE;
 
     /**
      * BOM-size (default is 0).<br>
      * IndexedTextFileAccessor does not support charset auto-detection but can ignore any byte order mark by skipping a specified number of bytes. However, the
      * job to decide whether or not there is a byte order mark is up to the caller, see also: http://bugs.sun.com/view_bug.do?bug_id=4508058
      */
-    public int bomSize = 0;
+    int bomSize = 0;
 
     /**
      * This method checks the values of certain arguments and throws an Exception if they don't match expectations.
@@ -148,7 +148,24 @@ public class ItfaConfiguration implements Cloneable, Serializable {
         }
     }
 
+    public int getMaxNumberOfCharIndexEntries() {
+        return maxNumberOfCharIndexEntries;
+    }
+
+    public void setMaxNumberOfCharIndexEntries(int maxNumberOfCharIndexEntries) {
+        this.maxNumberOfCharIndexEntries = maxNumberOfCharIndexEntries;
+    }
+
+    public int getMaxNumberOfLineIndexEntries() {
+        return maxNumberOfLineIndexEntries;
+    }
+
+    public void setMaxNumberOfLineIndexEntries(int maxNumberOfLineIndexEntries) {
+        this.maxNumberOfLineIndexEntries = maxNumberOfLineIndexEntries;
+    }
+
     @Override
+    @SuppressWarnings("squid:S2975")
     public Object clone() {
         ItfaConfiguration configuration = null;
         try {

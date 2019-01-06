@@ -106,7 +106,7 @@ public class CustomerEntity implements Entity<String>, Cloneable {
      * 
      * @param id identifier
      */
-    public void setCustomerId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -225,6 +225,7 @@ public class CustomerEntity implements Entity<String>, Cloneable {
     }
 
     @Override
+    @SuppressWarnings("squid:S2975")
     public Object clone() {
         CustomerEntity entity = null;
         try {

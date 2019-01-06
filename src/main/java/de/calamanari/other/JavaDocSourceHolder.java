@@ -2,7 +2,6 @@ package de.calamanari.other;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,31 +30,31 @@ public class JavaDocSourceHolder {
 
     public final String[] importPackageNames;
 
-    public JavaDocSourceHolder(File baseDir, File file) throws IOException, UnsupportedEncodingException, ClassNotFoundException {
+    public JavaDocSourceHolder(File baseDir, File file) throws IOException {
         this.path = file.toPath();
         List<String> rawLines = Files.readAllLines(path, Charset.forName("UTF-8"));
 
-        List<FileLine> lines = new ArrayList<>(rawLines.size());
+        List<FileLine> linesLocal = new ArrayList<>(rawLines.size());
         int firstSourceLine = -1;
         int afterSourceLine = -1;
 
         int idx = 0;
         for (String line : rawLines) {
             if (isSourceLine(line)) {
-                lines.add(new SourceLine(line));
+                linesLocal.add(new SourceLine(line));
                 if (firstSourceLine == -1) {
                     firstSourceLine = idx;
                 }
             }
             else {
-                lines.add(new FileLine(line));
+                linesLocal.add(new FileLine(line));
                 if (firstSourceLine > -1 && afterSourceLine == -1) {
                     afterSourceLine = idx;
                 }
             }
             idx++;
         }
-        this.lines = Collections.unmodifiableList(lines);
+        this.lines = Collections.unmodifiableList(linesLocal);
         this.sourceLinesStart = firstSourceLine;
         this.sourceLinesEnd = afterSourceLine;
 
@@ -104,7 +103,7 @@ public class JavaDocSourceHolder {
     }
 
     public List<SourceLine> getSourceLines() {
-        List<SourceLine> res = Collections.EMPTY_LIST;
+        List<SourceLine> res = Collections.emptyList();
         if (sourceLinesStart > -1) {
             int endIdx = sourceLinesEnd;
             if (endIdx == -1) {
@@ -117,7 +116,7 @@ public class JavaDocSourceHolder {
         return res;
     }
 
-    public void storeFile() throws IOException, UnsupportedEncodingException {
+    public void storeFile() throws IOException {
         Files.write(path, lines, Charset.forName("UTF-8"));
     }
 

@@ -77,35 +77,8 @@ public class CustomerDwhInfoEntity {
 
     // more flags and infos
 
-    /**
-     * Creates new data warehouse info entity
-     */
-    public CustomerDwhInfoEntity() {
-
-    }
-
-    /**
-     * Creates new data warehouse info entity from the given data
-     * 
-     * @param customerId identifier
-     * @param customerType type of customer
-     * @param scorePoints value from scoring
-     * @param firstOrderDate date of first order
-     * @param lastOrderDate date of least recent order
-     * @param dueInvoice flag to indicate unpaid bill
-     * @param fraudSuspicion flag to indicate that we suspect illegal activities
-     * @param badPayer flag to indicate a customer who pays late or only after reminding
-     */
-    public CustomerDwhInfoEntity(String customerId, String customerType, int scorePoints, Date firstOrderDate, Date lastOrderDate, boolean dueInvoice,
-            boolean fraudSuspicion, boolean badPayer) {
-        this.customerId = customerId;
-        this.customerType = customerType;
-        this.scorePoints = scorePoints;
-        this.firstOrderDate = firstOrderDate;
-        this.lastOrderDate = lastOrderDate;
-        this.dueInvoice = dueInvoice;
-        this.fraudSuspicion = fraudSuspicion;
-        this.badPayer = badPayer;
+    public static Builder forCustomerId(String customerId) {
+        return new Builder(customerId);
     }
 
     /**
@@ -260,7 +233,17 @@ public class CustomerDwhInfoEntity {
      */
     public CustomerDwhInfoDto toDto() {
 
-        return new CustomerDwhInfoDto(customerId, customerType, scorePoints, firstOrderDate, lastOrderDate, dueInvoice, fraudSuspicion, badPayer);
+        // @formatter:off
+        return CustomerDwhInfoDto.forCustomerId(customerId)
+                .withCustomerType(customerType)
+                .withScorePoints(scorePoints)
+                .withFirstOrderDate(firstOrderDate)
+                .withLastOrderDate(lastOrderDate)
+                .withDueInvoice(dueInvoice)
+                .withFraudSuspicion(fraudSuspicion)
+                .withBadPayer(badPayer)
+                .build();
+        // @formatter:on
     }
 
     /**
@@ -287,6 +270,95 @@ public class CustomerDwhInfoEntity {
                 + ", firstOrderDate=" + (firstOrderDate == null ? null : "'" + sdf.format(firstOrderDate) + "'") + ", lastOrderDate="
                 + (lastOrderDate == null ? null : "'" + sdf.format(lastOrderDate) + "'") + ", dueInvoice=" + dueInvoice + ", fraudSuspicion=" + fraudSuspicion
                 + ", badPayer=" + badPayer + "})";
+    }
+
+    /**
+     * Fluent builder to prevent too many constructor arguments
+     *
+     */
+    public static final class Builder {
+
+        private final CustomerDwhInfoEntity result = new CustomerDwhInfoEntity();
+
+        /**
+         * Creates new builder for a DTO regarding the given customer-ID
+         * 
+         * @param customerId
+         */
+        Builder(String customerId) {
+            result.setCustomerId(customerId);
+        }
+
+        /**
+         * @param customerType type of customer
+         * @return builder
+         */
+        public Builder withCustomerType(String customerType) {
+            result.setCustomerType(customerType);
+            return this;
+        }
+
+        /**
+         * @param scorePoints value from scoring
+         * @return builder
+         */
+        public Builder withScorePoints(int scorePoints) {
+            result.setScorePoints(scorePoints);
+            return this;
+        }
+
+        /**
+         * @param firstOrderDate date of first order
+         * @return builder
+         */
+        public Builder withFirstOrderDate(Date firstOrderDate) {
+            result.setFirstOrderDate(firstOrderDate);
+            return this;
+        }
+
+        /**
+         * @param lastOrderDate date of least recent order
+         * @return builder
+         */
+        public Builder withLastOrderDate(Date lastOrderDate) {
+            result.setLastOrderDate(lastOrderDate);
+            return this;
+        }
+
+        /**
+         * @param dueInvoice true indicates an open invoice not payed yet
+         * @return builder
+         */
+        public Builder withDueInvoice(boolean dueInvoice) {
+            result.setDueInvoice(dueInvoice);
+            return this;
+        }
+
+        /**
+         * @param fraudSuspicion flag to indicate that we suspect illegal activities
+         * @return builder
+         */
+        public Builder withFraudSuspicion(boolean fraudSuspicion) {
+            result.setFraudSuspicion(fraudSuspicion);
+            return this;
+        }
+
+        /**
+         * @param badPayer flag to indicate a customer who pays late or only after reminding
+         * @return builder
+         */
+        public Builder withBadPayer(boolean badPayer) {
+            result.setBadPayer(badPayer);
+            return this;
+        }
+
+        /**
+         * @return the DTO
+         */
+        public CustomerDwhInfoEntity build() {
+            LOGGER.debug("{} created: {}", CustomerDwhInfoDto.class.getSimpleName(), this);
+            return result;
+        }
     }
 
 }

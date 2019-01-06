@@ -29,31 +29,31 @@ final class IndexerPartitionMetaData {
     /**
      * size of the current (main) partition
      */
-    public int partitionSize;
+    int partitionSize;
 
     /**
      * size of the current (main) partition in bytes
      */
-    public long partitionSizeInBytes;
+    long partitionSizeInBytes;
 
     /**
      * number of slaves to be used for processing the main partition
      */
-    public int numberOfSlaves;
+    int numberOfSlaves;
 
     /**
      * default sub-partition size
      */
-    public int defaultSubPartitionSize;
+    int defaultSubPartitionSize;
 
     /**
      * maximum number of character index entries to be created for a sub-partition
      */
-    public int maxNumberOfCharEntriesInSubPartition;
+    int maxNumberOfCharEntriesInSubPartition;
 
     /**
      * maximum number of line index entries to be created for a sub-partition
      */
-    public int maxNumberOfLineEntriesInSubPartition;
+    int maxNumberOfLineEntriesInSubPartition;
 
 }

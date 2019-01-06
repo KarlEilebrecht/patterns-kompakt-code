@@ -49,13 +49,22 @@ public class GeoBadPayerInfoDtoAssembler {
             CustomerEntity customerEntity = Database.CUSTOMERS.get(customerId);
             AddressEntity addressEntity = Database.ADDRESSES.get(customerId);
 
-            if (dwhInfoEntity.isBadPayer()) {
-                if (customerEntity != null && addressEntity != null) {
-                    LOGGER.debug("Creating data transfer object from entities customer, address and dwh information");
-                    res = new GeoBadPayerInfoDto(customerEntity.getCustomerId(), customerEntity.getTitle(), customerEntity.getLastName(),
-                            customerEntity.getFirstName(), addressEntity.getZipCode(), addressEntity.getCity(), addressEntity.getCountry(),
-                            dwhInfoEntity.getCustomerType(), dwhInfoEntity.isDueInvoice());
-                }
+            if (dwhInfoEntity.isBadPayer() && customerEntity != null && addressEntity != null) {
+                LOGGER.debug("Creating data transfer object from entities customer, address and dwh information");
+
+                // @formatter:off
+                res = GeoBadPayerInfoDto.forCustomer(customerEntity.getCustomerId())
+                            .withTitle(customerEntity.getTitle())
+                            .withLastName(customerEntity.getLastName())
+                            .withFirstName(customerEntity.getFirstName())
+                            .withZipCode(addressEntity.getZipCode())          
+                            .withCity(addressEntity.getCity())
+                            .withCountry(addressEntity.getCountry())
+                            .withCustomerType(dwhInfoEntity.getCustomerType())
+                            .withDueInvoice(dwhInfoEntity.isDueInvoice())
+                      .build();
+                // @formatter:on
+
             }
         }
         if (res == null) {

@@ -26,7 +26,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,9 +86,7 @@ public class ActiveObjectTest {
         QueryRequestFuture future2 = queryComponent.queryHistoryData(null, "Miller", "1978-10-17");
         QueryRequestFuture future3 = queryComponent.queryHistoryData(null, null, "1978-10-17");
 
-        while (!future1.isQueryDone() || !future2.isQueryDone() || !future3.isQueryDone()) {
-            Thread.sleep(2000);
-        }
+        Awaitility.await().pollInterval(2, TimeUnit.SECONDS).until(() -> future1.isQueryDone() && future2.isQueryDone() && future3.isQueryDone());
 
         List<String[]> result1 = future1.getResult();
         List<String[]> result2 = future2.getResult();
@@ -130,7 +130,7 @@ public class ActiveObjectTest {
                 future1.cancelQuery();
                 break;
             }
-            Thread.sleep(2000);
+            Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(() -> true);
             waitCount++;
         }
 

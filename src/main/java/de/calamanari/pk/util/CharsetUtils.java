@@ -133,8 +133,7 @@ public final class CharsetUtils {
      * @return number of bytes
      */
     public static final byte detectSurrogatePairLength(Charset charset) {
-        Byte res = SURROGATE_PAIR_LENGTH_REGISTRY.get(charset);
-        if (res == null) {
+        return SURROGATE_PAIR_LENGTH_REGISTRY.computeIfAbsent(charset, k -> {
             CharBuffer charBuffer = CharBuffer.allocate(2);
             ByteBuffer byteBuffer = ByteBuffer.allocate(CHARACTER_BUFFER_BYTES);
             CharsetEncoder encoder = charset.newEncoder();
@@ -148,10 +147,8 @@ public final class CharsetUtils {
             charBuffer.append("\uD800\uDC00");
             charBuffer.rewind();
             encoder.encode(charBuffer, byteBuffer, true);
-            res = (byte) byteBuffer.position();
-            SURROGATE_PAIR_LENGTH_REGISTRY.put(charset, res);
-        }
-        return res;
+            return (byte) byteBuffer.position();
+        });
     }
 
     /**
@@ -162,9 +159,8 @@ public final class CharsetUtils {
      * @return byte array with length per code for all 65536 char-values
      */
     public static final byte[] createCharLengthLookup(String charsetName) {
-        byte[] charLengthLookup = CHAR_LENGTH_LOOKUP_REGISTRY.get(charsetName);
-        if (charLengthLookup == null) {
-            charLengthLookup = new byte[Character.MAX_VALUE + 1];
+        return CHAR_LENGTH_LOOKUP_REGISTRY.computeIfAbsent(charsetName, k -> {
+            byte[] charLengthLookup = new byte[Character.MAX_VALUE + 1];
             CharBuffer charBuffer = CharBuffer.allocate(1);
             ByteBuffer byteBuffer = ByteBuffer.allocate(CHARACTER_BUFFER_BYTES);
             Charset charset = Charset.forName(charsetName);
@@ -178,7 +174,7 @@ public final class CharsetUtils {
                     // surrogate handling works as follows:
                     // high surrogate is mapped to zero-size, low surrogate is mapped to pair-size
                     // this makes sense since the position before the low surrogate has no corresponding byte-position
-                    if (i >= MIN_HIGH_SURROGATE_CODE && i <= MAX_SURROGATE_CODE) {
+                    if (i >= MIN_HIGH_SURROGATE_CODE) {
                         // low surrogate
                         charLengthLookup[i] = surrogatePairSize;
                     }
@@ -192,9 +188,8 @@ public final class CharsetUtils {
                     charLengthLookup[i] = (byte) byteBuffer.position();
                 }
             }
-            CHAR_LENGTH_LOOKUP_REGISTRY.put(charsetName, charLengthLookup);
-        }
-        // cannot risk to return the original cached array
-        return charLengthLookup.clone();
+            return charLengthLookup;
+        }).clone();
+        // we do not return the original cached array but a clone to protect cache against modification
     }
 }

@@ -32,13 +32,7 @@ public abstract class AbstractWorker {
     /**
      * Default comparator, only compares the names for bringing workers into a natural order.
      */
-    public static final Comparator<AbstractWorker> BY_NAME_COMPARATOR = new Comparator<>() {
-
-        @Override
-        public int compare(AbstractWorker o1, AbstractWorker o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
+    public static final Comparator<AbstractWorker> BY_NAME_COMPARATOR = (AbstractWorker o1, AbstractWorker o2) -> o1.getName().compareTo(o2.getName());
 
     /**
      * Name of worker
@@ -80,6 +74,7 @@ public abstract class AbstractWorker {
      * 
      * @return iterator of subordinates, NEVER NULL
      */
+    @SuppressWarnings("squid:S1452")
     public abstract Iterator<? extends AbstractWorker> createSubordinatesIterator();
 
     @Override

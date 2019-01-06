@@ -83,7 +83,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
     public String getId() {
         LOGGER.debug("getId() called");
         String id = getValue(legacyCustomerData, KEY_ID);
-        LOGGER.debug("returning id=" + id);
+        LOGGER.debug("returning id={}", id);
         return id;
     }
 
@@ -91,7 +91,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
     public String getName() {
         LOGGER.debug("getName() called");
         String name = getValue(legacyCustomerData, KEY_NAME);
-        LOGGER.debug("returning name=" + name);
+        LOGGER.debug("returning name={}", name);
         return name;
     }
 
@@ -108,7 +108,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
                 throw new RuntimeException(ex);
             }
         }
-        LOGGER.debug("returning segment=" + segment);
+        LOGGER.debug("returning segment={}", segment);
         return segment;
     }
 
@@ -126,7 +126,7 @@ public class LegacyCustomerInfo implements CustomerInfo {
                 throw new RuntimeException(ex);
             }
         }
-        LOGGER.debug("returning lastOrderDate=" + lod);
+        LOGGER.debug("returning lastOrderDate={}", lod);
         return lod;
     }
 

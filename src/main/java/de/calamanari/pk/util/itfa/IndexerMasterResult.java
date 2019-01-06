@@ -31,45 +31,45 @@ final class IndexerMasterResult {
     /**
      * Stores the mapping character position to file position
      */
-    public Map<Long, Long> characterPositionIndex;
+    Map<Long, Long> characterPositionIndex;
 
     /**
      * Stores the mapping line position to file position
      */
-    public Map<Long, Long> linePositionIndex;
+    Map<Long, Long> linePositionIndex;
 
     /**
      * number of entries in the character position index
      */
-    public int numberOfCharacterIndexEntries;
+    int numberOfCharacterIndexEntries;
 
     /**
      * number of entries in the line position index
      */
-    public int numberOfLineIndexEntries;
+    int numberOfLineIndexEntries;
 
     /**
      * Number of lines in file
      */
-    public long numberOfLines;
+    long numberOfLines;
 
     /**
      * sorted array of indexed line numbers in index
      */
-    public long[] indexedLineNumbers;
+    long[] indexedLineNumbers;
 
     /**
      * sorted array of indexed character numbers in index
      */
-    public long[] indexedCharNumbers;
+    long[] indexedCharNumbers;
 
     /**
      * Number of characters in file
      */
-    public long numberOfCharacters;
+    long numberOfCharacters;
 
     /**
      * size of the file in bytes
      */
-    public long fileSize;
+    long fileSize;
 }

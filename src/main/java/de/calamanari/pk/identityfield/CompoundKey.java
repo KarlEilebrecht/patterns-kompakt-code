@@ -42,7 +42,7 @@ public final class CompoundKey implements Serializable {
     /**
      * parts of the compound key
      */
-    private final Object[] keyFieldValues;
+    private final Serializable[] keyFieldValues;
 
     /**
      * Pre-computed hash code, Since keys are VALUE OBJECTs, it is safe to cache the hash code.
@@ -54,9 +54,9 @@ public final class CompoundKey implements Serializable {
      * 
      * @param keyFieldValues parts of the key
      */
-    public CompoundKey(Object... keyFieldValues) {
+    public CompoundKey(Serializable... keyFieldValues) {
         int len = keyFieldValues.length;
-        Object[] copy = new Object[len];
+        Serializable[] copy = new Serializable[len];
         System.arraycopy(checkNotEmptyAndNoNulls(keyFieldValues), 0, copy, 0, len);
         this.keyFieldValues = copy;
         this.hashCode = Objects.hashCode(this.keyFieldValues);
@@ -86,7 +86,7 @@ public final class CompoundKey implements Serializable {
      * @param idx part of the key
      * @return key part
      */
-    public Object getKeyFieldValueAt(int idx) {
+    public Serializable getKeyFieldValueAt(int idx) {
         return keyFieldValues[idx];
     }
 
@@ -95,7 +95,7 @@ public final class CompoundKey implements Serializable {
      * 
      * @return key part
      */
-    public Object getSingleKeyValue() {
+    public Serializable getSingleKeyValue() {
         if (isCompoundKey()) {
             throw new UnsupportedOperationException("Compound key has no single key value.");
         }
@@ -127,11 +127,11 @@ public final class CompoundKey implements Serializable {
      * @return keyFieldValues pass-through
      * @throws IllegalArgumentException if array is empty or contains null
      */
-    private static Object[] checkNotEmptyAndNoNulls(Object[] keyFieldValues) throws IllegalArgumentException {
+    private static Serializable[] checkNotEmptyAndNoNulls(Serializable[] keyFieldValues) {
         if (keyFieldValues.length < 1) {
             throw new IllegalArgumentException(CompoundKey.class.getSimpleName() + " must have at least one field.");
         }
-        for (Object value : keyFieldValues) {
+        for (Serializable value : keyFieldValues) {
             if (value == null) {
                 throw new IllegalArgumentException(CompoundKey.class.getSimpleName() + " cannot contain nulls, given: " + Arrays.asList(keyFieldValues));
             }

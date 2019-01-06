@@ -123,6 +123,7 @@ public class ConcreteHostNameData implements HostNameData {
     }
 
     @Override
+    @SuppressWarnings({ "squid:S1182", "squid:S2975" })
     public Object clone() {
         LOGGER.debug("{}.clone() called.", ConcreteHostNameData.class.getSimpleName());
         @SuppressWarnings("unchecked")

@@ -1,7 +1,7 @@
 package de.calamanari.other;
 
 public class FileLine implements CharSequence {
-    public String text;
+    String text;
 
     public FileLine(String rawLine) {
         if (rawLine == null) {
@@ -27,7 +27,7 @@ public class FileLine implements CharSequence {
 
     @Override
     public String toString() {
-        return text.toString();
+        return text;
     }
 
 }

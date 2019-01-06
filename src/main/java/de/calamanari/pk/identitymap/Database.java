@@ -32,12 +32,12 @@ public final class Database {
     /**
      * The "database table" for customers
      */
-    public static final Map<String, CustomerEntity> CUSTOMERS = new HashMap<>();
+    static final Map<String, CustomerEntity> CUSTOMERS = new HashMap<>();
 
     /**
      * The "database table" for customer addresses
      */
-    public static final Map<String, AddressEntity> ADDRESSES = new HashMap<>();
+    static final Map<String, AddressEntity> ADDRESSES = new HashMap<>();
 
     /**
      * Utility class
@@ -46,31 +46,88 @@ public final class Database {
         // no instances
     }
 
-    /**
-     * For testing this allows to feed the "database"
-     * 
-     * @param customerId identifier
-     * @param title person's title
-     * @param lastName person's last name
-     * @param firstName person's first name
-     * @param phone telephone number
-     * @param email email-address
-     * @param promotionOptIn opt-in-flag for promotion events
-     * @param addressId address field
-     * @param street address field
-     * @param zipCode address field
-     * @param city address field
-     * @param country address field
-     * @param salutation address field
-     */
-    public static void addTestData(String customerId, String title, String lastName, String firstName, String phone, String email, boolean promotionOptIn,
-            String addressId, String street, String zipCode, String city, String country, String salutation) {
-
-        CustomerEntity customer = new CustomerEntity(customerId, title, lastName, firstName, phone, email, promotionOptIn);
-        CUSTOMERS.put(customerId, customer);
-        AddressEntity address = new AddressEntity(addressId, customerId, street, zipCode, city, country, salutation);
-        ADDRESSES.put(addressId, address);
-
+    public static Builder prepareCustomer(String customerId) {
+        return new Builder(customerId);
     }
 
+    public static class Builder {
+
+        private final CustomerEntity customerEntity = new CustomerEntity();
+
+        private final AddressEntity addressEntity = new AddressEntity();
+
+        Builder(String customerId) {
+            customerEntity.setId(customerId);
+            addressEntity.setCustomerId(customerId);
+        }
+
+        public Builder withTitle(String title) {
+            customerEntity.setTitle(title);
+            return this;
+        }
+
+        public Builder withLastName(String lastName) {
+            customerEntity.setLastName(lastName);
+            return this;
+        }
+
+        public Builder withFirstName(String firstName) {
+            customerEntity.setFirstName(firstName);
+            return this;
+        }
+
+        public Builder withPhone(String phone) {
+            customerEntity.setPhone(phone);
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            customerEntity.setEmail(email);
+            return this;
+        }
+
+        public Builder withPromotionOptIn(boolean promotionOptIn) {
+            customerEntity.setPromotionOptIn(promotionOptIn);
+            return this;
+        }
+
+        public Builder withAddressId(String addressId) {
+            addressEntity.setAddressId(addressId);
+            return this;
+        }
+
+        public Builder withStreet(String street) {
+            addressEntity.setStreet(street);
+            return this;
+        }
+
+        public Builder withZipCode(String zipCode) {
+            addressEntity.setZipCode(zipCode);
+            return this;
+        }
+
+        public Builder withCity(String city) {
+            addressEntity.setCity(city);
+            return this;
+        }
+
+        public Builder withCountry(String country) {
+            addressEntity.setCountry(country);
+            return this;
+        }
+
+        public Builder withSalutation(String salutation) {
+            addressEntity.setSalutation(salutation);
+            return this;
+        }
+
+        /**
+         * Adds the customer with all information to the database
+         */
+        public void commit() {
+            CUSTOMERS.put(customerEntity.getId(), customerEntity);
+            ADDRESSES.put(addressEntity.getId(), addressEntity);
+
+        }
+    }
 }

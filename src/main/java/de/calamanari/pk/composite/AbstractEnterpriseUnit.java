@@ -106,7 +106,7 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
      * 
      * @return collection of nodes, NEVER null
      */
-    public Collection<? extends EnterpriseNode> getChildNodes() {
+    public Collection<EnterpriseNode> getChildNodes() {
         return Collections.unmodifiableList(childNodes);
     }
 

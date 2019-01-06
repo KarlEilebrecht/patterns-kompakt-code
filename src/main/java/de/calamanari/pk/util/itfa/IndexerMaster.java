@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.pfis.ParallelFileInputStream;
@@ -197,8 +198,12 @@ final class IndexerMaster {
         finally {
             try {
                 executorService.shutdown();
+                executorService.awaitTermination(5, TimeUnit.SECONDS);
             }
-            catch (Throwable t) {
+            catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            catch (RuntimeException ex) {
                 // ignore
             }
             MiscUtils.closeResourceCatch(masterStream);
@@ -213,6 +218,7 @@ final class IndexerMaster {
      * @return prepared master stream
      * @throws IOException on file access problems
      */
+    @SuppressWarnings("squid:S2095")
     private ParallelFileInputStream prepareMasterStream() throws IOException {
         ParallelFileInputStream masterStream;
         masterStream = ParallelFileInputStream.createInputStream(file, configuration.indexerReadBufferSize, configuration.indexerReadBufferType);
@@ -270,10 +276,9 @@ final class IndexerMaster {
      * @throws IOException on file access problems
      */
     private void indexAll(ParallelFileInputStream masterStream) throws IOException {
-        BufferedReader masterReader = null;
 
-        try {
-            masterReader = new BufferedReader(new InputStreamReader(masterStream, charsetName), configuration.charBufferSize);
+        try (InputStreamReader isr = new InputStreamReader(masterStream, charsetName);
+                BufferedReader masterReader = new BufferedReader(isr, configuration.charBufferSize)) {
 
             long dataSize = fileSize - configuration.bomSize;
 
@@ -287,16 +292,6 @@ final class IndexerMaster {
             }
 
             indexPartitions(masterStream, masterReader, buffer);
-        }
-        finally {
-            if (masterReader != null) {
-                try {
-                    masterReader.close();
-                }
-                catch (Throwable t) {
-                    // irrelevant, we will close the channel anyway
-                }
-            }
         }
     }
 
@@ -493,8 +488,8 @@ final class IndexerMaster {
         double exactMaxNumberOfCharEntriesInSubPartition = (double) maxNumberOfCharEntriesInPartition / (double) partitionMetaData.numberOfSlaves;
 
         partitionMetaData.maxNumberOfCharEntriesInSubPartition = (int) Math.floor(exactMaxNumberOfCharEntriesInSubPartition);
-        charEntryDelta = charEntryDelta + (exactMaxNumberOfCharEntriesInSubPartition - partitionMetaData.maxNumberOfCharEntriesInSubPartition)
-                * partitionMetaData.numberOfSlaves;
+        charEntryDelta = charEntryDelta
+                + (exactMaxNumberOfCharEntriesInSubPartition - partitionMetaData.maxNumberOfCharEntriesInSubPartition) * partitionMetaData.numberOfSlaves;
 
         if (charEntryDelta > partitionMetaData.numberOfSlaves) {
             partitionMetaData.maxNumberOfCharEntriesInSubPartition++;
@@ -503,8 +498,8 @@ final class IndexerMaster {
 
         double exactMaxNumberOfLineEntriesInSubPartition = (double) maxNumberOfLineEntriesInPartition / (double) partitionMetaData.numberOfSlaves;
         partitionMetaData.maxNumberOfLineEntriesInSubPartition = (int) Math.floor(exactMaxNumberOfLineEntriesInSubPartition);
-        lineEntryDelta = lineEntryDelta + (exactMaxNumberOfLineEntriesInSubPartition - partitionMetaData.maxNumberOfLineEntriesInSubPartition)
-                * partitionMetaData.numberOfSlaves;
+        lineEntryDelta = lineEntryDelta
+                + (exactMaxNumberOfLineEntriesInSubPartition - partitionMetaData.maxNumberOfLineEntriesInSubPartition) * partitionMetaData.numberOfSlaves;
 
         if (lineEntryDelta > partitionMetaData.numberOfSlaves) {
             partitionMetaData.maxNumberOfLineEntriesInSubPartition++;
@@ -523,6 +518,7 @@ final class IndexerMaster {
             slavesFinishedLatch.await();
         }
         catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new IOException("Unexpected interruption during index run", ex);
         }
     }

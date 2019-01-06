@@ -20,6 +20,7 @@
 package de.calamanari.pk.coarsegrainedlock;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -69,6 +71,8 @@ public class CoarseGrainedLockTest {
      */
     private final Map<String, Order> orderDb = new ConcurrentHashMap<>();
 
+    private final AtomicReference<String> firstError = new AtomicReference<>();
+
     @Before
     public void setUp() throws Exception {
         customerDb.clear();
@@ -77,6 +81,7 @@ public class CoarseGrainedLockTest {
         customerDb.put("4711", new Customer("4711", "Jack", "Miller"));
         addressDb.put("8877", new Address("8877", "4711", "17, Citrus Ave", "286736", "Lemon Village"));
         orderDb.put("9966", new Order("8877", "4711", "XCDBVGHJKLIUZTTRD55FRW"));
+        firstError.set(null);
     }
 
     @Test
@@ -108,6 +113,8 @@ public class CoarseGrainedLockTest {
         fifthUserStartsToWork();
 
         countDown.await();
+
+        assertNull(firstError.get());
 
         assertTrue(InMemoryLockManager.getLockInfo("4711") == null);
 
@@ -156,6 +163,8 @@ public class CoarseGrainedLockTest {
             }
             latch.await();
 
+            assertNull(firstError.get());
+
             assertEquals(10000, valueHolder[0]);
 
             LOGGER.info("Test Lock Stress successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
@@ -182,7 +191,9 @@ public class CoarseGrainedLockTest {
 
                 boolean lockSuccess = InMemoryLockManager.acquireReadLock("4711", "User_1");
 
-                assertTrue(lockSuccess);
+                if (!lockSuccess) {
+                    firstError.compareAndSet(null, "firstUserUnsuccessful");
+                }
 
                 try {
 
@@ -197,11 +208,16 @@ public class CoarseGrainedLockTest {
 
                     // test reentrance
                     lockSuccess = InMemoryLockManager.acquireReadLock("4711", "User_1");
-                    assertTrue(lockSuccess);
+                    if (!lockSuccess) {
+                        firstError.compareAndSet(null, "firstUserUnsuccessful");
+                    }
 
                     // get write lock, we want to change address
                     lockSuccess = InMemoryLockManager.acquireWriteLock("4711", "User_1");
-                    assertTrue(lockSuccess);
+
+                    if (!lockSuccess) {
+                        firstError.compareAndSet(null, "firstUserUnsuccessful");
+                    }
 
                     address = new Address(address.getId(), address.getCustomerId(), "19, Lucky Road", address.getZipCode(), address.getCity());
                     addressDb.put("8877", address);
@@ -229,7 +245,9 @@ public class CoarseGrainedLockTest {
 
                 boolean lockSuccess = InMemoryLockManager.acquireReadLock("4711", "User_2");
 
-                assertTrue(lockSuccess);
+                if (!lockSuccess) {
+                    firstError.compareAndSet(null, "secondUserUnsuccessful");
+                }
 
                 try {
 
@@ -261,7 +279,9 @@ public class CoarseGrainedLockTest {
 
                 boolean lockFailed = !InMemoryLockManager.acquireWriteLock("4711", "User_3");
 
-                assertTrue(lockFailed);
+                if (!lockFailed) {
+                    firstError.compareAndSet(null, "thirdUserDidNotFailAsExpected");
+                }
 
                 InMemoryLockManager.ElementLock lock = InMemoryLockManager.getLockInfo("4711");
                 LOGGER.debug("User_3 failed to get write lock! - Existing Lock found: {}", lock);
@@ -280,7 +300,9 @@ public class CoarseGrainedLockTest {
 
                 try {
                     boolean lockSuccess = InMemoryLockManager.acquireWriteLock("4711", "User_3");
-                    assertTrue(lockSuccess);
+                    if (!lockSuccess) {
+                        firstError.compareAndSet(null, "thirdUserUnsuccessful");
+                    }
                     Order order = orderDb.get("9966");
                     order = new Order(order.getId(), order.getCustomerId(), "POLKIJUHZGT77653FF");
                     orderDb.put("9966", order);
@@ -308,7 +330,9 @@ public class CoarseGrainedLockTest {
 
                 boolean lockFailed = !InMemoryLockManager.acquireReadLock("4711", "User_4");
 
-                assertTrue(lockFailed);
+                if (!lockFailed) {
+                    firstError.compareAndSet(null, "fourthUserDidNotFailAsExpected");
+                }
 
                 LOGGER.debug("User_4 failed to get read lock! - Existing Lock found: {}", InMemoryLockManager.getLockInfo("4711"));
 
@@ -331,7 +355,9 @@ public class CoarseGrainedLockTest {
 
                 boolean lockSuccess = InMemoryLockManager.acquireReadLock("4711", "User_5");
 
-                assertTrue(lockSuccess);
+                if (!lockSuccess) {
+                    firstError.compareAndSet(null, "fifthUserUnsuccessful");
+                }
 
                 try {
 

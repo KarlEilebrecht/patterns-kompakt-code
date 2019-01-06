@@ -40,14 +40,7 @@ public class Invoice implements Serializable {
     /**
      * Compares the ids, for sorting
      */
-    public static final Comparator<Invoice> BY_ID_COMPARATOR = new Comparator<>() {
-
-        @Override
-        public int compare(Invoice o1, Invoice o2) {
-            return o1.getInvoiceId().compareTo(o2.getInvoiceId());
-        }
-
-    };
+    public static final Comparator<Invoice> BY_ID_COMPARATOR = (Invoice o1, Invoice o2) -> o1.getInvoiceId().compareTo(o2.getInvoiceId());
 
     /**
      * for serialization

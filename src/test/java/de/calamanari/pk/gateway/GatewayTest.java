@@ -21,6 +21,9 @@ package de.calamanari.pk.gateway;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.concurrent.TimeUnit;
+
+import org.awaitility.Awaitility;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -57,7 +60,7 @@ public class GatewayTest {
                 SecuMangaGatewayServer.DEFAULT_SECU_MANGA_HOST, "" + SecuMangaGatewayServer.DEFAULT_SECU_MANGA_PORT);
 
         // to be sure the servers are up, wait for 5 seconds
-        Thread.sleep(5000);
+        Awaitility.await().pollDelay(5, TimeUnit.SECONDS).until(() -> true);
 
     }
 

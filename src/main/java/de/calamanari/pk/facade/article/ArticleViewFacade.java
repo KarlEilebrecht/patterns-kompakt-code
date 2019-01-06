@@ -50,7 +50,7 @@ public class ArticleViewFacade {
      * @param articleHistory history system reference
      */
     public ArticleViewFacade(ArticleManager articleManager, ArticleHistory articleHistory) {
-        LOGGER.debug("Creating new {}" + this.getClass().getSimpleName());
+        LOGGER.debug("Creating new {}", this.getClass().getSimpleName());
         this.articleManager = articleManager;
         this.articleHistory = articleHistory;
     }

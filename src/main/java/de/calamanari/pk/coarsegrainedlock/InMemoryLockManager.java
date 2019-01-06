@@ -150,45 +150,62 @@ public final class InMemoryLockManager {
 
         LOGGER.debug("{}: {}.releaseLock({}, {}) called", Thread.currentThread().getName(), InMemoryLockManager.class.getSimpleName(), elementId, ownerId);
         ElementLock currentLock = null;
-        boolean success = false;
-        boolean abort = false;
+
+        OpState state;
 
         do {
             LOGGER.debug("{}: looking up existing lock ...", Thread.currentThread().getName());
             currentLock = LOCKS.get(elementId);
 
             if (currentLock != null && currentLock.isEngaged()) {
-
                 LOGGER.debug("{}: lock entry found ", Thread.currentThread().getName());
-
-                if (currentLock.getLockType() == LockType.WRITE_LOCK) {
-                    if (currentLock.getOwnerIds().contains(ownerId)) {
-                        success = releaseWriteLock(currentLock, elementId);
-                    }
-                    else {
-                        LOGGER.debug("{}: write lock NOT owned by requestor detected - aborting ...", Thread.currentThread().getName());
-                        // cannot remove lock, belongs to someone else
-                        abort = true;
-                    }
-                }
-                else {
-                    if (currentLock.getOwnerIds().contains(ownerId)) {
-                        success = releaseReadLock(currentLock, elementId, ownerId);
-                    }
-                    else {
-                        LOGGER.debug("{}: read lock NOT owned by requestor detected - aborting ...", Thread.currentThread().getName());
-                        abort = true;
-                    }
-                }
+                state = releaseEngagedLock(currentLock, elementId, ownerId);
             }
             else {
                 LOGGER.debug("{}: no lock found to be removed - aborting ...", Thread.currentThread().getName());
                 // there was no lock
-                success = true;
+                state = OpState.COMPLETED;
             }
-        } while (!success && !abort);
+        } while (state == OpState.PENDING);
 
-        return success;
+        return state.isSuccess();
+    }
+
+    /**
+     * Releases the lock if still present
+     * 
+     * @param currentLock
+     * @param elementId
+     * @param ownerId
+     * @return {@link OpState#COMPLETED} if the lock was released, {@link OpState#PENDING} to suggest a new attempt and {@link OpState#ABORTED} not possible
+     *         (not owned by requestor)
+     */
+    private static OpState releaseEngagedLock(ElementLock currentLock, String elementId, String ownerId) {
+        OpState state = OpState.PENDING;
+        if (currentLock.getLockType() == LockType.WRITE_LOCK) {
+            if (currentLock.getOwnerIds().contains(ownerId)) {
+                if (releaseWriteLock(currentLock, elementId)) {
+                    state = OpState.COMPLETED;
+                }
+            }
+            else {
+                LOGGER.debug("{}: write lock NOT owned by requestor detected - aborting ...", Thread.currentThread().getName());
+                // cannot remove lock, belongs to someone else
+                state = OpState.ABORTED;
+            }
+        }
+        else {
+            if (currentLock.getOwnerIds().contains(ownerId)) {
+                if (releaseReadLock(currentLock, elementId, ownerId)) {
+                    state = OpState.COMPLETED;
+                }
+            }
+            else {
+                LOGGER.debug("{}: read lock NOT owned by requestor detected - aborting ...", Thread.currentThread().getName());
+                state = OpState.ABORTED;
+            }
+        }
+        return state;
     }
 
     /**
@@ -202,7 +219,7 @@ public final class InMemoryLockManager {
         boolean success = false;
 
         LOGGER.debug("{}: No lock entry found, creating one ...", Thread.currentThread().getName());
-        ElementLock newLock = new ElementLock(LockType.READ_LOCK, elementId, Arrays.asList(new String[] { ownerId }), null);
+        ElementLock newLock = new ElementLock(LockType.READ_LOCK, elementId, Arrays.asList(ownerId), null);
 
         boolean haveLock = (LOCKS.putIfAbsent(elementId, newLock) == null);
         if (!haveLock) {
@@ -261,7 +278,7 @@ public final class InMemoryLockManager {
         boolean success = false;
         LOGGER.debug("{}: No lock entry found, creating one ...", Thread.currentThread().getName());
 
-        ElementLock newLock = new ElementLock(LockType.WRITE_LOCK, elementId, Arrays.asList(new String[] { ownerId }), null);
+        ElementLock newLock = new ElementLock(LockType.WRITE_LOCK, elementId, Arrays.asList(ownerId), null);
 
         boolean haveLock = (LOCKS.putIfAbsent(elementId, newLock) == null);
         if (!haveLock) {
@@ -507,7 +524,7 @@ public final class InMemoryLockManager {
     /**
      * Enumeration of supported lock types
      */
-    public static enum LockType {
+    public enum LockType {
         /**
          * indicates read lock
          */
@@ -519,4 +536,19 @@ public final class InMemoryLockManager {
         WRITE_LOCK
     }
 
+    private enum OpState {
+
+        PENDING(false), COMPLETED(true), ABORTED(false);
+
+        private final boolean success;
+
+        OpState(boolean success) {
+            this.success = success;
+        }
+
+        boolean isSuccess() {
+            return success;
+        }
+
+    }
 }

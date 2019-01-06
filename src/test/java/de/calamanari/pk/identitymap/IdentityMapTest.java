@@ -41,14 +41,71 @@ public class IdentityMapTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        Database.addTestData("ID0001", "Mr.", "McFlurry", "Dick", "0815-987", "Dick.Flurry@neversend.com", true, "ADR00091", "Quark-Street 70", "91827",
-                "Gotham City", "USA", "Dear Mr.");
-        Database.addTestData("ID0002", "Mrs.", "Clark", "Petula", "0817-871", "Petula.Clark@neversend.com", false, "ADR01071", "Black Owl Way 34", "1217",
-                "Pork Town", "USA", "Dear Mrs.");
-        Database.addTestData("ID0003", "Mrs.", "Blum", "Shanya", "089 8172 2123", "Shanya.Blum@neversend.com", true, "ADR00912", "Hauptstrasse 11", "71622",
-                "Blasenhain", "GER", "Sehr gehrte Frau");
-        Database.addTestData("ID0004", "Mr.", "De-Vil", "Sa Tan", "666 666 666", "souleater@neversend.com", false, "ADR00666", "Road to Hell 666", "666666",
-                "Blackhole", "USA", "Your Majesty");
+
+        // @formatter:off
+        
+        Database.prepareCustomer("ID0001")
+            .withTitle("Mr.")
+            .withLastName("McFlurry")
+            .withFirstName("Dick")
+            .withPhone("0815-987")
+            .withEmail("Dick.Flurry@neversend.com")
+            .withPromotionOptIn(true)
+            .withAddressId("ADR00091")
+            .withStreet("Quark-Street 70")
+            .withZipCode("91827")
+            .withCity("Gotham City")
+            .withCountry("USA")
+            .withSalutation("Dear Mr.")
+        .commit();
+        
+        Database.prepareCustomer("ID0002")
+            .withTitle("Mrs.")
+            .withLastName("Clark")
+            .withFirstName("Petula")
+            .withPhone("0817-871")
+            .withEmail("Petula.Clark@neversend.com")
+            .withPromotionOptIn(false)
+            .withAddressId("ADR01071")
+            .withStreet("Black Owl Way 34")
+            .withZipCode("1217")
+            .withCity("Pork Town")
+            .withCountry("USA")
+            .withSalutation("Dear Mrs.")
+        .commit();
+        
+        Database.prepareCustomer("ID0003")
+            .withTitle("Mrs.")
+            .withLastName("Blum")
+            .withFirstName("Shanya")
+            .withPhone("089 8172 2123")
+            .withEmail("Shanya.Blum@neversend.com")
+            .withPromotionOptIn(true)
+            .withAddressId("ADR00912")
+            .withStreet("Hauptstrasse 11")
+            .withZipCode("71622")
+            .withCity("Blasenhain")
+            .withCountry("GER")
+            .withSalutation("Sehr gehrte Frau")
+        .commit();
+
+        Database.prepareCustomer("ID0004")
+            .withTitle("Mr.")
+            .withLastName("De-Vil")
+            .withFirstName("Sa Tan")
+            .withPhone("666 666 666")
+            .withEmail("souleater@neversend.com")
+            .withPromotionOptIn(false)
+            .withAddressId("ADR00666")
+            .withStreet("Road to Hell 666")
+            .withZipCode("666666")
+            .withCity("Blackhole")
+            .withCountry("USA")
+            .withSalutation("Your Majesty")
+        .commit();
+        
+        // @formatter:on
+
     }
 
     @Test

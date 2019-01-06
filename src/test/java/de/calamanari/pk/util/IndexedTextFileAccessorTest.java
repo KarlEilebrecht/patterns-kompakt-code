@@ -30,7 +30,9 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
+import org.awaitility.Awaitility;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -200,7 +202,7 @@ public class IndexedTextFileAccessorTest {
         trailingSurrogatePairFile.delete();
         miscSurrogatePairFile.delete();
         if (HUGE_TEST_ALLOWED) {
-            Thread.sleep(5000);
+            Awaitility.await().pollDelay(5, TimeUnit.SECONDS).until(() -> true);
             huge1000000LinesFile.delete();
             huge1000000LinesFile = null;
         }

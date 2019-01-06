@@ -31,28 +31,28 @@ final class BufferEvent {
     /**
      * identifies the type of this event
      */
-    public BufferEventType eventType = BufferEventType.REQUEST_NEXT;
+    BufferEventType eventType = BufferEventType.REQUEST_NEXT;
 
     /**
      * new start position for repositioning (absolute file position)
      */
-    public long startPositionAbs = 0L;
+    long startPositionAbs = 0L;
 
     /**
      * a reference to a buffer. <br>
      * The Reader sends a filled buffer to the main thread. <br>
      * The main thread may use this attribute to return an existing buffer for recycling.
      */
-    public ByteBuffer buffer = null;
+    ByteBuffer buffer = null;
 
     /**
      * The reader will indicate this when delivering the first buffer after having repositioned the stream.
      */
-    public boolean repositionAnswer = false;
+    boolean repositionAnswer = false;
 
     /**
      * if this is an error event, this is the exception that occurred while reading
      */
-    public Throwable error = null;
+    Throwable error = null;
 
 }

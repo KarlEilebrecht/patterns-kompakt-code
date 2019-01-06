@@ -130,33 +130,38 @@ public final class ExternalProcessManager {
         Process externalServerProcess = externalServerProcesses.remove(mainClass);
         int res = Integer.MIN_VALUE;
         if (externalServerProcess != null) {
-            int waitAttempts = 0;
-            int maxWaitAttempts = (int) (maxWaitTimeMillis / MIN_SHUTDOWN_WAIT_TIME_MILLIS);
-            if (maxWaitAttempts <= 0) {
-                maxWaitAttempts = 1;
-            }
+            res = shutdownExternalProcess(externalServerProcess, mainClass, stopCommand, maxWaitTimeMillis, res);
+        }
+        return res;
+    }
 
-            if (stopCommand != null && stopCommand.trim().length() > 0) {
-                PrintWriter pw = new PrintWriter(externalServerProcess.getOutputStream());
-                pw.println(stopCommand.trim());
-                pw.flush();
-                // give the shutdown some time
-                for (; waitAttempts < maxWaitAttempts && res == Integer.MIN_VALUE; waitAttempts++) {
-                    Thread.sleep(MIN_SHUTDOWN_WAIT_TIME_MILLIS);
-                    try {
-                        res = externalServerProcess.exitValue();
-                    }
-                    catch (Exception ex) {
-                        continue;
-                    }
+    private int shutdownExternalProcess(Process externalServerProcess, Class<?> mainClass, String stopCommand, long maxWaitTimeMillis, int res) {
+        int waitAttempts = 0;
+        int maxWaitAttempts = (int) (maxWaitTimeMillis / MIN_SHUTDOWN_WAIT_TIME_MILLIS);
+        if (maxWaitAttempts <= 0) {
+            maxWaitAttempts = 1;
+        }
 
+        if (stopCommand != null && stopCommand.trim().length() > 0) {
+            PrintWriter pw = new PrintWriter(externalServerProcess.getOutputStream());
+            pw.println(stopCommand.trim());
+            pw.flush();
+            // give the shutdown some time
+            for (; waitAttempts < maxWaitAttempts && res == Integer.MIN_VALUE; waitAttempts++) {
+                MiscUtils.sleepThrowRuntimeException(MIN_SHUTDOWN_WAIT_TIME_MILLIS);
+                try {
+                    res = externalServerProcess.exitValue();
                 }
+                catch (Exception ex) {
+                    LOGGER.trace("Error during shutdown ...", ex);
+                }
+
             }
-            if (stopCommand == null || stopCommand.trim().length() > 0 || waitAttempts >= maxWaitAttempts) {
-                externalServerProcess.destroy();
-                if (waitAttempts >= maxWaitAttempts) {
-                    LOGGER.warn("Forcibly terminated external process " + mainClass.getSimpleName() + ".");
-                }
+        }
+        if (stopCommand == null || stopCommand.trim().length() > 0 || waitAttempts >= maxWaitAttempts) {
+            externalServerProcess.destroy();
+            if (waitAttempts >= maxWaitAttempts) {
+                LOGGER.warn("Forcibly terminated external process {}.", mainClass.getSimpleName());
             }
         }
         return res;

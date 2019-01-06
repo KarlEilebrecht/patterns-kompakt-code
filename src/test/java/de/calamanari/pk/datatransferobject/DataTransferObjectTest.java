@@ -24,7 +24,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.concurrent.TimeUnit;
 
+import org.awaitility.Awaitility;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -65,7 +67,7 @@ public class DataTransferObjectTest {
         ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT);
 
         // to be sure the server is up, wait 8 seconds
-        Thread.sleep(8000);
+        Awaitility.await().pollDelay(8, TimeUnit.SECONDS).until(() -> true);
 
     }
 
@@ -100,7 +102,7 @@ public class DataTransferObjectTest {
 
         long elapsed = (System.nanoTime() - startTimeNanos);
 
-        Thread.sleep(1000);
+        Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
         LOGGER.info("Test without data transfer object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
 
@@ -120,7 +122,7 @@ public class DataTransferObjectTest {
 
         long elapsed = (System.nanoTime() - startTimeNanos);
 
-        Thread.sleep(1000);
+        Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
         LOGGER.info("Test with data transfer object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
 

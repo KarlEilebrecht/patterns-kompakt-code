@@ -75,27 +75,18 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
      * @param socket accepted socket
      */
     protected void handleSocketCommunicationThreaded(final Socket socket) {
-
-        executorService.execute(new Runnable() {
-
-            /**
-             * communication in a separate thread
-             */
-            @Override
-            public void run() {
-
-                try {
-                    LOGGER.debug("{} Connected to {}", Thread.currentThread().getName(), socket.getInetAddress());
-                    handleSocketCommunication(socket);
-                }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                finally {
-                    MiscUtils.closeResourceCatch(socket);
-                }
-                LOGGER.debug("{} disconnected.", Thread.currentThread().getName());
+        executorService.execute(() -> {
+            try {
+                LOGGER.debug("{} Connected to {}", Thread.currentThread().getName(), socket.getInetAddress());
+                handleSocketCommunication(socket);
             }
+            catch (Exception ex) {
+                LOGGER.error("Error during socket communication.", ex);
+            }
+            finally {
+                MiscUtils.closeResourceCatch(socket);
+            }
+            LOGGER.debug("{} disconnected.", Thread.currentThread().getName());
         });
     }
 
@@ -133,7 +124,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
 
     @Override
     protected void doRequestProcessing() {
-        while (true) {
+        while (serverSocket != null) {
             try {
                 // socket will be closed by the responsible worker thread
                 @SuppressWarnings("resource")

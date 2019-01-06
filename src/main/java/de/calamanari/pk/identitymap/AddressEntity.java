@@ -223,6 +223,7 @@ public class AddressEntity implements Entity<String>, Cloneable {
     }
 
     @Override
+    @SuppressWarnings("squid:S2975")
     public Object clone() {
         AddressEntity entity = null;
         try {

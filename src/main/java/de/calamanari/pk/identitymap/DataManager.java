@@ -62,7 +62,7 @@ public final class DataManager {
 
         IdentityMap<String, CustomerEntity> identityMap = session.getIdentityMap(CustomerEntity.class);
 
-        LOGGER.debug("Performing lookup on {}", identityMap.toString());
+        LOGGER.debug("Performing lookup on {}", identityMap);
 
         res = identityMap.get(customerId);
 
@@ -118,7 +118,7 @@ public final class DataManager {
 
         IdentityMap<String, AddressEntity> identityMap = session.getIdentityMap(AddressEntity.class);
 
-        LOGGER.debug("Performing lookup on {}", identityMap.toString());
+        LOGGER.debug("Performing lookup on {}", identityMap);
 
         res = identityMap.get(addressId);
 

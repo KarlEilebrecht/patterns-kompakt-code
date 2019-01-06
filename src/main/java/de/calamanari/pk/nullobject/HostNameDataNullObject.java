@@ -115,6 +115,7 @@ public final class HostNameDataNullObject implements HostNameData {
     }
 
     @Override
+    @SuppressWarnings({ "squid:S2975", "squid:S1182" })
     public Object clone() {
         LOGGER.debug("{}.clone() called.", HostNameDataNullObject.class.getSimpleName());
         LOGGER.debug("Returning the singleton instance of NULL OBJECT, no duplicate!");

@@ -40,28 +40,23 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * This <i>view behavior</i> must not be implemented in {@link Fraction#compareTo(Fraction)} due to the <i><b>{@linkplain Comparable} interface
      * contract</b></i> which requires <code>equals()</code> and <code>compareTo()</code> to be implemented <i>consistently</i>.
      */
-    public static final Comparator<Fraction> VIEW_COMPARATOR = new Comparator<>() {
-
-        @Override
-        public int compare(Fraction o1, Fraction o2) {
-            int res = 0;
-            if (o1 != null || o2 != null) {
-                if (o1 == null) {
-                    res = 1;
-                }
-                else if (o2 == null) {
-                    res = -1;
-                }
-                else {
-                    res = o1.compareTo(o2);
-                    if (res == 0 && !o1.denominator.equals(o2.denominator)) {
-                        res = o1.numerator.compareTo(o2.numerator);
-                    }
+    public static final Comparator<Fraction> VIEW_COMPARATOR = (Fraction o1, Fraction o2) -> {
+        int res = 0;
+        if (o1 != null || o2 != null) {
+            if (o1 == null) {
+                res = 1;
+            }
+            else if (o2 == null) {
+                res = -1;
+            }
+            else {
+                res = o1.compareTo(o2);
+                if (res == 0 && !o1.denominator.equals(o2.denominator)) {
+                    res = o1.numerator.compareTo(o2.numerator);
                 }
             }
-            return res;
         }
-
+        return res;
     };
 
     /**
@@ -206,7 +201,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @param value number to be converted into a fraction
      */
     public Fraction(double value) {
-        this(new BigDecimal(value).setScale(MAX_SCALING, RoundingMode.HALF_EVEN));
+        this(BigDecimal.valueOf(value).setScale(MAX_SCALING, RoundingMode.HALF_EVEN));
     }
 
     /**
@@ -304,22 +299,22 @@ public class Fraction implements Comparable<Fraction>, Serializable {
 
         Fraction result = this;
         if (!fraction.numerator.equals(BigInteger.ZERO)) {
-            BigInteger numerator;
-            BigInteger denominator;
+            BigInteger numeratorLocal;
+            BigInteger denominatorLocal;
 
             if (this.denominator != fraction.denominator) {
                 Fraction[] fractions = toCommonDenominator(this, fraction);
-                numerator = fractions[0].numerator.add(fractions[1].numerator);
-                denominator = fractions[0].denominator;
+                numeratorLocal = fractions[0].numerator.add(fractions[1].numerator);
+                denominatorLocal = fractions[0].denominator;
             }
             else {
-                numerator = this.numerator.add(fraction.numerator);
-                denominator = this.denominator;
+                numeratorLocal = this.numerator.add(fraction.numerator);
+                denominatorLocal = this.denominator;
             }
-            if (numerator.equals(BigInteger.ZERO)) {
-                denominator = BigInteger.ONE;
+            if (numeratorLocal.equals(BigInteger.ZERO)) {
+                denominatorLocal = BigInteger.ONE;
             }
-            result = (new Fraction(numerator, denominator)).reduce();
+            result = (new Fraction(numeratorLocal, denominatorLocal)).reduce();
         }
         return result;
     }

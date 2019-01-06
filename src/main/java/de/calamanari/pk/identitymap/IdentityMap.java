@@ -74,7 +74,7 @@ public class IdentityMap<K, E extends Entity<K>> {
      * @return entity or null if unknown
      */
     public E get(K id) {
-        LOGGER.debug("{}(entityType={}).get('" + id + "') called", this.getClass().getSimpleName(), entityType.getSimpleName());
+        LOGGER.debug("{}(entityType={}).get('{}') called", this.getClass().getSimpleName(), entityType.getSimpleName(), id);
         return instances.get(id);
     }
 

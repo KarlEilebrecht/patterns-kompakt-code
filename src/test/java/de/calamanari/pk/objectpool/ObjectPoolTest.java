@@ -24,7 +24,9 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +61,10 @@ public class ObjectPoolTest {
         String callResult3 = instance1.computeResult();
         String callResult4 = instance1.computeResult();
 
-        assertEquals(callResult1, "X1");
-        assertEquals(callResult2, "X2");
-        assertEquals(callResult3, "X3");
-        assertEquals(callResult4, "X4");
+        assertEquals("X1", callResult1);
+        assertEquals("X2", callResult2);
+        assertEquals("X3", callResult3);
+        assertEquals("X4", callResult4);
 
         ExampleReusableObject instance2 = new ExampleReusableObject();
         String callResult5 = instance2.computeResult();
@@ -70,10 +72,10 @@ public class ObjectPoolTest {
         String callResult7 = instance2.computeResult();
         String callResult8 = instance2.computeResult();
 
-        assertEquals(callResult5, "X1");
-        assertEquals(callResult6, "X2");
-        assertEquals(callResult7, "X3");
-        assertEquals(callResult8, "X4");
+        assertEquals("X1", callResult5);
+        assertEquals("X2", callResult6);
+        assertEquals("X3", callResult7);
+        assertEquals("X4", callResult8);
 
         ExampleReusableObject instance3 = new ExampleReusableObject();
         String callResult9 = instance3.computeResult();
@@ -81,10 +83,10 @@ public class ObjectPoolTest {
         String callResult11 = instance3.computeResult();
         String callResult12 = instance3.computeResult();
 
-        assertEquals(callResult9, "X1");
-        assertEquals(callResult10, "X2");
-        assertEquals(callResult11, "X3");
-        assertEquals(callResult12, "X4");
+        assertEquals("X1", callResult9);
+        assertEquals("X2", callResult10);
+        assertEquals("X3", callResult11);
+        assertEquals("X4", callResult12);
 
         String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test without pool successful! Elapsed time: {} s", elapsedTimeString);
@@ -109,10 +111,10 @@ public class ObjectPoolTest {
 
         pool.returnInstance(instance1);
 
-        assertEquals(callResult1, "X1");
-        assertEquals(callResult2, "X2");
-        assertEquals(callResult3, "X3");
-        assertEquals(callResult4, "X4");
+        assertEquals("X1", callResult1);
+        assertEquals("X2", callResult2);
+        assertEquals("X3", callResult3);
+        assertEquals("X4", callResult4);
 
         ExampleReusableObject instance2 = pool.acquireInstance();
         String callResult5 = instance2.computeResult();
@@ -122,10 +124,10 @@ public class ObjectPoolTest {
 
         pool.returnInstance(instance2);
 
-        assertEquals(callResult5, "X1");
-        assertEquals(callResult6, "X2");
-        assertEquals(callResult7, "X3");
-        assertEquals(callResult8, "X4");
+        assertEquals("X1", callResult5);
+        assertEquals("X2", callResult6);
+        assertEquals("X3", callResult7);
+        assertEquals("X4", callResult8);
 
         ExampleReusableObject instance3 = pool.acquireInstance();
         String callResult9 = instance3.computeResult();
@@ -135,10 +137,10 @@ public class ObjectPoolTest {
 
         pool.returnInstance(instance3);
 
-        assertEquals(callResult9, "X1");
-        assertEquals(callResult10, "X2");
-        assertEquals(callResult11, "X3");
-        assertEquals(callResult12, "X4");
+        assertEquals("X1", callResult9);
+        assertEquals("X2", callResult10);
+        assertEquals("X3", callResult11);
+        assertEquals("X4", callResult12);
 
         String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with pool (no warm-up) successful! Elapsed time: {} s", elapsedTimeString);
@@ -168,10 +170,10 @@ public class ObjectPoolTest {
 
         pool.returnInstance(instance1);
 
-        assertEquals(callResult1, "X1");
-        assertEquals(callResult2, "X2");
-        assertEquals(callResult3, "X3");
-        assertEquals(callResult4, "X4");
+        assertEquals("X1", callResult1);
+        assertEquals("X2", callResult2);
+        assertEquals("X3", callResult3);
+        assertEquals("X4", callResult4);
 
         ExampleReusableObject instance2 = pool.acquireInstance();
         String callResult5 = instance2.computeResult();
@@ -181,10 +183,10 @@ public class ObjectPoolTest {
 
         pool.returnInstance(instance2);
 
-        assertEquals(callResult5, "X1");
-        assertEquals(callResult6, "X2");
-        assertEquals(callResult7, "X3");
-        assertEquals(callResult8, "X4");
+        assertEquals("X1", callResult5);
+        assertEquals("X2", callResult6);
+        assertEquals("X3", callResult7);
+        assertEquals("X4", callResult8);
 
         ExampleReusableObject instance3 = pool.acquireInstance();
         String callResult9 = instance3.computeResult();
@@ -194,10 +196,10 @@ public class ObjectPoolTest {
 
         pool.returnInstance(instance3);
 
-        assertEquals(callResult9, "X1");
-        assertEquals(callResult10, "X2");
-        assertEquals(callResult11, "X3");
-        assertEquals(callResult12, "X4");
+        assertEquals("X1", callResult9);
+        assertEquals("X2", callResult10);
+        assertEquals("X3", callResult11);
+        assertEquals("X4", callResult12);
 
         String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with pool (warm-up) successful! Elapsed time: {} s", elapsedTimeString);
@@ -263,7 +265,7 @@ public class ObjectPoolTest {
         long endNanos = System.nanoTime();
 
         // give some time for log output
-        Thread.sleep(1000);
+        Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
         String elapsedTimeString = MiscUtils.formatNanosAsSeconds(endNanos - startTimeNanos);
         LOGGER.info("Test with pool concurrent successful! Elapsed time: {} s", elapsedTimeString);
