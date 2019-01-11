@@ -57,7 +57,7 @@ public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
 
     @Override
     public String[] getCustomerData(int customerId) {
-        return testData.get(customerId);
+        return testData.getOrDefault(customerId, OldSysCustomerMgr.NO_RESULT);
     }
 
     @Override

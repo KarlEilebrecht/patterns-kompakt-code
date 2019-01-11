@@ -21,7 +21,6 @@ package de.calamanari.pk.modelviewcontroller;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -55,12 +54,8 @@ public class TeamController {
     /**
      * task to update the view
      */
-    private final Runnable updateViewTask = new Runnable() {
-        @Override
-        public void run() {
-            updateView();
-        }
-    };
+    @SuppressWarnings("squid:S1612")
+    private final Runnable updateViewTask = () -> updateView();
 
     /**
      * Creates new controller responsible for the given model and the given view
@@ -96,12 +91,9 @@ public class TeamController {
      */
     private void registerTeamModelObserver() {
         // observe the model
-        model.setModelObserver(new TeamModel.TeamModelObserver() {
-            @Override
-            public void handleModelChanged() {
-                LOGGER.debug("{} - model changed, updating view.", TeamController.class.getSimpleName());
-                SwingUtilities.invokeLater(updateViewTask);
-            }
+        model.setModelObserver(() -> {
+            LOGGER.debug("{} - model changed, updating view.", TeamController.class.getSimpleName());
+            SwingUtilities.invokeLater(updateViewTask);
         });
     }
 
@@ -109,14 +101,9 @@ public class TeamController {
      * Creates a new ChangeListener and registers it at all the radio button controls.
      */
     private void registerRadioButtonChangeListener() {
-        ChangeListener selectionListener = new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                LOGGER.debug("{} - selection changed, updating view.", TeamController.class.getSimpleName());
-                updateView();
-            }
-
+        ChangeListener selectionListener = (ChangeEvent e) -> {
+            LOGGER.debug("{} - selection changed, updating view.", TeamController.class.getSimpleName());
+            updateView();
         };
 
         view.rad1.addChangeListener(selectionListener);
@@ -132,30 +119,26 @@ public class TeamController {
      * The remove action removes the selected element (if any) and clears the selection.
      */
     private void registerRemoveButtonActionListener() {
-        view.btnRemove.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LOGGER.debug("{} - [Remove] clicked.", TeamController.class.getSimpleName());
-                int radioButtonIndex = 0;
-                int selectedIdx = -1;
-                for (Enumeration<AbstractButton> en = view.radioGroup.getElements(); en.hasMoreElements();) {
-                    JRadioButton rad = (JRadioButton) en.nextElement();
-                    if (rad.isSelected()) {
-                        selectedIdx = radioButtonIndex;
-                    }
-                    radioButtonIndex++;
+        view.btnRemove.addActionListener((ActionEvent e) -> {
+            LOGGER.debug("{} - [Remove] clicked.", TeamController.class.getSimpleName());
+            int radioButtonIndex = 0;
+            int selectedIdx = -1;
+            for (Enumeration<AbstractButton> en = view.radioGroup.getElements(); en.hasMoreElements();) {
+                JRadioButton rad = (JRadioButton) en.nextElement();
+                if (rad.isSelected()) {
+                    selectedIdx = radioButtonIndex;
                 }
-                if (selectedIdx >= 0) {
-                    LOGGER.debug("{} - entry {} was selected, removing.", TeamController.class.getSimpleName(), (selectedIdx + 1));
-                    model.remove(selectedIdx);
-                }
-                else {
-                    LOGGER.debug("{} - no entry selected, request ignored.", TeamController.class.getSimpleName());
-                }
-                view.radioGroup.clearSelection();
-                view.txtInput.setText("");
+                radioButtonIndex++;
             }
+            if (selectedIdx >= 0) {
+                LOGGER.debug("{} - entry {} was selected, removing.", TeamController.class.getSimpleName(), (selectedIdx + 1));
+                model.remove(selectedIdx);
+            }
+            else {
+                LOGGER.debug("{} - no entry selected, request ignored.", TeamController.class.getSimpleName());
+            }
+            view.radioGroup.clearSelection();
+            view.txtInput.setText("");
         });
     }
 
@@ -164,20 +147,16 @@ public class TeamController {
      * The add-action adds a new element to the model.
      */
     private void registerAddButtonActionListener() {
-        view.btnAdd.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LOGGER.debug("{} - [Add] clicked.", TeamController.class.getSimpleName());
-                String newMember = view.txtInput.getText().trim();
-                view.txtInput.setText("");
-                if (newMember.length() > 0) {
-                    LOGGER.debug("Adding member to model");
-                    model.add(newMember);
-                }
-                else {
-                    LOGGER.debug("Invalid input ignored");
-                }
+        view.btnAdd.addActionListener((ActionEvent e) -> {
+            LOGGER.debug("{} - [Add] clicked.", TeamController.class.getSimpleName());
+            String newMember = view.txtInput.getText().trim();
+            view.txtInput.setText("");
+            if (newMember.length() > 0) {
+                LOGGER.debug("Adding member to model");
+                model.add(newMember);
+            }
+            else {
+                LOGGER.debug("Invalid input ignored");
             }
         });
     }
@@ -186,13 +165,9 @@ public class TeamController {
      * Adds a new action listener to the close-button.
      */
     private void registerCloseButtonActionListener() {
-        view.btnClose.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LOGGER.debug("{} - [Close] clicked.", TeamController.class.getSimpleName());
-                shutDown();
-            }
+        view.btnClose.addActionListener((ActionEvent e) -> {
+            LOGGER.debug("{} - [Close] clicked.", TeamController.class.getSimpleName());
+            shutDown();
         });
     }
 

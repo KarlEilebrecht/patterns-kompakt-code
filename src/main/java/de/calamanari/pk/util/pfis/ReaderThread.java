@@ -121,26 +121,34 @@ final class ReaderThread extends Thread {
                 }
             }
         }
-        catch (Throwable t) {
-            BufferEvent bufferEvent = new BufferEvent();
-            bufferEvent.eventType = BufferEventType.ERROR;
-            bufferEvent.error = t;
-            try {
-                t.printStackTrace();
-                bufferDeliveryQueue.put(bufferEvent);
-            }
-            catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                // this is extremely fatal, hope this will never happen
-                LOGGER.error("Interrupted during critical queue operation, maybe consumer hangs now.", ex);
-            }
-            catch (Throwable ex) {
-                // this is extremely fatal, hope this will never happen
-                LOGGER.error("Unexpected error during critical queue operation, maybe consumer hangs now.", ex);
-            }
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            handleReaderThreadException(ex);
+        }
+        catch (IOException | RuntimeException ex) {
+            handleReaderThreadException(ex);
         }
         finally {
             MiscUtils.closeResourceCatch(fileChannel);
+        }
+    }
+
+    private void handleReaderThreadException(Exception ex) {
+        BufferEvent bufferEvent = new BufferEvent();
+        bufferEvent.eventType = BufferEventType.ERROR;
+        bufferEvent.error = ex;
+        try {
+            LOGGER.error("Error in reader thread", ex);
+            bufferDeliveryQueue.put(bufferEvent);
+        }
+        catch (InterruptedException ex2) {
+            Thread.currentThread().interrupt();
+            // this is extremely fatal, hope this will never happen
+            LOGGER.error("Interrupted during critical queue operation, maybe consumer hangs now.", ex2);
+        }
+        catch (RuntimeException ex2) {
+            // this is extremely fatal, hope this will never happen
+            LOGGER.error("Unexpected error during critical queue operation, maybe consumer hangs now.", ex2);
         }
     }
 

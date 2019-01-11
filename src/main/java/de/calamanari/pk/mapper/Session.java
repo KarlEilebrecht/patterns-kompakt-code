@@ -46,7 +46,7 @@ public class Session {
      * Creates new session
      */
     public Session() {
-        LOGGER.debug("{} created");
+        LOGGER.debug("{} created", this.getClass().getSimpleName());
     }
 
     /**

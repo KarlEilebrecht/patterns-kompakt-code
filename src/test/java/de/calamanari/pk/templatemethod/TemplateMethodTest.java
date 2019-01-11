@@ -52,7 +52,7 @@ public class TemplateMethodTest {
         ExternalProcessManager.getInstance().startExternal(EchoServer.class, LOGGER);
 
         // To be sure the server is up, wait 3 seconds.
-        Thread.sleep(3000);
+        MiscUtils.sleepThrowRuntimeException(3000);
     }
 
     @AfterClass

@@ -27,6 +27,8 @@ package de.calamanari.pk.wrapper.legacy;
  */
 public class OldSysCustomerMgr {
 
+    public static final String[] NO_RESULT = new String[0];
+
     /**
      * Returns an array with customer record:<br>
      * <ul>
@@ -35,12 +37,12 @@ public class OldSysCustomerMgr {
      * </ul>
      * 
      * @param customerId identifier
-     * @return array with customer data or null if not found
+     * @return array with customer data or {@link #NO_RESULT} if not found
      */
     public String[] getCustomerData(int customerId) {
         // internal legacy database access
 
-        return null;
+        return NO_RESULT;
     }
 
     /**

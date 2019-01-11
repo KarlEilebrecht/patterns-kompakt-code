@@ -128,6 +128,7 @@ public final class ParallelFileInputStream extends InputStream {
      * @return input stream
      * @throws IOException on file access error
      */
+    @SuppressWarnings("squid:S2095")
     public static ParallelFileInputStream createInputStream(File file, int maxBufferSize, BufferType bufferType) throws IOException {
         ParallelFileInputStream pfis = new ParallelFileInputStream(file, maxBufferSize, bufferType);
         pfis.readerThread.start();
@@ -234,7 +235,7 @@ public final class ParallelFileInputStream extends InputStream {
      * @param bufferType the type of buffer to be used, see {@link BufferType}
      * @throws IOException on file access error
      */
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "squid:S2093", "squid:S2095" })
     private ParallelFileInputStream(File file, int maxBufferSize, BufferType bufferType) throws IOException {
         if (maxBufferSize <= 0) {
             maxBufferSize = DEFAULT_MAX_BUFFER_SIZE;
@@ -256,6 +257,7 @@ public final class ParallelFileInputStream extends InputStream {
                 this.bufferRequestQueue.put(new BufferEvent());
             }
             catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
                 throw new IOException("Unexpected interruption during queue setup.", ex);
             }
 
@@ -297,11 +299,10 @@ public final class ParallelFileInputStream extends InputStream {
      * @throws IOException on file access error
      */
     private void assertNoError(BufferEvent bufferEvent) throws IOException {
-        if (this.readError != null) {
-            if (bufferEvent.eventType == BufferEventType.ERROR) {
-                handleError(bufferEvent.error);
-            }
+        if (this.readError != null && bufferEvent != null && bufferEvent.eventType == BufferEventType.ERROR) {
+            handleError(bufferEvent.error);
         }
+
         assertNoError();
     }
 
@@ -353,8 +354,12 @@ public final class ParallelFileInputStream extends InputStream {
             bufferRequestQueue.put(bufferEvent);
 
         }
-        catch (Throwable t) {
-            handleError(t);
+        catch (InterruptedException ex) {
+            handleError(ex);
+            Thread.currentThread().interrupt();
+        }
+        catch (IOException | RuntimeException ex) {
+            handleError(ex);
         }
     }
 
@@ -380,24 +385,7 @@ public final class ParallelFileInputStream extends InputStream {
             if (buffer.remaining() < 1) {
                 readNextPartitionParallel();
             }
-            int lenTodo = lenReal;
-            while (lenTodo > 0 && buffer.remaining() > 0) {
-                int remaining = buffer.remaining();
-                if (remaining > 0) {
-                    int lenPart = lenTodo;
-                    if (lenPart > remaining) {
-                        lenPart = remaining;
-                    }
-                    lenTodo = lenTodo - lenPart;
-                    buffer.get(b, off, lenPart);
-                    off = off + lenPart;
-                    position = position + lenPart;
-                }
-                if (lenTodo > 0) {
-                    readNextPartitionParallel();
-                }
-            }
-            lenReal = lenReal - lenTodo;
+            lenReal = lenReal - readRemaining(b, off, lenReal);
         }
         if (lenReal > 0) {
             bytesDelivered.addAndGet(lenReal);
@@ -406,6 +394,27 @@ public final class ParallelFileInputStream extends InputStream {
         else {
             return -1;
         }
+    }
+
+    private int readRemaining(byte[] b, int off, int lenReal) throws IOException {
+        int lenTodo = lenReal;
+        while (lenTodo > 0 && buffer.remaining() > 0) {
+            int remaining = buffer.remaining();
+            if (remaining > 0) {
+                int lenPart = lenTodo;
+                if (lenPart > remaining) {
+                    lenPart = remaining;
+                }
+                lenTodo = lenTodo - lenPart;
+                buffer.get(b, off, lenPart);
+                off = off + lenPart;
+                position = position + lenPart;
+            }
+            if (lenTodo > 0) {
+                readNextPartitionParallel();
+            }
+        }
+        return lenTodo;
     }
 
     /**
@@ -433,6 +442,7 @@ public final class ParallelFileInputStream extends InputStream {
             bufferRequestQueue.put(bufferRequest);
         }
         catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
             handleError(ex);
         }
 
@@ -443,7 +453,9 @@ public final class ParallelFileInputStream extends InputStream {
                 answer = bufferDeliveryQueue.take();
             }
             catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
                 handleError(ex);
+                break;
             }
             if (answer.eventType == BufferEventType.DELIVER_BUFFER && answer.repositionAnswer) {
                 // this is the one we requested
@@ -459,7 +471,9 @@ public final class ParallelFileInputStream extends InputStream {
                     bufferRequestQueue.put(bufferRequest);
                 }
                 catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
                     handleError(ex);
+                    done = true;
                 }
             }
             else {
@@ -469,7 +483,9 @@ public final class ParallelFileInputStream extends InputStream {
 
         assertNoError(answer);
 
-        this.buffer = answer.buffer;
+        if (answer != null) {
+            this.buffer = answer.buffer;
+        }
         position = positionAbs;
     }
 
@@ -511,7 +527,7 @@ public final class ParallelFileInputStream extends InputStream {
         try {
             readerThread.requestStopReading();
         }
-        catch (Throwable t) {
+        catch (RuntimeException ex) {
             // ignore
         }
 
@@ -520,7 +536,12 @@ public final class ParallelFileInputStream extends InputStream {
             bufferEvent.eventType = BufferEventType.SHUTDOWN;
             bufferRequestQueue.put(bufferEvent);
         }
-        catch (Throwable t) {
+        catch (InterruptedException ex) {
+            // try it by interrupt
+            readerThread.interrupt();
+            Thread.currentThread().interrupt();
+        }
+        catch (RuntimeException ex) {
             // try it by interrupt
             readerThread.interrupt();
         }

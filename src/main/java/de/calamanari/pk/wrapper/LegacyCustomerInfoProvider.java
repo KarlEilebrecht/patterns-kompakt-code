@@ -83,7 +83,7 @@ public class LegacyCustomerInfoProvider {
             LOGGER.debug("calling Legacy API ...");
             String[] legacyCustomerData = customerMgr.getCustomerData(legacyId);
             String[] legacyHistoryData = historyMgr.getHistory(legacyId);
-            if (legacyCustomerData != null) {
+            if (legacyCustomerData != OldSysCustomerMgr.NO_RESULT) {
                 res = new LegacyCustomerInfo(legacyCustomerData, legacyHistoryData);
             }
         }

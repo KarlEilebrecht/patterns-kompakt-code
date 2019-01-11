@@ -20,11 +20,12 @@
 package de.calamanari.pk.pessimisticofflinelock;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,10 +53,13 @@ public class PessimisticOfflineLockTest {
      */
     private final Map<String, Customer> customerDb = new ConcurrentHashMap<>();
 
+    private final AtomicReference<String> firstError = new AtomicReference<>();
+
     @Before
     public void setUp() throws Exception {
         customerDb.clear();
         customerDb.put("4711", new Customer("4711", "Jack", "Miller", "17, Citrus Ave", "286736", "Lemon Village"));
+        firstError.set(null);
     }
 
     @Test
@@ -75,6 +79,8 @@ public class PessimisticOfflineLockTest {
         fifthUserStartsToWork();
 
         countDown.await();
+
+        assertNull(firstError.get());
 
         assertEquals("LockInfo({elementId='4711', lockType='NONE', ownerIds=[]})", LockManager.getLockInfo("4711").toString());
 
@@ -96,7 +102,9 @@ public class PessimisticOfflineLockTest {
 
                 boolean lockSuccess = LockManager.acquireReadLock("4711", "User_1");
 
-                assertTrue(lockSuccess);
+                if (!lockSuccess) {
+                    firstError.compareAndSet(null, "User_1 failed to acquireLock (1)");
+                }
 
                 try {
 
@@ -108,11 +116,15 @@ public class PessimisticOfflineLockTest {
 
                     // test reentrance
                     lockSuccess = LockManager.acquireReadLock("4711", "User_1");
-                    assertTrue(lockSuccess);
+                    if (!lockSuccess) {
+                        firstError.compareAndSet(null, "User_1 failed to acquireLock (2)");
+                    }
 
                     // get write lock
                     lockSuccess = LockManager.acquireWriteLock("4711", "User_1");
-                    assertTrue(lockSuccess);
+                    if (!lockSuccess) {
+                        firstError.compareAndSet(null, "User_1 failed to acquireLock (3)");
+                    }
 
                     customer = new Customer(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(), "19, Lucky Road", customer.getZipCode(),
                             customer.getCity());
@@ -141,7 +153,9 @@ public class PessimisticOfflineLockTest {
 
                 boolean lockSuccess = LockManager.acquireReadLock("4711", "User_2");
 
-                assertTrue(lockSuccess);
+                if (!lockSuccess) {
+                    firstError.compareAndSet(null, "User_2 failed to acquireLock");
+                }
 
                 try {
 
@@ -173,7 +187,9 @@ public class PessimisticOfflineLockTest {
 
                 boolean lockFailed = !LockManager.acquireWriteLock("4711", "User_3");
 
-                assertTrue(lockFailed);
+                if (!lockFailed) {
+                    firstError.compareAndSet(null, "User_3 unexpectedly succeeded to acquireLock");
+                }
 
                 LOGGER.debug("User_3 failed to get write lock! - Existing Lock found: {}", LockManager.getLockInfo("4711"));
 
@@ -196,7 +212,9 @@ public class PessimisticOfflineLockTest {
 
                 boolean lockFailed = !LockManager.acquireReadLock("4711", "User_4");
 
-                assertTrue(lockFailed);
+                if (!lockFailed) {
+                    firstError.compareAndSet(null, "User_4 unexpectedly succeeded to acquireLock");
+                }
 
                 LOGGER.debug("User_4 failed to get read lock! - Existing Lock found: {}", LockManager.getLockInfo("4711"));
 
@@ -219,7 +237,9 @@ public class PessimisticOfflineLockTest {
 
                 boolean lockSuccess = LockManager.acquireReadLock("4711", "User_5");
 
-                assertTrue(lockSuccess);
+                if (!lockSuccess) {
+                    firstError.compareAndSet(null, "User_5 failed to acquireLock");
+                }
 
                 try {
 

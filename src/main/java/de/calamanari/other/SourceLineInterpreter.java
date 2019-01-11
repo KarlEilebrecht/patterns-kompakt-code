@@ -5,10 +5,11 @@ import java.util.List;
 
 public class SourceLineInterpreter {
 
-    public CommentType commentType = CommentType.NONE;
+    CommentType commentType = CommentType.NONE;
 
-    public List<Phrase> phrases = new ArrayList<>();
+    List<Phrase> phrases = new ArrayList<>();
 
+    @SuppressWarnings("squid:ForLoopCounterChangedCheck")
     public void readNext(SourceLine line) {
         phrases.clear();
         int phraseStart = line.startPos;
@@ -123,7 +124,7 @@ public class SourceLineInterpreter {
         }
     }
 
-    public static enum CommentType {
+    public enum CommentType {
         NONE, SIMPLE_STAR, DOUBLE_STAR, STRING_LITERAL, CHAR_LITERAL, END_OF_LINE
     }
 

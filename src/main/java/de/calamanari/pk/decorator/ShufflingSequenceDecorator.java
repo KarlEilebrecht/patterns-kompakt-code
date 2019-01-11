@@ -77,8 +77,7 @@ public class ShufflingSequenceDecorator implements NumberSequence {
      */
     protected long shuffleId(long rawId) {
         LOGGER.trace("shuffleId({}) called ...", rawId);
-        long shuffledId = orbOfConfusion.transform(rawId);
-        return shuffledId;
+        return orbOfConfusion.transform(rawId);
     }
 
 }

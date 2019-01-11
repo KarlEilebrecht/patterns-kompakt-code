@@ -22,6 +22,9 @@ package de.calamanari.pk.util.tpl;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.calamanari.pk.util.MiscUtils;
 
 /**
@@ -32,6 +35,8 @@ import de.calamanari.pk.util.MiscUtils;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public final class ThroughputCheckerThread extends Thread {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ThroughputCheckerThread.class);
 
     /**
      * life-cycle control true->false->true
@@ -179,9 +184,8 @@ public final class ThroughputCheckerThread extends Thread {
             overloadNanos = overloadNanos - lastCheckOverloadNanos;
         }
         overloadNanos = adjustComputedOverloadTime(overloadNanos, intervalNanos);
-        ThroughputEvent newEvent = new ThroughputEvent(nowNanoTime, intervalNanos, overloadNanos, passedCount, deniedCount, currentPerSecondThroughput,
-                totalPerSecondThroughput, overload);
-        return newEvent;
+        return new ThroughputEvent(nowNanoTime, intervalNanos, overloadNanos, passedCount, deniedCount, currentPerSecondThroughput, totalPerSecondThroughput,
+                overload);
     }
 
     /**
@@ -230,28 +234,42 @@ public final class ThroughputCheckerThread extends Thread {
             this.lastEvent = null;
             Throwable lastProblem = null;
             try {
-                while (!stopped.get()) {
-                    long time = System.nanoTime();
-                    long waitNanos = doWait();
-                    if (!stopped.get()) {
-                        doCheck();
-                    }
-                    lastCheckOperationTimeNanos = Math.abs(System.nanoTime() - time) - waitNanos;
-                }
+                executeChecks();
             }
-            catch (Throwable ex) {
+            catch (InterruptedException ex) {
+                if (!stopped.get()) {
+                    lastProblem = ex;
+                }
+                Thread.currentThread().interrupt();
+            }
+            catch (RuntimeException ex) {
                 if (!stopped.get()) {
                     lastProblem = ex;
                 }
             }
-            if (!stopped.get()) {
-                try {
-                    listener.handleListenerDied(lastProblem);
-                }
-                catch (Throwable t) {
-                    t.printStackTrace();
-                }
+            handleAfterExecution(lastProblem);
+        }
+    }
+
+    private void handleAfterExecution(Throwable lastProblem) {
+        if (!stopped.get()) {
+            try {
+                listener.handleListenerDied(lastProblem);
             }
+            catch (RuntimeException t) {
+                LOGGER.error("Listener died unexpectedly", t);
+            }
+        }
+    }
+
+    private void executeChecks() throws InterruptedException {
+        while (!stopped.get()) {
+            long time = System.nanoTime();
+            long waitNanos = doWait();
+            if (!stopped.get()) {
+                doCheck();
+            }
+            lastCheckOperationTimeNanos = Math.abs(System.nanoTime() - time) - waitNanos;
         }
     }
 }

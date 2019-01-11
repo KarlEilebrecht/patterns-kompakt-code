@@ -55,7 +55,7 @@ public class OldSysHistoryMgrMock extends OldSysHistoryMgr {
 
     @Override
     public String[] getHistory(int customerId) {
-        return testData.get(customerId);
+        return testData.getOrDefault(customerId, OldSysHistoryMgr.NO_RESULT);
     }
 
 }

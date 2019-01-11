@@ -19,12 +19,17 @@
 //@formatter:on
 package de.calamanari.pk.objectpool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Managed thread for pooling.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class PoolThread extends Thread {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PoolThread.class);
 
     /**
      * number of digits in hashcode
@@ -91,7 +96,7 @@ public class PoolThread extends Thread {
         synchronized (lock) {
             if (this.isAlive()) {
                 if (!disposed) {
-                    lock.notify();
+                    lock.notifyAll();
                 }
                 else {
                     throw new IllegalStateException("PoolThread is already disposed!");
@@ -119,8 +124,13 @@ public class PoolThread extends Thread {
                 }
                 returnToPoolAndWait();
             }
-            catch (Throwable t) {
-                t.printStackTrace();
+            catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                LOGGER.error("Pool thread interrupted -> disposing it", ex);
+                disposed = true;
+            }
+            catch (RuntimeException t) {
+                LOGGER.error("Pool thread has thrown an error", t);
                 this.resetState();
             }
         } while (!disposed);
@@ -173,6 +183,9 @@ public class PoolThread extends Thread {
      * 
      * @throws InterruptedException pass-through from waiting
      */
+    // I suppress here squid:S2274 because there is a loop outside in the run()-method.
+    // Should the thread wake-up unintentionally it will go back into the pool soon immediately
+    @SuppressWarnings("squid:S2274")
     protected void returnToPoolAndWait() throws InterruptedException {
         synchronized (lock) {
             threadPool.returnThreadToIdlePool(this);
@@ -190,7 +203,7 @@ public class PoolThread extends Thread {
             // call comes from pool management while this thread
             // is in wait mode, now
             // notify the thread that it can die gracefully
-            lock.notify();
+            lock.notifyAll();
         }
     }
 

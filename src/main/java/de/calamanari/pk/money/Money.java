@@ -126,7 +126,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(BigDecimal value, Currency currency) throws IllegalArgumentException {
+    public Money(BigDecimal value, Currency currency) {
         this.currency = currency;
         BigDecimal defaultUnitFactor = determineDefaultUnitFactor(currency);
         this.valueOfSmallestUnit = value.multiply(defaultUnitFactor).setScale(0, RoundingMode.HALF_EVEN).toBigInteger();
@@ -211,7 +211,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currency instance's currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(String value, Currency currency) throws IllegalArgumentException {
+    public Money(String value, Currency currency) {
         this(new BigDecimal(value), currency);
     }
 
@@ -222,7 +222,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @param currencyCode identifier for currency
      * @throws IllegalArgumentException if the currency is not supported
      */
-    public Money(String value, String currencyCode) throws IllegalArgumentException {
+    public Money(String value, String currencyCode) {
         this(new BigDecimal(value), Currency.getInstance(currencyCode));
     }
 
@@ -507,7 +507,7 @@ public class Money implements Serializable, Comparable<Money> {
      * @return sum of weights
      * @throws IllegalArgumentException if a weight value was null or negative
      */
-    private BigDecimal computeSumOfWeights(BigDecimal[] weights) throws IllegalArgumentException {
+    private BigDecimal computeSumOfWeights(BigDecimal[] weights) {
         BigDecimal sumOfWeights = BigDecimal.ZERO;
         for (BigDecimal weight : weights) {
             if (weight == null) {

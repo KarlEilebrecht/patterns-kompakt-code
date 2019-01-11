@@ -42,12 +42,6 @@ import javax.jws.soap.SOAPBinding;
 public class SecuMangaGatewayWebService {
 
     /**
-     * Constructor used by framework
-     */
-    public SecuMangaGatewayWebService() {
-    }
-
-    /**
      * scramble text
      * 
      * @param text to be scrambled
@@ -111,8 +105,7 @@ public class SecuMangaGatewayWebService {
                 PrintWriter bw = new PrintWriter(new OutputStreamWriter(secuMangaClientSocket.getOutputStream()));
                 BufferedReader br = new BufferedReader(new InputStreamReader(secuMangaClientSocket.getInputStream()))) {
             writeRequestMessage(bw, command, sendContent);
-            String content = readResponseMessage(secuMangaClientSocket, br);
-            return content;
+            return readResponseMessage(secuMangaClientSocket, br);
         }
     }
 

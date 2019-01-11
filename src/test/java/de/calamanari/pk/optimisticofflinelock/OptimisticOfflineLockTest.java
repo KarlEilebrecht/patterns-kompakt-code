@@ -26,9 +26,11 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sql.DataSource;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -57,6 +59,8 @@ public class OptimisticOfflineLockTest {
      */
     private static volatile DataManager dataManager;
 
+    private AtomicBoolean expectedExceptionCaught = new AtomicBoolean(false);
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
@@ -82,6 +86,11 @@ public class OptimisticOfflineLockTest {
         dataManager.addCustomer(4711, "Jack", "Miller", "17, Citrus Ave", "286736", "Lemon Village");
     }
 
+    @Before
+    public void beforeTest() {
+        expectedExceptionCaught.set(false);
+    }
+
     @Test
     public void testOptimisticOfflineLock() throws Exception {
 
@@ -96,6 +105,8 @@ public class OptimisticOfflineLockTest {
         secondUserStartsToWork();
 
         countDown.await();
+
+        assertTrue(expectedExceptionCaught.get());
 
         assertEquals("Customer({customerId='4711', lastName='Miller', firstName='Jane', street='19, Lucky Road', "
                 + "zipCode='286736', city='Lemon Village', version=2})", dataManager.findCustomerById(4711).toString());
@@ -122,7 +133,9 @@ public class OptimisticOfflineLockTest {
                 catch (Exception ex) {
                     caughtEx = ex;
                 }
-                assertTrue(caughtEx instanceof ConcurrentModificationException);
+                if (caughtEx instanceof ConcurrentModificationException) {
+                    expectedExceptionCaught.set(true);
+                }
 
                 // oops, user 1 was too optimistic, let's try again
                 customer = dataManager.findCustomerById(4711);

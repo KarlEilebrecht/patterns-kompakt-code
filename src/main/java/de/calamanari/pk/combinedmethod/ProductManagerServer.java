@@ -113,7 +113,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     @Override
     public Product findProductById(String id) throws RemoteException {
-        LOGGER.debug("findProductById('" + id + "') called");
+        LOGGER.debug("findProductById('{}') called", id);
         return database.get(id);
     }
 
@@ -125,7 +125,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
 
     @Override
     public void registerProduct(Product product) throws RemoteException {
-        LOGGER.debug("registerProduct(" + product + ") called");
+        LOGGER.debug("registerProduct({}) called", product);
         if (nextProductRegistrationMustFail) {
             LOGGER.debug("Simulating some error");
             nextProductRegistrationMustFail = false;
@@ -152,14 +152,11 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
         try {
             registerProduct(product);
         }
-        catch (Exception ex) {
+        catch (RemoteException | RuntimeException ex) {
             // "rollback"
             LOGGER.debug("Handling error during registration, preserving ID='{}' for reuse", productId);
             lostAndFoundIds.add(productId);
-            if ((ex instanceof RemoteException) || (ex instanceof RuntimeException)) {
-                throw ex;
-            }
-            throw new RuntimeException(ex);
+            throw ex;
         }
         return product;
     }
@@ -205,19 +202,19 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.environment().put("CLASSPATH", System.getProperties().getProperty("java.class.path", null));
         try {
-            LOGGER.info("Starting private RMI-Registry on port " + this.registryPort + " ...");
+            LOGGER.info("Starting private RMI-Registry on port {} ...", this.registryPort);
             rmiRegistryProcess = pb.start();
             // give the registry some time to get ready
             Thread.sleep(REGISTRY_STARTUP_MILLIS);
             LOGGER.info("RMI-Registry ready.");
         }
         catch (InterruptedException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Unexpected interruption", ex);
             Thread.currentThread().interrupt();
             throw new RuntimeException(ex);
         }
         catch (IOException | RuntimeException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Unexpected error in RMI registry", ex);
             throw new RuntimeException(ex);
         }
     }

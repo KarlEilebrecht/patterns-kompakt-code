@@ -20,11 +20,13 @@
 package de.calamanari.pk.objectpool;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.awaitility.Awaitility;
 import org.junit.Test;
@@ -236,6 +238,8 @@ public class ObjectPoolTest {
         long startTimeNanos = System.nanoTime();
         final CountDownLatch latch = new CountDownLatch(numberOfRuns);
 
+        AtomicReference<Throwable> firstError = new AtomicReference<>();
+
         ExecutorService executorService = Executors.newFixedThreadPool(25);
         try {
             for (int i = 0; i < numberOfRuns; i++) {
@@ -247,7 +251,9 @@ public class ObjectPoolTest {
                         ExampleReusableObject instance = pool.acquireInstance();
                         try {
                             String callResult = instance.computeResult();
-                            assertEquals(callResult, "X1");
+                            if (!"X1".equals(callResult)) {
+                                firstError.compareAndSet(null, new Exception("Assertion X1 failed in asynchronous thread " + threadNo));
+                            }
                         }
                         finally {
                             latch.countDown();
@@ -262,6 +268,8 @@ public class ObjectPoolTest {
         finally {
             executorService.shutdown();
         }
+
+        assertNull(firstError.get());
         long endNanos = System.nanoTime();
 
         // give some time for log output

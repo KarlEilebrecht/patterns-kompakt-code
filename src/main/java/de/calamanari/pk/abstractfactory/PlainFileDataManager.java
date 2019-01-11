@@ -51,8 +51,7 @@ public class PlainFileDataManager extends AbstractDataManager {
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }
         File destinationFile = new File(MiscUtils.getHomeDirectory(), itemName + ".txt");
-        PlainFileDataWriter res = new PlainFileDataWriter(destinationFile);
-        return res;
+        return new PlainFileDataWriter(destinationFile);
     }
 
     @Override
@@ -62,8 +61,7 @@ public class PlainFileDataManager extends AbstractDataManager {
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }
         File sourceFile = new File(MiscUtils.getHomeDirectory(), itemName + ".txt");
-        PlainFileDataReader res = new PlainFileDataReader(sourceFile);
-        return res;
+        return new PlainFileDataReader(sourceFile);
     }
 
 }

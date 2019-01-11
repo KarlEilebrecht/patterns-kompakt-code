@@ -100,31 +100,7 @@ public final class LockManager {
                 LOGGER.debug("{}: lock entry found ", Thread.currentThread().getName());
 
                 if (currentLockType == LockType.NONE) {
-                    LOGGER.debug("{}: element '{}' currently not locked, updating lock entry with: READ_LOCK ", Thread.currentThread().getName(), elementId);
-
-                    int numberOfUpdatedRows = 0;
-
-                    // begin TX
-
-                    // update LOCK_TABLE
-                    // set LOCK_TYPE = ${newLockType}
-                    // , OWNER_IDS = ${ownerId}
-                    // , VERSION = VERSION + 1
-                    // where ELEMENT_ID = ${elementId} and VERSION = ${version}
-
-                    numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }), version);
-
-                    // end TX
-
-                    if (numberOfUpdatedRows != 1) {
-                        LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                        // must be concurrent access, try the whole process again
-                        continue;
-                    }
-                    else {
-                        LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
-                        success = true;
-                    }
+                    success = tryAcquireUpdateReadLock(elementId, ownerId, newLockType, version);
                 }
                 else if (currentLockType == LockType.WRITE_LOCK) {
                     LOGGER.debug("{}: Existing write lock detected - aborting.", Thread.currentThread().getName());
@@ -132,74 +108,113 @@ public final class LockManager {
                     abort = true;
                 }
                 else {
-                    // there is a read lock
-                    if (lockOwnerIds.contains(ownerId)) {
-                        LOGGER.debug("{}: Existing read lock detected, owned by requestor, leaving with success.", Thread.currentThread().getName());
-                        // we have already the lock, show reentrant behavior
-                        success = true;
-                    }
-                    else {
-                        LOGGER.debug("{}: Existing read lock detected, adding requestor to owner list.", Thread.currentThread().getName());
-                        lockOwnerIds = new ArrayList<>(lockOwnerIds);
-                        lockOwnerIds.add(ownerId);
-
-                        int numberOfUpdatedRows = 0;
-
-                        // begin TX
-
-                        // update LOCK_TABLE
-                        // set LOCK_TYPE = ${newLockType}
-                        // , OWNER_IDS = ${lockOwnerIds}
-                        // , VERSION = VERSION + 1
-                        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
-
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
-
-                        // end TX
-
-                        if (numberOfUpdatedRows != 1) {
-                            LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                            // must be concurrent access, try the whole process again
-                            continue;
-                        }
-                        else {
-                            LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
-                            success = true;
-                        }
-
-                    }
+                    success = tryAcquireFurtherReadLock(elementId, ownerId, newLockType, lockOwnerIds, version);
                 }
             }
             else {
-
-                LOGGER.debug("{}: No lock entry found in lock table, creating one ...", Thread.currentThread().getName());
-
-                // currently there is no entry in the LOCK_TABLE
-                // thus we have to create one
-
-                boolean insertSuccessful = false;
-
-                // begin TX
-
-                // insert into LOCK_TABLE (ELEMENT_ID, LOCK_TYPE, OWNER_IDS, VERSION)
-                // values (${elementId}, ${newLockType}, ${ownerId}, 0)
-
-                insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }));
-
-                // end TX
-
-                if (!insertSuccessful) {
-                    LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                    // must be concurrent access, try the whole process again
-                    continue;
-                }
-                else {
-                    LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
-                    success = true;
-                }
+                success = tryAcquireNewReadLock(elementId, ownerId, newLockType);
             }
         } while (!success && !abort);
 
+        return success;
+    }
+
+    private static boolean tryAcquireFurtherReadLock(String elementId, String ownerId, LockType newLockType, List<String> lockOwnerIds, long version) {
+
+        boolean success = false;
+        // there is a read lock
+        if (lockOwnerIds.contains(ownerId)) {
+            LOGGER.debug("{}: Existing read lock detected, owned by requestor, leaving with success.", Thread.currentThread().getName());
+            // we have already the lock, show reentrant behavior
+            success = true;
+        }
+        else {
+            LOGGER.debug("{}: Existing read lock detected, adding requestor to owner list.", Thread.currentThread().getName());
+            lockOwnerIds = new ArrayList<>(lockOwnerIds);
+            lockOwnerIds.add(ownerId);
+
+            int numberOfUpdatedRows = 0;
+
+            // begin TX
+
+            // update LOCK_TABLE
+            // set LOCK_TYPE = ${newLockType}
+            // , OWNER_IDS = ${lockOwnerIds}
+            // , VERSION = VERSION + 1
+            // where ELEMENT_ID = ${elementId} and VERSION = ${version}
+
+            numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
+
+            // end TX
+
+            if (numberOfUpdatedRows != 1) {
+                LOGGER.debug("{}: concurrent modification detected while acquiring read lock - trying again ...", Thread.currentThread().getName());
+                // must be concurrent access, try the whole process again
+            }
+            else {
+                LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
+                success = true;
+            }
+        }
+        return success;
+    }
+
+    private static boolean tryAcquireNewReadLock(String elementId, String ownerId, LockType newLockType) {
+        boolean success = false;
+        LOGGER.debug("{}: No lock entry found in lock table, creating one ...", Thread.currentThread().getName());
+
+        // currently there is no entry in the LOCK_TABLE
+        // thus we have to create one
+
+        boolean insertSuccessful = false;
+
+        // begin TX
+
+        // insert into LOCK_TABLE (ELEMENT_ID, LOCK_TYPE, OWNER_IDS, VERSION)
+        // values (${elementId}, ${newLockType}, ${ownerId}, 0)
+
+        insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType, Arrays.asList(ownerId));
+
+        // end TX
+
+        if (!insertSuccessful) {
+            LOGGER.debug("{}: concurrent modification detected while acquiring read lock - trying again ...", Thread.currentThread().getName());
+            // must be concurrent access, try the whole process again
+        }
+        else {
+            LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
+            success = true;
+        }
+        return success;
+    }
+
+    private static boolean tryAcquireUpdateReadLock(String elementId, String ownerId, LockType newLockType, long version) {
+
+        LOGGER.debug("{}: element '{}' currently not locked, updating lock entry with: READ_LOCK ", Thread.currentThread().getName(), elementId);
+
+        boolean success = false;
+        int numberOfUpdatedRows = 0;
+
+        // begin TX
+
+        // update LOCK_TABLE
+        // set LOCK_TYPE = ${newLockType}
+        // , OWNER_IDS = ${ownerId}
+        // , VERSION = VERSION + 1
+        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
+
+        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, Arrays.asList(ownerId), version);
+
+        // end TX
+
+        if (numberOfUpdatedRows != 1) {
+            LOGGER.debug("{}: concurrent modification detected while updating read lock - trying again ...", Thread.currentThread().getName());
+            // must be concurrent access, try the whole process again
+        }
+        else {
+            LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
+            success = true;
+        }
         return success;
     }
 
@@ -253,114 +268,121 @@ public final class LockManager {
                 LOGGER.debug("{}: lock entry found ", Thread.currentThread().getName());
 
                 if (currentLockType == LockType.NONE) {
-
-                    LOGGER.debug("{}: element '{}' currently not locked, updating lock entry with: READ_LOCK ", Thread.currentThread().getName(), elementId);
-
-                    int numberOfUpdatedRows = 0;
-
-                    // begin TX
-
-                    // update LOCK_TABLE
-                    // set LOCK_TYPE = ${newLockType}
-                    // , OWNER_IDS = ${ownerId}
-                    // , VERSION = VERSION + 1
-                    // where ELEMENT_ID = ${elementId} and VERSION = ${version}
-
-                    numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }), version);
-
-                    // end TX
-
-                    if (numberOfUpdatedRows != 1) {
-                        LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                        // must be concurrent access, try the whole process again
-                        continue;
-                    }
-                    else {
-                        LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
-                        success = true;
-                    }
+                    success = tryAcquireUpdateWriteLock(elementId, ownerId, newLockType, version);
                 }
-                else if (currentLockType == LockType.WRITE_LOCK) {
-                    if (lockOwnerIds.contains(ownerId)) {
-                        LOGGER.debug("{}: Existing write lock detected, owned by requestor, leaving with success.", Thread.currentThread().getName());
-                        // we have already the lock, show reentrant behavior
-                        success = true;
-                    }
-                    else {
-                        LOGGER.debug("{}: Existing write lock detected - aborting.", Thread.currentThread().getName());
-                        // there is another write lock, thus cannot acquire one
-                        abort = true;
-                    }
+                else if (currentLockType == LockType.WRITE_LOCK && checkLockOwned(lockOwnerIds, ownerId)) {
+                    LOGGER.debug("{}: Existing write lock detected, owned by requestor, leaving with success.", Thread.currentThread().getName());
+                    success = true;
+                }
+                else if (currentLockType == LockType.READ_LOCK && !checkForeignReadLockPresent(lockOwnerIds, ownerId)) {
+                    success = tryUpgradeReadLockToWriteLock(elementId, newLockType, lockOwnerIds, version);
                 }
                 else {
-                    // there is a read lock
-                    if (lockOwnerIds.size() > 1 || !lockOwnerIds.contains(ownerId)) {
-                        LOGGER.debug("{}: Existing read lock (not owned by requestor) detected - aborting.", Thread.currentThread().getName());
-                        // at least one read lock does not belong to us, cannot set write lock
-                        abort = true;
-                    }
-                    else {
-                        LOGGER.debug("{}: Single read lock owned by requestor detected - switching to WRITE_LOCK.", Thread.currentThread().getName());
-
-                        // we have THE ONLY read lock, thus we can turn it into a write lock
-
-                        int numberOfUpdatedRows = 0;
-
-                        // begin TX
-
-                        // update LOCK_TABLE
-                        // set LOCK_TYPE = ${newLockType}
-                        // , OWNER_IDS = ${lockOwnerIds}
-                        // , VERSION = VERSION + 1
-                        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
-
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
-
-                        // end TX
-
-                        if (numberOfUpdatedRows != 1) {
-                            LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                            // must be concurrent access, try the whole process again
-                            continue;
-                        }
-                        else {
-                            LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
-                            success = true;
-                        }
-
-                    }
+                    // anybody else has a lock, no chance to obtain write lock
+                    LOGGER.debug("{}: Existing {} (not owned by requestor) detected - aborting.", Thread.currentThread().getName(), currentLockType);
+                    abort = true;
                 }
             }
             else {
-
-                LOGGER.debug("{}: No lock entry found in lock table, creating one ...", Thread.currentThread().getName());
-
-                // currently there is no entry in the LOCK_TABLE
-                // thus we have to create one
-
-                boolean insertSuccessful = false;
-
-                // begin TX
-
-                // insert into LOCK_TABLE (ELEMENT_ID, LOCK_TYPE, OWNER_IDS, VERSION)
-                // values (${elementId}, ${newLockType}, ${ownerId}, 0)
-
-                insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType, Arrays.asList(new String[] { ownerId }));
-
-                // end TX
-
-                if (!insertSuccessful) {
-                    LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                    // must be concurrent access, try the whole process again
-                    continue;
-                }
-                else {
-                    LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
-                    success = true;
-                }
+                success = tryAcquireNewWriteLock(elementId, ownerId, newLockType);
             }
         } while (!success && !abort);
 
+        return success;
+    }
+
+    private static boolean checkForeignReadLockPresent(List<String> lockOwnerIds, String ownerId) {
+        // there is a foreign read lock
+        return (lockOwnerIds.size() > 1 || !lockOwnerIds.contains(ownerId));
+    }
+
+    private static boolean tryAcquireNewWriteLock(String elementId, String ownerId, LockType newLockType) {
+        boolean success = false;
+        LOGGER.debug("{}: No lock entry found in lock table, creating one ...", Thread.currentThread().getName());
+
+        // currently there is no entry in the LOCK_TABLE
+        // thus we have to create one
+
+        boolean insertSuccessful = false;
+
+        // begin TX
+
+        // insert into LOCK_TABLE (ELEMENT_ID, LOCK_TYPE, OWNER_IDS, VERSION)
+        // values (${elementId}, ${newLockType}, ${ownerId}, 0)
+
+        insertSuccessful = doSimulateDatabaseInsertLock(elementId, newLockType, Arrays.asList(ownerId));
+
+        // end TX
+
+        if (!insertSuccessful) {
+            LOGGER.debug("{}: concurrent modification detected while acquiring write lock - trying again ...", Thread.currentThread().getName());
+            // must be concurrent access, try the whole process again
+        }
+        else {
+            LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
+            success = true;
+        }
+        return success;
+    }
+
+    private static boolean tryUpgradeReadLockToWriteLock(String elementId, LockType newLockType, List<String> lockOwnerIds, long version) {
+        boolean success = false;
+        LOGGER.debug("{}: Single read lock owned by requestor detected - switching to WRITE_LOCK.", Thread.currentThread().getName());
+
+        // we have THE ONLY read lock, thus we can turn it into a write lock
+
+        int numberOfUpdatedRows = 0;
+
+        // begin TX
+
+        // update LOCK_TABLE
+        // set LOCK_TYPE = ${newLockType}
+        // , OWNER_IDS = ${lockOwnerIds}
+        // , VERSION = VERSION + 1
+        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
+
+        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
+
+        // end TX
+
+        if (numberOfUpdatedRows != 1) {
+            LOGGER.debug("{}: concurrent modification detected while upgrading read lock to write lock - trying again ...", Thread.currentThread().getName());
+            // must be concurrent access, try the whole process again
+        }
+        else {
+            LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
+            success = true;
+        }
+        return success;
+    }
+
+    private static boolean tryAcquireUpdateWriteLock(String elementId, String ownerId, LockType newLockType, long version) {
+
+        boolean success = false;
+        LOGGER.debug("{}: element '{}' currently not locked, updating lock entry with: WRITE_LOCK ", Thread.currentThread().getName(), elementId);
+
+        int numberOfUpdatedRows = 0;
+
+        // begin TX
+
+        // update LOCK_TABLE
+        // set LOCK_TYPE = ${newLockType}
+        // , OWNER_IDS = ${ownerId}
+        // , VERSION = VERSION + 1
+        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
+
+        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, Arrays.asList(ownerId), version);
+
+        // end TX
+
+        if (numberOfUpdatedRows != 1) {
+            LOGGER.debug("{}: concurrent modification detected while updating write lock - trying again ...", Thread.currentThread().getName());
+            // must be concurrent access, try the whole process again
+        }
+        else {
+            LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
+            success = true;
+        }
         return success;
     }
 
@@ -419,93 +441,21 @@ public final class LockManager {
                     // there was no lock
                     abort = true;
                 }
-                else if (currentLockType == LockType.WRITE_LOCK) {
-
-                    if (lockOwnerIds.contains(ownerId)) {
-
-                        LOGGER.debug("{}: write lock owned by requestor detected - removing lock", Thread.currentThread().getName());
-
-                        lockOwnerIds = new ArrayList<>();
-
-                        int numberOfUpdatedRows = 0;
-
-                        // begin TX
-
-                        // update LOCK_TABLE
-                        // set LOCK_TYPE = ${newLockType}
-                        // , OWNER_IDS = ${ownerIds}
-                        // , VERSION = VERSION + 1
-                        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
-
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
-
-                        // end TX
-
-                        if (numberOfUpdatedRows != 1) {
-                            LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                            // must be concurrent access, try the whole process again
-                            continue;
-                        }
-                        else {
-                            LOGGER.debug("{}: Successfully removed write lock.", Thread.currentThread().getName());
-                            success = true;
-                        }
-
-                    }
-                    else {
-                        LOGGER.debug("{}: write lock NOT owned by requestor detected - aborting ...", Thread.currentThread().getName());
-                        // cannot remove lock, belongs to someone else
-                        abort = true;
-                    }
+                else if (currentLockType == LockType.WRITE_LOCK && checkLockOwned(lockOwnerIds, ownerId)) {
+                    success = tryReleaseWriteLock(elementId, newLockType, version);
+                }
+                else if (currentLockType == LockType.READ_LOCK && checkLockOwned(lockOwnerIds, ownerId)) {
+                    success = tryReleaseReadLock(elementId, ownerId, currentLockType, newLockType, lockOwnerIds, version);
                 }
                 else {
-                    // there is a read lock
-                    if (!lockOwnerIds.contains(ownerId)) {
-                        LOGGER.debug("{}: read lock NOT owned by requestor detected - aborting ...", Thread.currentThread().getName());
-                        // nothing to be removed
-                        abort = true;
-                    }
-                    else {
-                        LOGGER.debug("{}: read lock owned by requestor detected - removing lock ...", Thread.currentThread().getName());
-                        lockOwnerIds = new ArrayList<>(lockOwnerIds);
-                        lockOwnerIds.remove(ownerId);
-
-                        if (lockOwnerIds.size() > 0) {
-                            LOGGER.debug("{}: preserving read locks owned by others", Thread.currentThread().getName());
-                            // keep element locked
-                            newLockType = currentLockType;
-                        }
-
-                        int numberOfUpdatedRows = 0;
-
-                        // begin TX
-
-                        // update LOCK_TABLE
-                        // set LOCK_TYPE = ${newLockType}
-                        // , OWNER_IDS = ${lockOwnerIds}
-                        // , VERSION = VERSION + 1
-                        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
-
-                        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
-
-                        // end TX
-
-                        if (numberOfUpdatedRows != 1) {
-                            LOGGER.debug("{}: concurrent modification detected - trying again ...", Thread.currentThread().getName());
-                            // must be concurrent access, try the whole process again
-                            continue;
-                        }
-                        else {
-                            LOGGER.debug("{}: Successfully removed read lock.", Thread.currentThread().getName());
-                            success = true;
-                        }
-                    }
+                    LOGGER.debug("{}: {} NOT owned by requestor detected - aborting ...", Thread.currentThread().getName(), currentLockType);
+                    abort = true;
                 }
             }
             else {
                 LOGGER.debug("{}: no lock found to be removed - aborting ...", Thread.currentThread().getName());
                 // there was no lock
-                success = true;
+                abort = true;
             }
         } while (!success && !abort);
 
@@ -520,6 +470,80 @@ public final class LockManager {
 
         return success;
 
+    }
+
+    private static boolean checkLockOwned(List<String> lockOwnerIds, String ownerId) {
+        return lockOwnerIds.contains(ownerId);
+    }
+
+    private static boolean tryReleaseReadLock(String elementId, String ownerId, LockType currentLockType, LockType newLockType, List<String> lockOwnerIds,
+            long version) {
+
+        boolean success = false;
+        LOGGER.debug("{}: read lock owned by requestor detected - removing lock ...", Thread.currentThread().getName());
+        lockOwnerIds = new ArrayList<>(lockOwnerIds);
+        lockOwnerIds.remove(ownerId);
+
+        if (lockOwnerIds.size() > 0) {
+            LOGGER.debug("{}: preserving read locks owned by others", Thread.currentThread().getName());
+            // keep element locked
+            newLockType = currentLockType;
+        }
+
+        int numberOfUpdatedRows = 0;
+
+        // begin TX
+
+        // update LOCK_TABLE
+        // set LOCK_TYPE = ${newLockType}
+        // , OWNER_IDS = ${lockOwnerIds}
+        // , VERSION = VERSION + 1
+        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
+
+        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, lockOwnerIds, version);
+
+        // end TX
+
+        if (numberOfUpdatedRows != 1) {
+            LOGGER.debug("{}: concurrent modification detected while releasing read lock - trying again ...", Thread.currentThread().getName());
+            // must be concurrent access, try the whole process again
+        }
+        else {
+            LOGGER.debug("{}: Successfully removed read lock.", Thread.currentThread().getName());
+            success = true;
+        }
+        return success;
+    }
+
+    private static boolean tryReleaseWriteLock(String elementId, LockType newLockType, long version) {
+
+        boolean success = false;
+
+        LOGGER.debug("{}: write lock owned by requestor detected - removing lock", Thread.currentThread().getName());
+
+        int numberOfUpdatedRows = 0;
+
+        // begin TX
+
+        // update LOCK_TABLE
+        // set LOCK_TYPE = ${newLockType}
+        // , OWNER_IDS = ${ownerIds}
+        // , VERSION = VERSION + 1
+        // where ELEMENT_ID = ${elementId} and VERSION = ${version}
+
+        numberOfUpdatedRows = doSimulateDatabaseUpdateLock(elementId, newLockType, new ArrayList<>(), version);
+
+        // end TX
+
+        if (numberOfUpdatedRows != 1) {
+            LOGGER.debug("{}: concurrent modification detected while releasing write lock - trying again ...", Thread.currentThread().getName());
+            // must be concurrent access, try the whole process again
+        }
+        else {
+            LOGGER.debug("{}: Successfully removed write lock.", Thread.currentThread().getName());
+            success = true;
+        }
+        return success;
     }
 
     /**
@@ -545,7 +569,7 @@ public final class LockManager {
         // end TX
 
         if (res == null) {
-            List<String> lockOwnerIds = Collections.EMPTY_LIST;
+            List<String> lockOwnerIds = Collections.emptyList();
             res = new LockInfo(elementId, LockType.NONE, lockOwnerIds, 0);
         }
 
@@ -565,7 +589,7 @@ public final class LockManager {
         String[] recordData = (record == null ? null : record.get());
         if (recordData != null) {
             LockType lockType = LockType.valueOf(recordData[0]);
-            List<String> lockOwnerIds = Collections.EMPTY_LIST;
+            List<String> lockOwnerIds = Collections.emptyList();
             if (recordData[1].length() > 0) {
                 lockOwnerIds = Arrays.asList(recordData[1].split(","));
             }
@@ -706,7 +730,7 @@ public final class LockManager {
     /**
      * Enumeration of supported lock types
      */
-    public static enum LockType {
+    public enum LockType {
         /**
          * no lock / idle
          */

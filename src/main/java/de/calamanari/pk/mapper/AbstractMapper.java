@@ -24,6 +24,7 @@ package de.calamanari.pk.mapper;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("squid:S1610")
 public abstract class AbstractMapper {
 
     /**

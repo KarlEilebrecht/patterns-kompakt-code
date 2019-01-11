@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class TeamView extends JFrame {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TeamView.class);

@@ -20,8 +20,8 @@
 package de.calamanari.pk.activeobject;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -86,15 +86,16 @@ public class ActiveObjectTest {
         QueryRequestFuture future2 = queryComponent.queryHistoryData(null, "Miller", "1978-10-17");
         QueryRequestFuture future3 = queryComponent.queryHistoryData(null, null, "1978-10-17");
 
-        Awaitility.await().pollInterval(2, TimeUnit.SECONDS).until(() -> future1.isQueryDone() && future2.isQueryDone() && future3.isQueryDone());
+        Awaitility.await().atMost(20, TimeUnit.SECONDS).pollInterval(2, TimeUnit.SECONDS)
+                .until(() -> future1.isQueryDone() && future2.isQueryDone() && future3.isQueryDone());
 
         List<String[]> result1 = future1.getResult();
         List<String[]> result2 = future2.getResult();
         List<String[]> result3 = future3.getResult();
 
-        assertNotNull(result1);
-        assertNotNull(result2);
-        assertNotNull(result3);
+        assertNotSame(QueryRequestFuture.NO_RESULT, result1);
+        assertNotSame(QueryRequestFuture.NO_RESULT, result2);
+        assertNotSame(QueryRequestFuture.NO_RESULT, result3);
 
         assertEquals(1, result1.size());
         assertEquals(1, result2.size());
@@ -135,7 +136,7 @@ public class ActiveObjectTest {
         }
 
         assertTrue(future1.isQueryCancelled());
-        assertNull(future1.getResult());
+        assertSame(QueryRequestFuture.NO_RESULT, future1.getResult());
 
         String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Active Object cancel successful! Elapsed time: {} s", elapsedSeconds);

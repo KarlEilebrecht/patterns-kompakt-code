@@ -125,25 +125,29 @@ public class OrbOfConfusion {
             if (partition.length != PRIMES[i]) {
                 throw new IllegalArgumentException("partitions[" + i + "] contains " + partition.length + " elements (expected " + PRIMES[i] + ").");
             }
-            for (int j = 0; j < partition.length; j++) {
-                boolean ok = false;
+            checkPartitionDetails(i, partition);
+        }
+    }
+
+    private static void checkPartitionDetails(int i, int[] partition) {
+        for (int j = 0; j < partition.length; j++) {
+            boolean ok = false;
+            for (int k = 0; k < partition.length; k++) {
+                if (partition[k] == j) {
+                    ok = true;
+                    break;
+                }
+            }
+            if (!ok) {
+                StringBuilder sb = new StringBuilder();
                 for (int k = 0; k < partition.length; k++) {
-                    if (partition[k] == j) {
-                        ok = true;
-                        break;
+                    if (k > 0) {
+                        sb.append(", ");
                     }
+                    sb.append(partition[k]);
                 }
-                if (!ok) {
-                    StringBuilder sb = new StringBuilder();
-                    for (int k = 0; k < partition.length; k++) {
-                        if (k > 0) {
-                            sb.append(", ");
-                        }
-                        sb.append(partition[k]);
-                    }
-                    throw new IllegalArgumentException("partitions[" + i + "][]{" + sb.toString() + "} is no valid shuffled index partition (missing index="
-                            + j + ").");
-                }
+                throw new IllegalArgumentException("partitions[" + i + "][]{" + sb.toString() + "} is no valid shuffled index partition (missing index="
+                        + j + ").");
             }
         }
     }

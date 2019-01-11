@@ -19,6 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.activeobject;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ import org.slf4j.LoggerFactory;
 public class QueryRequestFuture {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryRequestFuture.class);
+
+    public static final List<String[]> NO_RESULT = Collections.emptyList();
 
     /**
      * The task being observed
@@ -50,7 +53,7 @@ public class QueryRequestFuture {
     /**
      * Returns the result if - and only if computation is done, otherwise null (non-blocking)
      * 
-     * @return result or null (if not completed or cancelled)
+     * @return result or {@link #NO_RESULT} (if not completed or cancelled)
      */
     public List<String[]> getResult() {
         LOGGER.debug("{}.getResult() called", this.getClass().getSimpleName());
@@ -62,7 +65,7 @@ public class QueryRequestFuture {
         catch (Exception ex) {
             LOGGER.error("Failed to get result!", ex);
         }
-        return null;
+        return NO_RESULT;
     }
 
     /**

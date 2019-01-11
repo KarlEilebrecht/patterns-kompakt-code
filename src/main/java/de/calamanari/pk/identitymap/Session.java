@@ -37,14 +37,7 @@ public class Session {
     /**
      * This simulates some kind of session management
      */
-    private static final ThreadLocal<Session> SESSION = new ThreadLocal<>() {
-
-        @Override
-        protected Session initialValue() {
-            return new Session();
-        }
-
-    };
+    private static final ThreadLocal<Session> SESSION_HOLDER = ThreadLocal.withInitial(Session::new);
 
     /**
      * Returns the current session from our simulated session management
@@ -52,7 +45,7 @@ public class Session {
      * @return session
      */
     public static final Session getCurrentSession() {
-        return SESSION.get();
+        return SESSION_HOLDER.get();
     }
 
     /**
@@ -64,16 +57,8 @@ public class Session {
      * @return identity map for the given entity type, never null
      */
     public <K extends Object, E extends Entity<K>> IdentityMap<K, E> getIdentityMap(Class<E> entityType) {
-        Object identityMap = identityMaps.get(entityType);
-
         @SuppressWarnings({ "unchecked" })
-        IdentityMap<K, E> result = (IdentityMap<K, E>) identityMap;
-
-        if (result == null) {
-            result = new IdentityMap<>(entityType);
-            identityMaps.put(entityType, result);
-        }
-
+        IdentityMap<K, E> result = (IdentityMap<K, E>) identityMaps.computeIfAbsent(entityType, key -> new IdentityMap<>(entityType));
         return result;
     }
 

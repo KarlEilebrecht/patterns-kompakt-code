@@ -50,8 +50,7 @@ public class SecureFileDataManager extends AbstractDataManager {
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }
         File destinationFile = new File(MiscUtils.getHomeDirectory(), itemName + ".sec");
-        SecureFileDataWriter res = new SecureFileDataWriter(destinationFile);
-        return res;
+        return new SecureFileDataWriter(destinationFile);
     }
 
     @Override
@@ -62,8 +61,7 @@ public class SecureFileDataManager extends AbstractDataManager {
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }
         File sourceFile = new File(MiscUtils.getHomeDirectory(), itemName + ".sec");
-        SecureFileDataReader res = new SecureFileDataReader(sourceFile);
-        return res;
+        return new SecureFileDataReader(sourceFile);
     }
 
 }

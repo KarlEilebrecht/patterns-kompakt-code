@@ -77,7 +77,7 @@ public final class PropertyRegistry {
     public static void initialize(Properties properties) {
         LOGGER.debug("{}.initialize(...) called", PropertyRegistry.class.getSimpleName());
         PropertyRegistry newInstance = new PropertyRegistry(properties);
-        LOGGER.debug("Setting new registry instance @", Integer.toHexString(newInstance.hashCode()));
+        LOGGER.debug("Setting new registry instance @{}", Integer.toHexString(newInstance.hashCode()));
         REGISTRY_INSTANCE.set(newInstance);
     }
 

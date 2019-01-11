@@ -229,6 +229,7 @@ public class SimpleThreadPool {
                 // we must throw an exception because there is the danger that
                 // the next POOL_LOCK.wait() will never return,
                 // because the notify() happened before.
+                Thread.currentThread().interrupt();
                 throw new RuntimeException("Unexpected InterruptedException in ThreadPool.POOL_LOCK.wait()!");
             }
         }

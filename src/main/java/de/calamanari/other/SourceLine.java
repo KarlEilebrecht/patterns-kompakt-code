@@ -12,7 +12,7 @@ public class SourceLine extends FileLine {
         super(rawLine);
         this.startPos = rawLine.indexOf("</span>") + 7;
         int ancorNameStartPos = rawLine.lastIndexOf("<a name=\"line.");
-        int ancorNameEndPos = rawLine.indexOf("\"", ancorNameStartPos);
+        int ancorNameEndPos = rawLine.indexOf('\"', ancorNameStartPos);
         this.ancorName = rawLine.substring(ancorNameStartPos, ancorNameEndPos);
         this.endPos = ancorNameStartPos;
     }

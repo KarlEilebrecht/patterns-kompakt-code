@@ -27,6 +27,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("squid:S1610")
 public abstract class AbstractHistoryQueryEngine {
 
     /**

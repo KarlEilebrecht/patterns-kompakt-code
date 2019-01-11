@@ -14,10 +14,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.calamanari.other.SourceLineInterpreter.CommentType;
 import de.calamanari.other.SourceLineInterpreter.Phrase;
 
 public class JavaDocSourceTransformer {
+
+    private static final String HTML_END_OF_SPAN = "</span>";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaDocSourceTransformer.class);
 
     private static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList("abstract", "assert", "boolean", "break", "byte", "case", "catch", "char",
             "class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "goto", "implements",
@@ -61,7 +68,7 @@ public class JavaDocSourceTransformer {
 
         for (JavaDocSourceHolder holder : classIndex.values()) {
             SourceLineInterpreter interpreter = new SourceLineInterpreter();
-            System.out.println(holder.className);
+            LOGGER.info(holder.className);
             for (SourceLine line : holder.getSourceLines()) {
                 // System.out.println(line);
                 interpreter.readNext(line);
@@ -85,46 +92,19 @@ public class JavaDocSourceTransformer {
             for (Phrase phrase : phrases) {
                 sb.append(line.text.substring(lastPos, phrase.startPos));
                 if (phrase.commentType == CommentType.DOUBLE_STAR) {
-                    sb.append("<span style=\"color: #3F5FBF;\">");
-                    sb.append(phrase.text);
-                    sb.append("</span>");
+                    formatDoubleStarComment(sb, phrase);
                 }
                 else if (phrase.commentType == CommentType.SIMPLE_STAR || phrase.commentType == CommentType.END_OF_LINE) {
-                    sb.append("<span style=\"color: #3F7F5F;\">");
-                    sb.append(phrase.text);
-                    sb.append("</span>");
+                    formatSimpleComment(sb, phrase);
                 }
                 else if (phrase.commentType == CommentType.CHAR_LITERAL || phrase.commentType == CommentType.STRING_LITERAL) {
-                    sb.append("<span style=\"color: #2A00FF;\">");
-                    sb.append(phrase.text);
-                    sb.append("</span>");
+                    formatLiteral(sb, phrase);
                 }
                 else if (JAVA_KEYWORDS.contains(phrase.text)) {
-                    sb.append("<span style=\"font-weight : bold; color: #7F0055;\">");
-                    sb.append(phrase.text);
-                    sb.append("</span>");
+                    formatKeyword(sb, phrase);
                 }
                 else {
-
-                    String searchString = phrase.text;
-                    if (phrase.text.startsWith("@")) {
-                        sb.append("<span style=\"color: #9B6464;\">");
-                        searchString = searchString.substring(1);
-                    }
-
-                    String link = findLink(searchString, holder);
-
-                    if (link != null) {
-                        sb.append("<a href=\"" + link + "\">");
-                        sb.append(phrase.text);
-                        sb.append("</a>");
-                    }
-                    else {
-                        sb.append(phrase.text);
-                    }
-                    if (phrase.text.startsWith("@")) {
-                        sb.append("</span>");
-                    }
+                    formatLink(sb, holder, phrase);
                 }
                 lastPos = phrase.startPos + phrase.text.length();
                 // sb.append(line.text.substring(phrase.startPos, lastPos));
@@ -132,6 +112,52 @@ public class JavaDocSourceTransformer {
             sb.append(line.text.substring(lastPos));
             line.text = sb.toString();
         }
+    }
+
+    private void formatLink(StringBuilder sb, JavaDocSourceHolder holder, Phrase phrase) {
+        String searchString = phrase.text;
+        if (phrase.text.startsWith("@")) {
+            sb.append("<span style=\"color: #9B6464;\">");
+            searchString = searchString.substring(1);
+        }
+
+        String link = findLink(searchString, holder);
+
+        if (link != null) {
+            sb.append("<a href=\"" + link + "\">");
+            sb.append(phrase.text);
+            sb.append("</a>");
+        }
+        else {
+            sb.append(phrase.text);
+        }
+        if (phrase.text.startsWith("@")) {
+            sb.append(HTML_END_OF_SPAN);
+        }
+    }
+
+    private void formatKeyword(StringBuilder sb, Phrase phrase) {
+        sb.append("<span style=\"font-weight : bold; color: #7F0055;\">");
+        sb.append(phrase.text);
+        sb.append(HTML_END_OF_SPAN);
+    }
+
+    private void formatLiteral(StringBuilder sb, Phrase phrase) {
+        sb.append("<span style=\"color: #2A00FF;\">");
+        sb.append(phrase.text);
+        sb.append(HTML_END_OF_SPAN);
+    }
+
+    private void formatSimpleComment(StringBuilder sb, Phrase phrase) {
+        sb.append("<span style=\"color: #3F7F5F;\">");
+        sb.append(phrase.text);
+        sb.append(HTML_END_OF_SPAN);
+    }
+
+    private void formatDoubleStarComment(StringBuilder sb, Phrase phrase) {
+        sb.append("<span style=\"color: #3F5FBF;\">");
+        sb.append(phrase.text);
+        sb.append(HTML_END_OF_SPAN);
     }
 
     private String findLink(String classNameCandidate, JavaDocSourceHolder holder) {

@@ -96,7 +96,7 @@ public class ObserverTest {
         }
 
         while (progressObserver.getCounterValue() < bytesAllInAll) {
-            Thread.sleep(1000);
+            MiscUtils.sleepThrowRuntimeException(1000);
         }
 
         for (OutputObservable observable : observableList) {
@@ -157,14 +157,14 @@ public class ObserverTest {
         for (int i = 0; i < 100; i++) {
             service.execute(new DummyServiceCaller(limiter, stoppedFlag));
         }
-        Thread.sleep(15000);
+        MiscUtils.sleepThrowRuntimeException(15000);
         stoppedFlag.set(true);
         service.shutdown();
         service.awaitTermination(1, TimeUnit.SECONDS);
 
         // asynchronous tests with multiple threads are delicate, thus we
         // give a little time to finish pending actions
-        Thread.sleep(1500);
+        MiscUtils.sleepThrowRuntimeException(1500);
 
         limiter.removeThroughputListener(observer);
 
@@ -211,6 +211,7 @@ public class ObserverTest {
         }
 
         @Override
+        @SuppressWarnings("squid:S2925")
         public void run() {
             while (!stoppedFlag.get()) {
 
@@ -235,6 +236,7 @@ public class ObserverTest {
                 }
                 catch (InterruptedException ex) {
                     LOGGER.error("interrupted");
+                    Thread.currentThread().interrupt();
                     break;
                 }
 

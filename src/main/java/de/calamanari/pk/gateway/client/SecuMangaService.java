@@ -40,6 +40,8 @@ public class SecuMangaService extends Service {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecuMangaService.class);
 
+    private static final String HTTP_GATEWAY_PK_CALAMANARI_DE = "http://gateway.pk.calamanari.de/";
+
     /**
      * location
      */
@@ -73,7 +75,7 @@ public class SecuMangaService extends Service {
      * Creates service with default settings
      */
     public SecuMangaService() {
-        super(SECUMANGASERVICE_WSDL_LOCATION, new QName("http://gateway.pk.calamanari.de/", "SecuMangaService"));
+        super(SECUMANGASERVICE_WSDL_LOCATION, new QName(HTTP_GATEWAY_PK_CALAMANARI_DE, "SecuMangaService"));
     }
 
     /**
@@ -82,7 +84,7 @@ public class SecuMangaService extends Service {
      */
     @WebEndpoint(name = "SecuMangaWebServicePort")
     public SecuMangaWebService getSecuMangaWebServicePort() {
-        return super.getPort(new QName("http://gateway.pk.calamanari.de/", "SecuMangaWebServicePort"), SecuMangaWebService.class);
+        return super.getPort(new QName(HTTP_GATEWAY_PK_CALAMANARI_DE, "SecuMangaWebServicePort"), SecuMangaWebService.class);
     }
 
     /**
@@ -93,7 +95,7 @@ public class SecuMangaService extends Service {
      */
     @WebEndpoint(name = "SecuMangaWebServicePort")
     public SecuMangaWebService getSecuMangaWebServicePort(WebServiceFeature... features) {
-        return super.getPort(new QName("http://gateway.pk.calamanari.de/", "SecuMangaWebServicePort"), SecuMangaWebService.class, features);
+        return super.getPort(new QName(HTTP_GATEWAY_PK_CALAMANARI_DE, "SecuMangaWebServicePort"), SecuMangaWebService.class, features);
     }
 
 }

@@ -100,7 +100,7 @@ public class PalindromeCheckMaster {
      */
     public PalindromeCheckResult performPalindromeFileTest(File file, String charsetName) throws IOException, InterruptedException, ExecutionException {
         LOGGER.debug("{}.performPalindromeFileTest({file={}, charsetName={}}) called", this.getClass().getSimpleName(), file, charsetName);
-        PalindromeCheckResult res = PalindromeCheckResult.UNKNOWN;
+        PalindromeCheckResult res;
 
         LOGGER.info("Scanning input file (create index) ... ");
         IndexedTextFileAccessor textFileAccessor = new IndexedTextFileAccessor(file, charsetName, checkMasterIndexerConfiguration);
