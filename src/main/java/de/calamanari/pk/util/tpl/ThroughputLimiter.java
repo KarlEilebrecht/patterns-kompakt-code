@@ -187,10 +187,9 @@ public final class ThroughputLimiter {
     /**
      * We collect internal statistics during the {@link ThroughputLimiter}'s lifetime
      * 
-     * @param sysTimeNanos time of request in nanoseconds
      * @param permissionAvailable true if the permission was granted (passed) or false (denied) otherwise
      */
-    private void updateCounts(long sysTimeNanos, boolean permissionAvailable) {
+    private void updateCounts(boolean permissionAvailable) {
         if (permissionAvailable) {
             passedCount.incrementAndGet();
         }
@@ -221,7 +220,7 @@ public final class ThroughputLimiter {
                 sysTime = MiscUtils.getSystemUptimeNanos();
             }
         } while (tryAgain);
-        updateCounts(sysTime, permissionAvailable);
+        updateCounts(permissionAvailable);
         return permissionAvailable;
     }
 
@@ -233,6 +232,10 @@ public final class ThroughputLimiter {
      * @return true if we should try again to get a permission, otherwise false (denied)
      * @throws InterruptedException if the calling thread was interrupted
      */
+    // Ignoring squid:S899 because this await() Sonar complains about is semantically
+    // an OR (either the overload has been fixed or the wait time elapsed)
+    // in either case we need to try again
+    @SuppressWarnings("squid:S899")
     private boolean waitForNextAttempt(long startNanos, long timeoutNanos) throws InterruptedException {
         boolean tryAgain = false;
         long elapsedNanos = MiscUtils.getSystemUptimeNanos() - startNanos;
@@ -285,7 +288,7 @@ public final class ThroughputLimiter {
     public boolean tryGetPermission() {
         long sysTime = MiscUtils.getSystemUptimeNanos();
         boolean permissionAvailable = tryGetPermissionInternal(sysTime);
-        updateCounts(sysTime, permissionAvailable);
+        updateCounts(permissionAvailable);
         return permissionAvailable;
     }
 

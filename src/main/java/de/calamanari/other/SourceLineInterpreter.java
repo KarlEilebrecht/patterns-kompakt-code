@@ -9,118 +9,144 @@ public class SourceLineInterpreter {
 
     List<Phrase> phrases = new ArrayList<>();
 
-    @SuppressWarnings("squid:ForLoopCounterChangedCheck")
+    int phraseStart = -1;
+    StringBuilder currentPhrase = new StringBuilder();
+    boolean lastCharWasAsterisk = false;
+
+    int positionInLine = -1;
+
     public void readNext(SourceLine line) {
         phrases.clear();
-        int phraseStart = line.startPos;
-        StringBuilder currentPhrase = new StringBuilder();
-        boolean lastWasStar = false;
-        for (int i = line.startPos; i < line.endPos; i++) {
-            char ch = line.charAt(i);
+        phraseStart = line.startPos;
+        currentPhrase.setLength(0);
+        positionInLine = line.startPos;
+        for (; positionInLine < line.endPos; positionInLine++) {
+            char ch = line.charAt(positionInLine);
             if (commentType != CommentType.NONE) {
-                currentPhrase.append(ch);
-                if (commentType == CommentType.STRING_LITERAL) {
-                    if (ch == '"') {
-                        phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                        commentType = CommentType.NONE;
-                        currentPhrase.setLength(0);
-                        phraseStart = i + 1;
-                    }
-                }
-                else if (commentType == CommentType.CHAR_LITERAL) {
-                    if (ch == '\'') {
-                        phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                        commentType = CommentType.NONE;
-                        currentPhrase.setLength(0);
-                        phraseStart = i + 1;
-                    }
-                }
-                else if (ch == '*') {
-                    lastWasStar = true;
-                }
-                else if (ch == '/' && lastWasStar) {
-                    lastWasStar = false;
-                    phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                    commentType = CommentType.NONE;
-                    currentPhrase.setLength(0);
-                    phraseStart = i + 1;
-                }
-                else {
-                    lastWasStar = false;
-                }
+                handleCharacterInsideComment(ch);
             }
             else if (ch == '"') {
-                if (currentPhrase.toString().trim().length() > 0) {
-                    phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                }
-                currentPhrase.setLength(0);
-                phraseStart = i;
-                commentType = CommentType.STRING_LITERAL;
-                currentPhrase.append(ch);
+                handleDoubleQuote();
             }
             else if (ch == '\'') {
-                if (currentPhrase.toString().trim().length() > 0) {
-                    phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                }
-                currentPhrase.setLength(0);
-                phraseStart = i;
-                commentType = CommentType.CHAR_LITERAL;
-                currentPhrase.append(ch);
+                handleSingleQuote();
             }
             else if (ch == '/') {
-                if (i < line.endPos - 2 && line.charAt(i + 1) == '*' && line.charAt(i + 2) == '*') {
-                    if (currentPhrase.toString().trim().length() > 0) {
-                        phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                    }
-                    currentPhrase.setLength(0);
-                    phraseStart = i;
-                    commentType = CommentType.DOUBLE_STAR;
-                    currentPhrase.append(ch);
-                    currentPhrase.append(line.charAt(i + 1));
-                    currentPhrase.append(line.charAt(i + 2));
-                    i = i + 2;
-                }
-                else if (i < line.endPos - 1 && line.charAt(i + 1) == '*') {
-                    if (currentPhrase.toString().trim().length() > 0) {
-                        phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                    }
-                    currentPhrase.setLength(0);
-                    phraseStart = i;
-                    commentType = CommentType.SIMPLE_STAR;
-                    currentPhrase.append(ch);
-                    currentPhrase.append(line.charAt(i + 1));
-                    i++;
-                }
-                else if (i < line.endPos - 1 && line.charAt(i + 1) == '/') {
-                    if (currentPhrase.toString().trim().length() > 0) {
-                        phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                    }
-                    currentPhrase.setLength(0);
-                    currentPhrase.append(line.subSequence(i, line.endPos));
-                    phraseStart = i;
-                    commentType = CommentType.END_OF_LINE;
-                    i = line.endPos;
-                }
-                else {
-                    currentPhrase.append(ch);
-                }
+                handleSlash(line);
             }
             else if (Character.isJavaIdentifierPart(ch) || ch == '@') {
                 currentPhrase.append(ch);
             }
             else {
-                if (currentPhrase.toString().trim().length() > 0) {
-                    phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-                }
-                currentPhrase.setLength(0);
-                phraseStart = i + 1;
+                addPendingPhrase();
+                beginNewPhrase();
             }
         }
-        if (currentPhrase.toString().trim().length() > 0) {
-            phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
-        }
+        addPendingPhrase();
         if (commentType == CommentType.END_OF_LINE || commentType == CommentType.CHAR_LITERAL || commentType == CommentType.STRING_LITERAL) {
             commentType = CommentType.NONE;
+        }
+    }
+
+    private void handleCharacterInsideComment(char ch) {
+        currentPhrase.append(ch);
+        if (commentType == CommentType.STRING_LITERAL) {
+            handleCharacterInStringLiteral(ch);
+        }
+        else if (commentType == CommentType.CHAR_LITERAL) {
+            handleCharacterInCharacterLiteral(ch);
+        }
+        else if (ch == '*') {
+            lastCharWasAsterisk = true;
+        }
+        else if (ch == '/' && lastCharWasAsterisk) {
+            handleEndOfComment();
+        }
+        else {
+            lastCharWasAsterisk = false;
+        }
+    }
+
+    private void handleSlash(SourceLine line) {
+        if (positionInLine < line.endPos - 2 && line.charAt(positionInLine + 1) == '*' && line.charAt(positionInLine + 2) == '*') {
+            addPendingPhrase();
+            currentPhrase.setLength(0);
+            phraseStart = positionInLine;
+            commentType = CommentType.DOUBLE_STAR;
+            currentPhrase.append('/');
+            currentPhrase.append(line.charAt(positionInLine + 1));
+            currentPhrase.append(line.charAt(positionInLine + 2));
+            positionInLine = positionInLine + 2;
+        }
+        else if (positionInLine < line.endPos - 1 && line.charAt(positionInLine + 1) == '*') {
+            addPendingPhrase();
+            currentPhrase.setLength(0);
+            phraseStart = positionInLine;
+            commentType = CommentType.SIMPLE_STAR;
+            currentPhrase.append('/');
+            currentPhrase.append(line.charAt(positionInLine + 1));
+            positionInLine++;
+        }
+        else if (positionInLine < line.endPos - 1 && line.charAt(positionInLine + 1) == '/') {
+            addPendingPhrase();
+            currentPhrase.setLength(0);
+            currentPhrase.append(line.subSequence(positionInLine, line.endPos));
+            phraseStart = positionInLine;
+            commentType = CommentType.END_OF_LINE;
+            positionInLine = line.endPos;
+        }
+        else {
+            currentPhrase.append('/');
+        }
+    }
+
+    private void handleSingleQuote() {
+        addPendingPhrase();
+        currentPhrase.setLength(0);
+        phraseStart = positionInLine;
+        commentType = CommentType.CHAR_LITERAL;
+        currentPhrase.append('\'');
+    }
+
+    private void handleDoubleQuote() {
+        addPendingPhrase();
+        currentPhrase.setLength(0);
+        phraseStart = positionInLine;
+        commentType = CommentType.STRING_LITERAL;
+        currentPhrase.append('"');
+    }
+
+    private void handleEndOfComment() {
+        lastCharWasAsterisk = false;
+        phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
+        commentType = CommentType.NONE;
+        beginNewPhrase();
+    }
+
+    private void handleCharacterInCharacterLiteral(char ch) {
+        if (ch == '\'') {
+            phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
+            commentType = CommentType.NONE;
+            beginNewPhrase();
+        }
+    }
+
+    private void handleCharacterInStringLiteral(char ch) {
+        if (ch == '"') {
+            phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
+            commentType = CommentType.NONE;
+            beginNewPhrase();
+        }
+    }
+
+    private void beginNewPhrase() {
+        currentPhrase.setLength(0);
+        phraseStart = positionInLine + 1;
+    }
+
+    private void addPendingPhrase() {
+        if (currentPhrase.toString().trim().length() > 0) {
+            phrases.add(new Phrase(phraseStart, currentPhrase.toString(), commentType));
         }
     }
 

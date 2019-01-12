@@ -79,21 +79,19 @@ public final class ThroughputEvent {
 
     /**
      * Creates a new throughput event to be reported
-     * 
-     * @param sysTimeNanos time in nanoseconds when the event occurred, see also {@linkplain MiscUtils#getSystemUptimeNanos()}
-     * @param intervalNanos exact length of the past interval in nanoseconds
-     * @param intervalOverloadNanos time in nanoseconds within the interval, the limiter was overloaded
+     *
+     * @param timing time of the event
      * @param passedCount number of granted permissions during the past interval
      * @param deniedCount number of denied permissions during the past interval
      * @param currentPerSecondThroughput calculated throughput for this interval (permissions granted per second)
      * @param totalPerSecondThroughput calculated throughput throughout the listeners lifetime (permissions granted per second)
      * @param overloaded true if the limiter is currently overloaded, otherwise false
      */
-    public ThroughputEvent(long sysTimeNanos, long intervalNanos, long intervalOverloadNanos, long passedCount, long deniedCount,
-            double currentPerSecondThroughput, double totalPerSecondThroughput, boolean overloaded) {
-        this.sysTimeNanos = sysTimeNanos;
-        this.intervalNanos = intervalNanos;
-        this.intervalOverloadNanos = intervalOverloadNanos;
+    public ThroughputEvent(Timing timing, long passedCount, long deniedCount, double currentPerSecondThroughput, double totalPerSecondThroughput,
+            boolean overloaded) {
+        this.sysTimeNanos = timing.sysTimeNanos;
+        this.intervalNanos = timing.intervalNanos;
+        this.intervalOverloadNanos = timing.intervalOverloadNanos;
         this.passedCount = passedCount;
         this.deniedCount = deniedCount;
         this.overloaded = overloaded;
@@ -176,6 +174,29 @@ public final class ThroughputEvent {
      */
     public double getTotalPerSecondThroughput() {
         return totalPerSecondThroughput;
+    }
+
+    /**
+     * Contains the time-related information of the event
+     *
+     */
+    public static class Timing {
+        private long sysTimeNanos;
+        private long intervalNanos;
+        private long intervalOverloadNanos;
+
+        /**
+         * @param sysTimeNanos time in nanoseconds when the event occurred, see also {@linkplain MiscUtils#getSystemUptimeNanos()}
+         * @param intervalNanos exact length of the past interval in nanoseconds
+         * @param intervalOverloadNanos time in nanoseconds within the interval, the limiter was overloaded
+         */
+        public Timing(long sysTimeNanos, long intervalNanos, long intervalOverloadNanos) {
+            super();
+            this.sysTimeNanos = sysTimeNanos;
+            this.intervalNanos = intervalNanos;
+            this.intervalOverloadNanos = intervalOverloadNanos;
+        }
+
     }
 
 }

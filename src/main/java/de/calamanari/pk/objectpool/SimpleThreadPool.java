@@ -210,6 +210,8 @@ public class SimpleThreadPool {
      * 
      * @return PoolThread from the pool
      */
+    // the idea is indeed to wait, the two locks (sonar complaint) are held by intention
+    @SuppressWarnings("squid:S3046")
     protected synchronized PoolThread getNextAvailableThread() {
         PoolThread thread = null;
         while (true) {

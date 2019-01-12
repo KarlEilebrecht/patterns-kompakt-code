@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ExampleScriptingFramework implements MacroPluginFramework {
 
+    private static final String ERROR_IN_LINE = "Error in line ";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ExampleScriptingFramework.class);
 
     /**
@@ -133,7 +135,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             resultVarName = line.substring(0, eqPos).trim();
         }
         else {
-            throw new RuntimeException("Error in line " + (lineNumber + 1) + ": no result variable (expected x=macro(y,..))");
+            throw new RuntimeException(ERROR_IN_LINE + (lineNumber + 1) + ": no result variable (expected x=macro(y,..))");
         }
 
         Object result = executeMacro(line.substring(eqPos + 1), lineNumber, pluginFactory);
@@ -183,7 +185,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
         if (openPos > 0 && closePos > 0 && closePos > openPos) {
             macroName = expression.substring(0, openPos).trim();
             if (macroName.length() == 0) {
-                throw new RuntimeException("Error in line " + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
+                throw new RuntimeException(ERROR_IN_LINE + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
             }
             String argumentString = expression.substring(openPos + 1, closePos).trim();
             if (argumentString.length() > 0) {
@@ -191,7 +193,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             }
         }
         else {
-            throw new RuntimeException("Error in line " + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
+            throw new RuntimeException(ERROR_IN_LINE + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
         }
         res = new ArrayList<>(argumentNames.length + 1);
         res.add(macroName);

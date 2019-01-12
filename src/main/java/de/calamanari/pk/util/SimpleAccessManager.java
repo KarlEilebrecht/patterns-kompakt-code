@@ -38,6 +38,8 @@ import java.util.WeakHashMap;
  */
 public final class SimpleAccessManager {
 
+    private static final String MSG_SECURITY_PROBLEM_ACCESS_DENIED = "Security problem: access denied";
+
     /**
      * For simplicity this is implemented as a singleton.
      */
@@ -98,7 +100,7 @@ public final class SimpleAccessManager {
             permissions.add(operationName);
         }
         else {
-            throw new RuntimeException("Security problem: access denied");
+            throw new RuntimeException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
         }
     }
 
@@ -116,7 +118,7 @@ public final class SimpleAccessManager {
             }
         }
         else {
-            throw new RuntimeException("Security problem: access denied");
+            throw new RuntimeException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
         }
     }
 
@@ -130,7 +132,7 @@ public final class SimpleAccessManager {
             permissionsMap.remove(thread);
         }
         else {
-            throw new RuntimeException("Security problem: access denied");
+            throw new RuntimeException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
         }
     }
 

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -79,6 +80,9 @@ public class WorkerIterator implements Iterator<Worker> {
 
     @Override
     public Worker next() {
+        if (position < 0 || position > allWorkers.size() - 1) {
+            throw new NoSuchElementException();
+        }
         Worker res = allWorkers.get(position);
         position++;
         return res;

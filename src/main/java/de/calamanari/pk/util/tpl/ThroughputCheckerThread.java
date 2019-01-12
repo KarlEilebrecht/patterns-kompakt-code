@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.tpl.ThroughputEvent.Timing;
 
 /**
  * A {@link ThroughputCheckerThread} manages a {@link ThroughputListener} at runtime.<br>
@@ -137,7 +138,7 @@ public final class ThroughputCheckerThread extends Thread {
             long nowNanoTime = MiscUtils.getSystemUptimeNanos();
             boolean overload = (state != OverloadState.NOT_OVERLOADED);
             if (lastEvent == null) {
-                event = new ThroughputEvent(nowNanoTime, 0, 0, passedCount, deniedCount, 0, 0, overload);
+                event = new ThroughputEvent(new Timing(nowNanoTime, 0, 0), passedCount, deniedCount, 0, 0, overload);
                 firstCheckTimeNanos = nowNanoTime;
                 firstCheckTimePassedCount = passedCount;
                 lastCheckOverloadNanos = overloadNanos;
@@ -184,8 +185,8 @@ public final class ThroughputCheckerThread extends Thread {
             overloadNanos = overloadNanos - lastCheckOverloadNanos;
         }
         overloadNanos = adjustComputedOverloadTime(overloadNanos, intervalNanos);
-        return new ThroughputEvent(nowNanoTime, intervalNanos, overloadNanos, passedCount, deniedCount, currentPerSecondThroughput, totalPerSecondThroughput,
-                overload);
+        return new ThroughputEvent(new Timing(nowNanoTime, intervalNanos, overloadNanos), passedCount, deniedCount, currentPerSecondThroughput,
+                totalPerSecondThroughput, overload);
     }
 
     /**

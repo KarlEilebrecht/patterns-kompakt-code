@@ -22,10 +22,13 @@ package de.calamanari.pk.modelviewcontroller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.AbstractButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,7 +149,7 @@ public class ModelViewControllerTest {
 
         doClick(view.btnClose);
 
-        view.shutDownLatch.await();
+        Awaitility.await().atMost(2, TimeUnit.MINUTES).until(view::isDisposed);
 
         String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Model View Controller successful! Elapsed time: {} s", elapsedTimeString);

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
@@ -116,7 +117,7 @@ public final class Tracer2 implements Serializable {
         catch (Exception ex) {
             throw new RuntimeException("Unexpected error creating tracer output file " + outputFile, ex);
         }
-        LOGGER.debug("New instance of {} created, using file: ", Tracer2.class.getSimpleName(), outputFile);
+        LOGGER.debug("New instance of {} created, using file: {}", Tracer2.class.getSimpleName(), outputFile);
     }
 
     /**
@@ -164,7 +165,8 @@ public final class Tracer2 implements Serializable {
                 traceWriter.close();
                 traceWriter = null;
                 if (deleteLogFile) {
-                    outputFile.delete();
+                    boolean haveDeleted = Files.deleteIfExists(outputFile.toPath());
+                    LOGGER.trace("log file deleted: {}", haveDeleted);
                 }
             }
         }

@@ -22,7 +22,8 @@ package de.calamanari.pk.util;
 import java.util.Arrays;
 
 /**
- * This class implements the "Orb Of Confusion" algorithm which performs a shuffled partition index transformation on an arbitrary range of positive numbers.<br>
+ * This class implements the "Orb Of Confusion" algorithm which performs a shuffled partition index transformation on an arbitrary range of positive
+ * numbers.<br>
  * <ul>
  * <li><i>Objective:</i> Map bijectively any number of a given range to another number of the same range where the mappings are not easy to be guessed. Thus a
  * sequence of numbers (i.e. a database sequence) can be transformed duplicate-free on-the-fly.</li>
@@ -120,10 +121,10 @@ public class OrbOfConfusion {
         for (int i = 0; i < TRANSFORMATION_STEPS; i++) {
             int[] partition = partitions[i];
             if (partition == null) {
-                throw new IllegalArgumentException("partitions[" + i + "] was null.");
+                throw new IllegalArgumentException("partitions" + "[" + i + "] was null.");
             }
             if (partition.length != PRIMES[i]) {
-                throw new IllegalArgumentException("partitions[" + i + "] contains " + partition.length + " elements (expected " + PRIMES[i] + ").");
+                throw new IllegalArgumentException("partitions" + "[" + i + "] contains " + partition.length + " elements (expected " + PRIMES[i] + ").");
             }
             checkPartitionDetails(i, partition);
         }
@@ -146,8 +147,8 @@ public class OrbOfConfusion {
                     }
                     sb.append(partition[k]);
                 }
-                throw new IllegalArgumentException("partitions[" + i + "][]{" + sb.toString() + "} is no valid shuffled index partition (missing index="
-                        + j + ").");
+                throw new IllegalArgumentException(
+                        "partitions[" + i + "][]{" + sb.toString() + "} is no valid shuffled index partition (missing index=" + j + ").");
             }
         }
     }

@@ -23,6 +23,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
@@ -161,7 +162,8 @@ public final class Tracer {
                 traceWriter.close();
                 traceWriter = null;
                 if (deleteLogFile) {
-                    outputFile.delete();
+                    boolean haveDeleted = Files.deleteIfExists(outputFile.toPath());
+                    LOGGER.trace("log file deleted: {}", haveDeleted);
                 }
             }
         }

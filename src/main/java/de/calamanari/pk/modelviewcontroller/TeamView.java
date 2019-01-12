@@ -23,7 +23,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.concurrent.CountDownLatch;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -166,15 +165,7 @@ public class TeamView extends JFrame {
      */
     public final JTextField txtInput = new JTextField("");
 
-    /**
-     * After UI is ready we use this to communicate
-     */
-    public final CountDownLatch startUpLatch = new CountDownLatch(1);
-
-    /**
-     * After disposal this will be decremented
-     */
-    public final CountDownLatch shutDownLatch = new CountDownLatch(1);
+    private volatile boolean disposed = false;
 
     /**
      * Creates the view
@@ -309,15 +300,18 @@ public class TeamView extends JFrame {
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
-        startUpLatch.countDown();
         LOGGER.debug("{} is now {}visible", this.getClass().getSimpleName(), (b ? "" : "in"));
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        shutDownLatch.countDown();
+        this.disposed = true;
         LOGGER.debug("{} has been disposed", this.getClass().getSimpleName());
+    }
+
+    public boolean isDisposed() {
+        return disposed;
     }
 
 }
