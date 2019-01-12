@@ -67,15 +67,18 @@ public class JavaDocSourceTransformer {
         });
 
         for (JavaDocSourceHolder holder : classIndex.values()) {
-            SourceLineInterpreter interpreter = new SourceLineInterpreter();
-            LOGGER.info(holder.className);
-            for (SourceLine line : holder.getSourceLines()) {
-                // System.out.println(line);
-                interpreter.readNext(line);
-                highlightPhrases(holder, line, interpreter.phrases);
-                // System.out.println(line);
+            if (!holder.isAlreadyProcessed()) {
+                SourceLineInterpreter interpreter = new SourceLineInterpreter();
+                LOGGER.info("Processing {} ...", holder.className);
+                for (SourceLine line : holder.getSourceLines()) {
+                    interpreter.readNext(line);
+                    highlightPhrases(holder, line, interpreter.phrases);
+                }
+                holder.storeFile();
             }
-            holder.storeFile();
+            else {
+                LOGGER.info("Skipped {} - already transformed.", holder.className);
+            }
         }
 
     }
@@ -107,7 +110,6 @@ public class JavaDocSourceTransformer {
                     formatLink(sb, holder, phrase);
                 }
                 lastPos = phrase.startPos + phrase.text.length();
-                // sb.append(line.text.substring(phrase.startPos, lastPos));
             }
             sb.append(line.text.substring(lastPos));
             line.text = sb.toString();
@@ -122,11 +124,13 @@ public class JavaDocSourceTransformer {
         }
 
         String link = findLink(searchString, holder);
-
+        if (link == null) {
+            link = findLink(holder.simpleClassName + "." + searchString, holder);
+        }
         if (link != null) {
-            sb.append("<a href=\"" + link + "\">");
+            sb.append("<a href=\"" + link + "\"><u>");
             sb.append(phrase.text);
-            sb.append("</a>");
+            sb.append("</u></a>");
         }
         else {
             sb.append(phrase.text);
@@ -167,6 +171,7 @@ public class JavaDocSourceTransformer {
             if (!candidate.endsWith(suffix)) {
                 candidate = candidate + suffix;
             }
+
             JavaDocSourceHolder destHolder = classIndex.get(candidate);
             if (destHolder != null) {
                 return createHtmlRefFrom(holder.packagePath, destHolder.packagePath, classNameCandidate);

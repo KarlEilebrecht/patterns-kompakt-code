@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 
 public class JavaDocSourceHolder {
 
+    private static final String PK_PROCESSED = "<!-- pk:processed -->";
+
     private static final String IMPORT_SEARCH_PATTERN_2 = "^\\s*(import\\s+)?((\\w+\\.)+\\w+)(\\.\\*)?(\\s*;\\s*)?$";
 
     private final List<FileLine> lines;
@@ -64,9 +66,10 @@ public class JavaDocSourceHolder {
         int pos = fileName.lastIndexOf('.');
         fileName = fileName.substring(0, pos);
 
+        pos = fileName.lastIndexOf(File.separatorChar);
+
         this.className = fileName.replace(File.separatorChar, '.');
 
-        pos = className.lastIndexOf('.');
         String pkgName = null;
         if (pos > -1) {
             this.simpleClassName = className.substring(pos + 1);
@@ -117,7 +120,14 @@ public class JavaDocSourceHolder {
     }
 
     public void storeFile() throws IOException {
+        if (lines.size() > 0) {
+            FileLine lastLine = lines.get(lines.size() - 1);
+            lastLine.text = lastLine.text + PK_PROCESSED;
+        }
         Files.write(path, lines, Charset.forName("UTF-8"));
     }
 
+    public boolean isAlreadyProcessed() {
+        return lines.stream().anyMatch((FileLine line) -> (line.text.contains(PK_PROCESSED)));
+    }
 }
