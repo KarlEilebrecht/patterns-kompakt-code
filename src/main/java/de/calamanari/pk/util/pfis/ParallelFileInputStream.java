@@ -549,33 +549,22 @@ public final class ParallelFileInputStream extends InputStream {
         fileChannel.close();
 
         if (MiscUtils.isWindowsOS()) {
-            this.buffer = ByteBuffer.allocate(0);
-            System.gc();
-
-            // What the hell ... ?!
-            // The two lines above may seem a little esoteric,
-            // but they can help to release files on windows.
-            // I think this is a problem with memory mapped IO (buffer).
-            // As long as the mapping is active, a file cannot
-            // be deleted/renamed etc.
-            //
-            // The line
-            // this.buffer = ByteBuffer.allocate(0);
-            //
-            // removes the strong reference to the old buffer
-            // which (in principle) allows garbage collection.
-            // I don't use null but an empty buffer because this
-            // is more robust, I don't have to cope with
-            // null-handling all over the code.
-            //
-            // The other line
-            // System.gc();
-            //
-            // causes a hint to garbage collection.
-            // However, this does not force the file release but it
-            // highly increases the chance ...
+            tryReleaseMappedBufferFileOnWindows();
         }
 
+    }
+
+    /**
+     * On Windows the JVM has a problem to release files that were mapped to a channel after the channel was closed properly.<br/>
+     * As a consequence the files cannot be deleted while the JVM is still running.<br/>
+     * The only known workaround (successful most of the time) is calling System.gc() - the reason why I suppress Sonar's complaint squid:S1215 here.
+     * <p>
+     * See <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154">https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154</a>
+     */
+    @SuppressWarnings("squid:S1215")
+    private void tryReleaseMappedBufferFileOnWindows() {
+        this.buffer = ByteBuffer.allocate(0);
+        System.gc();
     }
 
     @Override

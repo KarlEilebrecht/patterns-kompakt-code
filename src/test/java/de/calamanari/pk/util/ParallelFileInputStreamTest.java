@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.UUID;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -37,6 +38,8 @@ import de.calamanari.pk.util.pfis.ParallelFileInputStream;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
 public class ParallelFileInputStreamTest {
+
+    private static final String EXECUTION_UUID = UUID.randomUUID().toString();
 
     /**
      * empty File
@@ -214,7 +217,7 @@ public class ParallelFileInputStreamTest {
      * @param size 0..255
      */
     private static File createBytesFile(int size) throws Exception {
-        File res = new File(MiscUtils.getHomeDirectory(), "testBytes" + size);
+        File res = new File(MiscUtils.getHomeDirectory(), "testBytes" + size + "_" + EXECUTION_UUID);
         try (FileOutputStream fos = new FileOutputStream(res)) {
             for (int i = 0; i < size; i++) {
                 fos.write(i);
