@@ -1,27 +1,18 @@
-Hallo!
+Willkommen!
 
 Schön, dass Sie sich entschieden haben, die Beispiele zu Patterns kompakt
 herunterzuladen. 
 
 Führen Sie folgende Schritte aus, um loszulegen:
 
- 1. Installieren Sie Java 7 (JDK) und Eclipse (z.B. Indigo)
- 2. Erstellen Sie ein Verzeichnis für Ihr Projekt, z.B. C:\pk
- 3. Entpacken Sie pk-examples.zip nach C:\pk (Sie sollten anschließend einen Ordner C:\pk\src sehen).
- 4. Starten Sie Eclipse
- 5. Wählen Sie File->New->Project
- 6. Wählen Sie Java->Java-Project
-
-    Project name: pkexamples
-    [ ] Use default location
-    Location: C:\pk
-
- 7. Klicken Sie [Next>]
- 8. Wählen Sie im nun erscheinenden Dialog "New Java Project" den Karteireiter "Libraries"
- 9. Klicken Sie [Add Library]
-10. Wählen Sie "JUnit" und klicken Sie auf [Next>]
-11. Wählen Sie JUnit library version: [JUnit 4] und klicken Sie auf [Finish]
-12. Klicken Sie nochmals auf [Finish]
+ 1. Installieren Sie Java 11 (JDK) 
+ 2. Installieren Sie Maven (3.2.3 oder neuer) - Sie finden die Instruktionen im Internet
+ 3. Installieren Sie eine IDE (z.B. Eclipse)
+ 4. Entpacken Sie pk-examples.zip in den Ordner, den Sie für das Projekt nutzen möchten
+ 5. Starten Sie Ihre IDE (hier Eclipse)
+ 6. Wählen Sie Import->Maven->Existing Maven Project und selektieren Sie den entpackten Ordner
+ 7. Nach Abschluss (Eclipse wird alle Abhängigkeiten herunterladen) sollte das Projekt compile-clean sein.
+ 8. Freunde der Kommandozeile wechseln in den entpackten Ordner und bauen dort: mvn clean install
 
 Das Projekt ist nun bereit.
 
@@ -30,6 +21,10 @@ im Kontextmenü [Run As] JUnit Test starten.
 
 Die Tests sollten alle durchlaufen.
 
+Das Projekt verwendet slf4j mit logback für die Logausgabe. Entsprechend können Sie 
+die Logausgabe über die logback.xml-Datei steuern.
+
 Viel Erfolg!
 
 Karl Eilebrecht
+
