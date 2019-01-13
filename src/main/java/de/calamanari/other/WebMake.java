@@ -336,8 +336,8 @@ public class WebMake {
             }
         }
 
-        content.append("\n<h3>Ressourcen</h3><ul><li><a href=\"../patterns.htm#CODE\">Quellcode</a></li><li><a href=\"")
-                .append(javaDocReferenceMap.get(pattern.patternTechName) + "\" target=\"_blank\">JavaDoc</a></li></ul>\n");
+        content.append("\n<h3>Ressourcen</h3><ul><li><a href=\"../patterns.htm#CODE\">Quellcode (Projekt zum Download)</a></li><li><a href=\"")
+                .append(javaDocReferenceMap.get(pattern.patternTechName) + "\" target=\"_blank\">JavaDoc (API mit Quelltext online verlinkt)</a></li></ul>\n");
 
         String fileContent = pkTemplate.replace(DIRECTORY_PLACEHOLDER, directory);
         fileContent = fileContent.replace(CONTENT_PLACEHOLDER, content.toString());

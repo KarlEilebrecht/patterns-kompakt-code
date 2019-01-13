@@ -25,24 +25,29 @@ bereits erfolgreich anwenden konnten.
 Viel Erfolg und vor allem Spaß bei Ihrer Arbeit!
 <p />
 <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>, <a href="mailto:gs@gernotstarke.de">Gernot Starke</a><br />
-April 2013
+Januar 2019
 <p />
 &nbsp;
 <p />
 <a name="CODE" />
 <h3>Code-Beispiele</h3>
-Hier können Sie die Codebeispiele herunterladen: 
+Neben der Möglichkeit, sich die API der Klassen mit verlinktem Source-Code <a href="./javadoc/index.html" target="blank">online anzuschauen</a>, können Sie das Projekt mit den Codebeispielen hier herunterladen: 
 <h4><a href="./download/pk-examples.zip">Download pk-examples.zip</a></h4>
 <p />
-Die Beispiele haben so wenig externe Abhängigkeiten wie möglich.<br />
-Neben dem Archiv mit den Sourcen</a> benötigen Sie lediglich:<br />
+Es hat sich zum Standard entwickelt, viele Basisfunktionaliäten mit Bibliotheken
+abzudecken, die als externe Dependencies deklariert und aus Repositories geladen werden.<br />
+In der Vergangenheit haben wir noch versucht, ohne solche zusätzlichen Abhängigkeiten auszukommen, weil
+das für Neulinge die Hürden erhöht, Beispiele einfach mal auszuprobieren.<br /><br />
+Mittlerweile wird ein solcher Insel-Entwicklungsansatz aber immer schwieriger (das JDK wird verschlankt) und ist zunehmend fragwürdig, weil er einfach <i>Best Practices</i> widerspricht.<br />
+Daher sind die Code-Beispiele jetzt als Maven-Projekt umgesetzt und setzen neben dem JDK 11 eine funktionierende Maven-Installation voraus.
+<p />
+Neben dem Archiv mit den Sourcen benötigen Sie:<br />
 <ul>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">Java Platform (JDK) 7</a></li>
-<li><a href="http://www.junit.org/" target="_blank">JUnit 4</a></li>
+<li>Java Platform (JDK) 11 (z.B. OpenJDK)</li>
+<li>Apache Maven (3.2.3 oder neuer)</li>
 </ul>
-Zu empfehlen ist aber eine IDE wie <a href="http://www.eclipse.org/" target="_blank">Eclipse</a>, 
-das <a href="http://www.eclipse.org/downloads/packages/release/indigo/sr2">Indigo-Release (IDE for Java-Developers)</a>
-ist beispielsweise hervorragend (da ist das dann JUnit auch schon dabei).
+Zu empfehlen ist eine IDE wie <a href="http://www.eclipse.org/" target="_blank">Eclipse</a>. <br />
+Wir haben außerdem <a href="https://www.sonarlint.org/" target="_blank">SonarLint</a> im Einsatz.
 <p />
 &nbsp;
 <p />
