@@ -54,8 +54,7 @@ public class TeamController {
     /**
      * task to update the view
      */
-    @SuppressWarnings("squid:S1612")
-    private final Runnable updateViewTask = () -> updateView();
+    private final Runnable updateViewTask = this::updateView;
 
     /**
      * Creates new controller responsible for the given model and the given view
