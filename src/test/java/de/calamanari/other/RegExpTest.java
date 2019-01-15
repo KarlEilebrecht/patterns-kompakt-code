@@ -5,10 +5,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RegExpTest {
 
+    @Ignore
     @Test
     public void test() {
         // Pattern p = Pattern.compile("^(import[\\s]+(static)?)?[\\s]+([\\w]+\\.)*[\\w]+(\\.\\*)?[\\s]*$");

@@ -3,10 +3,12 @@ package de.calamanari.other;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BinTest {
 
+    @Ignore
     @Test
     public void testBinaryCodes() throws Exception {
 
