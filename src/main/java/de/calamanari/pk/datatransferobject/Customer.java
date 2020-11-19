@@ -20,6 +20,7 @@
 package de.calamanari.pk.datatransferobject;
 
 import java.io.IOException;
+import java.rmi.Remote;
 
 /**
  * Customer - interface for customer representations, introduced in this example to allow transparently handling different representations (DATA TRANSFER OBJECT
@@ -27,7 +28,7 @@ import java.io.IOException;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public interface Customer {
+public interface Customer extends Remote {
 
     /**
      * Returns id of customer
