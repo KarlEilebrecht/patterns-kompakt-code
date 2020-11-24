@@ -22,6 +22,7 @@ package de.calamanari.pk.util.db;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -102,12 +103,12 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
                     throw new DerbyJarNotFoundException("Could not find derby-xxx.jar: " + url + "");
                 }
             }
-            catch (MalformedURLException | UnsupportedEncodingException ex) {
+            catch (MalformedURLException | UnsupportedEncodingException | RuntimeException ex) {
                 throw new DerbyJarNotFoundException("Unable to create URL for derby-xxx.jar: " + s, ex);
             }
         }
         else {
-            throw new DerbyJarNotFoundException("Unable to lookup Derby in classpath!");
+            throw new DerbyJarNotFoundException("Unable to lookup Derby in classpath! Hint: check required dependencies/jars (usually derby and derby-tools).");
         }
 
         return res;
@@ -135,11 +136,10 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
      */
     private EmbeddedJavaDbDataSource() {
         try {
-            @SuppressWarnings("resource")
             ClassLoader loader = URLClassLoader.newInstance(new URL[] { findDerbyJar() });
             final Driver driver = (Driver) Class.forName(EMBEDDED_JAVADB_DRIVER_NAME, true, loader).getConstructor().newInstance();
 
-            // DriverManager does not register any drivers from from outside the class path
+            // DriverManager does not register any drivers from outside the class path
             // Thus we create a little proxy / delegate, the resulting anonymous class is automatically
             // located in the class path and can thus be loaded by the DriverManager - as long as no SecurityManager
             // comes into play ;-)
@@ -182,8 +182,9 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
 
             });
         }
-        catch (Exception ex) {
-            throw new RuntimeException("Unable to load: " + EMBEDDED_JAVADB_DRIVER_NAME, ex);
+        catch (InvocationTargetException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InstantiationException | SQLException
+                | RuntimeException ex) {
+            throw new DerbyDriverSetupException("Unable to load and register embedded derby driver: " + EMBEDDED_JAVADB_DRIVER_NAME, ex);
         }
     }
 

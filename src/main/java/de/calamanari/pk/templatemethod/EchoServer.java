@@ -21,6 +21,7 @@ package de.calamanari.pk.templatemethod;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.AbstractThreadedSocketServer;
+import de.calamanari.pk.util.SocketCommunicationException;
 
 /**
  * Echo server - concrete class implementing the operations used by TEMPLATE METHODs of AbstractThreadedSocketServer.<br>
@@ -62,10 +64,10 @@ public class EchoServer extends AbstractThreadedSocketServer {
      * This implementation returns each received line immediately to the sender.
      * 
      * @param socket accepted socket
-     * @throws Exception on any communication error
+     * @throws SocketCommunicationException on any communication error
      */
     @Override
-    protected void handleSocketCommunication(Socket socket) throws Exception {
+    protected void handleSocketCommunication(Socket socket) throws SocketCommunicationException {
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
@@ -89,6 +91,9 @@ public class EchoServer extends AbstractThreadedSocketServer {
             LOGGER.info("Closing connection to {}", socket.getInetAddress());
 
             bw.flush();
+        }
+        catch (IOException | RuntimeException ex) {
+            throw new SocketCommunicationException(ex);
         }
     }
 

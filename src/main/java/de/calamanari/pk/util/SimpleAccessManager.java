@@ -100,7 +100,7 @@ public final class SimpleAccessManager {
             permissions.add(operationName);
         }
         else {
-            throw new RuntimeException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
+            throw new SimpleAccessException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
         }
     }
 
@@ -118,7 +118,7 @@ public final class SimpleAccessManager {
             }
         }
         else {
-            throw new RuntimeException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
+            throw new SimpleAccessException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
         }
     }
 
@@ -132,7 +132,7 @@ public final class SimpleAccessManager {
             permissionsMap.remove(thread);
         }
         else {
-            throw new RuntimeException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
+            throw new SimpleAccessException(MSG_SECURITY_PROBLEM_ACCESS_DENIED);
         }
     }
 

@@ -19,6 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,38 +77,48 @@ public final class ExternalProcessManager {
      * @param mainClass class to be executed (must provide main(arg[])-method NOT NULL
      * @param logger target for redirecting process console output NOT NULL
      * @param commandLineArgs optional arguments
-     * @throws Exception on any error during start
+     * @throws ExternalProcessManagementException on any error during start
      */
-    public synchronized void startExternal(Class<?> mainClass, Logger logger, String... commandLineArgs) throws Exception {
+    public synchronized void startExternal(Class<?> mainClass, Logger logger, String... commandLineArgs) throws ExternalProcessManagementException {
 
         if (mainClass == null) {
-            throw new IllegalArgumentException("Argument 'mainClass' must not be null.");
+            throw new ExternalProcessManagementException(
+                    String.format("Argument 'mainClass' must not be null (mainClass=null, commandLineArgs=%s).", Arrays.toString(commandLineArgs)));
         }
 
         if (logger == null) {
-            throw new IllegalArgumentException("Argument 'logger' must not be null.");
+            throw new ExternalProcessManagementException(String.format("Argument 'logger' must not be null (mainClass=%s, commandLineArgs=%s).",
+                    mainClass.getName(), Arrays.toString(commandLineArgs)));
         }
 
         Process externalServerProcess = externalServerProcesses.get(mainClass);
 
         if (externalServerProcess != null) {
-            throw new IllegalStateException("Instance is already running!");
+            throw new ExternalProcessManagementException(
+                    String.format("Instance is already running! (mainClass=%s, commandLineArgs=%s)", mainClass.getName(), Arrays.toString(commandLineArgs)));
         }
 
-        List<String> args = new ArrayList<>();
+        try {
+            List<String> args = new ArrayList<>();
 
-        args.add("java");
-        args.add("-classpath");
-        args.add(System.getProperties().getProperty("java.class.path", null));
-        args.add(mainClass.getName());
-        args.addAll(Arrays.asList(commandLineArgs));
+            args.add("java");
+            args.add("-classpath");
+            args.add(System.getProperties().getProperty("java.class.path", null));
+            args.add(mainClass.getName());
+            args.addAll(Arrays.asList(commandLineArgs));
 
-        ProcessBuilder pb = new ProcessBuilder(args);
+            ProcessBuilder pb = new ProcessBuilder(args);
 
-        externalServerProcess = pb.start();
-        (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console", externalServerProcess.getInputStream(), logger, Level.INFO)).start();
-        (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console", externalServerProcess.getErrorStream(), logger, Level.INFO)).start();
-        externalServerProcesses.put(mainClass, externalServerProcess);
+            externalServerProcess = pb.start();
+            (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console", externalServerProcess.getInputStream(), logger, Level.INFO)).start();
+            (new ExternalConsoleHandlerThread(mainClass.getSimpleName() + " Console", externalServerProcess.getErrorStream(), logger, Level.INFO)).start();
+            externalServerProcesses.put(mainClass, externalServerProcess);
+        }
+        catch (IOException | RuntimeException ex) {
+            throw new ExternalProcessManagementException(
+                    String.format("Error starting external process (mainClass=%s, commandLineArgs=%s).", mainClass.getName(), Arrays.toString(commandLineArgs)),
+                    ex);
+        }
     }
 
     /**
@@ -119,20 +130,26 @@ public final class ExternalProcessManager {
      * @param stopCommand quit command to send via process' input stream, if null/empty force termination
      * @param maxWaitTimeMillis maximum wait time in milliseconds, after this time the process will be killed
      * @return exit code or Integer.MIN_VALUE to indicate abnormal/forced termination
-     * @throws Exception on any error while trying to stop
+     * @throws ExternalProcessManagementException on any error while trying to stop
      */
-    public synchronized int stopExternal(Class<?> mainClass, String stopCommand, long maxWaitTimeMillis) throws Exception {
+    public synchronized int stopExternal(Class<?> mainClass, String stopCommand, long maxWaitTimeMillis) throws ExternalProcessManagementException {
 
         if (mainClass == null) {
-            throw new IllegalArgumentException("Argument 'mainClass' must not be null.");
+            throw new ExternalProcessManagementException(String.format("Argument 'mainClass' must not be null (mainClass=null, stopCommand=%s).", stopCommand));
         }
 
-        Process externalServerProcess = externalServerProcesses.remove(mainClass);
-        int res = Integer.MIN_VALUE;
-        if (externalServerProcess != null) {
-            res = shutdownExternalProcess(externalServerProcess, mainClass, stopCommand, maxWaitTimeMillis, res);
+        try {
+            Process externalServerProcess = externalServerProcesses.remove(mainClass);
+            int res = Integer.MIN_VALUE;
+            if (externalServerProcess != null) {
+                res = shutdownExternalProcess(externalServerProcess, mainClass, stopCommand, maxWaitTimeMillis, res);
+            }
+            return res;
         }
-        return res;
+        catch (RuntimeException ex) {
+            throw new ExternalProcessManagementException(
+                    String.format("Error stopping external process (mainClass=%s, stopCommand=%s).", mainClass.getName(), stopCommand), ex);
+        }
     }
 
     private int shutdownExternalProcess(Process externalServerProcess, Class<?> mainClass, String stopCommand, long maxWaitTimeMillis, int res) {
@@ -148,7 +165,7 @@ public final class ExternalProcessManager {
             pw.flush();
             // give the shutdown some time
             for (; waitAttempts < maxWaitAttempts && res == Integer.MIN_VALUE; waitAttempts++) {
-                MiscUtils.sleepThrowRuntimeException(MIN_SHUTDOWN_WAIT_TIME_MILLIS);
+                TimeUtils.sleepThrowRuntimeException(MIN_SHUTDOWN_WAIT_TIME_MILLIS);
                 try {
                     res = externalServerProcess.exitValue();
                 }

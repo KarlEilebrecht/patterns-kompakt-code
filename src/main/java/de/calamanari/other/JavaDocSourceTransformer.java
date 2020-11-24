@@ -40,7 +40,7 @@ public class JavaDocSourceTransformer {
 
     }
 
-    public void doTransformation() throws Exception {
+    public void doTransformation() throws IOException {
         Files.walkFileTree(baseDir.toPath(), new FileVisitor<Path>() {
 
             @Override
@@ -89,7 +89,7 @@ public class JavaDocSourceTransformer {
      * @param phrases
      */
     private void highlightPhrases(JavaDocSourceHolder holder, SourceLine line, List<Phrase> phrases) {
-        if (phrases.size() > 0) {
+        if (!phrases.isEmpty()) {
             StringBuilder sb = new StringBuilder(line.length());
             int lastPos = 0;
             for (Phrase phrase : phrases) {
