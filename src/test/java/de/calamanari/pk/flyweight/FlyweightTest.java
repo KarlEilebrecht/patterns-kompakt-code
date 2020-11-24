@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Flyweight Test - demonstrates FLYWEIGHT pattern.
@@ -135,7 +135,7 @@ public class FlyweightTest {
 
         LOGGER.info("Approx. memory consumption AFTER: " + getApproxMemory() + " bytes");
 
-        LOGGER.info("Test Flyweight successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test Flyweight successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 
@@ -163,7 +163,7 @@ public class FlyweightTest {
 
         LOGGER.info("Approx. memory consumption AFTER: " + getApproxMemory() + " bytes");
 
-        LOGGER.info("Test Flyweight Unshared successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test Flyweight Unshared successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 
@@ -175,7 +175,7 @@ public class FlyweightTest {
         while (getApproxMemory() > memInitial && attempt < 10) {
             System.gc();
             attempt++;
-            MiscUtils.sleepIgnoreException(500);
+            TimeUtils.sleepIgnoreException(500);
         }
     }
 

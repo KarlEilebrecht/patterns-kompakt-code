@@ -36,7 +36,7 @@ import java.nio.channels.FileChannel;
 import java.util.Map;
 
 import de.calamanari.pk.util.CharsetUtils;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.CloseUtils;
 
 /**
  * Indexed Text File Accessor creates an index for a given file and allows to jump to specific characters or lines.<br>
@@ -229,7 +229,7 @@ public class IndexedTextFileAccessor {
         }
         finally {
             if (isr == null) {
-                MiscUtils.closeResourceCatch(is, channel);
+                CloseUtils.closeResourceCatch(is, channel);
             }
         }
         return isr;
@@ -256,7 +256,7 @@ public class IndexedTextFileAccessor {
         }
         finally {
             if (!ok) {
-                MiscUtils.closeResourceCatch(isr);
+                CloseUtils.closeResourceCatch(isr);
             }
         }
         return isr;
@@ -309,7 +309,7 @@ public class IndexedTextFileAccessor {
             }
             finally {
                 if (!ok && isr != null || skipped < ignoredCharacters) {
-                    MiscUtils.closeResourceCatch(isr);
+                    CloseUtils.closeResourceCatch(isr);
                 }
             }
             if (skipped < ignoredCharacters) {
@@ -369,7 +369,7 @@ public class IndexedTextFileAccessor {
             }
             finally {
                 if (!ok && isr != null || skipped < ignoredLines) {
-                    MiscUtils.closeResourceCatch(isr);
+                    CloseUtils.closeResourceCatch(isr);
                 }
             }
             if (skipped < ignoredLines) {
@@ -479,7 +479,7 @@ public class IndexedTextFileAccessor {
         channel.position(filePosition);
         long realPosition = channel.position();
         if (realPosition != filePosition) {
-            MiscUtils.closeResourceCatch(channel);
+            CloseUtils.closeResourceCatch(channel);
             throw new IndexOutOfBoundsException(
                     "Specified filePosition=" + filePosition + " is greater than the file size - file truncated after index creation?");
         }

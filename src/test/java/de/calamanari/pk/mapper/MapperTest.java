@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import de.calamanari.pk.mapper.firstsys.Address;
 import de.calamanari.pk.mapper.firstsys.Person;
 import de.calamanari.pk.mapper.secondsys.Customer;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Mapper Test - demonstrates MAPPER pattern.
@@ -93,7 +93,7 @@ public class MapperTest {
         customer1 = dataManager.findCustomer(session, "1");
         assertEquals(customerString1, customer1.toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Mapper successful! Elapsed time: {} s", elapsedTimeString);
 
     }

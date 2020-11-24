@@ -24,7 +24,8 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
+import de.calamanari.pk.util.SimpleScrambleCodec;
 
 /**
  * Secure file data reader, a CONCRETE PRODUCT of CONCRETE FACTORY
@@ -57,8 +58,8 @@ public class SecureFileDataReader extends AbstractDataReader {
     @Override
     public String readString() {
         LOGGER.debug("{}.readString() called.", this.getClass().getSimpleName());
-        String scrambledItem = MiscUtils.readFileToString(sourceFile);
-        String item = MiscUtils.unscramble(scrambledItem);
+        String scrambledItem = FileUtils.readFileToString(sourceFile);
+        String item = SimpleScrambleCodec.decode(scrambledItem);
         LOGGER.debug("return='{}'.", item);
         return item;
     }

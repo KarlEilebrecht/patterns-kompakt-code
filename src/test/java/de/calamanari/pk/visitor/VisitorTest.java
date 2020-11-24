@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Visitor Test - demonstrates VISITOR pattern.
@@ -87,7 +87,7 @@ public class VisitorTest {
         order1.accept(visitor6);
         assertEquals("5.50", nf.format(visitor6.getEffectiveDiscountPerc()));
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Visitor successful! Elapsed time: {} s", elapsedTimeString);
 
     }

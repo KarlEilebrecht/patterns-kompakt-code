@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Model View Controller Test - demonstrates MODEL VIEW CONTROLLER pattern.
@@ -151,7 +151,7 @@ public class ModelViewControllerTest {
 
         Awaitility.await().atMost(2, TimeUnit.MINUTES).until(view::isDisposed);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Model View Controller successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -160,7 +160,7 @@ public class ModelViewControllerTest {
      * short wait time (for better UI-experience)
      */
     private void waitSomeTime() {
-        MiscUtils.sleepIgnoreException(1000);
+        TimeUtils.sleepIgnoreException(1000);
     }
 
     /**
@@ -176,7 +176,7 @@ public class ModelViewControllerTest {
                     button.doClick(100);
                 }
             });
-            MiscUtils.sleepThrowRuntimeException(120);
+            TimeUtils.sleepThrowRuntimeException(120);
         }
         catch (Exception ex) {
             throw new RuntimeException("Unexpected Problem during dispatch!", ex);
@@ -199,9 +199,9 @@ public class ModelViewControllerTest {
                     field.setText(text.substring(0, curLen));
                 }
             });
-            MiscUtils.sleepIgnoreException(100);
+            TimeUtils.sleepIgnoreException(100);
         }
-        MiscUtils.sleepIgnoreException(500);
+        TimeUtils.sleepIgnoreException(500);
     }
 
 }

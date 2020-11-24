@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.CloseUtils;
 import de.calamanari.pk.util.pfis.ParallelFileInputStream;
 
 /**
@@ -206,7 +206,7 @@ final class IndexerMaster {
             catch (RuntimeException ex) {
                 // ignore
             }
-            MiscUtils.closeResourceCatch(masterStream);
+            CloseUtils.closeResourceCatch(masterStream);
         }
 
         return createResult();

@@ -28,7 +28,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Persistence Session - supplementary class for LAZY LOAD demonstration<br>
@@ -141,7 +141,7 @@ public class PersistenceSession {
      * Simulate delay for accessing the underlying database
      */
     private static void simulateDatabaseDelay() {
-        MiscUtils.sleepIgnoreException(SIMULATED_DATABASE_DELAY_MILLIS);
+        TimeUtils.sleepIgnoreException(SIMULATED_DATABASE_DELAY_MILLIS);
     }
 
     /**

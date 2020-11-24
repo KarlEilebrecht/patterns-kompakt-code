@@ -19,12 +19,11 @@
 //@formatter:on
 package de.calamanari.pk.strategy;
 
+import java.nio.charset.StandardCharsets;
 import java.util.zip.CRC32;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.calamanari.pk.util.MiscUtils;
 
 /**
  * Crc32 Hash Strategy - concrete hash STRATEGY using CRC32.
@@ -51,7 +50,7 @@ public class Crc32HashStrategy extends HashStrategy {
     public String computeHash(String text) {
         LOGGER.debug("Concrete Strategy {} computes hash ...", STRATEGY_NAME);
         CRC32 crc32 = new CRC32();
-        crc32.update(MiscUtils.getUtf8Bytes(text));
+        crc32.update(text.getBytes(StandardCharsets.UTF_8));
         return Long.toHexString(crc32.getValue());
     }
 

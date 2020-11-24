@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Transfer Object Assembler Test - demonstrates TRANSFER OBJECT ASSEMBLER pattern.
@@ -170,7 +170,7 @@ public class TransferObjectAssemblerTest {
                 + "{customerId=ID0004, title=Mr., lastName=De-Vil, firstName=Sa Tan, zipCode=666666, "
                 + "city=Blackhole, country=USA, customerType=Active Multi Buyer, dueInvoice=true}]", display.toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test without transfer object assembler successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -202,7 +202,7 @@ public class TransferObjectAssemblerTest {
                 + "{customerId=ID0004, title=Mr., lastName=De-Vil, firstName=Sa Tan, zipCode=666666, "
                 + "city=Blackhole, country=USA, customerType=Active Multi Buyer, dueInvoice=true}]", display.toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with transfer object assembler successful! Elapsed time: {} s", elapsedTimeString);
 
     }

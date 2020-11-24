@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Adapter test demonstrates the ADAPTER pattern.
@@ -69,7 +69,7 @@ public class AdapterTest {
         assertEquals("Jack Miller", name);
         assertEquals("Special Agent, works for Secret Shopper Service", description);
         assertTrue(valid);
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Adapter properties successful! Elapsed time: {} s", elapsedSeconds);
     }
 
@@ -93,7 +93,7 @@ public class AdapterTest {
         success = personViewAdapter.setValid(true);
         assertFalse(success);
         assertFalse(personViewAdapter.isValid());
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Adapter operations successful! Elapsed time: {} s", elapsedSeconds);
     }
 

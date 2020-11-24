@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Registry test - demonstrates the REGISTRY pattern.
@@ -82,7 +82,7 @@ public class RegistryTest {
 
         assertEquals("Host: TREADSTONE, secure: true", s);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Registry successful! Elapsed time: {} s", elapsedTimeString);
 
     }

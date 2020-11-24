@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Value Object Test - demonstrates VALUE OBJECT pattern.
@@ -107,7 +107,7 @@ public class ValueObjectTest {
         Arrays.sort(fractions, Fraction.VIEW_COMPARATOR);
         assertEquals("[(0/1), (1/3), (2/2), (4/4), (25/5)]", Arrays.asList(fractions).toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Value Object successful! Elapsed time: {} s", elapsedTimeString);
 
     }

@@ -19,12 +19,11 @@
 //@formatter:on
 package de.calamanari.pk.builder;
 
+import java.nio.charset.StandardCharsets;
 import java.util.zip.CRC32;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.calamanari.pk.util.MiscUtils;
 
 /**
  * CRC32 Checksum Builder - concrete checksum BUILDER implementation using CRC32.<br>
@@ -112,7 +111,7 @@ public class Crc32ChecksumBuilder implements ChecksumBuilder {
         else {
             text = text.replace(NULL_REPLACEMENT, NULL_NULL_REPLACEMENT);
         }
-        this.addBytesInternal(MiscUtils.getUtf8Bytes(text));
+        this.addBytesInternal(text.getBytes(StandardCharsets.UTF_8));
     }
 
     /**

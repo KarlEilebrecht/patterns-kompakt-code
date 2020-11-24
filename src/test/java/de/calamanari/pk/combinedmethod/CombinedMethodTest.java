@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Combined Method test - demonstrates COMBINED METHOD pattern.<br>
@@ -109,7 +109,7 @@ public class CombinedMethodTest {
         long elapsed = (System.nanoTime() - startTimeNanos);
 
         Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(elapsed);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(elapsed);
 
         LOGGER.info("Test without combined method successful! Elapsed time: {} s", elapsedSeconds);
     }
@@ -155,7 +155,7 @@ public class CombinedMethodTest {
 
         Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(elapsed);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(elapsed);
         LOGGER.info("Test with combined method successful! Elapsed time: {} s", elapsedSeconds);
 
     }

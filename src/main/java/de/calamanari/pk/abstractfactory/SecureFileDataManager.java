@@ -24,7 +24,7 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
 
 /**
  * Secure file data manager uses a text file for persistence, it demonstrates a CONCRETE FACTORY.
@@ -49,7 +49,7 @@ public class SecureFileDataManager extends AbstractDataManager {
             // to be honest, the rule is not strict enough :-)
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }
-        File destinationFile = new File(MiscUtils.getHomeDirectory(), itemName + ".sec");
+        File destinationFile = new File(FileUtils.getHomeDirectory(), itemName + ".sec");
         return new SecureFileDataWriter(destinationFile);
     }
 
@@ -60,7 +60,7 @@ public class SecureFileDataManager extends AbstractDataManager {
             // to be honest, the rule is not strict enough :-)
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }
-        File sourceFile = new File(MiscUtils.getHomeDirectory(), itemName + ".sec");
+        File sourceFile = new File(FileUtils.getHomeDirectory(), itemName + ".sec");
         return new SecureFileDataReader(sourceFile);
     }
 

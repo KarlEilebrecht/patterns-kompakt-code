@@ -24,7 +24,8 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
+import de.calamanari.pk.util.SimpleScrambleCodec;
 
 /**
  * Secure file data writer, a CONCRETE PRODUCT of CONCRETE FACTORY
@@ -57,9 +58,9 @@ public class SecureFileDataWriter extends AbstractDataWriter {
     @Override
     public long writeString(String item) {
         LOGGER.debug("{}.writeString('{}') called.", this.getClass().getSimpleName(), item);
-        String scrambledItem = MiscUtils.scramble(item);
+        String scrambledItem = SimpleScrambleCodec.encode(item);
         LOGGER.debug("output='{}'.", scrambledItem);
-        return MiscUtils.writeStringToFile(scrambledItem, destinationFile);
+        return FileUtils.writeStringToFile(scrambledItem, destinationFile);
     }
 
 }

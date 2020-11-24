@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Builder Test - demonstrates BUILDER pattern.
@@ -86,7 +86,7 @@ public class BuilderTest {
         for (Object[] toBeNotEqual : toBeNotEqualArrays) {
             assertNotSame(checksum, checksumHelper.computeChecksum(toBeNotEqual));
         }
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Builder successful! Elapsed time: {} s", elapsedSeconds);
 
     }

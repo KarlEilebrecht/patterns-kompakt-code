@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Wrapper Test - demonstrates WRAPPER pattern
@@ -100,7 +100,7 @@ public class WrapperTest {
         assertEquals("LegacyCustomerInfo({ID='5', Name='Ren Stimpy', Segment=20, Last Order Date='2010-12-20'})", sInfo5);
         LOGGER.debug(sInfo5);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Wrapper successful! Elapsed time: {} s", elapsedTimeString);
 
     }

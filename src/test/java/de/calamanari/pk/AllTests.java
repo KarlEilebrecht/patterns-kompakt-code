@@ -68,8 +68,8 @@ import de.calamanari.pk.strategy.StrategyTest;
 import de.calamanari.pk.templatemethod.TemplateMethodTest;
 import de.calamanari.pk.transferobjectassembler.TransferObjectAssemblerTest;
 import de.calamanari.pk.util.IndexedTextFileAccessorTest;
-import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.ParallelFileInputStreamTest;
+import de.calamanari.pk.util.TimeUtils;
 import de.calamanari.pk.uuid.UUIDTest;
 import de.calamanari.pk.valueobject.ValueObjectTest;
 import de.calamanari.pk.visitor.VisitorTest;
@@ -161,7 +161,7 @@ public final class AllTests {
      */
     @AfterClass
     public static void afterAll() {
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("AllTests completed. Elapsed time: {} s", elapsedTimeString);
     }
 

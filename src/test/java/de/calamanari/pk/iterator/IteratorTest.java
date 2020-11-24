@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Iterator Test - demonstrates ITERATOR pattern.
@@ -83,7 +83,7 @@ public class IteratorTest {
         LOGGER.info("All subordinates of {} are: {}", rootWorker.getName(), res);
         assertEquals("Hans, Jake, John, Larry, Linda", res);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Iterator successful! Elapsed time: {} s", elapsedTimeString);
     }
 

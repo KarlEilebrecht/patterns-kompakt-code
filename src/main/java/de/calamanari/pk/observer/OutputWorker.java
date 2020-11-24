@@ -22,7 +22,7 @@ package de.calamanari.pk.observer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Output Worker is a concrete observable in this OBSERVER example.
@@ -51,6 +51,7 @@ public class OutputWorker extends Thread implements OutputObservable {
     /**
      * registered output observer, if any
      */
+    @SuppressWarnings("java:S3077")
     private volatile OutputObserver observer = null;
 
     /**
@@ -68,7 +69,7 @@ public class OutputWorker extends Thread implements OutputObservable {
     public void run() {
         long bytesWritten = 0;
         while (bytesWritten < bytesToWrite) {
-            MiscUtils.sleepThrowRuntimeException(WAIT_DELAY_MILLIS);
+            TimeUtils.sleepThrowRuntimeException(WAIT_DELAY_MILLIS);
             if (observer != null) {
                 LOGGER.debug("{} no. {} notifies observer!", this.getClass().getSimpleName(), this.workerNumber);
                 observer.handleBytesWritten(this.workerNumber, 1L);

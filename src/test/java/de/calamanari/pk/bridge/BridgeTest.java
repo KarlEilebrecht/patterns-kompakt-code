@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.bridge.halcorp.HalCorpSecurePersonDataConnectorImp;
 import de.calamanari.pk.bridge.multiglom.MultiGlomUdpPersonDataConnectorImp;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Bridge Test - demonstrates BRIDGE pattern.
@@ -139,7 +139,7 @@ public class BridgeTest {
                         + "street=Lame Duck Valley 180, city=Rugby, zipCode=88906})",
                 halCorpConnector.findXyPersonById(halCorpPersonTestIds.get(0)).toString());
 
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Bridge successful! Elapsed time: {} s", elapsedSeconds);
 
     }

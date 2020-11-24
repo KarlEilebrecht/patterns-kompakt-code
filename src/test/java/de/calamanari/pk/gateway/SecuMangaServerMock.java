@@ -30,7 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.AbstractThreadedSocketServer;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.SimpleScrambleCodec;
+import de.calamanari.pk.util.SocketCommunicationException;
 
 /**
  * SecuManga is a fictional native encryption library a GATEWAY will be provided for in this demonstration.
@@ -68,14 +69,15 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 
     /**
      * Creates new mock without starting it yet.<br>
-     * We want to focus on the fictional legacy API, the most of the server/request stuff you'll find in the super classes.
+     * We want to focus on the fictional legacy API, the most of the server/request stuff you'll find in the super
+     * classes.
      */
     public SecuMangaServerMock() {
         super(SecuMangaServerMock.class.getSimpleName());
     }
 
     @Override
-    protected void handleSocketCommunication(final Socket socket) throws Exception {
+    protected void handleSocketCommunication(final Socket socket) throws SocketCommunicationException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 
@@ -98,6 +100,9 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
                 bw.write("ERR! command '" + commandName + "'" + (content.length() > 0 ? "" : " MISSING CONTENT"));
             }
             bw.flush();
+        }
+        catch (IOException | RuntimeException ex) {
+            throw new SocketCommunicationException(ex);
         }
     }
 
@@ -148,10 +153,10 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
     private String processText(String commandName, String text) {
         String result = null;
         if (COMMAND_SCRAMBLE.equalsIgnoreCase(commandName)) {
-            result = MiscUtils.scramble(text);
+            result = SimpleScrambleCodec.encode(text);
         }
         else if (COMMAND_UNSCRAMBLE.equals(commandName)) {
-            result = MiscUtils.unscramble(text);
+            result = SimpleScrambleCodec.decode(text);
         }
         else {
             result = "ERR! unsupported command '" + commandName + "'";

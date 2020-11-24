@@ -26,7 +26,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Customer Service - customer data access component<br>
@@ -49,7 +49,7 @@ public class CustomerService {
      * utility method to simulate some delay
      */
     private static void simulateNetworkDelay() {
-        MiscUtils.sleepIgnoreException(NETWORK_DELAY);
+        TimeUtils.sleepIgnoreException(NETWORK_DELAY);
     }
 
     /**

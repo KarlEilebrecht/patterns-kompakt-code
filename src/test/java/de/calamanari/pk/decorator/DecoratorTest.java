@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Decorator test - demonstrates DECORATOR pattern
@@ -78,7 +78,7 @@ public class DecoratorTest {
             usedIdsInOrder.add(nextId);
         }
 
-        LOGGER.info("Test decorator shuffling successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test decorator shuffling successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
         logUsedIds(usedIdsInOrder);
 

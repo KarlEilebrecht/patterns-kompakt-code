@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Pessimistic Offline Lock Test - demonstrates PESSIMISTIC OFFLINE LOCK pattern.
@@ -87,7 +87,7 @@ public class PessimisticOfflineLockTest {
         assertEquals("Customer({customerId='4711', lastName='Miller', firstName='Jack', street='19, Lucky Road', " + "zipCode='286736', city='Lemon Village'})",
                 customerDb.get("4711").toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Pessimistic Offline Lock successful! Elapsed time: {} s", elapsedTimeString);
     }
 
@@ -112,7 +112,7 @@ public class PessimisticOfflineLockTest {
 
                     LOGGER.debug("User_1 displays: {}", customer);
 
-                    MiscUtils.sleepIgnoreException(5000);
+                    TimeUtils.sleepIgnoreException(5000);
 
                     // test reentrance
                     lockSuccess = LockManager.acquireReadLock("4711", "User_1");
@@ -130,7 +130,7 @@ public class PessimisticOfflineLockTest {
                             customer.getCity());
                     customerDb.put("4711", customer);
 
-                    MiscUtils.sleepIgnoreException(2000);
+                    TimeUtils.sleepIgnoreException(2000);
                 }
                 finally {
                     LockManager.releaseLock("4711", "User_1");
@@ -149,7 +149,7 @@ public class PessimisticOfflineLockTest {
 
             @Override
             public void run() {
-                MiscUtils.sleepIgnoreException(2000);
+                TimeUtils.sleepIgnoreException(2000);
 
                 boolean lockSuccess = LockManager.acquireReadLock("4711", "User_2");
 
@@ -162,7 +162,7 @@ public class PessimisticOfflineLockTest {
                     Customer customer = customerDb.get("4711");
                     LOGGER.debug("User_2 displays: {}", customer);
 
-                    MiscUtils.sleepIgnoreException(2000);
+                    TimeUtils.sleepIgnoreException(2000);
 
                 }
                 finally {
@@ -183,7 +183,7 @@ public class PessimisticOfflineLockTest {
             @Override
             public void run() {
 
-                MiscUtils.sleepIgnoreException(3000);
+                TimeUtils.sleepIgnoreException(3000);
 
                 boolean lockFailed = !LockManager.acquireWriteLock("4711", "User_3");
 
@@ -208,7 +208,7 @@ public class PessimisticOfflineLockTest {
             @Override
             public void run() {
 
-                MiscUtils.sleepIgnoreException(6000);
+                TimeUtils.sleepIgnoreException(6000);
 
                 boolean lockFailed = !LockManager.acquireReadLock("4711", "User_4");
 
@@ -233,7 +233,7 @@ public class PessimisticOfflineLockTest {
             @Override
             public void run() {
 
-                MiscUtils.sleepIgnoreException(8000);
+                TimeUtils.sleepIgnoreException(8000);
 
                 boolean lockSuccess = LockManager.acquireReadLock("4711", "User_5");
 

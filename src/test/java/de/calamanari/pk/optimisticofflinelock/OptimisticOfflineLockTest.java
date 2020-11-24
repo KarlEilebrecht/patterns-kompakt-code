@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
 
 /**
@@ -111,7 +111,7 @@ public class OptimisticOfflineLockTest {
         assertEquals("Customer({customerId='4711', lastName='Miller', firstName='Jane', street='19, Lucky Road', "
                 + "zipCode='286736', city='Lemon Village', version=2})", dataManager.findCustomerById(4711).toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Optimistic Offline Lock successful! Elapsed time: {} s", elapsedTimeString);
     }
 
@@ -125,7 +125,7 @@ public class OptimisticOfflineLockTest {
             public void run() {
                 Customer customer = dataManager.findCustomerById(4711);
                 customer.setStreet("19, Lucky Road");
-                MiscUtils.sleepIgnoreException(5000);
+                TimeUtils.sleepIgnoreException(5000);
                 Exception caughtEx = null;
                 try {
                     dataManager.storeCustomer(customer);
@@ -154,7 +154,7 @@ public class OptimisticOfflineLockTest {
         (new Thread("User_2") {
             @Override
             public void run() {
-                MiscUtils.sleepIgnoreException(2000);
+                TimeUtils.sleepIgnoreException(2000);
                 Customer customer = dataManager.findCustomerById(4711);
                 customer.setFirstName("Jane");
                 dataManager.storeCustomer(customer);

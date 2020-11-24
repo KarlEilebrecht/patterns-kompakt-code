@@ -28,7 +28,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Plugin test demonstrates the PLUGIN pattern
@@ -47,8 +48,8 @@ public class PluginTest {
     @AfterClass
     public static void setUpAfterClass() throws Exception {
         if (!KEEP_FILES_AFTER_TEST) {
-            File file1 = new File(MiscUtils.getHomeDirectory(), "plugin-test-script.out");
-            File file2 = new File(MiscUtils.getHomeDirectory(), "plugin-test-script2.out");
+            File file1 = new File(FileUtils.getHomeDirectory(), "plugin-test-script.out");
+            File file2 = new File(FileUtils.getHomeDirectory(), "plugin-test-script2.out");
             if (file1.exists()) {
                 file1.delete();
             }
@@ -73,13 +74,13 @@ public class PluginTest {
         long startTimeNanos = System.nanoTime();
         ExampleScriptingFramework framework = new ExampleScriptingFramework();
         MacroPluginFactory pluginFactory = new MacroPluginFactory(framework);
-        framework.executeScriptFile(MiscUtils.findFile("de/calamanari/pk/plugin/plugin-test-script.txt"), pluginFactory);
+        framework.executeScriptFile(FileUtils.findFile("de/calamanari/pk/plugin/plugin-test-script.txt"), pluginFactory);
 
         String expectedResult = "The funny frog jumped over the lazy duck.\n.kcud yzal eht revo depmuj gorf ynnuf ehT;" + " length=41";
-        String result = MiscUtils.readFileToString(new File(MiscUtils.getHomeDirectory(), "plugin-test-script.out"));
+        String result = FileUtils.readFileToString(new File(FileUtils.getHomeDirectory(), "plugin-test-script.out"));
         assertEquals(expectedResult, result);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test plugin successful! Elapsed time: {} s", elapsedTimeString);
         LOGGER.debug(framework.getProtocol());
     }

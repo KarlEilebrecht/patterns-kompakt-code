@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * History Query Engine Mock - in this example this is a component implementation for executing queries that may take some time.
@@ -96,7 +96,7 @@ public class HistoryQueryEngineMock extends AbstractHistoryQueryEngine {
         if (result == null) {
             result = new ArrayList<>();
         }
-        MiscUtils.sleepThrowRuntimeException(queryDurationMillis);
+        TimeUtils.sleepThrowRuntimeException(queryDurationMillis);
         return result;
     }
 

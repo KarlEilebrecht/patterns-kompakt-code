@@ -21,7 +21,7 @@ package de.calamanari.pk.util.tpl;
 
 import java.util.concurrent.CountDownLatch;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * A {@link OverloadState} instance represents the overload state of the {@link ThroughputLimiter} including an overload start time and a latch (where
@@ -52,7 +52,7 @@ public final class OverloadState {
     /**
      * Creates new overload state using the given start time
      * 
-     * @param startTimeNanos time in nanoseconds when overload started, see {@linkplain MiscUtils#getSystemUptimeNanos()}
+     * @param startTimeNanos time in nanoseconds when overload started, see {@linkplain TimeUtils#getSystemUptimeNanos()}
      */
     OverloadState(long startTimeNanos) {
         this.overloadStartTimeNanos = startTimeNanos;

@@ -28,7 +28,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.CloneUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Null Object Test - demonstrates NULL OBJECT pattern.
@@ -69,7 +70,7 @@ public class NullObjectTest {
         assertNotSame(nameData, nameDataClone);
 
         // serialization / produce a duplicate
-        HostNameData nameDataSer = MiscUtils.passByValue(nameData);
+        HostNameData nameDataSer = CloneUtils.passByValue(nameData);
         assertNotSame(nameData, nameDataSer);
 
         // negative case (unknown key)
@@ -81,10 +82,10 @@ public class NullObjectTest {
         assertSame(nameData, nameData2);
 
         // serialization of a NULL OBJECT followed by deserialization should not produce a duplicate
-        HostNameData nameData3 = MiscUtils.passByValue(nameData);
+        HostNameData nameData3 = CloneUtils.passByValue(nameData);
         assertSame(nameData, nameData3);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Null Object successful! Elapsed time: {} s", elapsedTimeString);
     }
 

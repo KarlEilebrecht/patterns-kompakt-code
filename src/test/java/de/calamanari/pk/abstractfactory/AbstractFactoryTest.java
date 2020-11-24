@@ -30,7 +30,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Test case for ABSTRACT FACTORY
@@ -80,8 +81,8 @@ public class AbstractFactoryTest {
     @AfterClass
     public static void setUpAfterClass() throws Exception {
         if (!KEEP_FILES_AFTER_TEST) {
-            File file1 = new File(MiscUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".txt");
-            File file2 = new File(MiscUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".sec");
+            File file1 = new File(FileUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".txt");
+            File file2 = new File(FileUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".sec");
             if (file1.exists()) {
                 file1.delete();
             }
@@ -99,7 +100,7 @@ public class AbstractFactoryTest {
         LOGGER.info("Performing test with configuration 1 ...");
         long startTimeNanos = System.nanoTime();
         commonTestInternal(CONFIG_KEY1, FUNNY_TEXT);
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Execution of test with configuration 1 was successful! Elapsed time: {} s", elapsedSeconds);
     }
 
@@ -108,7 +109,7 @@ public class AbstractFactoryTest {
         LOGGER.info("Performing test with configuration 2 ...");
         long startTimeNanos = System.nanoTime();
         commonTestInternal(CONFIG_KEY2, FUNNY_TEXT);
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Execution of test with configuration 2 was successful! Elapsed time: {} s", elapsedSeconds);
     }
 

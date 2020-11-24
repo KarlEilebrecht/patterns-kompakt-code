@@ -22,7 +22,7 @@ package de.calamanari.pk.objectpool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Example reusable object for being pooled
@@ -51,7 +51,7 @@ public class ExampleReusableObject {
 
         // expensive setup, such as open files, create connection or
         // compute seeds
-        MiscUtils.sleepIgnoreException(CREATION_DELAY_MILLIS);
+        TimeUtils.sleepIgnoreException(CREATION_DELAY_MILLIS);
         LOGGER.debug("New ExampleReusableObject created.");
     }
 
@@ -64,7 +64,7 @@ public class ExampleReusableObject {
         LOGGER.debug("computeResult called ...");
 
         intrinsicState++;
-        MiscUtils.sleepIgnoreException(1);
+        TimeUtils.sleepIgnoreException(1);
         LOGGER.debug("computeResult completed.");
         return "X" + intrinsicState;
     }

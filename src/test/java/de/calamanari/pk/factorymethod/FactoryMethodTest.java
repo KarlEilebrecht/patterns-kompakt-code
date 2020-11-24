@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Test case for FACTOY METHOD
@@ -82,7 +82,7 @@ public class FactoryMethodTest {
         assertEquals("MoronStoreVoucher({id=777777, displayCode=bde31, firstName=Jack, lastName=Miller, value=100.0})"
                 + "FreakliesShopVoucher({id=S11111111, displayCode=vjm11111111, " + "firstName=Jack, lastName=Miller, value=100.0})", sb.toString());
 
-        LOGGER.info("Test Factory Method successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Factory Method successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

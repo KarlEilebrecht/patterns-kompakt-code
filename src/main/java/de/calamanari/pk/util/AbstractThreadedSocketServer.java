@@ -19,6 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -49,6 +50,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
     /**
      * reference to serverSocket
      */
+    @SuppressWarnings("java:S3077")
     protected volatile ServerSocket serverSocket = null;
 
     /**
@@ -84,7 +86,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
                 LOGGER.error("Error during socket communication.", ex);
             }
             finally {
-                MiscUtils.closeResourceCatch(socket);
+                CloseUtils.closeResourceCatch(socket);
             }
             LOGGER.debug("{} disconnected.", Thread.currentThread().getName());
         });
@@ -109,11 +111,8 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
         try {
             serverSocket = new ServerSocket(serverPort);
         }
-        catch (RuntimeException ex) {
-            throw ex;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
+        catch (IOException | RuntimeException ex) {
+            throw new SocketPreparationException(ex);
         }
     }
 
@@ -127,7 +126,6 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
         while (serverSocket != null) {
             try {
                 // socket will be closed by the responsible worker thread
-                @SuppressWarnings("resource")
                 Socket socket = serverSocket.accept();
                 handleSocketCommunicationThreaded(socket);
             }
@@ -145,12 +143,12 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
 
     @Override
     protected void initiateShutdown() {
-        MiscUtils.closeResourceCatch(Level.WARN, serverSocket);
+        CloseUtils.closeResourceCatch(Level.WARN, serverSocket);
     }
 
     @Override
     protected void cleanUp() {
-        MiscUtils.closeResourceCatch(Level.WARN, serverSocket);
+        CloseUtils.closeResourceCatch(Level.WARN, serverSocket);
         executorService.shutdown();
     }
 
@@ -160,9 +158,9 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
      * This method must be implemented thread-safe.
      * 
      * @param socket (for communication, will be closed by caller automatically)
-     * @throws Exception delegate handling to caller
+     * @throws SocketCommunicationException delegate handling to caller
      */
-    protected abstract void handleSocketCommunication(Socket socket) throws Exception;
+    protected abstract void handleSocketCommunication(Socket socket) throws SocketCommunicationException;
 
     /**
      * Method returning a default port.<br>

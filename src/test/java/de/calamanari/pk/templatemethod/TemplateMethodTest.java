@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Template Method Test - demonstrates the TEMPLATE METHOD pattern.
@@ -52,7 +52,7 @@ public class TemplateMethodTest {
         ExternalProcessManager.getInstance().startExternal(EchoServer.class, LOGGER);
 
         // To be sure the server is up, wait 3 seconds.
-        MiscUtils.sleepThrowRuntimeException(3000);
+        TimeUtils.sleepThrowRuntimeException(3000);
     }
 
     @AfterClass
@@ -79,7 +79,7 @@ public class TemplateMethodTest {
 
         assertEquals(testText, output2);
 
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test ExampleTemplateMethodStringCodec successful! Elapsed time: {} s", elapsedSeconds);
 
     }
@@ -122,7 +122,7 @@ public class TemplateMethodTest {
         assertEquals(testText1, answer1);
         assertEquals(testText2, answer2);
 
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test EchoServer successful! Elapsed time: {} s", elapsedSeconds);
     }
 

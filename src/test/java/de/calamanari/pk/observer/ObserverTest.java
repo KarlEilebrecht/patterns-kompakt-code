@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 import de.calamanari.pk.util.tpl.ThroughputEvent;
 import de.calamanari.pk.util.tpl.ThroughputLimiter;
 import de.calamanari.pk.util.tpl.ThroughputListener;
@@ -96,7 +96,7 @@ public class ObserverTest {
         }
 
         while (progressObserver.getCounterValue() < bytesAllInAll) {
-            MiscUtils.sleepThrowRuntimeException(1000);
+            TimeUtils.sleepThrowRuntimeException(1000);
         }
 
         for (OutputObservable observable : observableList) {
@@ -105,7 +105,7 @@ public class ObserverTest {
 
         assertEquals(bytesAllInAll, progressObserver.getCounterValue());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Observer successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -157,21 +157,21 @@ public class ObserverTest {
         for (int i = 0; i < 100; i++) {
             service.execute(new DummyServiceCaller(limiter, stoppedFlag));
         }
-        MiscUtils.sleepThrowRuntimeException(15000);
+        TimeUtils.sleepThrowRuntimeException(15000);
         stoppedFlag.set(true);
         service.shutdown();
         service.awaitTermination(1, TimeUnit.SECONDS);
 
         // asynchronous tests with multiple threads are delicate, thus we
         // give a little time to finish pending actions
-        MiscUtils.sleepThrowRuntimeException(1500);
+        TimeUtils.sleepThrowRuntimeException(1500);
 
         limiter.removeThroughputListener(observer);
 
         assertEquals(this.serviceCallAttemptCounter.get(), (observedCallDeniedCounter.get() + observedCallSuccessCounter.get()));
         assertEquals(this.serviceCallSuccessCounter.get(), observedCallSuccessCounter.get());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with asynchronous Observer successful! Elapsed time: {} s", elapsedTimeString);
 
     }

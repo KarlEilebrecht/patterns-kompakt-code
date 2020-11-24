@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Command Test - demonstrates COMMAND pattern.
@@ -93,7 +93,7 @@ public class CommandTest {
 
         assertEquals("The quick brown fox jumped over the lazy duck.", textComponent.toString());
 
-        LOGGER.info("Test Commmand successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Commmand successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

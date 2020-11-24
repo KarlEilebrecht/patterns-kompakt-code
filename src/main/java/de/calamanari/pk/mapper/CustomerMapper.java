@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import de.calamanari.pk.mapper.firstsys.Address;
 import de.calamanari.pk.mapper.firstsys.Person;
 import de.calamanari.pk.mapper.secondsys.Customer;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Customer Mapper - demonstrates MAPPER pattern<br>
@@ -83,7 +83,7 @@ public class CustomerMapper extends AbstractMapper {
         int customerLifeTimeDays = 0;
         Date firstOrderDate = person.getFirstOrderDate();
         if (firstOrderDate != null) {
-            customerLifeTimeDays = MiscUtils.dayDiff(firstOrderDate, new Date(System.currentTimeMillis()));
+            customerLifeTimeDays = TimeUtils.dayDiff(firstOrderDate, new Date(System.currentTimeMillis()));
         }
         customer.setCustomerLifeTimeDays(customerLifeTimeDays);
 

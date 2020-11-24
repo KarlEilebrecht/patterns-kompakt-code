@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Money Test - demonstrates MONEY pattern and consequences when ignoring the basic problem.
@@ -174,7 +174,7 @@ public class MoneyTest {
         // Methods allowing to specify the SCALE (like BigDecimal.divide) will be your
         // friends if you try to define the number of digits AFTER the decimal point.
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Money Technical Basics successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -238,7 +238,7 @@ public class MoneyTest {
         // ok, now it works
         assertEquals("4.00 EUR", valueTogether.toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Money successful! Elapsed time: {} s", elapsedTimeString);
 
     }

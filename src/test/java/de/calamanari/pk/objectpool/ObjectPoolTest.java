@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Testcase for ExampleObjectPool and related stuff
@@ -90,7 +90,7 @@ public class ObjectPoolTest {
         assertEquals("X3", callResult11);
         assertEquals("X4", callResult12);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test without pool successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -144,7 +144,7 @@ public class ObjectPoolTest {
         assertEquals("X3", callResult11);
         assertEquals("X4", callResult12);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with pool (no warm-up) successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -203,7 +203,7 @@ public class ObjectPoolTest {
         assertEquals("X3", callResult11);
         assertEquals("X4", callResult12);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with pool (warm-up) successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -275,7 +275,7 @@ public class ObjectPoolTest {
         // give some time for log output
         Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(endNanos - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(endNanos - startTimeNanos);
         LOGGER.info("Test with pool concurrent successful! Elapsed time: {} s", elapsedTimeString);
 
     }

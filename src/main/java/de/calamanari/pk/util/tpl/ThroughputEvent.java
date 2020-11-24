@@ -22,7 +22,7 @@ package de.calamanari.pk.util.tpl;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * A {@link ThroughputEvent} contains some KPIs about a {@link ThroughputLimiter}'s current state.
@@ -186,7 +186,7 @@ public final class ThroughputEvent {
         private long intervalOverloadNanos;
 
         /**
-         * @param sysTimeNanos time in nanoseconds when the event occurred, see also {@linkplain MiscUtils#getSystemUptimeNanos()}
+         * @param sysTimeNanos time in nanoseconds when the event occurred, see also {@linkplain TimeUtils#getSystemUptimeNanos()}
          * @param intervalNanos exact length of the past interval in nanoseconds
          * @param intervalOverloadNanos time in nanoseconds within the interval, the limiter was overloaded
          */

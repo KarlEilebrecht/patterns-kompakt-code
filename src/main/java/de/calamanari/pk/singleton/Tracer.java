@@ -29,7 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
 
 /**
  * Tracer - a straight forward thread-safe SINGLETON implementation
@@ -79,7 +79,7 @@ public final class Tracer {
 
                 // here could for example take place a system registry lookup to determine the output directory
                 // and the configured file name.
-                File outputFile = new File(MiscUtils.getHomeDirectory(), "tracer.log");
+                File outputFile = new File(FileUtils.getHomeDirectory(), "tracer.log");
 
                 instance = new Tracer(outputFile);
 

@@ -32,7 +32,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.CloneUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Lazy Load Test - demonstrates LAZY LOAD pattern.
@@ -77,7 +78,7 @@ public class LazyLoadTest {
         assertEquals("Invoice({invoiceId=INV-001, amountClaimed=154.23, debtorName=Charly Brown, street=Dogstreet 12, "
                 + "zipCode=64354, city=Pumpkin Lake, dataComplete=true, detached=false})", invoice.toString());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Lazy Load successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -106,7 +107,7 @@ public class LazyLoadTest {
         // PersistenceManager.findAllInvoices(false);
         // and compare runtimes!
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Lazy Load Show Ripple Effect successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -140,7 +141,7 @@ public class LazyLoadTest {
         }
         assertEquals("Session closed!", (caughtEx == null ? "" : caughtEx.getMessage()));
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Lazy Load Show Closed Session Effect successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -160,7 +161,7 @@ public class LazyLoadTest {
 
         // simulate passing the invoice around, somewhere "by-value" (instance gets serialized and deserialized,
         // sometimes unnoticed)
-        invoice = MiscUtils.passByValue(invoice);
+        invoice = CloneUtils.passByValue(invoice);
 
         Exception caughtEx = null;
         try {
@@ -171,7 +172,7 @@ public class LazyLoadTest {
         }
         assertEquals("Cannot load data, entity detached!", (caughtEx == null ? "" : caughtEx.getMessage()));
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Lazy Load Show Lost Session Effect successful! Elapsed time: {} s", elapsedTimeString);
 
     }

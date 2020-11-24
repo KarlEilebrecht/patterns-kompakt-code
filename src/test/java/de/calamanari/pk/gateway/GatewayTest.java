@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import de.calamanari.pk.gateway.client.DefaultSecuMangaGatewayClient;
 import de.calamanari.pk.gateway.client.SecuMangaGatewayClient;
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Gateway test, demonstrates GATEWAY pattern
@@ -95,7 +95,7 @@ public class GatewayTest {
         // Because the client instances are NOT safe to be used concurrently,
         // SecuMangaGatewayClient instances should be cached in an OBJECT POOL!
         long avgTime = (long) ((System.nanoTime() - startTimeNanos) / ((double) NUMBER_OF_RUNS * 2));
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(avgTime);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(avgTime);
         LOGGER.info("Average runtime per call: {} s", elapsedSeconds);
 
         LOGGER.debug("'{}'", scrambled);
@@ -103,7 +103,7 @@ public class GatewayTest {
 
         assertEquals(testText, unscrambled);
 
-        elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test gateway successful! Elapsed time: {} s", elapsedSeconds);
 
     }

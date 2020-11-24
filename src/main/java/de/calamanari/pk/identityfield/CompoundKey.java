@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.BoxingUtils;
 
 /**
  * Compound Key - used in IDENTITY FIELD example <br>
@@ -68,7 +68,7 @@ public final class CompoundKey implements Serializable {
      * @param keyFieldValues parts of the key
      */
     public CompoundKey(long[] keyFieldValues) {
-        this(MiscUtils.boxArray(keyFieldValues));
+        this(BoxingUtils.boxArray(keyFieldValues));
     }
 
     /**

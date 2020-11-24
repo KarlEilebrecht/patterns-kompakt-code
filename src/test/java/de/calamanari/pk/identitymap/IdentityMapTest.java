@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Identity Map Test - demonstrates IDENTITY MAP pattern.
@@ -136,7 +136,7 @@ public class IdentityMapTest {
         // the identity map ensures we won't get a duplicate but the same instance again
         assertSame(customer1, customer2);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test identity map successful! Elapsed time: {} s", elapsedTimeString);
 
     }

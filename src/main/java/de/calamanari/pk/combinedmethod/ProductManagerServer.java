@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import de.calamanari.pk.util.AbstractConsoleServer;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Product Manager Server - the server side
@@ -257,7 +257,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
     @Override
     protected void doRequestProcessing() {
         while (true) {
-            MiscUtils.sleep(Level.WARN, REQUEST_DELAY_MILLIS);
+            TimeUtils.sleep(Level.WARN, REQUEST_DELAY_MILLIS);
             if (getServerState() != ServerState.ONLINE) {
                 break;
             }

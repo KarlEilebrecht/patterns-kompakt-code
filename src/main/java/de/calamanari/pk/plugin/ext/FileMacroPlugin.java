@@ -20,6 +20,7 @@
 package de.calamanari.pk.plugin.ext;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.plugin.MacroPlugin;
 import de.calamanari.pk.plugin.MacroPluginFramework;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
 
 /**
  * File Macro Plugin provides macros for file access.
@@ -126,7 +127,7 @@ public class FileMacroPlugin implements MacroPlugin {
         if (!(arg1 instanceof String)) {
             throw new RuntimeException("Could not execute macro 'createHomeFile' - illegal argument (String expected).");
         }
-        return new File(MiscUtils.getHomeDirectory(), (String) arg1);
+        return new File(FileUtils.getHomeDirectory(), (String) arg1);
     }
 
     /**
@@ -150,7 +151,7 @@ public class FileMacroPlugin implements MacroPlugin {
         if (!(arg1 instanceof File) || (arg2 != null && !(arg2 instanceof String))) {
             throw new RuntimeException("Could not execute macro 'readFileToString' - illegal arguments.");
         }
-        return MiscUtils.readFileToString((File) arg1, (String) arg2);
+        return FileUtils.readFileToString((File) arg1, (arg2 == null ? null : Charset.forName((String) arg2)));
     }
 
     /**
@@ -175,7 +176,7 @@ public class FileMacroPlugin implements MacroPlugin {
         if (!(arg1 instanceof String) || !(arg2 instanceof File) || (arg3 != null && !(arg3 instanceof String))) {
             throw new RuntimeException("Could not execute macro 'writeStringToFile' - illegal arguments.");
         }
-        return Long.valueOf(MiscUtils.writeStringToFile((String) arg1, (File) arg2, (String) arg3));
+        return Long.valueOf(FileUtils.writeStringToFile((String) arg1, (File) arg2, (arg3 == null ? null : Charset.forName((String) arg3))));
     }
 
 }

@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 import de.calamanari.pk.util.itfa.ItfaConfiguration;
 
@@ -85,7 +85,7 @@ public class PalindromeCheckMaster {
      */
     private void doOtherStuff() {
         LOGGER.debug("MASTER does other stuff while waiting ...");
-        MiscUtils.sleepIgnoreException(OTHER_TASK_DELAY_MILLIS);
+        TimeUtils.sleepIgnoreException(OTHER_TASK_DELAY_MILLIS);
     }
 
     /**
@@ -134,14 +134,16 @@ public class PalindromeCheckMaster {
      */
     private void waitForSlavesToComplete(PalindromeCheckFuture future) {
         boolean done = false;
-        NumberFormat nf = NumberFormat.getInstance(Locale.US);
-        nf.setMaximumFractionDigits(0);
-        nf.setMinimumFractionDigits(0);
         do {
             LOGGER.debug("MASTER polls for result ...");
             done = future.isDone();
             if (!done) {
-                LOGGER.info("{}% completed, MASTER is still waiting for SLAVE-results ...", nf.format(future.getProgressPerc()));
+                if (LOGGER.isInfoEnabled()) {
+                    NumberFormat nf = NumberFormat.getInstance(Locale.US);
+                    nf.setMaximumFractionDigits(0);
+                    nf.setMinimumFractionDigits(0);
+                    LOGGER.info("{}% completed, MASTER is still waiting for SLAVE-results ...", nf.format(future.getProgressPerc()));
+                }
                 doOtherStuff();
             }
         } while (!done);

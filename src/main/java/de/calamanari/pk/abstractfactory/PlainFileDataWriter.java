@@ -24,7 +24,7 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
 
 /**
  * Plain file data writer, a CONCRETE PRODUCT of CONCRETE FACTORY
@@ -58,7 +58,7 @@ public class PlainFileDataWriter extends AbstractDataWriter {
     public long writeString(String item) {
         LOGGER.debug("{}.writeString('{}') called.", this.getClass().getSimpleName(), item);
         LOGGER.debug("output='{}'.", item);
-        return MiscUtils.writeStringToFile(item, destinationFile);
+        return FileUtils.writeStringToFile(item, destinationFile);
     }
 
 }

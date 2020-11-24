@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * A {@link ThroughputLimiter} allows to limit and observe the number of events (i.e. executions or requests) in a configurable time interval (floating), see
@@ -209,7 +209,7 @@ public final class ThroughputLimiter {
     public boolean tryGetPermission(long timeout, TimeUnit unit) throws InterruptedException {
         boolean permissionAvailable = false;
         boolean tryAgain = false;
-        long startNanos = MiscUtils.getSystemUptimeNanos();
+        long startNanos = TimeUtils.getSystemUptimeNanos();
         long sysTime = startNanos;
         long timeoutNanos = TimeUnit.NANOSECONDS.convert(timeout, unit);
         do {
@@ -217,7 +217,7 @@ public final class ThroughputLimiter {
             permissionAvailable = tryGetPermissionInternal(sysTime);
             if (!permissionAvailable && timeoutNanos > 0) {
                 tryAgain = waitForNextAttempt(startNanos, timeoutNanos);
-                sysTime = MiscUtils.getSystemUptimeNanos();
+                sysTime = TimeUtils.getSystemUptimeNanos();
             }
         } while (tryAgain);
         updateCounts(permissionAvailable);
@@ -238,7 +238,7 @@ public final class ThroughputLimiter {
     @SuppressWarnings("squid:S899")
     private boolean waitForNextAttempt(long startNanos, long timeoutNanos) throws InterruptedException {
         boolean tryAgain = false;
-        long elapsedNanos = MiscUtils.getSystemUptimeNanos() - startNanos;
+        long elapsedNanos = TimeUtils.getSystemUptimeNanos() - startNanos;
         long remainingTimeoutNanos = timeoutNanos - elapsedNanos;
         if (remainingTimeoutNanos > 0) {
             long latchWaitNanos = remainingTimeoutNanos;
@@ -286,7 +286,7 @@ public final class ThroughputLimiter {
      * @return true if a permission is available, false otherwise
      */
     public boolean tryGetPermission() {
-        long sysTime = MiscUtils.getSystemUptimeNanos();
+        long sysTime = TimeUtils.getSystemUptimeNanos();
         boolean permissionAvailable = tryGetPermissionInternal(sysTime);
         updateCounts(permissionAvailable);
         return permissionAvailable;
@@ -330,7 +330,7 @@ public final class ThroughputLimiter {
         if (intervalTimeMillis <= 0) {
             throw new IllegalArgumentException("Argument intervalTimeMillis must be a positive value, given: " + intervalTimeMillis);
         }
-        long intervalTimeNanos = ((long) MiscUtils.MILLION) * intervalTimeMillis;
+        long intervalTimeNanos = ((long) TplConstants.MILLION) * intervalTimeMillis;
         if (!adjustExistingListener(listener, intervalTimeNanos)) {
             ThroughputCheckerThread checkerThread = new ThroughputCheckerThread(this, listener, intervalTimeNanos);
             this.throughputListenerCheckerThreads.add(checkerThread);

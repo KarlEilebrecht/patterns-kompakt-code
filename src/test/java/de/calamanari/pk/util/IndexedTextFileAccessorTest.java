@@ -179,7 +179,7 @@ public class IndexedTextFileAccessorTest {
             long startTimeNanos = System.nanoTime();
             LOGGER.info("Creating huge file ... ");
             huge1000000LinesFile = createHugeFile("hugeFile1000000_" + CHARSET_NAME + ".txt");
-            String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+            String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
             LOGGER.info("Huge file '{}' created after {} s.", huge1000000LinesFile, elapsedTimeString);
         }
 
@@ -381,7 +381,7 @@ public class IndexedTextFileAccessorTest {
             long startTimeNanos = System.nanoTime();
             LOGGER.info("Creating IndexedTextFileAccessor ... ");
             IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(huge1000000LinesFile, CHARSET_NAME);
-            String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+            String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
             LOGGER.info("Index ready after {} s.", elapsedTimeString);
             assertEquals(1146888889, ifa.getFileSize());
             assertEquals(1056888889, ifa.getNumberOfCharacters());
@@ -412,7 +412,7 @@ public class IndexedTextFileAccessorTest {
             }
         }
         finally {
-            MiscUtils.closeResourceCatch(isr);
+            CloseUtils.closeResourceCatch(isr);
         }
         return sb.toString();
     }
@@ -432,7 +432,7 @@ public class IndexedTextFileAccessorTest {
             res = br.readLine();
         }
         finally {
-            MiscUtils.closeResourceCatch(isr);
+            CloseUtils.closeResourceCatch(isr);
         }
         return res;
     }
@@ -447,7 +447,7 @@ public class IndexedTextFileAccessorTest {
      * @throws Exception on any error
      */
     public static File createTextFile(String fileName, Collection<String> lines, String charsetName) throws Exception {
-        File file = new File(MiscUtils.getHomeDirectory(), fileName);
+        File file = new File(FileUtils.getHomeDirectory(), fileName);
         BufferedWriter bw = null;
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -466,7 +466,7 @@ public class IndexedTextFileAccessorTest {
             }
         }
         finally {
-            MiscUtils.closeResourceCatch(bw);
+            CloseUtils.closeResourceCatch(bw);
         }
         return file;
     }
@@ -479,7 +479,7 @@ public class IndexedTextFileAccessorTest {
      * @throws Exception
      */
     private static File createHugeFile(String fileName) throws Exception {
-        File file = new File(MiscUtils.getHomeDirectory(), fileName);
+        File file = new File(FileUtils.getHomeDirectory(), fileName);
 
         StringBuilder line = new StringBuilder();
         for (int i = 0; i < 30; i++) {

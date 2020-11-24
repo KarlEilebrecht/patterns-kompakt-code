@@ -38,7 +38,7 @@ import org.slf4j.event.Level;
 import de.calamanari.pk.datatransferobject.Customer;
 import de.calamanari.pk.datatransferobject.CustomerManager;
 import de.calamanari.pk.util.AbstractConsoleServer;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Customer Manager Server - a remote service handling persistence
@@ -203,7 +203,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
     @Override
     protected void doRequestProcessing() {
         while (true) {
-            MiscUtils.sleep(Level.WARN, REQUEST_DELAY_MILLIS);
+            TimeUtils.sleep(Level.WARN, REQUEST_DELAY_MILLIS);
             if (getServerState() != ServerState.ONLINE) {
                 break;
             }

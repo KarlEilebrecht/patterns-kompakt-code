@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Strategy Test - demonstrates STRATEGY pattern.
@@ -82,7 +82,7 @@ public class StrategyTest {
             assertEquals(messageText, messageMock.getText());
         }
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Strategy successful! Elapsed time: {} s", elapsedTimeString);
 
     }

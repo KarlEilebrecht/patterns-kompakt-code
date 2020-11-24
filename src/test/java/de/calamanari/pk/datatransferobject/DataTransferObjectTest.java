@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.datatransferobject.server.CustomerManagerServer;
 import de.calamanari.pk.util.ExternalProcessManager;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Data Transfer Object test - demonstrates DATA TRANSFER OBJECT pattern
@@ -104,7 +104,7 @@ public class DataTransferObjectTest {
 
         Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
-        LOGGER.info("Test without data transfer object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test without data transfer object successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 
@@ -124,7 +124,7 @@ public class DataTransferObjectTest {
 
         Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
-        LOGGER.info("Test with data transfer object successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test with data transfer object successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
 
     }
 

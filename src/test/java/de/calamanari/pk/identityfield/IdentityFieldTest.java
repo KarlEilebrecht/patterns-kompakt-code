@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Identity Field Test - demonstrates compound key in IDENTITY FIELD pattern
@@ -72,7 +72,7 @@ public class IdentityFieldTest {
         assertFalse(e4711.equals(e4799));
         assertEquals("Entity({id=CompoundKey([47, 11]), x='Marty', y='McFly'})", e4711.toString());
         assertEquals("Entity({id=CompoundKey([47, 99]), x='Ernie', y='Bert'})", e4799.toString());
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test identity field successful! Elapsed time: {} s", elapsedTimeString);
     }
 
@@ -126,7 +126,7 @@ public class IdentityFieldTest {
             CompoundKey key = keyList.get(i);
             assertEquals(i, keyMap.get(key).intValue());
         }
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test compound key successful! Elapsed time: {} s", elapsedTimeString);
 
     }

@@ -30,7 +30,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
 
 /**
  * Tracer2 - a more sophisticated thread-safe SINGLETON implementation<br>
@@ -70,7 +70,7 @@ public final class Tracer2 implements Serializable {
 
             // here could for example take place a system registry lookup to determine the output directory
             // and the configured file name.
-            File outputFile = new File(MiscUtils.getHomeDirectory(), "tracer2.log");
+            File outputFile = new File(FileUtils.getHomeDirectory(), "tracer2.log");
 
             INSTANCE = new Tracer2(outputFile);
 

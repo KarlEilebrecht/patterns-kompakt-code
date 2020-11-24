@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Singleton Test - demonstrates SINGLETON pattern.
@@ -101,7 +101,7 @@ public class SingletonTest {
             }
         }
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS));
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS));
         LOGGER.info("Test Singleton successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -149,7 +149,7 @@ public class SingletonTest {
         // several times and also change the order of the tests for the
         // different implementations.
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS));
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds((long) ((double) (System.nanoTime() - startTimeNanos) / NUMBER_OF_RUNS));
         LOGGER.info("Test Singleton2 successful! Elapsed time: {} s", elapsedTimeString);
 
     }
@@ -172,7 +172,7 @@ public class SingletonTest {
         Tracer2 restored = (Tracer2) ois.readObject();
 
         assertSame(firstCallResult, restored);
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Singleton3 successful! Elapsed time: {} s", elapsedTimeString);
 
     }

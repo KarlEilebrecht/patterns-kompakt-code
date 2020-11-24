@@ -24,7 +24,7 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
 
 /**
  * Plain file data reader, a CONCRETE PRODUCT of CONCRETE FACTORY
@@ -57,7 +57,7 @@ public class PlainFileDataReader extends AbstractDataReader {
     @Override
     public String readString() {
         LOGGER.debug("{}.readString() called.", this.getClass().getSimpleName());
-        String item = MiscUtils.readFileToString(sourceFile);
+        String item = FileUtils.readFileToString(sourceFile);
         LOGGER.debug("return='{}'.", item);
         return item;
     }

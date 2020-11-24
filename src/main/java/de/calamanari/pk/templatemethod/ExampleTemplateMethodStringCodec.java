@@ -22,7 +22,7 @@ package de.calamanari.pk.templatemethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.SimpleScrambleCodec;
 
 /**
  * Example Template Method String Codec - concrete Codec, demonstrates TEMPLATE METHOD pattern
@@ -41,13 +41,13 @@ public class ExampleTemplateMethodStringCodec extends AbstractTemplateMethodStri
     @Override
     public String encode(String text) {
         LOGGER.debug("Encoding '{}'", text);
-        return CODE_PREFIX + MiscUtils.scramble(text);
+        return CODE_PREFIX + SimpleScrambleCodec.encode(text);
     }
 
     @Override
     public String decode(String text) {
         LOGGER.debug("Decoding '{}'", text);
-        return MiscUtils.unscramble(text.substring(CODE_PREFIX.length()));
+        return SimpleScrambleCodec.decode(text.substring(CODE_PREFIX.length()));
     }
 
     @Override

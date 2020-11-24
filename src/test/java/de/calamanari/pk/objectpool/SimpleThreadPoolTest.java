@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Test case to demonstrate thread pool.
@@ -48,9 +48,10 @@ public class SimpleThreadPoolTest {
     private static final int NUMBER_OF_RUNS = 500;
 
     /**
-     * count down latch to be notified when all threads have finished their work Note: this reference will be re-initialized before each test (see setUp()) and
-     * accessed by multiple threads concurrently. To avoid that a thread during the second test gets the (exhausted) latch object from the first test, I declare
-     * the reference volatile. This has nothing to do with the latch itself!
+     * count down latch to be notified when all threads have finished their work Note: this reference will be
+     * re-initialized before each test (see setUp()) and accessed by multiple threads concurrently. To avoid that a
+     * thread during the second test gets the (exhausted) latch object from the first test, I declare the reference
+     * volatile. This has nothing to do with the latch itself!
      */
     private static volatile CountDownLatch doneCount;
 
@@ -70,7 +71,7 @@ public class SimpleThreadPoolTest {
             LOGGER.debug("Thread {}: {} working ...", no, Integer.toHexString(Thread.currentThread().hashCode()));
 
             // test takes some time, no random
-            MiscUtils.sleepIgnoreException(((no * 73) % 13) * 10);
+            TimeUtils.sleepIgnoreException(((no * 73) % 13) * 10);
             doneCount.countDown();
             LOGGER.debug("Thread {} completed!", no);
         }
@@ -104,7 +105,7 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test without pool successful! Elapsed time: {} s", elapsedTimeString);
     }
 
@@ -130,7 +131,7 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with empty growing pool successful! Elapsed time: {} s", elapsedTimeString);
         int countBefore = growingPool.getThreadCount();
 
@@ -169,7 +170,7 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with small restricted pool successful! Elapsed time: {} s", elapsedTimeString);
 
         int[] poolInfo = smallPool.getPoolInfo();
@@ -201,7 +202,7 @@ public class SimpleThreadPoolTest {
         boolean success = doneCount.await(2, TimeUnit.MINUTES);
         assertTrue(success);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test with large pool successful! Elapsed time: {} s", elapsedTimeString);
 
         int[] poolInfo = largeWarmPool.getPoolInfo();

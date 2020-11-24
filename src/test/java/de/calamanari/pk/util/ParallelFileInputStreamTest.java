@@ -217,7 +217,7 @@ public class ParallelFileInputStreamTest {
      * @param size 0..255
      */
     private static File createBytesFile(int size) throws Exception {
-        File res = new File(MiscUtils.getHomeDirectory(), "testBytes" + size + "_" + EXECUTION_UUID);
+        File res = new File(FileUtils.getHomeDirectory(), "testBytes" + size + "_" + EXECUTION_UUID);
         try (FileOutputStream fos = new FileOutputStream(res)) {
             for (int i = 0; i < size; i++) {
                 fos.write(i);

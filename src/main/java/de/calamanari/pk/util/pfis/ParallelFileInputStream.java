@@ -29,7 +29,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.CloseUtils;
 
 /**
  * Parallel File Input Stream - input stream using a concurrent reader thread.<br>
@@ -266,7 +266,7 @@ public final class ParallelFileInputStream extends InputStream {
         }
         finally {
             if (!success) {
-                MiscUtils.closeResourceCatch(fileChannelLocal);
+                CloseUtils.closeResourceCatch(fileChannelLocal);
             }
         }
     }
@@ -548,7 +548,7 @@ public final class ParallelFileInputStream extends InputStream {
 
         fileChannel.close();
 
-        if (MiscUtils.isWindowsOS()) {
+        if (isWindowsOS()) {
             tryReleaseMappedBufferFileOnWindows();
         }
 
@@ -559,7 +559,7 @@ public final class ParallelFileInputStream extends InputStream {
      * As a consequence the files cannot be deleted while the JVM is still running.<br/>
      * The only known workaround (successful most of the time) is calling System.gc() - the reason why I suppress Sonar's complaint squid:S1215 here.
      * <p>
-     * See <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154">https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154</a>
+     * See <a href= "https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154">https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154</a>
      */
     @SuppressWarnings("squid:S1215")
     private void tryReleaseMappedBufferFileOnWindows() {
@@ -567,14 +567,28 @@ public final class ParallelFileInputStream extends InputStream {
         System.gc();
     }
 
+    /**
+     * Determines whether the current VM runs on a Microsoft Windows System.
+     * 
+     * @return true if OS is Windows otherwise false
+     */
+    protected static boolean isWindowsOS() {
+        boolean res = false;
+        String osName = System.getProperty("os.name");
+        if (osName != null && osName.startsWith("Windows")) {
+            res = true;
+        }
+        return res;
+    }
+
     @Override
-    public void mark(int readlimit) {
+    public synchronized void mark(int readlimit) {
         this.markPositionAbs = position;
         this.markPositionRel = buffer.position();
     }
 
     @Override
-    public void reset() throws IOException {
+    public synchronized void reset() throws IOException {
 
         assertNoError();
 
@@ -607,7 +621,7 @@ public final class ParallelFileInputStream extends InputStream {
             return -1;
         }
         else {
-            return singleByte[0];
+            return singleByte[0] & 0xFF;
         }
     }
 

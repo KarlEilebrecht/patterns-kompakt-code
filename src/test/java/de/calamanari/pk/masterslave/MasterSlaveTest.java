@@ -36,7 +36,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.FileUtils;
+import de.calamanari.pk.util.TimeUtils;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 import de.calamanari.pk.util.itfa.ItfaConfiguration;
 
@@ -150,7 +151,7 @@ public class MasterSlaveTest {
 
         assertEquals(PalindromeCheckResult.CONFIRMED, checkResult);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Master Slave Palindrome successful! Elapsed time: {} s", elapsedTimeString);
 
         testFile.delete();
@@ -171,7 +172,7 @@ public class MasterSlaveTest {
 
         assertEquals(PalindromeCheckResult.createFailedResult(errorPositionLeft, errorPositionRight), checkResult);
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Master Slave Non Palindrome successful! Elapsed time: {} s", elapsedTimeString);
 
         testFile.delete();
@@ -194,7 +195,7 @@ public class MasterSlaveTest {
 
         int numberOfErrorPositions = errorPositions.length;
         File res = null;
-        res = new File(MiscUtils.getHomeDirectory(), "palindrome_test_" + CHARSET_NAME + "_" + size + "_err=" + numberOfErrorPositions + ".txt");
+        res = new File(FileUtils.getHomeDirectory(), "palindrome_test_" + CHARSET_NAME + "_" + size + "_err=" + numberOfErrorPositions + ".txt");
 
         LOGGER.info("Creating palindrome test file {} ...", res);
 

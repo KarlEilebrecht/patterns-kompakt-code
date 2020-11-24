@@ -32,7 +32,7 @@ import de.calamanari.pk.command.AppendTextCommand;
 import de.calamanari.pk.command.DeleteTextCommand;
 import de.calamanari.pk.command.InputCommand;
 import de.calamanari.pk.command.TextComponent;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Command Processor Test - demonstrates COMMAND PROCESSOR pattern.
@@ -86,7 +86,7 @@ public class CommandProcessorTest {
 
         assertEquals("The quick brown fox jumped over the lazy dog.", textComponent.toString());
 
-        LOGGER.info("Test Commmand Processor successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Commmand Processor successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
     }
 
 }

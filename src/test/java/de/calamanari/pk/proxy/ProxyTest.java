@@ -32,8 +32,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
 import de.calamanari.pk.util.SimpleAccessManager;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Proxy Test demonstrates PROXY pattern.
@@ -160,7 +160,7 @@ public class ProxyTest {
         assertEquals("All the time, the fat yellow cow flew over the rotton lake.", concreteDocumentManager.findDocumentByName(TEST_DOCUMENT_NAME));
         assertEquals(null, concreteDocumentManager.findDocumentByName(TEST_DOCUMENT_NAME2));
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Proxy successful! Elapsed time: {} s", elapsedTimeString);
 
     }

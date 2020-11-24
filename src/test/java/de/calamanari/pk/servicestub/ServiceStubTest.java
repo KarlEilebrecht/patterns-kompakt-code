@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Service Stub test - demonstrates SERVICE STUB (aka MOCK) pattern.
@@ -90,7 +90,7 @@ public class ServiceStubTest {
         assertTrue(caughtEx instanceof AccountValidationException);
         assertEquals("Could not create account, invalid address.", caughtEx.getMessage());
 
-        String elapsedTimeString = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test service stub successful! Elapsed time: {} s", elapsedTimeString);
     }
 

@@ -33,7 +33,7 @@ import de.calamanari.pk.facade.article.Article;
 import de.calamanari.pk.facade.article.ArticleManager;
 import de.calamanari.pk.facade.article.ArticleViewFacade;
 import de.calamanari.pk.facade.article.history.ArticleHistory;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Facade Test demonstrates FACADE pattern.
@@ -98,7 +98,7 @@ public class FacadeTest {
         assertEquals(nf.format(-1), nf.format(markDownPrice2));
         assertEquals(nf.format(-1), nf.format(markDownPrice3));
 
-        LOGGER.info("Test Facade successful! Elapsed time: " + MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Facade successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
 
     }
 

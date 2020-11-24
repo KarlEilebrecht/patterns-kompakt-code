@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Active Object Test - demonstrates ACTIVE OBJECT pattern.
@@ -105,7 +105,7 @@ public class ActiveObjectTest {
         assertEquals("Bad bananas punished by old trees.", result2.get(0)[3]);
         assertEquals("Blue apes on skyscrapers.", result3.get(1)[3]);
 
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Active Object successful! Elapsed time: {} s", elapsedSeconds);
 
     }
@@ -138,7 +138,7 @@ public class ActiveObjectTest {
         assertTrue(future1.isQueryCancelled());
         assertSame(QueryRequestFuture.NO_RESULT, future1.getResult());
 
-        String elapsedSeconds = MiscUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
+        String elapsedSeconds = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Active Object cancel successful! Elapsed time: {} s", elapsedSeconds);
 
     }

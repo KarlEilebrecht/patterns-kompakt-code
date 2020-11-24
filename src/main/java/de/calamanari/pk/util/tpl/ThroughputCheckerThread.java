@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
 import de.calamanari.pk.util.tpl.ThroughputEvent.Timing;
 
 /**
@@ -116,8 +116,8 @@ public final class ThroughputCheckerThread extends Thread {
     private long doWait() throws InterruptedException {
         long waitNanos = intervalTimeNanos - lastCheckOperationTimeNanos;
         if (waitNanos > 0) {
-            long waitMillis = waitNanos / MiscUtils.MILLION;
-            long remainingWaitNanos = waitNanos - (waitMillis * MiscUtils.MILLION);
+            long waitMillis = waitNanos / TplConstants.MILLION;
+            long remainingWaitNanos = waitNanos - (waitMillis * TplConstants.MILLION);
             Thread.sleep(waitMillis, (int) remainingWaitNanos);
         }
         return waitNanos;
@@ -135,7 +135,7 @@ public final class ThroughputCheckerThread extends Thread {
             long overloadNanos = instance.overloadNanos.get();
             OverloadState state = instance.overloadState.get();
             ThroughputEvent event = null;
-            long nowNanoTime = MiscUtils.getSystemUptimeNanos();
+            long nowNanoTime = TimeUtils.getSystemUptimeNanos();
             boolean overload = (state != OverloadState.NOT_OVERLOADED);
             if (lastEvent == null) {
                 event = new ThroughputEvent(new Timing(nowNanoTime, 0, 0), passedCount, deniedCount, 0, 0, overload);
@@ -172,11 +172,11 @@ public final class ThroughputCheckerThread extends Thread {
         long totalElapsedNanos = nowNanoTime - firstCheckTimeNanos;
         double totalPerSecondThroughput = 0;
         if (totalElapsedNanos > 0) {
-            totalPerSecondThroughput = (((double) (passedCount - firstCheckTimePassedCount)) / totalElapsedNanos) * MiscUtils.BILLION;
+            totalPerSecondThroughput = (((double) (passedCount - firstCheckTimePassedCount)) / totalElapsedNanos) * TplConstants.BILLION;
         }
         double currentPerSecondThroughput = 0;
         if (intervalNanos > 0) {
-            currentPerSecondThroughput = (((double) (passedCount - lastEvent.passedCount)) / intervalNanos) * MiscUtils.BILLION;
+            currentPerSecondThroughput = (((double) (passedCount - lastEvent.passedCount)) / intervalNanos) * TplConstants.BILLION;
         }
         if (overload) {
             overloadNanos = computeOverloadNanosWithDelta(nowNanoTime, overloadNanos, overloadStartTimeNanos);
@@ -210,9 +210,9 @@ public final class ThroughputCheckerThread extends Thread {
     /**
      * In overload state we compute the estimated overload nanos including the current delta to the overload start time.
      * 
-     * @param nowNanoTime current time in nanoseconds, see {@link MiscUtils#getSystemUptimeNanos()}
+     * @param nowNanoTime current time in nanoseconds, see {@link TimeUtils#getSystemUptimeNanos()}
      * @param overloadNanos estimated time in nanoseconds the limiter was overloaded during the past interval
-     * @param overloadStartTimeNanos start time in nanoseconds the overload phase started, see {@link MiscUtils#getSystemUptimeNanos()}
+     * @param overloadStartTimeNanos start time in nanoseconds the overload phase started, see {@link TimeUtils#getSystemUptimeNanos()}
      * @return overload time in past interval in nanoseconds
      */
     private long computeOverloadNanosWithDelta(long nowNanoTime, long overloadNanos, long overloadStartTimeNanos) {
