@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,8 +38,6 @@ public class WebMake {
     private static final String CONTENT_PLACEHOLDER = "content::";
 
     private static final String DIRECTORY_PLACEHOLDER = "directory::";
-
-    private static final String ISO_8859_1 = "ISO-8859-1";
 
     private static final String DOT_HTML = ".html";
 
@@ -116,16 +115,16 @@ public class WebMake {
         return rootNode;
     }
 
-    public void run() throws Exception {
+    public void run() throws IOException {
         indexJavaDoc();
         List<RawData> rawDataList = this.loadRawFiles();
         for (RawData item : rawDataList) {
-            LOGGER.info(item.toString());
+            LOGGER.atInfo().addArgument(item::toString).log("{}");
         }
         LOGGER.info("{} items found", rawDataList.size());
         root = createDirectoryTree(rawDataList);
-        LOGGER.info(root.createNodeString("", false, false, "Strukturmuster", "Verteilung", "Integration", "Persistenz", "Datenbankschl&uuml;ssel",
-                "Sonstige Patterns"));
+        LOGGER.atInfo().addArgument(() -> root.createNodeString("", false, false, "Strukturmuster", "Verteilung", "Integration", "Persistenz",
+                "Datenbankschl&uuml;ssel", "Sonstige Patterns")).log("{}");
         rootContent = loadRootContent();
         LOGGER.info(rootContent);
         pkTemplate = loadPkPattern();
@@ -244,7 +243,7 @@ public class WebMake {
                 + "\" " + usemap + "border=\"0\"/>" + mapString + "\n" + indent + "</div>\n" + indent + "<p />";
     }
 
-    private void createRootPage() throws Exception {
+    private void createRootPage() throws IOException {
 
         File outputPath = new File(rootPath, PATTERNS);
         File outputFile = new File(outputPath, "patterns.htm");
@@ -255,7 +254,7 @@ public class WebMake {
         fileContent = fileContent.replace(ROOT_PLACEHOLDER, "");
         fileContent = fileContent.replace(DATE_PLACEHOLDER, today);
         fileContent = fileContent.replace(YEAR_PLACEHOLDER, year);
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), ISO_8859_1))) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.ISO_8859_1))) {
             bw.write(fileContent);
         }
 
@@ -281,7 +280,7 @@ public class WebMake {
         return res;
     }
 
-    private void createCategoryPage(RawData category, List<RawData> rawDataList) throws Exception {
+    private void createCategoryPage(RawData category, List<RawData> rawDataList) throws IOException {
         File outputPath = new File(rootPath, PATTERNS);
         File outputFile = new File(outputPath, category.categoryTechName + DOT_HTML);
 
@@ -305,12 +304,12 @@ public class WebMake {
         fileContent = fileContent.replace(DATE_PLACEHOLDER, today);
         fileContent = fileContent.replace(YEAR_PLACEHOLDER, year);
 
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), ISO_8859_1))) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.ISO_8859_1))) {
             bw.write(fileContent);
         }
     }
 
-    private void createPatternPage(RawData pattern) throws Exception {
+    private void createPatternPage(RawData pattern) throws IOException {
         File outputPath = new File(rootPath, PATTERNS);
         File outputFile = new File(outputPath, pattern.patternTechName + DOT_HTML);
         String directory = root.createNodeString("", false, false, pattern.categoryName, pattern.patternName);
@@ -345,13 +344,13 @@ public class WebMake {
         fileContent = fileContent.replace(DATE_PLACEHOLDER, today);
         fileContent = fileContent.replace(YEAR_PLACEHOLDER, year);
 
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), ISO_8859_1))) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.ISO_8859_1))) {
             bw.write(fileContent);
         }
 
     }
 
-    private void createPages(List<RawData> rawDataList) throws Exception {
+    private void createPages(List<RawData> rawDataList) throws IOException {
         Set<String> writtenCategories = new HashSet<>();
         for (RawData data : rawDataList) {
             if (!writtenCategories.contains(data.categoryName)) {
@@ -393,12 +392,12 @@ public class WebMake {
         return sb.toString();
     }
 
-    private String loadRootContent() throws Exception {
+    private String loadRootContent() throws IOException {
         StringBuilder sb = new StringBuilder();
         File rawRootPath = new File(rootPath, "patterns/raw");
         File rootContentFile = new File(rawRootPath, "zz_root.htm");
         String line = null;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rootContentFile), ISO_8859_1))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rootContentFile), StandardCharsets.ISO_8859_1))) {
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 if (line.length() > 0) {
@@ -412,12 +411,12 @@ public class WebMake {
         return sb.toString();
     }
 
-    private String loadPkPattern() throws Exception {
+    private String loadPkPattern() throws IOException {
         StringBuilder sb = new StringBuilder();
         File rawRootPath = new File(rootPath, "patterns/templates");
         File rootContentFile = new File(rawRootPath, "patterns-template.html");
         String line = null;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rootContentFile), ISO_8859_1))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rootContentFile), StandardCharsets.ISO_8859_1))) {
             while ((line = br.readLine()) != null) {
                 line = line.trim();
                 if (sb.length() > 0) {
@@ -430,7 +429,7 @@ public class WebMake {
 
     }
 
-    private List<RawData> loadRawFiles() throws Exception {
+    private List<RawData> loadRawFiles() throws IOException {
         List<RawData> res = new ArrayList<>();
         File rawRootPath = new File(rootPath, "patterns/raw");
         File[] rawFiles = rawRootPath.listFiles();
@@ -440,7 +439,7 @@ public class WebMake {
                 data.patternTechName = rawFile.getName().substring(0, rawFile.getName().length() - 5);
                 res.add(data);
                 String line = null;
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rawFile), ISO_8859_1))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rawFile), StandardCharsets.ISO_8859_1))) {
                     while ((line = br.readLine()) != null) {
                         processRawLine(br, line, data);
                     }
@@ -452,7 +451,7 @@ public class WebMake {
         return res;
     }
 
-    private void processRawLine(BufferedReader br, String line, RawData data) throws Exception {
+    private void processRawLine(BufferedReader br, String line, RawData data) throws IOException {
         line = line.trim();
         if (line.length() > 0) {
             if (line.startsWith("ord::")) {
@@ -477,7 +476,7 @@ public class WebMake {
         }
     }
 
-    private void parsePatternDetailsFromRawLine(BufferedReader br, RawData data, String line) throws Exception {
+    private void parsePatternDetailsFromRawLine(BufferedReader br, RawData data, String line) throws IOException {
         String h4 = extractReadAhead(line, br, "<h4>");
         if (h4 != null) {
             data.patternDescription = escape(h4);
@@ -496,7 +495,7 @@ public class WebMake {
         data.categoryTechName = categoryTechName;
     }
 
-    private String extractReadAhead(String line, BufferedReader br, String tagName) throws Exception {
+    private String extractReadAhead(String line, BufferedReader br, String tagName) throws IOException {
         String res = null;
         String tagNameClose = "</" + tagName.substring(1);
         if (line.startsWith(tagName)) {
@@ -640,13 +639,13 @@ public class WebMake {
         private void addSubNodeStrings(String indent, boolean linkFromRootFolder, List<String> selectedNodesCollection, StringBuilder res,
                 String... selectedNodes) {
             if (rootFlag || selectedNodesCollection.contains(name)) {
-                if (rootFlag && subNodes.size() > 0) {
+                if (rootFlag && !subNodes.isEmpty()) {
                     res.append("\n");
                     for (DirNode node : subNodes) {
                         res.append(node.createNodeString(indent, false, linkFromRootFolder, selectedNodes) + "\n");
                     }
                 }
-                else if (subNodes.size() > 0) {
+                else if (!subNodes.isEmpty()) {
                     res.append("\n" + indent + DEFAULT_INDENT + "<ul>\n");
                     for (DirNode node : subNodes) {
                         res.append(node.createNodeString(indent + DEFAULT_INDENT + DEFAULT_INDENT, false, linkFromRootFolder, selectedNodes) + "\n");
