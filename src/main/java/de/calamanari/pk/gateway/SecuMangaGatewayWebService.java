@@ -27,9 +27,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
+import jakarta.jws.WebMethod;
+import jakarta.jws.WebService;
+import jakarta.jws.soap.SOAPBinding;
 
 /**
  * Secu Manga Gateway Web Service is the server-side implementation of the web service, the server-part of GATEWAY.<br>

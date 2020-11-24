@@ -23,13 +23,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.xml.ws.Endpoint;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.AbstractConsoleServer;
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.TimeUtils;
+import jakarta.xml.ws.Endpoint;
 
 /**
  * The SecuManga Gateway provides access to the fictional native legacy SecuManga security library.
@@ -122,6 +121,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
     /**
      * reference to service endpoint
      */
+    @SuppressWarnings("java:S3077")
     protected volatile Endpoint serviceEndpoint;
 
     /**
@@ -174,7 +174,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
     @Override
     protected void doRequestProcessing() {
         while (true) {
-            MiscUtils.sleepIgnoreException(REQUEST_DELAY_MILLIS);
+            TimeUtils.sleepIgnoreException(REQUEST_DELAY_MILLIS);
             if (getServerState() != ServerState.ONLINE) {
                 break;
             }
