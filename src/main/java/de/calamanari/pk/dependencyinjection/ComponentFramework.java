@@ -109,6 +109,7 @@ public final class ComponentFramework {
      * @throws InvocationTargetException injection method or field could not be invoked
      * @throws NoSuchMethodException if constructor unavailable
      */
+    @SuppressWarnings("java:S3011")
     private static Component createAndPerformSetterOrAnnotationBasedInjection(String componentIdentifier, Class<? extends Component> componentClass)
             throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Component component = null;
@@ -231,6 +232,7 @@ public final class ComponentFramework {
      * @param cl class to be reflected
      * @return appropriate field or null
      */
+    @SuppressWarnings("java:S3011")
     private static Field getInjectionField(Class<?> cl) {
         try {
             Field[] fields = cl.getDeclaredFields();

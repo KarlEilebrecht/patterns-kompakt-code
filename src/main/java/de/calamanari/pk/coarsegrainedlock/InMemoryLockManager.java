@@ -354,7 +354,7 @@ public final class InMemoryLockManager {
 
         boolean haveReleased = false;
 
-        if (lockOwnerIds.size() > 0) {
+        if (!lockOwnerIds.isEmpty()) {
             LOGGER.debug("{}: preserving read locks owned by others", Thread.currentThread().getName());
             ElementLock newLock = new ElementLock(readLock.getLockType(), elementId, lockOwnerIds, readLock.latch);
             haveReleased = LOCKS.replace(elementId, readLock, newLock);

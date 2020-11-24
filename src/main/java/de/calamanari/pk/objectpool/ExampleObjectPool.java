@@ -79,7 +79,7 @@ public class ExampleObjectPool {
 
         poolLock.lock();
         try {
-            if (idleInstances.size() > 0) {
+            if (!idleInstances.isEmpty()) {
                 LOGGER.debug("{}({}): idle instance available.", this.getClass().getSimpleName(), Thread.currentThread().getName());
                 res = idleInstances.remove(0);
             }

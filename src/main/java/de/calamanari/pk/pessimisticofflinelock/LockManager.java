@@ -484,7 +484,7 @@ public final class LockManager {
         lockOwnerIds = new ArrayList<>(lockOwnerIds);
         lockOwnerIds.remove(ownerId);
 
-        if (lockOwnerIds.size() > 0) {
+        if (!lockOwnerIds.isEmpty()) {
             LOGGER.debug("{}: preserving read locks owned by others", Thread.currentThread().getName());
             // keep element locked
             newLockType = currentLockType;

@@ -48,6 +48,7 @@ public class TeamModel {
     /**
      * observer of this model
      */
+    @SuppressWarnings("java:S3077")
     private volatile TeamModelObserver observer = null;
 
     /**

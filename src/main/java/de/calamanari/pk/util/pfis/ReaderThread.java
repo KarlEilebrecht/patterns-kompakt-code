@@ -28,7 +28,7 @@ import java.util.concurrent.BlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.util.MiscUtils;
+import de.calamanari.pk.util.CloseUtils;
 
 /**
  * The reader thread reads the stream concurrently to the main thread.<br>
@@ -129,7 +129,7 @@ final class ReaderThread extends Thread {
             handleReaderThreadException(ex);
         }
         finally {
-            MiscUtils.closeResourceCatch(fileChannel);
+            CloseUtils.closeResourceCatch(fileChannel);
         }
     }
 

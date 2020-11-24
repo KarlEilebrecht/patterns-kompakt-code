@@ -75,6 +75,7 @@ public class SimpleThreadPool {
     /**
      * Thread group for all managed threads.
      */
+    @SuppressWarnings("java:S3014")
     private final ThreadGroup threadGroup = new ThreadGroup(this.getClass().getSimpleName() + " - Pool Threads");
 
     /**
@@ -192,7 +193,7 @@ public class SimpleThreadPool {
                     threadCount--;
                 }
             }
-            else if (idleThreads.size() == 0 && threadCount < maxThreads) {
+            else if (idleThreads.isEmpty() && threadCount < maxThreads) {
                 for (int i = 0; i < incThreads; i++) {
                     PoolThread thread = createNewPoolThread();
                     idleThreads.add(thread);
@@ -258,6 +259,7 @@ public class SimpleThreadPool {
      * 
      * @return thread group all pool threads belong to
      */
+    @SuppressWarnings("java:S3014")
     public ThreadGroup getThreadGroup() {
         return threadGroup;
     }

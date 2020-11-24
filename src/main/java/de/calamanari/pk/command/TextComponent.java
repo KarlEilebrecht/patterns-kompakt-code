@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TextComponent {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteTextCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TextComponent.class);
 
     /**
      * To keep example simple we just wrap a string builder

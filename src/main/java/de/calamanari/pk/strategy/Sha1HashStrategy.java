@@ -19,6 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.strategy;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ public class Sha1HashStrategy extends HashStrategy {
             try {
                 MessageDigest md = MessageDigest.getInstance("SHA-1");
                 md.reset();
-                md.update(text.getBytes("UTF-8"));
+                md.update(text.getBytes(StandardCharsets.UTF_8));
                 result = convertBytesToHexString(md.digest());
             }
             catch (Exception ex) {

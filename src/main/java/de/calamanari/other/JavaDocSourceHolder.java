@@ -2,7 +2,7 @@ package de.calamanari.other;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class JavaDocSourceHolder {
 
     public JavaDocSourceHolder(File baseDir, File file) throws IOException {
         this.path = file.toPath();
-        List<String> rawLines = Files.readAllLines(path, Charset.forName("UTF-8"));
+        List<String> rawLines = Files.readAllLines(path, StandardCharsets.UTF_8);
 
         List<FileLine> linesLocal = new ArrayList<>(rawLines.size());
         int firstSourceLine = -1;
@@ -120,11 +120,11 @@ public class JavaDocSourceHolder {
     }
 
     public void storeFile() throws IOException {
-        if (lines.size() > 0) {
+        if (!lines.isEmpty()) {
             FileLine lastLine = lines.get(lines.size() - 1);
             lastLine.text = lastLine.text + PK_PROCESSED;
         }
-        Files.write(path, lines, Charset.forName("UTF-8"));
+        Files.write(path, lines, StandardCharsets.UTF_8);
     }
 
     public boolean isAlreadyProcessed() {

@@ -49,6 +49,7 @@ public class PoolThread extends Thread {
     /**
      * Runnable to be executed by the thread. The variable is declared volatile to be sure the thread sees the new content after notification.
      */
+    @SuppressWarnings("java:S3077")
     private volatile Runnable job = null;
 
     /**
@@ -92,7 +93,7 @@ public class PoolThread extends Thread {
      * Starts resp. reactivates the thread to do a job.
      */
     @Override
-    public void start() {
+    public synchronized void start() {
         synchronized (lock) {
             if (this.isAlive()) {
                 if (!disposed) {

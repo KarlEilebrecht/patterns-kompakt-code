@@ -36,7 +36,7 @@ public final class LogUtils {
         // no instances
     }
 
-    public static boolean isLogginEnabled(Logger logger, Level level) {
+    public static boolean isLoggingEnabled(Logger logger, Level level) {
         boolean res = false;
         if (level != null) {
             //@formatter:off
@@ -77,6 +77,24 @@ public final class LogUtils {
                 case ERROR:  logger.error(message, t); break;
             }
             //@formatter:on
+        }
+    }
+
+    /**
+     * Formats the given String in quotes, should the given string be longer then limit, it will be truncated
+     * @param s (null will not be quoted)
+     * @param limit (0 or negative turns off the limit)
+     * @return formatted string in quotes, note: the maximum length of the returned String is <code>limit+6</code>
+     */
+    public static String limitAndQuoteStringForMessage(String s, int limit) {
+        if (s == null) {
+            return "null";
+        }
+        else if (limit > 0 && s.length() > limit) {
+            return "'" + s.substring(0, limit) + " ...'";
+        }
+        else {
+            return "'" + s + "'";
         }
     }
 

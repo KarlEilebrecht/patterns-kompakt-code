@@ -118,7 +118,7 @@ public class MacroPluginFactory {
             throw new RuntimeException("Exception while collecting plugins from " + pluginFolder, ex);
         }
 
-        if (availablePlugins.size() == 0) {
+        if (availablePlugins.isEmpty()) {
             throw new RuntimeException("No Plugin found at " + pluginFolder);
         }
         else {

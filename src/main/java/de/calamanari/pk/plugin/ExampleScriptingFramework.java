@@ -21,7 +21,7 @@ package de.calamanari.pk.plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,7 +100,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
         LOGGER.debug("{}.executeScriptFile({}) called.", this.getClass().getSimpleName(), scriptFile);
         List<String> lines = null;
         try {
-            lines = Files.readAllLines(scriptFile.toPath(), Charset.forName("ISO-8859-1"));
+            lines = Files.readAllLines(scriptFile.toPath(), StandardCharsets.ISO_8859_1);
         }
         catch (IOException ex) {
             throw new RuntimeException(ex);
