@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.bridge.Address;
+import de.calamanari.pk.bridge.ConnectorException;
 import de.calamanari.pk.bridge.Person;
 import de.calamanari.pk.bridge.PersonDataConnectorImp;
 
@@ -118,7 +119,7 @@ public class MultiGlomPersonDataConnectorImp implements PersonDataConnectorImp {
             this.personDb.put(person.getId(), person);
         }
         else {
-            throw new RuntimeException("Unable to update " + person + " (no such entry).");
+            throw new ConnectorException("Unable to update " + person + " (no such entry).");
         }
     }
 
@@ -129,7 +130,7 @@ public class MultiGlomPersonDataConnectorImp implements PersonDataConnectorImp {
             this.addressDb.put(address.getId(), address);
         }
         else {
-            throw new RuntimeException("Unable to update " + address + " (no such entry).");
+            throw new ConnectorException("Unable to update " + address + " (no such entry).");
         }
     }
 
