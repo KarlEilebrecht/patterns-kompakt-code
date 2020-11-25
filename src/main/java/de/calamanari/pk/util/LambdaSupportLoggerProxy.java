@@ -27,15 +27,15 @@ import org.slf4j.event.Level;
 import org.slf4j.spi.LoggingEventBuilder;
 
 /**
- * Adapter with support for lambdas as arguments to the common logging methods of SLF4J Logger.
+ * Proxy with support for lambdas as arguments to the common logging methods of SLF4J Logger.
  * <p>
  * <b>Usage:</b>
  * <ul>
  * <li>Wrap the logger: <code>private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(DataManager.class));</code></li>
- * <li>Import the defer(...)-method: <code>import static &lt;...&gt;>.LambdaSupportLoggerProxy.defer;</code></li>
+ * <li>Import the defer(...)-method: <code>import static ..LambdaSupportLoggerProxy.defer;</code></li>
  * <li>Use the LOGGER as usual (no interface change).</li>
- * <li>Whenever you need a lambda-expression to be evaluated lately, pass the lambda as an argument using defer(...), example:
- * <code>LOGGER.debug("Instance of type {} found: @{}, id={}", type, <b><i>defer</i>(() -> Integer.toHexString(res.hashCode()))</b>, id);</code></li>
+ * <li>Whenever you need a lambda-expression to be evaluated lately, pass the lambda as an argument using <code>defer(<i>expression</i>)</code>, example:
+ * <code>LOGGER.debug("Instance of type {} found: @{}, id={}", type, <b><i>defer</i>(() -> Integer.toHexString(element.hashCode()))</b>, id);</code></li>
  * </ul>
  * <p>
  * <b>Motivation and implications:</b>
@@ -44,26 +44,26 @@ import org.slf4j.spi.LoggingEventBuilder;
  * Some of my logging statements contained computed data. This computation effort should not be spent if the the corresponding log level is disabled. There is
  * an obvious way to deal with this: surround the logging statements with <code>if (LOGGER.isDebugEnabled() {...}</code> which creates two extra lines and is
  * error-prone as the level "debug" is now specified twice, in the condition and in the log-method-name (redundancy).<br>
- * However, for quite a while lambdas are around, so enthusiastically I looked for a newer version of slf4 or so and got disappointed.<br>
- * While the top dog Log4j2 has introduced basic lambda support (basic because the mix with regular arguments still looks clumsy), SLF4J only integrated it in
- * the new fluent-API. The fluent-API may be a great piece of work, however, I found several problems adopting it:
+ * However, for quite a while lambdas are around, so enthusiastically I looked for a newer version of slf4 or so and could not get satisfied.<br>
+ * While the top dog Log4j2 has introduced basic lambda support, SLF4J only integrated it in the new fluent-API. The fluent-API may be a great piece of work,
+ * however, I found several problems adopting it:
  * <ul>
  * <li>Due to architectural reasons the implementation had to go into the logger implementation, so effective lambda support depends on the adapter - or worse -
  * its precise version. In my case lockback-classic 1.3.0-alpha<b>4</b> with slf4j 2.0.0-alpha1 worked, 1.3.0-alpha<b>5</b> surprisingly did not. Such things
  * make me nervous.<br>
  * &nbsp;</li>
- * <li>The fluent API changes the look of log statements drastically and they are a (IMHO) verbose. Example:
- * <code>LOGGER.debug("Processing arguments a={}, b={}, c={}", a, b, c);</code> is very clear to read. Now we want to add <i>d</i> which shall be a lambda.
+ * <li>The fluent API changes the look of log statements drastically. Example: <code>LOGGER.debug("Processing arguments a={}, b={}, c={}", a, b, c);</code> is
+ * very clear to read. Now we want to add <i>d</i> which shall be a lambda.
  * <code>LOGGER.atDebug().addAgument(()->computeD()).log("Processing arguments d={} a={}, b={}, c={}", a, b, c);</code><br>
- * Hmm, but what if <i>d</i> should go last or if I want to mix arguments? I end up with anything like this:
+ * Hmm, but what if <i>d</i> should go last or if I wanted to mix arguments? I would end up with anything like this:
  * <code>LOGGER.atDebug().addArgument(a).addArgument(b).addArgument(c).addAgument(()->computeD()).log("Processing arguments d={} a={}, b={}, c={}");</code><br>
- * For new projects people might get used to the new style, for existing projects it is not easy to deal with different styles.</li>
+ * For new projects people might get used to this style, for existing projects with many existing classes it is not easy to deal with different styles.</li>
  * </ul>
  * <p>
- * In a moment of hubris I thought it should not be that complicated to quickly change the logger implementation to test every Object argument for being a
- * Supplier<?> and evaluate it only if the log-level is active. So, I decided to dig a little bit and read through some discussions and blogs. Soon, I realized
- * all the problems the logger implementors are fighting with. This is indeed a hard nut to crack. The user (means us, the developers) has a seemingly simple
- * request to specify a lambda <i>on demand</i> without any changes to the API of the logger or the style for writing log statements.<br>
+ * In a moment of hubris I thought it should not be that complicated to quickly change the logger implementation to simply test every Object argument for being
+ * a Supplier&lt;?&gt; and evaluate it only if the log-level is active. So, I decided to dig a little bit and read through some discussions and blogs. Soon, I
+ * realized all the problems the logger implementors are fighting with. This is indeed a hard nut to crack. The user (means us, the developers) has a seemingly
+ * simple request to specify a lambda <i>on demand</i> without any changes to the API of the logger or the style for writing log statements.<br>
  * Thus, the ultimate goal would be writing <code>LOGGER.debug("Processing arguments a={}, b={}, c={}, d={}", a, b, c, ()->computeD());</code>. Unfortunately,
  * this does not work with the current interface due to Java's implementation of lambdas requiring the specification of a Supplier&lt;?&gt;. The first problem
  * to solve is the question how to get the Supplier arguments in without getting too verbose.<br>
@@ -72,18 +72,20 @@ import org.slf4j.spi.LoggingEventBuilder;
  * require more than 5 log parameters. A Java class can have thousands of methods without any runtime performance impact, but IDEs (code assist) are probably
  * not so happy with such a method variety. You should also be aware that IDE code analysis and SonaType magic may no longer be able to give all the useful
  * hints (like missing parameters) if you change the interface using a logger ADAPTER with an enriched interface. And finally, we do not want all these methods
- * to be part of the Logger <i>interface</i>. Anyway, a test has shown this approach works and would give the user exactly what she wants.
+ * to be part of the Logger <i>interface</i>. Anyway, a test has shown this approach would work and would give the user exactly what she wants, but I don't like
+ * the implications.
+ * <p>
+ * Back to the drawing board ...
  * <p>
  * Hmm, what if we don't make it <i>perfect</i>? Is there any reasonable compromise? I think yes, if we accepted a little bit more code to specify a lambda as
  * an Object argument. Casting is possible but inconvenient:
- * <code>LOGGER.debug("Processing arguments a={}, b={}, c={}, d={}", a, b, c, (Supplier<?>) ()->computeD());</code><br>
+ * <code>LOGGER.debug("Processing arguments a={}, b={}, c={}, d={}", a, b, c, (Supplier&lt;?&gt;) ()->computeD());</code><br>
  * Default code assist won't help and user-defined IDE-macros are not everybody's favorite. The solution I can live with is the <i>defer()</i>-method, which
- * just performs an implicit cast to Object. Reminder: If you hate that, consider the above mentioned ADAPTER approach with many generated methods. It is always
- * a trade-off ...
+ * just performs an implicit cast to Object.
  * <p>
- * Coming back to the original challenge there is a second problem: Where should we evaluate the lambdas? Logger is an interface. So, adding the new behavior
- * would mean adjusting <i>every</i> implementation class. My problem with the logback implementation and the fluent-API above shows that this is not trivial.
- * At least for a POC this was too much work. Instead I decided to implement a PROXY (we add behavior and let the interface as-is) that deals with the
+ * Coming back to the original challenge there is a second problem to solve: Where should we evaluate the lambdas? Logger is an interface. So, adding the new
+ * behavior would mean adjusting <i>every</i> implementation class. My earlier problem with the logback implementation and the fluent-API shows that this is not
+ * trivial. At least for a POC this was too much work. Instead I decided to implement a PROXY (we add behavior and let the interface as-is) that deals with the
  * Supplier&lt;?&gt;-arguments to resolve them if - and only if - the log level is active. Then the PROXY delegates the remaining work to the underlying real
  * logger.
  * <p>
