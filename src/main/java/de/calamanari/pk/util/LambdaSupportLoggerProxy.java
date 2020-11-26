@@ -27,103 +27,55 @@ import org.slf4j.event.Level;
 import org.slf4j.spi.LoggingEventBuilder;
 
 /**
- * Proxy with support for lambdas as arguments to the common logging methods of SLF4J Logger.
+ * {@link LambdaSupportLoggerProxy} is a PROXY to easier support lambda expressions as arguments to the SLF4J-Logger's logging methods.
  * <p>
  * <b>Usage:</b>
  * <ul>
- * <li>Wrap the logger: <code>private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(DataManager.class));</code></li>
- * <li>Import the defer(...)-method: <code>import static ..LambdaSupportLoggerProxy.defer;</code></li>
+ * <li>Import the defer(...)-method: <code>import static {@link de.calamanari.pk.util.LambdaSupportLoggerProxy#defer(Supplier)};</code></li>
+ * <li>Wrap your logger: <code>private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(DataManager.class));</code></li>
  * <li>Use the LOGGER as usual (no interface change).</li>
  * <li>Whenever you need a lambda-expression to be evaluated lately, pass the lambda as an argument using <code>defer(<i>expression</i>)</code>, example:
  * <code>LOGGER.debug("Instance of type {} found: @{}, id={}", type, <b><i>defer</i>(() -> Integer.toHexString(element.hashCode()))</b>, id);</code></li>
  * </ul>
  * <p>
- * <b>Motivation and implications:</b>
+ * <b>Side Notes:</b>
  * <p>
- * The journey started with SonaType complaints of the type <code>java:S2629</code> "Invoke method(s) only conditionally.".<br>
- * Some of my logging statements contained computed data. This computation effort should not be spent if the the corresponding log level is disabled. There is
- * an obvious way to deal with this: surround the logging statements with <code>if (LOGGER.isDebugEnabled() {...}</code> which creates two extra lines and is
- * error-prone as the level "debug" is now specified twice, in the condition and in the log-method-name (redundancy).<br>
- * However, for quite a while lambdas are around, so enthusiastically I looked for a newer version of slf4 or so and could not get satisfied.<br>
- * While the top dog Log4j2 has introduced basic lambda support, SLF4J only integrated it in the new fluent-API. The fluent-API may be a great piece of work,
- * however, I found several problems adopting it:
+ * This work was part of a POC after reading through various discussions and blog-posts, for example:
  * <ul>
- * <li>Due to architectural reasons the implementation had to go into the logger implementation, so effective lambda support depends on the adapter - or worse -
- * its precise version. In my case lockback-classic 1.3.0-alpha<b>4</b> with slf4j 2.0.0-alpha1 worked, 1.3.0-alpha<b>5</b> surprisingly did not. Such things
- * make me nervous.<br>
- * &nbsp;</li>
- * <li>The fluent API changes the look of log statements drastically. Example: <code>LOGGER.debug("Processing arguments a={}, b={}, c={}", a, b, c);</code> is
- * very clear to read. Now we want to add <i>d</i> which shall be a lambda.
- * <code>LOGGER.atDebug().addAgument(()->computeD()).log("Processing arguments d={} a={}, b={}, c={}", a, b, c);</code><br>
- * Hmm, but what if <i>d</i> should go last or if I wanted to mix arguments? I would end up with anything like this:
- * <code>LOGGER.atDebug().addArgument(a).addArgument(b).addArgument(c).addAgument(()->computeD()).log("Processing arguments d={} a={}, b={}, c={}");</code><br>
- * For new projects people might get used to this style, for existing projects with many existing classes it is not easy to deal with different styles.</li>
+ * <li><a href=
+ * "https://stackoverflow.com/questions/41255503/lambda-support-for-slf4j-api">https://stackoverflow.com/questions/41255503/lambda-support-for-slf4j-api</a></li>
+ * <li><a href= "https://jira.qos.ch/browse/SLF4J-371">https://jira.qos.ch/browse/SLF4J-371</a></li>
  * </ul>
  * <p>
- * In a moment of hubris I thought it should not be that complicated to quickly change the logger implementation to simply test every Object argument for being
- * a Supplier&lt;?&gt; and evaluate it only if the log-level is active. So, I decided to dig a little bit and read through some discussions and blogs. Soon, I
- * realized all the problems the logger implementors are fighting with. This is indeed a hard nut to crack. The user (means us, the developers) has a seemingly
- * simple request to specify a lambda <i>on demand</i> without any changes to the API of the logger or the style for writing log statements.<br>
- * Thus, the ultimate goal would be writing <code>LOGGER.debug("Processing arguments a={}, b={}, c={}, d={}", a, b, c, ()->computeD());</code>. Unfortunately,
- * this does not work with the current interface due to Java's implementation of lambdas requiring the specification of a Supplier&lt;?&gt;. The first problem
- * to solve is the question how to get the Supplier arguments in without getting too verbose.<br>
- * To achieve the ideal interface (from user perspective) I found no other way than creating <i>argument list permutations</i>. Every argument can be either an
- * Object or a Supplier&lt;?&gt;. A test has shown that we need to add (generate) hundreds of methods when we assume that a reasonable log statement won't
- * require more than 5 log parameters. A Java class can have thousands of methods without any runtime performance impact, but IDEs (code assist) are probably
- * not so happy with such a method variety. You should also be aware that IDE code analysis and SonaType magic may no longer be able to give all the useful
- * hints (like missing parameters) if you change the interface using a logger ADAPTER with an enriched interface. And finally, we do not want all these methods
- * to be part of the Logger <i>interface</i>. Anyway, a test has shown this approach would work and would give the user exactly what she wants, but I don't like
- * the implications.
+ * I read between the lines that the fluent-API is a decent solution but many users (including me) were looking for any simpler
+ * <i>drop-in-and-be-happy-solution</i>.
  * <p>
- * Back to the drawing board ...
- * <p>
- * Hmm, what if we don't make it <i>perfect</i>? Is there any reasonable compromise? I think yes, if we accepted a little bit more code to specify a lambda as
- * an Object argument. Casting is possible but inconvenient:
- * <code>LOGGER.debug("Processing arguments a={}, b={}, c={}, d={}", a, b, c, (Supplier&lt;?&gt;) ()->computeD());</code><br>
- * Default code assist won't help and user-defined IDE-macros are not everybody's favorite. The solution I can live with is the <i>defer()</i>-method, which
- * just performs an implicit cast to Object.
- * <p>
- * Coming back to the original challenge there is a second problem to solve: Where should we evaluate the lambdas? Logger is an interface. So, adding the new
- * behavior would mean adjusting <i>every</i> implementation class. My earlier problem with the logback implementation and the fluent-API shows that this is not
- * trivial. At least for a POC this was too much work. Instead I decided to implement a PROXY (we add behavior and let the interface as-is) that deals with the
- * Supplier&lt;?&gt;-arguments to resolve them if - and only if - the log level is active. Then the PROXY delegates the remaining work to the underlying real
- * logger.
- * <p>
- * <b>Advantages:</b>
- * <p>
+ * This implementation is the best compromise I could find:
  * <ul>
  * <li>Minimally invasive: decision to use it or not can be made per class.</li>
  * <li>Lambdas can be specified on demand.</li>
  * <li>Simple logging statements remain clear and short, lambda-enriched statements have a still acceptable level of complexity.</li>
- * <li>We do not change the interface, we do not change the existing usage paradigm.</li>
+ * <li>We do not change the interface of the Logger, we do not change the existing logger usage paradigm.</li>
  * <li>Code analysis tools (like code helper or SonaType) are not impacted at all.</li>
- * <li>This solution can easily be back-ported for any older slf4j-version.</li>
+ * <li>The caller depth output (i.e. <a href="https://logback.qos.ch/manual/layouts.html">https://logback.qos.ch/manual/layouts.html</a>) may change (+1)
+ * because the call to the real logger now comes from inside the PROXY.</li>
+ * <li>The thin proxy layer adds minimal extra effort for testing all log arguments. Potentially, this may have an impact on scenarios with enabled logger and
+ * super-high throughput.</li>
+ * <li>This solution is a trade-off between 3 factors:
+ * <ul>
+ * <li><b>usability:</b> The original request was <i>simply specifying a lambda expressions as a log argument on demand</i>. This implementation almost
+ * satisfies this requirement as the <i>defer()</i>-method might be perceived as a penalty.</li>
+ * <li><b>continuity:</b> Except from the impact on the caller depth this solution is close to perfect: the user needs to do a minimal code adjustment when
+ * declaring the logger.</li>
+ * <li><b>effort:</b> Implementation effort was rather low. We accept some additional general runtime effort for argument testing.</li>
  * </ul>
- * <p>
- * <b>Limitations:</b>
- * <p>
- * The implementors of Java lambdas had to make some compromises to make the new language feature compatible to the existing Java world. Especially, the
- * requirement to only use <i>final</i> or <i>effectively final</i> variables in the expression can cause headaches. For logging statements this can be a real
- * pain. We want to write short statements and evaluate computed values only conditionally. All the efforts like this class or the fluent-API or the new methods
- * in Log4j2 target these goal. But none of them can eliminate the <i>final</i> or <i>effectively final</i> problem. <br>
- * Example: <code>LOGGER.debug("Instance found: @{}", Integer.toHexString(res.hashCode()));</code><br>
- * SonaType complains that we should do the computation <code>Integer.toHexString(res.hashCode())</code> only conditionally. Makes sense ...<br>
- * <code>LOGGER.debug("Instance found: @{}", defer(() -> Integer.toHexString(res.hashCode())));</code> <b>does not compile!</b><br>
- * The problem is now the variable "res" which is NOT (effectively) final. It is a typical result variable to ensure the method has exactly one return.<br>
- * In this example I could fix this:<br>
- * <code>final var resLog = res;</code><br>
- * <code>LOGGER.debug("Instance found: @{}", Integer.toHexString(resLog.hashCode()));</code><br>
- * This is not beautiful because a line of code has been added which seemingly does not contribute anything to the method's logic.
- * <p>
- * <b>Conclusion:</b>
- * <p>
- * This POC has shown that the idea works. I can use now lambdas for logging with minimal effort. But it seems, there is no ideal solution.<br>
- * Even if you implemented the ADAPTER solution with hundreds of methods and adjusted all code helpers and SonaType rules, the <i>(effectively) final
- * problem</i> won't go away.
- * <p>
- * Whatever logger you use, this is currently the price you have to pay: more and unrelated code to perform the logging with lambdas.
- * <p>
- * Maybe sometimes a simple <code>if (LOGGER.isDebugEnabled()) {...}</code> is just the better deal. <b>:)</b>
+ * Another POC has shown that better <b>usability</b> (eliminate need for the <i>defer()</i>-method can be achieved by implementing an ADAPTER (generated code
+ * with a few hundred methods using argument permutation), but this would come at a high price: The implementation effort would be quite high, and we would
+ * definitely break <b>continuity</b>. Tests with such an adapter indicated that IDE code assist and analysis features (SonaType) out-of-the-box won't work with
+ * the adapter in the same way they do with the plain logger. It is also questionable how IDEs react on classes with hundreds of methods. However, the runtime
+ * (evaluation) effort would be smaller because unlike the PROXY-solution the ADAPTER-implementation with argument permutation won't require any argument
+ * testing.
+ * </ul>
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
@@ -173,8 +125,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.trace(msg);
     }
 
-    public void trace(String format, Object arg) {
-        logger.trace(format, eval(format, arg, 1, isTraceEnabled()));
+    public void trace(String format, Object arg1) {
+        logger.trace(format, eval(format, arg1, 1, isTraceEnabled()));
     }
 
     public void trace(String format, Object arg1, Object arg2) {
@@ -202,8 +154,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.trace(marker, msg);
     }
 
-    public void trace(Marker marker, String format, Object arg) {
-        logger.trace(marker, format, eval(format, arg, 1, isTraceEnabled(marker)));
+    public void trace(Marker marker, String format, Object arg1) {
+        logger.trace(marker, format, eval(format, arg1, 1, isTraceEnabled(marker)));
     }
 
     public void trace(Marker marker, String format, Object arg1, Object arg2) {
@@ -226,8 +178,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.debug(msg);
     }
 
-    public void debug(String format, Object arg) {
-        logger.debug(format, eval(format, arg, 1, isDebugEnabled()));
+    public void debug(String format, Object arg1) {
+        logger.debug(format, eval(format, arg1, 1, isDebugEnabled()));
     }
 
     public void debug(String format, Object arg1, Object arg2) {
@@ -250,8 +202,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.debug(marker, msg);
     }
 
-    public void debug(Marker marker, String format, Object arg) {
-        logger.debug(marker, format, eval(format, arg, 1, isDebugEnabled(marker)));
+    public void debug(Marker marker, String format, Object arg1) {
+        logger.debug(marker, format, eval(format, arg1, 1, isDebugEnabled(marker)));
     }
 
     public void debug(Marker marker, String format, Object arg1, Object arg2) {
@@ -279,8 +231,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.info(msg);
     }
 
-    public void info(String format, Object arg) {
-        logger.info(format, eval(format, arg, 1, isInfoEnabled()));
+    public void info(String format, Object arg1) {
+        logger.info(format, eval(format, arg1, 1, isInfoEnabled()));
     }
 
     public void info(String format, Object arg1, Object arg2) {
@@ -303,8 +255,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.info(marker, msg);
     }
 
-    public void info(Marker marker, String format, Object arg) {
-        logger.info(marker, format, eval(format, arg, 1, isInfoEnabled(marker)));
+    public void info(Marker marker, String format, Object arg1) {
+        logger.info(marker, format, eval(format, arg1, 1, isInfoEnabled(marker)));
     }
 
     public void info(Marker marker, String format, Object arg1, Object arg2) {
@@ -332,16 +284,16 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.warn(msg);
     }
 
-    public void warn(String format, Object arg) {
-        logger.warn(format, eval(format, arg, 1, isWarnEnabled()));
-    }
-
-    public void warn(String format, Object... arguments) {
-        logger.warn(format, eval(format, arguments, 1, isWarnEnabled()));
+    public void warn(String format, Object arg1) {
+        logger.warn(format, eval(format, arg1, 1, isWarnEnabled()));
     }
 
     public void warn(String format, Object arg1, Object arg2) {
         logger.warn(format, eval(format, arg1, 1, isWarnEnabled()), eval(format, arg2, 2, isWarnEnabled()));
+    }
+
+    public void warn(String format, Object... arguments) {
+        logger.warn(format, eval(format, arguments, 1, isWarnEnabled()));
     }
 
     public void warn(String msg, Throwable t) {
@@ -356,8 +308,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.warn(marker, msg);
     }
 
-    public void warn(Marker marker, String format, Object arg) {
-        logger.warn(marker, format, eval(format, arg, 1, isWarnEnabled(marker)));
+    public void warn(Marker marker, String format, Object arg1) {
+        logger.warn(marker, format, eval(format, arg1, 1, isWarnEnabled(marker)));
     }
 
     public void warn(Marker marker, String format, Object arg1, Object arg2) {
@@ -385,8 +337,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.error(msg);
     }
 
-    public void error(String format, Object arg) {
-        logger.error(format, eval(format, arg, 1, isErrorEnabled()));
+    public void error(String format, Object arg1) {
+        logger.error(format, eval(format, arg1, 1, isErrorEnabled()));
     }
 
     public void error(String format, Object arg1, Object arg2) {
@@ -409,8 +361,8 @@ public class LambdaSupportLoggerProxy implements Logger {
         logger.error(marker, msg);
     }
 
-    public void error(Marker marker, String format, Object arg) {
-        logger.error(marker, format, eval(format, arg, 1, isErrorEnabled(marker)));
+    public void error(Marker marker, String format, Object arg1) {
+        logger.error(marker, format, eval(format, arg1, 1, isErrorEnabled(marker)));
     }
 
     public void error(Marker marker, String format, Object arg1, Object arg2) {
@@ -450,9 +402,7 @@ public class LambdaSupportLoggerProxy implements Logger {
             catch (RuntimeException ex) {
                 res = "SUPPLIER_EVAL_ERROR_ARG_" + argNumber;
                 // potential supplier complexity requires option to "debug the logging"
-                if (logger.isTraceEnabled()) {
-                    logger.trace("Evaluation of Supplier<?> failed at log argument {} for message '{}'", argNumber, format, ex);
-                }
+                logger.trace("Evaluation of Supplier<?> failed for log method argument {} (after format) for message '{}'", argNumber, format, ex);
             }
         }
         return res;
