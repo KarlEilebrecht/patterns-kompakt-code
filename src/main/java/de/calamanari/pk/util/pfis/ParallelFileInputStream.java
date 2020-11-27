@@ -557,7 +557,7 @@ public final class ParallelFileInputStream extends InputStream {
     /**
      * On Windows the JVM has a problem to release files that were mapped to a channel after the channel was closed properly.<br/>
      * As a consequence the files cannot be deleted while the JVM is still running.<br/>
-     * The only known workaround (successful most of the time) is calling System.gc() - the reason why I suppress Sonar's complaint squid:S1215 here.
+     * The only known workaround (successful most of the time) is calling System.gc() - the reason why I suppress SonarLint's complaint squid:S1215 here.
      * <p>
      * See <a href= "https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154">https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154</a>
      */
