@@ -19,6 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.uuid;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -65,6 +67,8 @@ public class UUIDTest {
 
             results.add(req);
         }
+
+        assertEquals(NUMBER_OF_RUNS, results.size());
 
         List<Request> orderedResults = new ArrayList<>(results);
         Collections.sort(orderedResults);

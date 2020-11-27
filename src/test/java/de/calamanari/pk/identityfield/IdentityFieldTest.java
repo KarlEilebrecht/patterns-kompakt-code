@@ -20,7 +20,7 @@
 package de.calamanari.pk.identityfield;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +69,7 @@ public class IdentityFieldTest {
         long startTimeNanos = System.nanoTime();
         Entity e4711 = dataManager.findEntityByXY("Marty", "McFly");
         Entity e4799 = dataManager.findEntityByXY("Ernie", "Bert");
-        assertFalse(e4711.equals(e4799));
+        assertNotEquals(e4711, e4799);
         assertEquals("Entity({id=CompoundKey([47, 11]), x='Marty', y='McFly'})", e4711.toString());
         assertEquals("Entity({id=CompoundKey([47, 99]), x='Ernie', y='Bert'})", e4799.toString());
         String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);

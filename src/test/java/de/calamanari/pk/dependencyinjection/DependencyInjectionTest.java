@@ -19,6 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +49,7 @@ public class DependencyInjectionTest {
 
         for (String componentType : componentTypes) {
             Component component = ComponentFramework.createComponent(componentType);
+            assertNotNull(component);
             component.setData("Run(" + componentType + ")");
             component.printData();
         }

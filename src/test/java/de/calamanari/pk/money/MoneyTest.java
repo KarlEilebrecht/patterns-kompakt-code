@@ -20,8 +20,8 @@
 package de.calamanari.pk.money;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -71,8 +71,8 @@ public class MoneyTest {
         d3 = dd + dd2;
 
         // huh?
-        assertFalse("1.00000000000000000".equals(nf.format(d1)));
-        assertFalse("0.30000000000000000".equals(nf.format(d3)));
+        assertNotEquals("1.00000000000000000", nf.format(d1));
+        assertNotEquals("0.30000000000000000", nf.format(d3));
 
         // the reason is the binary representation
         // computers use internally.
@@ -108,8 +108,8 @@ public class MoneyTest {
         bd3 = bdd.add(bdd2);
 
         // aha, same test as above, but now expected to evaluate to true
-        assertTrue("1.00000000000000000".equals(nf.format(bd1)));
-        assertTrue("0.30000000000000000".equals(nf.format(bd3)));
+        assertEquals("1.00000000000000000", nf.format(bd1));
+        assertEquals("0.30000000000000000", nf.format(bd3));
 
         // But there are further problems:
         // A typical currency system defines different units
@@ -176,7 +176,6 @@ public class MoneyTest {
 
         String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Money Technical Basics successful! Elapsed time: {} s", elapsedTimeString);
-
     }
 
     @Test
