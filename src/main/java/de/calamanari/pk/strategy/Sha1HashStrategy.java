@@ -21,6 +21,7 @@ package de.calamanari.pk.strategy;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,8 +79,8 @@ public class Sha1HashStrategy extends HashStrategy {
                 md.update(text.getBytes(StandardCharsets.UTF_8));
                 result = convertBytesToHexString(md.digest());
             }
-            catch (Exception ex) {
-                throw new RuntimeException("Error applying SHA-1 hash.", ex);
+            catch (NoSuchAlgorithmException | RuntimeException ex) {
+                throw new HashStrategyException("Error applying SHA-1 hash.", ex);
             }
         }
         return result;

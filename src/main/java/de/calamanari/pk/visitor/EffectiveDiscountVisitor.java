@@ -29,6 +29,11 @@ import org.slf4j.LoggerFactory;
  */
 public class EffectiveDiscountVisitor implements EnterpriseVisitor {
 
+    /**
+     * Log message used multiple times, 2 arguments: simple names of the concrete class and and the object to be visited
+     */
+    private static final String MSG_VISIT_CALLED = "{}.visit({}) called";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EffectiveDiscountVisitor.class);
 
     /**
@@ -68,7 +73,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerHolding holding) {
-        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerHolding.class.getSimpleName());
+        LOGGER.debug(MSG_VISIT_CALLED, this.getClass().getSimpleName(), CustomerHolding.class.getSimpleName());
         holdingDiscountPerc = holding.getHoldingDiscountPerc();
     }
 
@@ -79,7 +84,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerCompany company) {
-        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerCompany.class.getSimpleName());
+        LOGGER.debug(MSG_VISIT_CALLED, this.getClass().getSimpleName(), CustomerCompany.class.getSimpleName());
         companyDiscountPerc = company.getDiscountPerc();
         CustomerHolding holding = company.getHolding();
         if (holding != null) {
@@ -94,7 +99,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerDivision division) {
-        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerDivision.class.getSimpleName());
+        LOGGER.debug(MSG_VISIT_CALLED, this.getClass().getSimpleName(), CustomerDivision.class.getSimpleName());
         divisionDiscountPerc = division.getDivisionDiscountPerc();
         CustomerCompany company = division.getCompany();
         if (company != null) {
@@ -109,7 +114,7 @@ public class EffectiveDiscountVisitor implements EnterpriseVisitor {
      */
     @Override
     public void visit(CustomerOrder order) {
-        LOGGER.debug("{}.visit({}) called", this.getClass().getSimpleName(), CustomerOrder.class.getSimpleName());
+        LOGGER.debug(MSG_VISIT_CALLED, this.getClass().getSimpleName(), CustomerOrder.class.getSimpleName());
         this.orderDiscountPerc = order.getSpecialDiscountPerc();
         this.promotionOrderDiscountPerc = calculateEffectivePromotionDiscountPerc(order);
 

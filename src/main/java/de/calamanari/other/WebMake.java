@@ -1,5 +1,7 @@
 package de.calamanari.other;
 
+import static de.calamanari.pk.util.LambdaSupportLoggerProxy.defer;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,6 +27,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.util.LambdaSupportLoggerProxy;
+
 public class WebMake {
 
     private static final String PATTERNS = "patterns";
@@ -41,7 +45,7 @@ public class WebMake {
 
     private static final String DOT_HTML = ".html";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebMake.class);
+    private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(WebMake.class));
 
     private static final Map<Character, String> HTML_ESCAPE = new HashMap<>();
     static {
@@ -119,12 +123,12 @@ public class WebMake {
         indexJavaDoc();
         List<RawData> rawDataList = this.loadRawFiles();
         for (RawData item : rawDataList) {
-            LOGGER.atInfo().addArgument(item::toString).log("{}");
+            LOGGER.info("{}", defer(item::toString));
         }
         LOGGER.info("{} items found", rawDataList.size());
         root = createDirectoryTree(rawDataList);
-        LOGGER.atInfo().addArgument(() -> root.createNodeString("", false, false, "Strukturmuster", "Verteilung", "Integration", "Persistenz",
-                "Datenbankschl&uuml;ssel", "Sonstige Patterns")).log("{}");
+        LOGGER.info("{}", defer(() -> root.createNodeString("", false, false, "Strukturmuster", "Verteilung", "Integration", "Persistenz",
+                "Datenbankschl&uuml;ssel", "Sonstige Patterns")));
         rootContent = loadRootContent();
         LOGGER.info(rootContent);
         pkTemplate = loadPkPattern();

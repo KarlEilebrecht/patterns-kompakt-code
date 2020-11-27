@@ -58,7 +58,7 @@ public class DocumentManagerSecurityProxy implements DocumentManager {
         }
         else {
             LOGGER.debug("Permission denied, call will not be delegated to concrete document manager {}", protectedInstance.getClass().getSimpleName());
-            throw new RuntimeException("Access denied!");
+            throw new DocumentAccessException(String.format("Read access denied to document %s", documentName));
         }
     }
 
@@ -71,7 +71,7 @@ public class DocumentManagerSecurityProxy implements DocumentManager {
         }
         else {
             LOGGER.debug("Permission denied, call will not be delegated to concrete document manager {}", protectedInstance.getClass().getSimpleName());
-            throw new RuntimeException("Access denied!");
+            throw new DocumentAccessException(String.format("Write access denied to document %s", documentName));
         }
     }
 

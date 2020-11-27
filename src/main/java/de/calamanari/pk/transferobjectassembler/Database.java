@@ -19,6 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -270,8 +271,8 @@ public final class Database {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 orderDate = (orderDateISO == null ? null : sdf.parse(orderDateISO));
             }
-            catch (Exception ex) {
-                throw new RuntimeException(ex);
+            catch (ParseException ex) {
+                throw new DatabaseException("Error parsing orderDateISO=" + orderDateISO, ex);
             }
             return orderDate;
         }

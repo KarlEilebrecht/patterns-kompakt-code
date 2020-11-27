@@ -26,6 +26,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.plugin.ExampleScriptingFrameworkException;
 import de.calamanari.pk.plugin.MacroPlugin;
 import de.calamanari.pk.plugin.MacroPluginFramework;
 import de.calamanari.pk.util.FileUtils;
@@ -109,7 +110,7 @@ public class FileMacroPlugin implements MacroPlugin {
         case "createHomeFile":
             return executeMacroCreateHomeFile(args);
         default:
-            throw new RuntimeException("Could not execute macro '" + macroName + "' - unknown macro.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro '" + macroName + "' - unknown macro.");
         }
     }
 
@@ -121,11 +122,11 @@ public class FileMacroPlugin implements MacroPlugin {
      */
     private File executeMacroCreateHomeFile(Object[] args) {
         if (args == null || args.length != 1) {
-            throw new RuntimeException("Could not execute macro 'createHomeFile' - insufficient arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'createHomeFile' - insufficient arguments.");
         }
         Object arg1 = args[0];
         if (!(arg1 instanceof String)) {
-            throw new RuntimeException("Could not execute macro 'createHomeFile' - illegal argument (String expected).");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'createHomeFile' - illegal argument (String expected).");
         }
         return new File(FileUtils.getHomeDirectory(), (String) arg1);
     }
@@ -138,7 +139,7 @@ public class FileMacroPlugin implements MacroPlugin {
      */
     private String executeMacroReadFileToString(Object[] args) {
         if (args == null || args.length < 1 || args.length > 2) {
-            throw new RuntimeException("Could not execute macro 'readFileToString' - insufficient arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'readFileToString' - insufficient arguments.");
         }
         Object arg1 = args[0];
         Object arg2 = null;
@@ -149,7 +150,7 @@ public class FileMacroPlugin implements MacroPlugin {
             arg1 = new File((String) arg1);
         }
         if (!(arg1 instanceof File) || (arg2 != null && !(arg2 instanceof String))) {
-            throw new RuntimeException("Could not execute macro 'readFileToString' - illegal arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'readFileToString' - illegal arguments.");
         }
         return FileUtils.readFileToString((File) arg1, (arg2 == null ? null : Charset.forName((String) arg2)));
     }
@@ -162,7 +163,7 @@ public class FileMacroPlugin implements MacroPlugin {
      */
     private Long executeMacroWriteStringToFile(Object[] args) {
         if (args == null || args.length < MIN_ARGS || args.length > MAX_ARGS) {
-            throw new RuntimeException("Could not execute macro 'writeStringToFile' - insufficient arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'writeStringToFile' - insufficient arguments.");
         }
         Object arg1 = args[0];
         Object arg2 = args[1];
@@ -174,7 +175,7 @@ public class FileMacroPlugin implements MacroPlugin {
             arg2 = new File((String) arg2);
         }
         if (!(arg1 instanceof String) || !(arg2 instanceof File) || (arg3 != null && !(arg3 instanceof String))) {
-            throw new RuntimeException("Could not execute macro 'writeStringToFile' - illegal arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'writeStringToFile' - illegal arguments.");
         }
         return Long.valueOf(FileUtils.writeStringToFile((String) arg1, (File) arg2, (arg3 == null ? null : Charset.forName((String) arg3))));
     }

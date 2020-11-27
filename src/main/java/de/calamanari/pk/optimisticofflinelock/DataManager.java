@@ -22,6 +22,7 @@ package de.calamanari.pk.optimisticofflinelock;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
 
 import javax.sql.DataSource;
@@ -42,20 +43,44 @@ public class DataManager {
     /**
      * prepared statement to store a customer: <code>{@value}</code>
      */
-    private static final String SQL_INSERT_NEW_CUSTOMER = "insert into CUSTOMER (CUSTOMER_ID, FIRST_NAME, " + "LAST_NAME, STREET, ZIPCODE, CITY, VERSION) "
-            + "values (?, ?, ?, ?, ?, ?, 0)";
+    private static final String SQL_INSERT_NEW_CUSTOMER = """
+
+            insert into CUSTOMER (CUSTOMER_ID,
+                                  FIRST_NAME,
+                                  LAST_NAME,
+                                  STREET,
+                                  ZIPCODE,
+                                  CITY,
+                                  VERSION)
+            values (?, ?, ?, ?, ?, ?, 0)""";
 
     /**
      * prepared statement to query a customer by id: <code>{@value}</code>
      */
-    private static final String SQL_SELECT_CUSTOMER_BY_ID = "select CUSTOMER_ID, FIRST_NAME, " + "LAST_NAME, STREET, ZIPCODE, CITY, VERSION from CUSTOMER "
-            + "where CUSTOMER_ID=?";
+    private static final String SQL_SELECT_CUSTOMER_BY_ID = """
+
+            select CUSTOMER_ID,
+                   FIRST_NAME,
+                   LAST_NAME,
+                   STREET,
+                   ZIPCODE,
+                   CITY,
+                   VERSION
+              from CUSTOMER
+             where CUSTOMER_ID=?""";
 
     /**
      * prepared statement to update a customer and increase version: <code>{@value}</code>
      */
-    private static final String SQL_UPDATE_CUSTOMER = "update CUSTOMER set FIRST_NAME=?, " + "LAST_NAME=?, STREET=?, ZIPCODE=?, CITY=?, VERSION=VERSION + 1 "
-            + "where CUSTOMER_ID=? and VERSION=?";
+    private static final String SQL_UPDATE_CUSTOMER = """
+
+            update CUSTOMER set FIRST_NAME=?,
+                                LAST_NAME=?,
+                                STREET=?,
+                                ZIPCODE=?,
+                                CITY=?,
+                                VERSION=VERSION + 1
+             where CUSTOMER_ID=? and VERSION=?""";
 
     /**
      * datasource to be used
@@ -91,8 +116,8 @@ public class DataManager {
             stmt.setString(6, city);
             stmt.executeUpdate();
         }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
+        catch (SQLException | RuntimeException ex) {
+            throw new DataManagerException(String.format("Failed to add customer to database (customerId=%s)", customerId), ex);
         }
     }
 
@@ -114,7 +139,7 @@ public class DataManager {
             }
         }
         catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new DataManagerException(String.format("Failed to lookup customer in database (customerId=%s)", customerId), ex);
         }
         return res;
     }
@@ -194,7 +219,8 @@ public class DataManager {
             numberOfUpdatedRecords = stmt.executeUpdate();
         }
         catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new DataManagerException(
+                    String.format("Failed to update customer in database (customerId=%s)", customer == null ? "<null>" : customer.getCustomerId()), ex);
         }
         return numberOfUpdatedRecords;
     }

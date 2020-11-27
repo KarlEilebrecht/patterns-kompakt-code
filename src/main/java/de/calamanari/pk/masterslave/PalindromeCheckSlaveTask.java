@@ -19,12 +19,15 @@
 //@formatter:on
 package de.calamanari.pk.masterslave;
 
+import static de.calamanari.pk.util.LambdaSupportLoggerProxy.defer;
+
 import java.io.IOException;
 import java.io.Reader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 
 /**
@@ -35,7 +38,7 @@ import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
  */
 public class PalindromeCheckSlaveTask implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PalindromeCheckSlaveTask.class);
+    private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(PalindromeCheckSlaveTask.class));
 
     /**
      * test result: the source was a palindrome
@@ -91,7 +94,8 @@ public class PalindromeCheckSlaveTask implements Runnable {
         try {
             if (!future.isAborted()) {
                 LOGGER.debug("SLAVE-Thread @{} executes {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
-                        Integer.toHexString(Thread.currentThread().hashCode()), this.getClass().getSimpleName(), startIdx1, startIdx2, partitionSize);
+                        defer(() -> Integer.toHexString(Thread.currentThread().hashCode())), this.getClass().getSimpleName(), startIdx1, startIdx2,
+                        partitionSize);
                 char[] partition1 = getPartition(startIdx1);
                 char[] partition2 = getPartition(startIdx2);
                 int[] partialResult = performPalindromeTest(partition1, partition2);
@@ -104,18 +108,20 @@ public class PalindromeCheckSlaveTask implements Runnable {
             }
             else {
                 LOGGER.debug("SLAVE-Thread @{} skips {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
-                        Integer.toHexString(Thread.currentThread().hashCode()), this.getClass().getSimpleName(), startIdx1, startIdx2, partitionSize);
+                        defer(() -> Integer.toHexString(Thread.currentThread().hashCode())), this.getClass().getSimpleName(), startIdx1, startIdx2,
+                        partitionSize);
             }
         }
-        catch (Exception ex) {
+        catch (IOException | RuntimeException ex) {
             LOGGER.error("Error while checking partitions [{}, {}) vs. [{}, {})", startIdx1, (startIdx1 + partitionSize), startIdx2,
                     (startIdx2 + partitionSize), ex);
             // tell the MASTER about the problem
             result = PalindromeCheckResult.ERROR;
         }
         finally {
-            LOGGER.debug("SLAVE-Thread @{} reports to MASTER via Future: {}", Integer.toHexString(Thread.currentThread().hashCode()), result);
+            LOGGER.debug("SLAVE-Thread @{} reports to MASTER via Future: {}", defer(() -> Integer.toHexString(Thread.currentThread().hashCode())), result);
             future.reportSlaveResult(result);
+            textFileAccessor.cleanup();
         }
     }
 
@@ -126,7 +132,7 @@ public class PalindromeCheckSlaveTask implements Runnable {
      * @return partition from file
      * @throws Exception on any error
      */
-    private char[] getPartition(long startIdx) throws Exception {
+    private char[] getPartition(long startIdx) throws IOException {
         char[] partition = new char[partitionSize];
         try (Reader reader = textFileAccessor.createInputStreamReaderAtChar(startIdx, partitionSize)) {
 

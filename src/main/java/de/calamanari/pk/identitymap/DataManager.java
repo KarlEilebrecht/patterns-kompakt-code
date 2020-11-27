@@ -19,8 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.identitymap;
 
+import static de.calamanari.pk.util.LambdaSupportLoggerProxy.defer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 
 /**
  * Data Manager - provides finder methods in this example, placeholder for whatever persistence framework/strategies may be in use. <br>
@@ -35,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class DataManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class);
+    private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(DataManager.class));
 
     /**
      * Utility class
@@ -69,11 +73,13 @@ public final class DataManager {
         if (res == null) {
             LOGGER.debug("Instance not in {} yet!", identityMap);
             res = findCustomerByIdInDatabase(customerId);
-            LOGGER.debug("Putting Instance @{} into {}", Integer.toHexString(res.hashCode()), identityMap);
+            final var resL = res;
+            LOGGER.debug("Putting Instance @{} into {}", defer(() -> Integer.toHexString(resL.hashCode())), identityMap);
             identityMap.add(res);
         }
         else {
-            LOGGER.debug("Instance found: @{}", Integer.toHexString(res.hashCode()));
+            final var resL = res;
+            LOGGER.debug("Instance found: @{}", defer(() -> Integer.toHexString(resL.hashCode())));
         }
 
         return res;
@@ -125,11 +131,13 @@ public final class DataManager {
         if (res == null) {
             LOGGER.debug("Instance not in {} yet!", identityMap);
             res = findAddressByIdInDatabase(addressId);
-            LOGGER.debug("Putting Instance @{} into {}", Integer.toHexString(res.hashCode()), identityMap);
+            final var resL = res;
+            LOGGER.debug("Putting Instance @{} into {}", defer(() -> Integer.toHexString(resL.hashCode())), identityMap);
             identityMap.add(res);
         }
         else {
-            LOGGER.debug("Instance found: @{}", Integer.toHexString(res.hashCode()));
+            final var resL = res;
+            LOGGER.debug("Instance found: @{}", defer(() -> Integer.toHexString(resL.hashCode())));
         }
 
         return res;

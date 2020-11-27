@@ -21,6 +21,8 @@ package de.calamanari.pk.objectpool;
 
 import java.util.ArrayList;
 
+import de.calamanari.pk.util.UnexpectedInterruptedException;
+
 /**
  * Simple Thread-Pool implementation using worker pool threads.<br>
  * I originally wrote this class in 2004 and although nowadays using the Executors framework (java.util.concurrent) should be preferred(!), this simple thread
@@ -211,7 +213,7 @@ public class SimpleThreadPool {
      * 
      * @return PoolThread from the pool
      */
-    // the idea is indeed to wait, the two locks (sonar complaint) are held by intention
+    // the idea is indeed to wait, the two locks (SonarLint complaint) are held by intention
     @SuppressWarnings("squid:S3046")
     protected synchronized PoolThread getNextAvailableThread() {
         PoolThread thread = null;
@@ -233,7 +235,7 @@ public class SimpleThreadPool {
                 // the next POOL_LOCK.wait() will never return,
                 // because the notify() happened before.
                 Thread.currentThread().interrupt();
-                throw new RuntimeException("Unexpected InterruptedException in ThreadPool.POOL_LOCK.wait()!");
+                throw new UnexpectedInterruptedException("Fatal interrupt in ThreadPool.POOL_LOCK.wait() - possible deadlock!", ex);
             }
         }
         return thread;

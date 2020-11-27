@@ -106,8 +106,8 @@ public class Invoice implements Serializable {
         try {
             amount = Double.parseDouble(amountClaimed);
         }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
+        catch (NumberFormatException | NullPointerException ex) {
+            throw new IllegalArgumentException(String.format("Failed to convert amountClaimed=%s (double value expected)", amountClaimed), ex);
         }
         this.invoiceId = invoiceId;
         this.amountClaimed = amount;

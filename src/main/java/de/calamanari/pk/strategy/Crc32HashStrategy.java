@@ -49,9 +49,13 @@ public class Crc32HashStrategy extends HashStrategy {
     @Override
     public String computeHash(String text) {
         LOGGER.debug("Concrete Strategy {} computes hash ...", STRATEGY_NAME);
-        CRC32 crc32 = new CRC32();
-        crc32.update(text.getBytes(StandardCharsets.UTF_8));
-        return Long.toHexString(crc32.getValue());
+        long crc32Value = 0L;
+        if (text != null && text.length() > 0) {
+            CRC32 crc32 = new CRC32();
+            crc32.update(String.valueOf(text).getBytes(StandardCharsets.UTF_8));
+            crc32Value = crc32.getValue();
+        }
+        return Long.toHexString(crc32Value);
     }
 
 }

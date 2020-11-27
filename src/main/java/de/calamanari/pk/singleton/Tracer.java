@@ -21,7 +21,9 @@ package de.calamanari.pk.singleton;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.util.concurrent.locks.ReentrantLock;
@@ -85,6 +87,12 @@ public final class Tracer {
 
             }
         }
+        catch (TracerException ex) {
+            throw ex;
+        }
+        catch (RuntimeException ex) {
+            throw new TracerException("Could not create tracer", ex);
+        }
         finally {
             LOCK.unlock();
         }
@@ -102,8 +110,8 @@ public final class Tracer {
             this.outputFile = outputFile;
             this.traceWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)));
         }
-        catch (Exception ex) {
-            throw new RuntimeException("Unexpected error creating tracer output file " + outputFile, ex);
+        catch (FileNotFoundException | RuntimeException ex) {
+            throw new TracerException("Unexpected error creating tracer output file " + outputFile, ex);
         }
         LOGGER.debug("New instance of {} created, using file: {}", Tracer.class.getSimpleName(), outputFile);
     }
@@ -124,8 +132,8 @@ public final class Tracer {
         try {
             traceWriter.append(sb);
         }
-        catch (Exception ex) {
-            throw new RuntimeException("Unexpected error accessing tracer output file!", ex);
+        catch (IOException | RuntimeException ex) {
+            throw new TracerException("Unexpected error accessing tracer output file!", ex);
         }
         finally {
             fileAccessLock.unlock();
@@ -144,6 +152,9 @@ public final class Tracer {
                 instance.closeFile(deleteLogFile);
                 instance = null;
             }
+        }
+        catch (TracerException ex) {
+            LOGGER.error("Error during shutdown", ex);
         }
         finally {
             LOCK.unlock();
@@ -167,8 +178,8 @@ public final class Tracer {
                 }
             }
         }
-        catch (Exception ex) {
-            LOGGER.error("Could not close tracer file.", ex);
+        catch (IOException | RuntimeException ex) {
+            throw new TracerException("Could not close tracer file.", ex);
         }
         finally {
             fileAccessLock.unlock();

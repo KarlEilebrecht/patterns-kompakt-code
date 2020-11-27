@@ -19,6 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.datatransferobject.server;
 
+import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
@@ -72,11 +73,15 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
     /**
      * server stub
      */
+    // Volatile is sufficient as there is no race condition in this scenario
+    @SuppressWarnings("java:S3077")
     private volatile CustomerManager customerManagerStub;
 
     /**
      * our private RMI-server
      */
+    // Volatile is sufficient as there is no race condition in this scenario
+    @SuppressWarnings("java:S3077")
     private volatile Process rmiRegistryProcess;
 
     /**
@@ -144,9 +149,14 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
             Thread.sleep(REGISTRY_STARTUP_MILLIS);
             LOGGER.info("RMI-Registry ready.");
         }
-        catch (Exception ex) {
-            LOGGER.error("Unexpected communication exception", ex);
-            throw new RuntimeException(ex);
+        catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new CustomerManagerServerException(
+                    String.format("Unexpected interruption exception (could not start RMI-Registry on port %d)!", this.registryPort), ex);
+        }
+        catch (IOException | RuntimeException ex) {
+            throw new CustomerManagerServerException(
+                    String.format("Unexpected communication exception (could not start RMI-Registry on port %d)!", this.registryPort), ex);
         }
     }
 
@@ -191,7 +201,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
             registry.bind("CustomerManager", this.customerManagerStub);
         }
         catch (RemoteException | AlreadyBoundException | RuntimeException ex) {
-            LOGGER.error("Error during preparation!", ex);
+            throw new CustomerManagerServerException("Error during preparation!", ex);
         }
     }
 
@@ -248,7 +258,12 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
      * @param args first argument may optionally specify the port
      */
     public static void main(String[] args) {
-        (new CustomerManagerServer()).setupAndStart(args);
+        try {
+            (new CustomerManagerServer()).setupAndStart(args);
+        }
+        catch (RuntimeException ex) {
+            LOGGER.error("Server startup failed!", ex);
+        }
     }
 
 }

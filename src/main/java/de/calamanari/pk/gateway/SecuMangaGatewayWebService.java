@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 
+import de.calamanari.pk.util.LogUtils;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
@@ -72,21 +73,17 @@ public class SecuMangaGatewayWebService {
      */
     private String processText(String text, String secuMangaCommand) {
 
-        String response = null;
+        String host = null;
+        int port = 0;
         try {
-
             Map<String, String> properties = SecuMangaGatewayServer.getSystemProperties();
-
-            String host = properties.get(SecuMangaGatewayServer.PROPERTY_SECU_MANGA_HOST);
-            int port = Integer.parseInt(properties.get(SecuMangaGatewayServer.PROPERTY_SECU_MANGA_PORT));
-
-            response = doSecuMangaRequest(host, port, secuMangaCommand, text);
-
+            host = properties.get(SecuMangaGatewayServer.PROPERTY_SECU_MANGA_HOST);
+            port = Integer.parseInt(properties.get(SecuMangaGatewayServer.PROPERTY_SECU_MANGA_PORT));
         }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
+        catch (RuntimeException ex) {
+            throw new SecuMangaGatewayException("Unable to perform request, due to a gateway configuration problem.", ex);
         }
-        return response;
+        return doSecuMangaRequest(host, port, secuMangaCommand, text);
     }
 
     /**
@@ -97,15 +94,19 @@ public class SecuMangaGatewayWebService {
      * @param command one of the SecuManga commands
      * @param sendContent content to be sent
      * @return received content (answer)
-     * @throws Exception on any problem
+     * @throws SecuMangaGatewayException on any problem
      */
-    private String doSecuMangaRequest(String host, int port, String command, String sendContent) throws Exception {
+    private String doSecuMangaRequest(String host, int port, String command, String sendContent) {
 
         try (Socket secuMangaClientSocket = new Socket(host, port);
                 PrintWriter bw = new PrintWriter(new OutputStreamWriter(secuMangaClientSocket.getOutputStream()));
                 BufferedReader br = new BufferedReader(new InputStreamReader(secuMangaClientSocket.getInputStream()))) {
             writeRequestMessage(bw, command, sendContent);
             return readResponseMessage(secuMangaClientSocket, br);
+        }
+        catch (IOException | RuntimeException ex) {
+            throw new SecuMangaGatewayException(String.format("Unable to perform request: host=%s, port=%d, command=%s, sendContent=%s", host, port, command,
+                    LogUtils.limitAndQuoteStringForMessage(sendContent, 100)), ex);
         }
     }
 

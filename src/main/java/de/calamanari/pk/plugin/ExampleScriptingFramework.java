@@ -103,7 +103,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             lines = Files.readAllLines(scriptFile.toPath(), StandardCharsets.ISO_8859_1);
         }
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new ExampleScriptingFrameworkException(String.format("Error executing scriptFile=%s", String.valueOf(scriptFile)), ex);
         }
         int i = 0;
         for (String line : lines) {
@@ -135,7 +135,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             resultVarName = line.substring(0, eqPos).trim();
         }
         else {
-            throw new RuntimeException(ERROR_IN_LINE + (lineNumber + 1) + ": no result variable (expected x=macro(y,..))");
+            throw new ExampleScriptingFrameworkException(ERROR_IN_LINE + (lineNumber + 1) + ": no result variable (expected x=macro(y,..))");
         }
 
         Object result = executeMacro(line.substring(eqPos + 1), lineNumber, pluginFactory);
@@ -164,7 +164,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             result = plugin.executeMacro(macroName, macroArguments);
         }
         catch (Exception ex) {
-            throw new RuntimeException("Unexpected Error in line " + (lineNumber + 1), ex);
+            throw new ExampleScriptingFrameworkException("Unexpected Error in line " + (lineNumber + 1), ex);
         }
         return result;
     }
@@ -185,7 +185,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
         if (openPos > 0 && closePos > 0 && closePos > openPos) {
             macroName = expression.substring(0, openPos).trim();
             if (macroName.length() == 0) {
-                throw new RuntimeException(ERROR_IN_LINE + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
+                throw new ExampleScriptingFrameworkException(ERROR_IN_LINE + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
             }
             String argumentString = expression.substring(openPos + 1, closePos).trim();
             if (argumentString.length() > 0) {
@@ -193,7 +193,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             }
         }
         else {
-            throw new RuntimeException(ERROR_IN_LINE + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
+            throw new ExampleScriptingFrameworkException(ERROR_IN_LINE + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
         }
         res = new ArrayList<>(argumentNames.length + 1);
         res.add(macroName);

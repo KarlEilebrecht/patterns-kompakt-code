@@ -19,6 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.registry;
 
+import static de.calamanari.pk.util.LambdaSupportLoggerProxy.defer;
+
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -30,6 +32,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.util.LambdaSupportLoggerProxy;
+
 /**
  * Property Registry - a simple registry: safe to be accessed concurrently with minimum synchronization, providing the ability to be refreshed at any time.
  * 
@@ -37,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class PropertyRegistry {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyRegistry.class);
+    private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(PropertyRegistry.class));
 
     /**
      * Maintains the current registry instance, which can be exchanged by the surrounding framework
@@ -77,7 +81,7 @@ public final class PropertyRegistry {
     public static void initialize(Properties properties) {
         LOGGER.debug("{}.initialize(...) called", PropertyRegistry.class.getSimpleName());
         PropertyRegistry newInstance = new PropertyRegistry(properties);
-        LOGGER.debug("Setting new registry instance @{}", Integer.toHexString(newInstance.hashCode()));
+        LOGGER.debug("Setting new registry instance @{}", defer(() -> Integer.toHexString(newInstance.hashCode())));
         REGISTRY_INSTANCE.set(newInstance);
     }
 
@@ -129,7 +133,7 @@ public final class PropertyRegistry {
      * @return property value or empty string if not found
      */
     public String getProperty(String propertyName) {
-        LOGGER.debug("{}@{}.getProperty('{}') called", PropertyRegistry.class.getSimpleName(), Integer.toHexString(this.hashCode()), propertyName);
+        LOGGER.debug("{}@{}.getProperty('{}') called", PropertyRegistry.class.getSimpleName(), defer(() -> Integer.toHexString(this.hashCode())), propertyName);
         return getProperty(propertyName, "");
     }
 
@@ -140,7 +144,8 @@ public final class PropertyRegistry {
      * @return true if property exists, otherwise false
      */
     public boolean containsProperty(String propertyName) {
-        LOGGER.debug("{}@{}.containsProperty('{}') called", PropertyRegistry.class.getSimpleName(), Integer.toHexString(this.hashCode()), propertyName);
+        LOGGER.debug("{}@{}.containsProperty('{}') called", PropertyRegistry.class.getSimpleName(), defer(() -> Integer.toHexString(this.hashCode())),
+                propertyName);
         return propertyMap.containsKey(propertyName);
     }
 
@@ -150,7 +155,7 @@ public final class PropertyRegistry {
      * @return set of names (unmodifiable)
      */
     public Set<String> getPropertyNames() {
-        LOGGER.debug("{}@{}.getPropertyNames() called", PropertyRegistry.class.getSimpleName(), Integer.toHexString(this.hashCode()));
+        LOGGER.debug("{}@{}.getPropertyNames() called", PropertyRegistry.class.getSimpleName(), defer(() -> Integer.toHexString(this.hashCode())));
         return Collections.unmodifiableSet(propertyMap.keySet());
     }
 }

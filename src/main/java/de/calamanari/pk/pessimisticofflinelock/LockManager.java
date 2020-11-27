@@ -40,6 +40,21 @@ public final class LockManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(LockManager.class);
 
     /**
+     * Message for successful read lock, 1 argument: name of thread
+     */
+    private static final String MSG_RLOCK_SUCCESS = "{}: Successfully acquired read lock.";
+
+    /**
+     * Message for successful write lock, 1 argument: name of thread
+     */
+    private static final String MSG_WLOCK_SUCCESS = "{}: Successfully acquired write lock.";
+
+    /**
+     * Message when lock entry found, 1 argument: name of thread
+     */
+    private static final String MSG_LOCK_FOUND = "{}: lock entry found ";
+
+    /**
      * Simulates database
      */
     private static final ConcurrentHashMap<String, AtomicReference<String[]>> DATABASE = new ConcurrentHashMap<>();
@@ -97,7 +112,7 @@ public final class LockManager {
             }
 
             if (lockEntryExists) {
-                LOGGER.debug("{}: lock entry found ", Thread.currentThread().getName());
+                LOGGER.debug(MSG_LOCK_FOUND, Thread.currentThread().getName());
 
                 if (currentLockType == LockType.NONE) {
                     success = tryAcquireUpdateReadLock(elementId, ownerId, newLockType, version);
@@ -152,7 +167,7 @@ public final class LockManager {
                 // must be concurrent access, try the whole process again
             }
             else {
-                LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
+                LOGGER.debug(MSG_RLOCK_SUCCESS, Thread.currentThread().getName());
                 success = true;
             }
         }
@@ -182,7 +197,7 @@ public final class LockManager {
             // must be concurrent access, try the whole process again
         }
         else {
-            LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
+            LOGGER.debug(MSG_RLOCK_SUCCESS, Thread.currentThread().getName());
             success = true;
         }
         return success;
@@ -212,7 +227,7 @@ public final class LockManager {
             // must be concurrent access, try the whole process again
         }
         else {
-            LOGGER.debug("{}: Successfully acquired read lock.", Thread.currentThread().getName());
+            LOGGER.debug(MSG_RLOCK_SUCCESS, Thread.currentThread().getName());
             success = true;
         }
         return success;
@@ -265,7 +280,7 @@ public final class LockManager {
 
             if (lockEntryExists) {
 
-                LOGGER.debug("{}: lock entry found ", Thread.currentThread().getName());
+                LOGGER.debug(MSG_LOCK_FOUND, Thread.currentThread().getName());
 
                 if (currentLockType == LockType.NONE) {
                     success = tryAcquireUpdateWriteLock(elementId, ownerId, newLockType, version);
@@ -319,7 +334,7 @@ public final class LockManager {
             // must be concurrent access, try the whole process again
         }
         else {
-            LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
+            LOGGER.debug(MSG_WLOCK_SUCCESS, Thread.currentThread().getName());
             success = true;
         }
         return success;
@@ -350,7 +365,7 @@ public final class LockManager {
             // must be concurrent access, try the whole process again
         }
         else {
-            LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
+            LOGGER.debug(MSG_WLOCK_SUCCESS, Thread.currentThread().getName());
             success = true;
         }
         return success;
@@ -380,7 +395,7 @@ public final class LockManager {
             // must be concurrent access, try the whole process again
         }
         else {
-            LOGGER.debug("{}: Successfully acquired write lock.", Thread.currentThread().getName());
+            LOGGER.debug(MSG_WLOCK_SUCCESS, Thread.currentThread().getName());
             success = true;
         }
         return success;
@@ -433,7 +448,7 @@ public final class LockManager {
 
             if (lockEntryExists) {
 
-                LOGGER.debug("{}: lock entry found ", Thread.currentThread().getName());
+                LOGGER.debug(MSG_LOCK_FOUND, Thread.currentThread().getName());
 
                 if (currentLockType == LockType.NONE) {
                     LOGGER.debug("{}: element '{}' currently not locked aborting ...", Thread.currentThread().getName(), elementId);
@@ -599,7 +614,7 @@ public final class LockManager {
             }
             catch (NumberFormatException ex) {
                 // won't happen
-                throw new RuntimeException(ex);
+                throw new LockManagementException("Unexpected error parsing version from internal recordData.", ex);
             }
             res = new LockInfo(elementId, lockType, lockOwnerIds, version);
         }
@@ -643,7 +658,7 @@ public final class LockManager {
             }
             catch (NumberFormatException ex) {
                 // won't happen
-                throw new RuntimeException(ex);
+                throw new LockManagementException("Unexpected error parsing version from internal recordData.", ex);
             }
             if (currentVersion == expectedVersion) {
                 String[] newRecordData = new String[] { lockType.toString(), ownerIdListToCommaSeparatedString(ownerIds), "" + (currentVersion + 1) };

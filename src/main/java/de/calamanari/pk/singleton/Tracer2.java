@@ -21,7 +21,9 @@ package de.calamanari.pk.singleton;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.nio.file.Files;
@@ -114,8 +116,8 @@ public final class Tracer2 implements Serializable {
             this.outputFile = outputFile;
             this.traceWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile)));
         }
-        catch (Exception ex) {
-            throw new RuntimeException("Unexpected error creating tracer output file " + outputFile, ex);
+        catch (FileNotFoundException | RuntimeException ex) {
+            throw new TracerException("Unexpected error creating tracer output file " + outputFile, ex);
         }
         LOGGER.debug("New instance of {} created, using file: {}", Tracer2.class.getSimpleName(), outputFile);
     }
@@ -136,8 +138,8 @@ public final class Tracer2 implements Serializable {
         try {
             traceWriter.append(sb);
         }
-        catch (Exception ex) {
-            throw new RuntimeException("Unexpected error accessing tracer output file!", ex);
+        catch (IOException | RuntimeException ex) {
+            throw new TracerException("Unexpected error accessing tracer output file!", ex);
         }
         finally {
             fileAccessLock.unlock();
@@ -150,7 +152,12 @@ public final class Tracer2 implements Serializable {
      * @param deleteLogFile if true, immediately delete the created log file
      */
     public static void shutdown(boolean deleteLogFile) {
-        Internal.INSTANCE.closeFile(deleteLogFile);
+        try {
+            Internal.INSTANCE.closeFile(deleteLogFile);
+        }
+        catch (TracerException ex) {
+            LOGGER.error("Error during shutdown", ex);
+        }
     }
 
     /**
@@ -170,8 +177,8 @@ public final class Tracer2 implements Serializable {
                 }
             }
         }
-        catch (Exception ex) {
-            LOGGER.error("Could not close tracer file.", ex);
+        catch (IOException | RuntimeException ex) {
+            throw new TracerException("Could not close tracer file.", ex);
         }
         finally {
             fileAccessLock.unlock();

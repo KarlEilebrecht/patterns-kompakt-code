@@ -20,6 +20,7 @@
 package de.calamanari.pk.combinedmethod;
 
 import java.io.IOException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -92,11 +93,15 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
     /**
      * server stub
      */
+    // Volatile is sufficient as there is no race condition in this scenario
+    @SuppressWarnings("java:S3077")
     private volatile ProductManager productManagerStub;
 
     /**
      * our private RMI-server
      */
+    // Volatile is sufficient as there is no race condition in this scenario
+    @SuppressWarnings("java:S3077")
     private volatile Process rmiRegistryProcess;
 
     /**
@@ -129,7 +134,7 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
         if (nextProductRegistrationMustFail) {
             LOGGER.debug("Simulating some error");
             nextProductRegistrationMustFail = false;
-            throw new RuntimeException("Some error!");
+            throw new ProductManagerServerException("Some error!");
         }
         String id = product.getProductId();
         if (id != null) {
@@ -209,13 +214,13 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
             LOGGER.info("RMI-Registry ready.");
         }
         catch (InterruptedException ex) {
-            LOGGER.error("Unexpected interruption", ex);
             Thread.currentThread().interrupt();
-            throw new RuntimeException(ex);
+            throw new ProductManagerServerException(
+                    String.format("Unexpected interruption exception (could not start RMI-Registry on port %d)!", this.registryPort), ex);
         }
         catch (IOException | RuntimeException ex) {
-            LOGGER.error("Unexpected error in RMI registry", ex);
-            throw new RuntimeException(ex);
+            throw new ProductManagerServerException(
+                    String.format("Unexpected communication exception (could not start RMI-Registry on port %d)!", this.registryPort), ex);
         }
     }
 
@@ -244,8 +249,8 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
             Registry registry = LocateRegistry.getRegistry(registryPort);
             registry.bind("ProductManager", this.productManagerStub);
         }
-        catch (Exception ex) {
-            LOGGER.error("Error during preparation!", ex);
+        catch (RemoteException | AlreadyBoundException ex) {
+            throw new ProductManagerServerException("Error during preparation!", ex);
         }
     }
 
@@ -299,7 +304,12 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
      * @param args first argument may optionally specify the port
      */
     public static void main(String[] args) {
-        (new ProductManagerServer()).setupAndStart(args);
+        try {
+            (new ProductManagerServer()).setupAndStart(args);
+        }
+        catch (RuntimeException ex) {
+            LOGGER.error("Server startup failed!", ex);
+        }
     }
 
 }

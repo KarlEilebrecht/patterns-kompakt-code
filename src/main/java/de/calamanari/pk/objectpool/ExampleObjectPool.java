@@ -26,6 +26,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.util.UnexpectedInterruptedException;
+
 /**
  * Example Object Pool - demonstrates an OBJECT POOL.
  * 
@@ -72,7 +74,7 @@ public class ExampleObjectPool {
         }
         catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Fatal Pool error!", ex);
+            throw new UnexpectedInterruptedException("Fatal Pool error!", ex);
         }
 
         LOGGER.debug("{}({}): accessing pool ...", this.getClass().getSimpleName(), Thread.currentThread().getName());

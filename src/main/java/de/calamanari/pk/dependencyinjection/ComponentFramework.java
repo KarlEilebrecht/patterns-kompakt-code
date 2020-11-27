@@ -76,24 +76,29 @@ public final class ComponentFramework {
      * 
      * @param componentIdentifier identifies component type
      * @return created component
-     * @throws Exception on any error
+     * @throws ComponentCreationException on any error
      */
-    public static Component createComponent(String componentIdentifier) throws Exception {
+    public static Component createComponent(String componentIdentifier) throws ComponentCreationException {
         LOGGER.debug("{}.createComponent({}) called", ComponentFramework.class.getSimpleName(), componentIdentifier);
         Component component = null;
-        Class<? extends Component> componentClass = resolveComponentClass(componentIdentifier);
+        try {
+            Class<? extends Component> componentClass = resolveComponentClass(componentIdentifier);
 
-        if (PrintServiceInjectable.class.isAssignableFrom(componentClass)) {
-            component = createAndPerformInterfaceInjection(componentClass);
-        }
-        else {
-            Constructor<? extends Component> constructor = getInjectionConstructor(componentClass);
-            if (constructor != null) {
-                component = createAndPerformConstructorInjection(constructor);
+            if (PrintServiceInjectable.class.isAssignableFrom(componentClass)) {
+                component = createAndPerformInterfaceInjection(componentClass);
             }
             else {
-                component = createAndPerformSetterOrAnnotationBasedInjection(componentIdentifier, componentClass);
+                Constructor<? extends Component> constructor = getInjectionConstructor(componentClass);
+                if (constructor != null) {
+                    component = createAndPerformConstructorInjection(constructor);
+                }
+                else {
+                    component = createAndPerformSetterOrAnnotationBasedInjection(componentIdentifier, componentClass);
+                }
             }
+        }
+        catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException | RuntimeException ex) {
+            throw new ComponentCreationException(String.format("Error creating component '%s'", componentIdentifier), ex);
         }
         return component;
     }

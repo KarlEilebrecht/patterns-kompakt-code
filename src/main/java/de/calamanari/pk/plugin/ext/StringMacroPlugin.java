@@ -24,6 +24,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.plugin.ExampleScriptingFrameworkException;
 import de.calamanari.pk.plugin.MacroPlugin;
 import de.calamanari.pk.plugin.MacroPluginFramework;
 
@@ -98,7 +99,7 @@ public class StringMacroPlugin implements MacroPlugin {
         case "newString":
             return executeMacroNewString(args);
         default:
-            throw new RuntimeException("Could not execute macro '" + macroName + "' - unknown macro.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro '" + macroName + "' - unknown macro.");
         }
     }
 
@@ -111,14 +112,14 @@ public class StringMacroPlugin implements MacroPlugin {
     private String executeMacroNewString(Object[] args) {
         String res = null;
         if (args == null || args.length != 1) {
-            throw new RuntimeException("Could not execute macro 'newString' - insufficient arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'newString' - insufficient arguments.");
         }
         Object arg1 = args[0];
         if (arg1 instanceof CharSequence) {
             res = ((CharSequence) arg1).toString();
         }
         else {
-            throw new RuntimeException("Could not execute macro 'newString' - illegal argument (String expected).");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'newString' - illegal argument (String expected).");
         }
         return res;
     }
@@ -132,12 +133,12 @@ public class StringMacroPlugin implements MacroPlugin {
     private String executeMacroReverse(Object[] args) {
         String res = null;
         if (args == null || args.length != 1) {
-            throw new RuntimeException("Could not execute macro 'reverse' - insufficient arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'reverse' - insufficient arguments.");
         }
         Object arg1 = args[0];
         if (arg1 != null) {
             if (!(arg1 instanceof String)) {
-                throw new RuntimeException("Could not execute macro 'reverse' - illegal argument (String expected).");
+                throw new ExampleScriptingFrameworkException("Could not execute macro 'reverse' - illegal argument (String expected).");
             }
             StringBuilder sb = new StringBuilder((String) arg1);
             res = sb.reverse().toString();
@@ -153,11 +154,11 @@ public class StringMacroPlugin implements MacroPlugin {
      */
     private Integer executeMacroLength(Object[] args) {
         if (args == null || args.length != 1) {
-            throw new RuntimeException("Could not execute macro 'length' - insufficient arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'length' - insufficient arguments.");
         }
         Object arg1 = args[0];
         if (!(arg1 instanceof String)) {
-            throw new RuntimeException("Could not execute macro 'length' - illegal argument (String expected).");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'length' - illegal argument (String expected).");
         }
         return Integer.valueOf(((String) arg1).length());
     }
@@ -170,7 +171,7 @@ public class StringMacroPlugin implements MacroPlugin {
      */
     private String executeMacroConcat(Object[] args) {
         if (args == null || args.length < 2) {
-            throw new RuntimeException("Could not execute macro 'concat' - insufficient arguments.");
+            throw new ExampleScriptingFrameworkException("Could not execute macro 'concat' - insufficient arguments.");
         }
         StringBuilder sb = new StringBuilder();
         for (Object arg : args) {

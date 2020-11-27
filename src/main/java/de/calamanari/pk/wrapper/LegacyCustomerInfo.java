@@ -105,7 +105,8 @@ public class LegacyCustomerInfo implements CustomerInfo {
                 segment = Integer.parseInt(sSegment);
             }
             catch (Exception ex) {
-                throw new RuntimeException(ex);
+                throw new LciWrapperException(String.format("Error parsing customer segment from legacy system, value=%s, expected: integer value", sSegment),
+                        ex);
             }
         }
         LOGGER.debug("returning segment={}", segment);
@@ -123,7 +124,8 @@ public class LegacyCustomerInfo implements CustomerInfo {
                 lod = sdf.parse(sLod);
             }
             catch (ParseException ex) {
-                throw new RuntimeException(ex);
+                throw new LciWrapperException(String.format("Error parsing last order date from legacy system, value=%s, expected format=yyyy-MM-dd", sLod),
+                        ex);
             }
         }
         LOGGER.debug("returning lastOrderDate={}", lod);

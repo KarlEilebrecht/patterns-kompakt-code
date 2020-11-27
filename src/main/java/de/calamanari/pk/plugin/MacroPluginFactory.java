@@ -80,7 +80,8 @@ public class MacroPluginFactory {
             List<String> allMacros = new ArrayList<>(macroPluginLookup.keySet());
             Collections.sort(allMacros);
             // hmm, very lazy, here we better should work with a checked exception :-)
-            throw new RuntimeException("No plugin available for macro '" + macroName + "',\nThe following macros are currently supported: " + allMacros);
+            throw new ExampleScriptingFrameworkException(
+                    "No plugin available for macro '" + macroName + "',\nThe following macros are currently supported: " + allMacros);
         }
         return plugin;
     }
@@ -115,11 +116,11 @@ public class MacroPluginFactory {
 
         }
         catch (Exception ex) {
-            throw new RuntimeException("Exception while collecting plugins from " + pluginFolder, ex);
+            throw new ExampleScriptingFrameworkException("Exception while collecting plugins from " + pluginFolder, ex);
         }
 
         if (availablePlugins.isEmpty()) {
-            throw new RuntimeException("No Plugin found at " + pluginFolder);
+            throw new ExampleScriptingFrameworkException("No Plugin found at " + pluginFolder);
         }
         else {
             LOGGER.info("{} plugins installed.", availablePlugins.size());
@@ -199,7 +200,7 @@ public class MacroPluginFactory {
         ClassLoader loader = getThisClassLoader();
         URL url = loader.getResource(this.getClass().getName().replace('.', '/') + ".class");
         if (url == null) {
-            throw new RuntimeException("Unable to find plugin path.");
+            throw new ExampleScriptingFrameworkException("Unable to find plugin path.");
         }
 
         File classFile = new File(url.getFile());
@@ -207,7 +208,7 @@ public class MacroPluginFactory {
         File pluginFolder = new File(classFile.getParent(), "ext");
 
         if (!pluginFolder.exists()) {
-            throw new RuntimeException("Missing plugin-folder: " + pluginFolder);
+            throw new ExampleScriptingFrameworkException("Missing plugin-folder: " + pluginFolder);
         }
         return pluginFolder;
     }
