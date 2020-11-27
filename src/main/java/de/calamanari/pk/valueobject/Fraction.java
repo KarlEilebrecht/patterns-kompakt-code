@@ -292,6 +292,8 @@ public class Fraction implements Comparable<Fraction>, Serializable {
      * @param fraction value to be added
      * @return sum fraction
      */
+    // ignore SonaLint Rule false-positive ("!fraction.numerator.equals(BigInteger.ZERO)" not always evaluates to true)
+    @SuppressWarnings("java:S2589")
     public Fraction add(Fraction fraction) {
         if (fraction == null) {
             throw new IllegalArgumentException("Argument must not be null.");
