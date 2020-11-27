@@ -254,13 +254,20 @@ public abstract class AbstractConsoleServer {
         public void run() {
             try {
 
-                prepare();
+                boolean success = false;
+                try {
+                    prepare();
+                    success = true;
+                }
+                catch (RuntimeException ex) {
+                    LOGGER.error("Unexpected error during server startup preparation!", ex);
+                }
 
                 // inform the thread waiting inside the start()-method
                 synchronized (monitor) {
                     boolean mustNotify = (serverState == ServerState.START_UP_WAITING);
                     if (serverState == ServerState.START_UP || serverState == ServerState.START_UP_WAITING) {
-                        serverState = ServerState.ONLINE;
+                        serverState = (success ? ServerState.ONLINE : ServerState.OFFLINE);
                         if (mustNotify) {
                             monitor.notifyAll();
                         }
