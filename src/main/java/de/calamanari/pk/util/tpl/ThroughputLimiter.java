@@ -232,7 +232,7 @@ public final class ThroughputLimiter {
      * @return true if we should try again to get a permission, otherwise false (denied)
      * @throws InterruptedException if the calling thread was interrupted
      */
-    // Ignoring squid:S899 because this await() Sonar complains about is semantically
+    // Ignoring squid:S899 because this await() SonarLint complains about is semantically
     // an OR (either the overload has been fixed or the wait time elapsed)
     // in either case we need to try again
     @SuppressWarnings("squid:S899")
