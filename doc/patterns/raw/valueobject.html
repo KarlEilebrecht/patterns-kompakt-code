@@ -4,28 +4,28 @@ ord::0806
 <h5>Sonstige Patterns</h5>
 
 <h4>Die Vergleichsoperation einfacher Objekte wird durch eine neue ersetzt,
-die auf den Attributwerten und nicht auf der Objektidentität basiert.</h4>
+die auf den Attributwerten und nicht auf der Objektidentit&auml;t basiert.</h4>
 
 <h3>Beispiel</h3>
 
 Im Beispiel betreiben wir ein wenig Bruchrechnung, ganz so, wie Sie das noch aus der Schule kennen. <br />
-Ein Bruch wird dabei durch eine <i>Fraction</i>-Instanz repräsentiert. Mit diesen Instanzen können Clients rechnen.
+Ein Bruch wird dabei durch eine <i>Fraction</i>-Instanz repr&auml;sentiert. Mit diesen Instanzen k&ouml;nnen Clients rechnen.
 
 img::value_object_cx.png
 <area shape="rect" coords="10,10,227,263" href="Fraction">
 
-Das Ergebnis einer Kalkulation drückt sich in einer neuen <i>Fraction</i>-Instanz aus.
+Das Ergebnis einer Kalkulation dr&uuml;ckt sich in einer neuen <i>Fraction</i>-Instanz aus.
 
 img::value_object_dx.png
 <area shape="rect" coords="460,10,550,464" href="Fraction">
 <area shape="rect" coords="324,10,414,464" href="Fraction">
 <area shape="rect" coords="179,10,269,464" href="Fraction">
 
-<i>Fraction</i>-Instanzen sind <i>immutable</i>, ihre Attribute bzw. ihr Wert ändert sich nie.
+<i>Fraction</i>-Instanzen sind <i>immutable</i>, ihre Attribute bzw. ihr Wert &auml;ndert sich nie.
 
 <p />
 
-Um das Zusammenspiel im Detail beobachten zu können, setzen Sie den log-level auf DEBUG in der logback.xml und führen den zugehörigen TestCase aus.<br />
-Beachten Sie, wie die Identität (<code>fraction1.equals(fraction2)</code>) definiert ist!
+Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus.<br />
+Beachten Sie, wie die Identit&auml;t (<code>fraction1.equals(fraction2)</code>) definiert ist!
 
 ref::PEAA

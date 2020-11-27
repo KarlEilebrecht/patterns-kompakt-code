@@ -4,7 +4,7 @@ ord::0402
 <h5>Verteilung</h5>
 
 <h4>Data Transfer Object (DTO) fasst in einer verteilten Umgebung (z. B. JEE)
-zu übertragende Daten in einem neuen Objekt zusammen, um die Anzahl der entfernten
+zu &uuml;bertragende Daten in einem neuen Objekt zusammen, um die Anzahl der entfernten
 Methodenaufrufe zu reduzieren und somit das Netzwerk zu entlasten.</h4>
 
 <h3>Sequenzdiagramm</h3>
@@ -19,7 +19,7 @@ Im Beispiel erlaubt ein <i>CustomerManager</i> den Clients Zugriff auf
 img::data_transfer_object_px.png
 
 Bei direkter Verwendung der Entities durch den Client entstehen potenziell viele
-Netzwerkaufrufe. Daher wird ein CustomerDto eingeführt.
+Netzwerkaufrufe. Daher wird ein CustomerDto eingef&uuml;hrt.
 
 img::data_transfer_object_cx.png
 <area shape="rect" coords="487,159,658,217" href="CustomerManagerServer">
@@ -29,7 +29,7 @@ img::data_transfer_object_cx.png
 <area shape="rect" coords="221,159,392,217" href="CustomerDto">
 <area shape="rect" coords="10,10,166,217" href="Customer">
 
-Die Daten zu einem Kunden werden nun in einem <i>gemeinsamen Call</i> übertragen.
+Die Daten zu einem Kunden werden nun in einem <i>gemeinsamen Call</i> &uuml;bertragen.
 
 img::data_transfer_object_dx.png
 <area shape="rect" coords="597,13,687,540" href="CustomerDto">
@@ -40,6 +40,6 @@ Ein Client liest/schreibt die einzelnen Datenfelder lokal.
 <p />
 
 
-Um das Zusammenspiel im Detail beobachten zu können, setzen Sie den log-level auf DEBUG in der logback.xml und führen den zugehörigen TestCase aus.
+Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus.
 
 ref::J2EE

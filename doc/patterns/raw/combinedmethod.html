@@ -6,7 +6,7 @@ ord::0401
 <h4>Mehrere Methodenaufrufe werden in einer neuen 
 Methode des Komponenteninterfaces zusammengefasst,
 um Aufrufreihenfolgen, Transaktionssicherheit bzw. 
-Fehlerbehandlung besser gewährleisten zu können.</h4>
+Fehlerbehandlung besser gew&auml;hrleisten zu k&ouml;nnen.</h4>
 
 <h3>Sequenzdiagramm</h3>
 
@@ -16,8 +16,8 @@ img::combined_method_dn.png
 
 Im Beispiel haben wir es mit einer <i>ProductManager</i>-Schnittstelle zu tun.<br />
 Produkte werden erzeugt und dann registriert.<br>
-Ursprünglich gab es nur einen Server, die gemeinsame Transaktionalität war gewährleistet.<br />
-Das hat sich zwischenzeitlich geändert.
+Urspr&uuml;nglich gab es nur einen Server, die gemeinsame Transaktionalit&auml;t war gew&auml;hrleistet.<br />
+Das hat sich zwischenzeitlich ge&auml;ndert.
 
 img::combined_method_px.png
 
@@ -27,10 +27,10 @@ img::combined_method_dx.png
 <area shape="rect" coords="380,13,518,258" href="ProductManagerServer">
 <area shape="rect" coords="194,13,284,258" href="Product">
 
-Die Methode <i>combinedCreateAndRegisterProduct(...)</i> wird entweder vollständig erfolgreich ausgeführt oder gar nicht (keine halben Sachen).
+Die Methode <i>combinedCreateAndRegisterProduct(...)</i> wird entweder vollst&auml;ndig erfolgreich ausgef&uuml;hrt oder gar nicht (keine halben Sachen).
 <p />
 
 
-Um das Zusammenspiel im Detail beobachten zu können, setzen Sie den log-level auf DEBUG in der logback.xml und führen den zugehörigen TestCase aus.
+Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus.
 
 ref::POSA4

@@ -3,7 +3,7 @@ ord::0205
 
 <h5>Verhaltensmuster</h5>
 
-<h4>Visitor ermöglicht es, neue Operationen auf den Elementen 
+<h4>Visitor erm&ouml;glicht es, neue Operationen auf den Elementen 
 einer Struktur zu definieren, ohne die Elemente selbst anzupassen.</h4>
 
 <h3>Klassendiagramm</h3>
@@ -12,10 +12,10 @@ img::visitor_cn.png
 
 <h3>Beispiel</h3>
 
-In unserem kleinen B2B-Geschäft haben wir es mit verschiedenen Firmen zu tun (unseren Kunden).<br>
-Dabei haben wir es häufig mit Unternehmensstrukturen (Holding, Firma, Abteilung etc.) zu tun.<br>
-Auf jeder Ebene werden ggf. Rabatte gewährt, wobei genau festgelegt ist, 
-welche kombiniert werden dürfen und welche nicht.
+In unserem kleinen B2B-Gesch&auml;ft haben wir es mit verschiedenen Firmen zu tun (unseren Kunden).<br>
+Dabei haben wir es h&auml;ufig mit Unternehmensstrukturen (Holding, Firma, Abteilung etc.) zu tun.<br>
+Auf jeder Ebene werden ggf. Rabatte gew&auml;hrt, wobei genau festgelegt ist, 
+welche kombiniert werden d&uuml;rfen und welche nicht.
 
 img::visitor_cx.png
 <area shape="rect" coords="398,10,651,128" href="EnterpriseVisitor">
@@ -25,17 +25,17 @@ img::visitor_cx.png
 <area shape="rect" coords="10,333,263,451" href="CustomerDivision">
 <area shape="rect" coords="10,173,263,291" href="CustomerCompany">
 
-Visitor ermöglicht hier, den <i>konkreten</i> Rabatt zu bestimmen.
+Visitor erm&ouml;glicht hier, den <i>konkreten</i> Rabatt zu bestimmen.
 
 img::visitor_dx.png
 <area shape="rect" coords="434,10,590,254" href="CustomerHolding">
 <area shape="rect" coords="186,10,342,254" href="EffectiveDiscountVisitor">
 
-Zur Ermittlung des Rabatts steigt der <i>Besucher</i> an der gewählten Stelle
-ein, fragt sich gewissermaßen durch, und rechnet den <i>konkreten</i> Rabatt aus.
+Zur Ermittlung des Rabatts steigt der <i>Besucher</i> an der gew&auml;hlten Stelle
+ein, fragt sich gewisserma&szlig;en durch, und rechnet den <i>konkreten</i> Rabatt aus.
 <p />
 
 
-Um das Zusammenspiel im Detail beobachten zu können, setzen Sie den log-level auf DEBUG in der logback.xml und führen den zugehörigen TestCase aus.
+Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus.
 
 ref::GOF,STEMA

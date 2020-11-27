@@ -5,11 +5,11 @@ ord::0605
 
 <h4>Konflikte zwischen konkurrierenden Business-Transaktionen beim Zugriff auf eine Datenquelle
 werden behandelt, indem die drohende Inkonsistenz zum Zeitpunkt des Updates entdeckt
-und die ausführende Transaktion abgebrochen wird (rollback).</h4>
+und die ausf&uuml;hrende Transaktion abgebrochen wird (rollback).</h4>
 
 <h3>Beispiel</h3>
 
-Im Beispiel geht es um die Bearbeitung von Kundendatensätzen.
+Im Beispiel geht es um die Bearbeitung von Kundendatens&auml;tzen.
 
 img::optimistic_offline_lock_cx.png
 <area shape="rect" coords="220,10,437,89" href="DataManager">
@@ -24,10 +24,10 @@ img::optimistic_offline_lock_dx.png
 <area shape="rect" coords="204,10,294,722" href="DataManager">
 
 Der erste Client <i>verliert</i>, weil der zweite Client zwischenzeitlich 
-erfolgreich seine Änderung abgeschlossen hat.
+erfolgreich seine &Auml;nderung abgeschlossen hat.
 <p />
 
 
-Um das Zusammenspiel im Detail beobachten zu können, setzen Sie den log-level auf DEBUG in der logback.xml und führen den zugehörigen TestCase aus.
+Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus.
 
 ref::PEAA

@@ -1,28 +1,28 @@
 Willkommen!
 
-Schön, dass Sie sich entschieden haben, die Beispiele zu Patterns kompakt
+Schoen, dass Sie sich entschieden haben, die Beispiele zu Patterns kompakt
 herunterzuladen. 
 
-Führen Sie folgende Schritte aus, um loszulegen:
+Fuehren Sie folgende Schritte aus, um loszulegen:
 
- 1. Installieren Sie Java 11 (JDK) 
- 2. Installieren Sie Maven (3.2.3 oder neuer) - Sie finden die Instruktionen im Internet
+ 1. Installieren Sie Java 15 (JDK) 
+ 2. Installieren Sie Maven (3.6.3 oder neuer) - Sie finden die Instruktionen im Internet
  3. Installieren Sie eine IDE (z.B. Eclipse)
- 4. Entpacken Sie pk-examples.zip in den Ordner, den Sie für das Projekt nutzen möchten
+ 4. Entpacken Sie pk-examples.zip in den Ordner, den Sie fuer das Projekt nutzen moechten
  5. Starten Sie Ihre IDE (hier Eclipse)
- 6. Wählen Sie Import->Maven->Existing Maven Project und selektieren Sie den entpackten Ordner
- 7. Nach Abschluss (Eclipse wird alle Abhängigkeiten herunterladen) sollte das Projekt compile-clean sein.
+ 6. Waehlen Sie Import->Maven->Existing Maven Project und selektieren Sie den entpackten Ordner
+ 7. Nach Abschluss (Eclipse wird alle Abhaengigkeiten herunterladen) sollte das Projekt compile-clean sein.
  8. Freunde der Kommandozeile wechseln in den entpackten Ordner und bauen dort: mvn clean install
 
 Das Projekt ist nun bereit.
 
-Sie können nun src/de/calamanari/pk/AllTests.java im Baum selektieren und 
-im Kontextmenü [Run As] JUnit Test starten.
+Sie koennen nun src/de/calamanari/pk/AllTests.java im Baum selektieren und 
+im Kontextmenue [Run As] JUnit Test starten.
 
 Die Tests sollten alle durchlaufen.
 
-Das Projekt verwendet slf4j mit logback für die Logausgabe. Entsprechend können Sie 
-die Logausgabe über die logback.xml-Datei steuern.
+Das Projekt verwendet slf4j mit logback fuer die Logausgabe. Entsprechend koennen Sie 
+die Logausgabe ueber die logback.xml-Datei steuern.
 
 Viel Erfolg!
 

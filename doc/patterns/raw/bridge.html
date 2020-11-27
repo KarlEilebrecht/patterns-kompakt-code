@@ -3,8 +3,8 @@ ord::0302
 
 <h5>Strukturmuster</h5>
 
-<h4>Bridge entkoppelt eine Abstraktion von ihrer Implementierung, sodass beide unabhängig voneinander verändert werden können.
-Änderungen verschiedener Aspekte eines Systems werden voneinander unabhängig.</h4>
+<h4>Bridge entkoppelt eine Abstraktion von ihrer Implementierung, sodass beide unabh&auml;ngig voneinander ver&auml;ndert werden k&ouml;nnen.
+&auml;nderungen verschiedener Aspekte eines Systems werden voneinander unabh&auml;ngig.</h4>
 
 <h3>Klassendiagramm</h3>
 
@@ -12,7 +12,7 @@ img::bridge_cn.png
 
 <h3>Beispiel</h3>
 
-Das Beispiel zeigt ein System, dass über einen <i>PersonDataConnector</i> auf Personendaten eines Fremdsystems zugreifen kann.<br />
+Das Beispiel zeigt ein System, dass &uuml;ber einen <i>PersonDataConnector</i> auf Personendaten eines Fremdsystems zugreifen kann.<br />
 
 img::bridge_cx.png
 <area shape="rect" coords="557,340,770,413" href="MultiGlomUdpPersonDataConnectorImp">
@@ -25,13 +25,13 @@ img::bridge_cx.png
 
 Dabei gibt es zwei Aspekte zu beachten:
 <ul>
-<li>Pro Quellsystem wird eine gewisse Kernfunktionalität für den Zugriff benötigt.</li>
+<li>Pro Quellsystem wird eine gewisse Kernfunktionalit&auml;t f&uuml;r den Zugriff ben&ouml;tigt.</li>
 <li>Es soll mehrere Konnektoren geben, die Funktionen basierend auf den Kernfunktionen anbieten.<br />
 Der Standardkonnektor erlaubt einem Client nur zu lesen, ein <i>RwPersonDataConnector</i> erlaubt auch den schreibenden Zugriff.</li>
 </ul>
 <br />
-Die Bridge ermöglicht, diese Aspekte getrennt zu halten. Während ein Team für die Konnektoren zuständig ist, implementieren andere
-Teams bereits Implementierungen der Kernfunktionen für den Zugriff
+Die Bridge erm&ouml;glicht, diese Aspekte getrennt zu halten. W&auml;hrend ein Team f&uuml;r die Konnektoren zust&auml;ndig ist, implementieren andere
+Teams bereits Implementierungen der Kernfunktionen f&uuml;r den Zugriff
 auf Systeme der Firmen <i>HalCorp</i> und <i>MultiGlom</i>.
 
 img::bridge_px.png
@@ -41,6 +41,6 @@ Im Bild sehen sie die Installation bei <i>Foobar&amp;Sons</i>, die ein <i>HalCor
 <p />
 
 
-Um das Zusammenspiel im Detail beobachten zu können, setzen Sie den log-level auf DEBUG in der logback.xml und führen den zugehörigen TestCase aus.
+Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus.
 
 ref::GOF,SHTR
