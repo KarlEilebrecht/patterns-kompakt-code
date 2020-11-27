@@ -4,7 +4,7 @@
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License"):
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -35,6 +35,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+// In this source I intentionally have made a few comments regarding the corresponding SQL-statements.
+// Thus I need to suppress the SonarLint complaint
+@SuppressWarnings("java:S125")
 public final class LockManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LockManager.class);

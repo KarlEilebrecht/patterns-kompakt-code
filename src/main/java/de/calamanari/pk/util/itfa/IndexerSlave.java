@@ -4,7 +4,7 @@
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License"):
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -184,14 +184,13 @@ final class IndexerSlave implements Runnable {
             }
             state.lineEntryCount++;
             state.lineIndex[state.lineEntryCount - 1] = new long[] { state.numberOfLinesRead, newLineStart };
-            // lastLineStartPos = newLineStart;
             state.lastIndexedLineStartCharNumber = newLineStartCharNumber;
         }
     }
 
     private void updateCharacterIndex(SlaveConfig conf, SlaveState state) {
         // never create entries for low surrogate characters (56320-57343), because it is impossible to
-        // directly read (decode) them without reading the mandatory high surrogate before;
+        // directly read (decode) them without reading the mandatory high surrogate before
         // low surrogates don't have any absolute position
         if ((state.read < CharsetUtils.MIN_HIGH_SURROGATE_CODE || state.read > CharsetUtils.MAX_SURROGATE_CODE)
                 && conf.currentMaxNumberOfCharEntries > state.charEntryCount
@@ -202,7 +201,6 @@ final class IndexerSlave implements Runnable {
             }
             state.charEntryCount++;
             state.charIndex[state.charEntryCount - 1] = new long[] { state.numberOfCharactersRead, state.lastBytePos };
-            // lastCharPos = lastBytePos;
             state.lastCharWasIndexed = true;
             state.lastIndexedCharNumber = state.numberOfCharactersRead;
         }
