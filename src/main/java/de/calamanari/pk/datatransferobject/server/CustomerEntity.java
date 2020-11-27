@@ -34,6 +34,7 @@ import de.calamanari.pk.datatransferobject.CustomerRemote;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+// Suppress Sonar Lint complaint about not implementing equals (no intention to do that based on properties here)
 @SuppressWarnings("squid:S2160")
 public class CustomerEntity extends UnicastRemoteObject implements CustomerRemote {
 

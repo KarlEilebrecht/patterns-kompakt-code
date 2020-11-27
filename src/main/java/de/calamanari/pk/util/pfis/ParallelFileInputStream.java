@@ -128,6 +128,7 @@ public final class ParallelFileInputStream extends InputStream {
      * @return input stream
      * @throws IOException on file access error
      */
+    // This method's job is returning an open stream, thus suppressing SonarLint complaint
     @SuppressWarnings("squid:S2095")
     public static ParallelFileInputStream createInputStream(File file, int maxBufferSize, BufferType bufferType) throws IOException {
         ParallelFileInputStream pfis = new ParallelFileInputStream(file, maxBufferSize, bufferType);
@@ -235,6 +236,7 @@ public final class ParallelFileInputStream extends InputStream {
      * @param bufferType the type of buffer to be used, see {@link BufferType}
      * @throws IOException on file access error
      */
+    // This method's job is returning an open stream, thus suppressing SonarLint complaints
     @SuppressWarnings({ "resource", "squid:S2093", "squid:S2095" })
     private ParallelFileInputStream(File file, int maxBufferSize, BufferType bufferType) throws IOException {
         if (maxBufferSize <= 0) {

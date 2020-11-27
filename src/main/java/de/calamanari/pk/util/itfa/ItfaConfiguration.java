@@ -28,7 +28,7 @@ import de.calamanari.pk.util.pfis.BufferType;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class ItfaConfiguration implements Cloneable, Serializable {
+public class ItfaConfiguration implements Serializable {
 
     /**
      * for serialization
@@ -162,19 +162,6 @@ public class ItfaConfiguration implements Cloneable, Serializable {
 
     public void setMaxNumberOfLineIndexEntries(int maxNumberOfLineIndexEntries) {
         this.maxNumberOfLineIndexEntries = maxNumberOfLineIndexEntries;
-    }
-
-    @Override
-    @SuppressWarnings("squid:S2975")
-    public Object clone() {
-        ItfaConfiguration configuration = null;
-        try {
-            configuration = (ItfaConfiguration) super.clone();
-        }
-        catch (CloneNotSupportedException ex) {
-            // won't happen
-        }
-        return configuration;
     }
 
 }

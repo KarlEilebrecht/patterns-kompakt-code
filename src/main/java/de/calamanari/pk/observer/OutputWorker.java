@@ -51,6 +51,7 @@ public class OutputWorker extends Thread implements OutputObservable {
     /**
      * registered output observer, if any
      */
+    // Volatile is sufficient as there is no race condition in this scenario
     @SuppressWarnings("java:S3077")
     private volatile OutputObserver observer = null;
 

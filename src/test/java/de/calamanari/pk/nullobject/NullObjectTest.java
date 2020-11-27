@@ -66,7 +66,7 @@ public class NullObjectTest {
         assertEquals("XENOS, TREADSTONE, ANDROMEDA, GALAXY1", concatNames(nameData));
 
         // clone / produce a duplicate
-        HostNameData nameDataClone = (HostNameData) nameData.clone();
+        HostNameData nameDataClone = nameData.copy();
         assertNotSame(nameData, nameDataClone);
 
         // serialization / produce a duplicate
@@ -78,7 +78,7 @@ public class NullObjectTest {
         assertEquals("", concatNames(nameData));
 
         // null objects should not be duplicated
-        HostNameData nameData2 = (HostNameData) nameData.clone();
+        HostNameData nameData2 = nameData.copy();
         assertSame(nameData, nameData2);
 
         // serialization of a NULL OBJECT followed by deserialization should not produce a duplicate

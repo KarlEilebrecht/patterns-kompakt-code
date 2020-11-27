@@ -57,7 +57,7 @@ public class Session {
      * @return identity map for the given entity type, never null
      */
     public <K extends Object, E extends Entity<K>> IdentityMap<K, E> getIdentityMap(Class<E> entityType) {
-        @SuppressWarnings({ "unchecked" })
+        @SuppressWarnings("unchecked")
         IdentityMap<K, E> result = (IdentityMap<K, E>) identityMaps.computeIfAbsent(entityType, key -> new IdentityMap<>(entityType));
         return result;
     }

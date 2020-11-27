@@ -211,6 +211,7 @@ public class ObserverTest {
         }
 
         @Override
+        // Suppressing SonarLint's complaint about using Thread.sleep() here, see below
         @SuppressWarnings("squid:S2925")
         public void run() {
             while (!stoppedFlag.get()) {
@@ -235,7 +236,7 @@ public class ObserverTest {
                     Thread.sleep(0, 1);
                 }
                 catch (InterruptedException ex) {
-                    LOGGER.error("interrupted");
+                    LOGGER.error("Worker thread interrupted!");
                     Thread.currentThread().interrupt();
                     break;
                 }

@@ -50,6 +50,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
     /**
      * reference to serverSocket
      */
+    // Volatile is sufficient as there is no race condition in this scenario
     @SuppressWarnings("java:S3077")
     protected volatile ServerSocket serverSocket = null;
 

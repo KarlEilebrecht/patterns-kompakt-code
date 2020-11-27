@@ -24,7 +24,7 @@ package de.calamanari.pk.identitymap;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class AddressEntity implements Entity<String>, Cloneable {
+public class AddressEntity implements Entity<String> {
 
     /**
      * address identifier
@@ -222,17 +222,12 @@ public class AddressEntity implements Entity<String>, Cloneable {
                 + ", country=" + country + ", salutation=" + salutation + "})";
     }
 
-    @Override
-    @SuppressWarnings("squid:S2975")
-    public Object clone() {
-        AddressEntity entity = null;
-        try {
-            entity = (AddressEntity) super.clone();
-        }
-        catch (CloneNotSupportedException ex) {
-            // won't happen
-        }
-        return entity;
+    /**
+     * Creates a duplicate with the same values as this object
+     * @return duplicate
+     */
+    public AddressEntity shallowCopy() {
+        return new AddressEntity(id, customerId, street, zipCode, city, country, salutation);
     }
 
 }

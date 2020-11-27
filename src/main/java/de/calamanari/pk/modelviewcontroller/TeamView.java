@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+// Sonar Lint rule violation cannot be avoided when using Swing
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class TeamView extends JFrame {
 

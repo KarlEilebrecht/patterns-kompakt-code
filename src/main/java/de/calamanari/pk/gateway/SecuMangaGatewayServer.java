@@ -121,6 +121,7 @@ public class SecuMangaGatewayServer extends AbstractConsoleServer {
     /**
      * reference to service endpoint
      */
+    // Volatile is sufficient as there is no race condition regarding the Endpoint creation in this scenario
     @SuppressWarnings("java:S3077")
     protected volatile Endpoint serviceEndpoint;
 

@@ -74,6 +74,7 @@ public abstract class AbstractWorker {
      * 
      * @return iterator of subordinates, NEVER NULL
      */
+    // Suppressing this Sonar Lint warning because NOT using a wildcard here would lead to very inelegant code in the worker hierarchy, try it out ...
     @SuppressWarnings("squid:S1452")
     public abstract Iterator<? extends AbstractWorker> createSubordinatesIterator();
 

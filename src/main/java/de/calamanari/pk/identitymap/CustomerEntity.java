@@ -24,7 +24,7 @@ package de.calamanari.pk.identitymap;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class CustomerEntity implements Entity<String>, Cloneable {
+public class CustomerEntity implements Entity<String> {
 
     /**
      * id of customer
@@ -224,17 +224,11 @@ public class CustomerEntity implements Entity<String>, Cloneable {
                 + ", email=" + email + ", promotionOptIn=" + promotionOptIn + "})";
     }
 
-    @Override
-    @SuppressWarnings("squid:S2975")
-    public Object clone() {
-        CustomerEntity entity = null;
-        try {
-            entity = (CustomerEntity) super.clone();
-        }
-        catch (CloneNotSupportedException ex) {
-            // won't happen
-        }
-        return entity;
+    /**
+     * Creates a duplicate with the same values as this object
+     * @return duplicate
+     */
+    public CustomerEntity shallowCopy() {
+        return new CustomerEntity(id, title, lastName, firstName, phone, email, promotionOptIn);
     }
-
 }

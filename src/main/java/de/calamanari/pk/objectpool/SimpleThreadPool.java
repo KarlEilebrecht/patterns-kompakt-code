@@ -77,6 +77,7 @@ public class SimpleThreadPool {
     /**
      * Thread group for all managed threads.
      */
+    // Sonar Lint correctly warns that using ThreadPoolExecutor would be better practice :)
     @SuppressWarnings("java:S3014")
     private final ThreadGroup threadGroup = new ThreadGroup(this.getClass().getSimpleName() + " - Pool Threads");
 
@@ -261,6 +262,7 @@ public class SimpleThreadPool {
      * 
      * @return thread group all pool threads belong to
      */
+    // Suppressing correct SonarLint advice to better use ThreadPoolExecutor :)
     @SuppressWarnings("java:S3014")
     public ThreadGroup getThreadGroup() {
         return threadGroup;

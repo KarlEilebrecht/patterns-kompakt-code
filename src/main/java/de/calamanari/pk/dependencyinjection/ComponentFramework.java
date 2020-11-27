@@ -114,6 +114,7 @@ public final class ComponentFramework {
      * @throws InvocationTargetException injection method or field could not be invoked
      * @throws NoSuchMethodException if constructor unavailable
      */
+    // Suppressing Sonar Type complaint about using reflection, this is a "framework"
     @SuppressWarnings("java:S3011")
     private static Component createAndPerformSetterOrAnnotationBasedInjection(String componentIdentifier, Class<? extends Component> componentClass)
             throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
@@ -237,6 +238,7 @@ public final class ComponentFramework {
      * @param cl class to be reflected
      * @return appropriate field or null
      */
+    // Suppressing Sonar Type complaint about using reflection, this is a "framework"
     @SuppressWarnings("java:S3011")
     private static Field getInjectionField(Class<?> cl) {
         try {

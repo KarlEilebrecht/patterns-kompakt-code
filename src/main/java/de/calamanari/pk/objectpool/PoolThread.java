@@ -44,11 +44,12 @@ public class PoolThread extends Thread {
     /**
      * This lock manages the waiting mode of a thread
      */
-    private final Object lock = new Object();
+    private final Object monitor = new Object();
 
     /**
      * Runnable to be executed by the thread. The variable is declared volatile to be sure the thread sees the new content after notification.
      */
+    // Due to the monitor volatile is sufficient
     @SuppressWarnings("java:S3077")
     private volatile Runnable job = null;
 
@@ -94,10 +95,10 @@ public class PoolThread extends Thread {
      */
     @Override
     public synchronized void start() {
-        synchronized (lock) {
+        synchronized (monitor) {
             if (this.isAlive()) {
                 if (!disposed) {
-                    lock.notifyAll();
+                    monitor.notifyAll();
                 }
                 else {
                     throw new IllegalStateException("PoolThread is already disposed!");
@@ -185,12 +186,12 @@ public class PoolThread extends Thread {
      * @throws InterruptedException pass-through from waiting
      */
     // I suppress here squid:S2274 because there is a loop outside in the run()-method.
-    // Should the thread wake-up unintentionally it will go back into the pool soon immediately
+    // Should the thread wake-up unintentionally it will go back into the pool immediately
     @SuppressWarnings("squid:S2274")
     protected void returnToPoolAndWait() throws InterruptedException {
-        synchronized (lock) {
+        synchronized (monitor) {
             threadPool.returnThreadToIdlePool(this);
-            lock.wait();
+            monitor.wait();
         }
     }
 
@@ -199,12 +200,12 @@ public class PoolThread extends Thread {
      * The method must not be called in any other thread-state than idle!
      */
     protected void dispose() {
-        synchronized (lock) {
+        synchronized (monitor) {
             disposed = true;
             // call comes from pool management while this thread
             // is in wait mode, now
             // notify the thread that it can die gracefully
-            lock.notifyAll();
+            monitor.notifyAll();
         }
     }
 

@@ -27,7 +27,7 @@ import java.util.Collection;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public interface HostNameData extends Iterable<String>, Cloneable, Serializable {
+public interface HostNameData extends Iterable<String>, Serializable {
 
     /**
      * Returns the number of entries in host name data
@@ -91,11 +91,10 @@ public interface HostNameData extends Iterable<String>, Cloneable, Serializable 
     public boolean addHostName(String name);
 
     /**
-     * HostNameData is cloneable
-     * 
-     * @return clone
+     * Creates a copy of this object, so that the internal state of the copy will be independent.<br>
+     * This is not a deep clone as the values will not be copied but referenced.
+     * @return copy of this object
      */
-    @SuppressWarnings("squid:S2975")
-    public Object clone();
+    public <T extends HostNameData> T copy();
 
 }

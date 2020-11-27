@@ -98,7 +98,7 @@ public final class DataManager {
         CustomerEntity entity = Database.CUSTOMERS.get(customerId);
 
         // The database must always returns a fresh entity, otherwise the example was a little useless :-)
-        return (CustomerEntity) entity.clone();
+        return entity.shallowCopy();
 
     }
 
@@ -156,7 +156,7 @@ public final class DataManager {
         AddressEntity entity = Database.ADDRESSES.get(addressId);
 
         // The database must always returns a fresh entity, otherwise the example was a little useless :-)
-        return (AddressEntity) entity.clone();
+        return entity.shallowCopy();
     }
 
 }

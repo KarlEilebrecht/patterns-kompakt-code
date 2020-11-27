@@ -122,13 +122,16 @@ public class ConcreteHostNameData implements HostNameData {
         return Collections.unmodifiableList(internalList).iterator();
     }
 
-    @Override
-    @SuppressWarnings({ "squid:S1182", "squid:S2975" })
-    public Object clone() {
-        LOGGER.debug("{}.clone() called.", ConcreteHostNameData.class.getSimpleName());
+    /**
+     * Creates a copy of this object, so that the internal state of the copy will be independent.<br>
+     * This is not a deep clone as the values will not be copied but referenced.
+     * @return copy of this object
+     */
+    public <T extends HostNameData> T copy() {
+        LOGGER.debug("{}.copy() called.", ConcreteHostNameData.class.getSimpleName());
         @SuppressWarnings("unchecked")
-        ArrayList<String> clonedInternalList = (ArrayList<String>) internalList.clone();
-        return new ConcreteHostNameData(purpose, clonedInternalList);
+        T res = (T) new ConcreteHostNameData(purpose, new ArrayList<>(internalList));
+        return res;
     }
 
 }

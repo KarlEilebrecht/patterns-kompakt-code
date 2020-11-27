@@ -48,6 +48,7 @@ public class TeamModel {
     /**
      * observer of this model
      */
+    // Volatile is sufficient as there is no race condition in this scenario
     @SuppressWarnings("java:S3077")
     private volatile TeamModelObserver observer = null;
 

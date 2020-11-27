@@ -218,6 +218,7 @@ final class IndexerMaster {
      * @return prepared master stream
      * @throws IOException on file access problems
      */
+    // This method's job is to return an open stream, thus suppressing SonarLint complaint
     @SuppressWarnings("squid:S2095")
     private ParallelFileInputStream prepareMasterStream() throws IOException {
         ParallelFileInputStream masterStream;
