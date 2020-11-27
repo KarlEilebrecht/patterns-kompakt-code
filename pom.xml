@@ -8,6 +8,10 @@
 	<name>Patterns Kompakt Code</name>
 	<description>Code-Beispiel zum Buch Patterns Kompakt</description>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>
