@@ -623,4 +623,10 @@ public class IndexedTextFileAccessor {
         return skipped;
     }
 
+    /**
+     * If a caller does not need the text file accessor anymore, this method should be called to free thread-local resources.
+     */
+    public void cleanup() {
+        lastKnownFilePosition.remove();
+    }
 }

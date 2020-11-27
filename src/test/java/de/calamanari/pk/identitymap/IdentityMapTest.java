@@ -139,6 +139,8 @@ public class IdentityMapTest {
         String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test identity map successful! Elapsed time: {} s", elapsedTimeString);
 
+        Session.cleanUp();
+
     }
 
 }

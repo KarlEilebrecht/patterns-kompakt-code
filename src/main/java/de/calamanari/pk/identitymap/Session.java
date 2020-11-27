@@ -62,4 +62,11 @@ public class Session {
         return result;
     }
 
+    /**
+     * Method to be called when the current thread does not need the session data anymore.
+     */
+    public static void cleanUp() {
+        SESSION_HOLDER.remove();
+    }
+
 }
