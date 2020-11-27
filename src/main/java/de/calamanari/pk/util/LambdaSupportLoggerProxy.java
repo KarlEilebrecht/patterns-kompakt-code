@@ -56,7 +56,7 @@ import org.slf4j.spi.LoggingEventBuilder;
  * <li>Lambdas can be specified on demand.</li>
  * <li>Simple logging statements remain clear and short, lambda-enriched statements have a still acceptable level of complexity.</li>
  * <li>We do not change the interface of the Logger, we do not change the existing logger usage paradigm.</li>
- * <li>Code analysis tools (like code helper or SonaType) are not impacted at all.</li>
+ * <li>Code analysis tools (like code helper or SonarLint) are not impacted at all.</li>
  * <li>The caller depth output (i.e. <a href="https://logback.qos.ch/manual/layouts.html">https://logback.qos.ch/manual/layouts.html</a>) may change (+1)
  * because the call to the real logger now comes from inside the PROXY.</li>
  * <li>The thin proxy layer adds minimal extra effort for testing all log arguments. Potentially, this may have an impact on scenarios with enabled logger and
@@ -71,7 +71,7 @@ import org.slf4j.spi.LoggingEventBuilder;
  * </ul>
  * Another POC has shown that better <b>usability</b> (eliminate need for the <i>defer()</i>-method can be achieved by implementing an ADAPTER (generated code
  * with a few hundred methods using argument permutation), but this would come at a high price: The implementation effort would be quite high, and we would
- * definitely break <b>continuity</b>. Tests with such an adapter indicated that IDE code assist and analysis features (SonaType) out-of-the-box won't work with
+ * definitely break <b>continuity</b>. Tests with such an adapter indicated that IDE code assist and analysis features (SonaLint) out-of-the-box won't work with
  * the adapter in the same way they do with the plain logger. It is also questionable how IDEs react on classes with hundreds of methods. However, the runtime
  * (evaluation) effort would be smaller because unlike the PROXY-solution the ADAPTER-implementation with argument permutation won't require any argument
  * testing.
