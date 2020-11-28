@@ -20,6 +20,20 @@ import org.slf4j.LoggerFactory;
 import de.calamanari.other.SourceLineInterpreter.CommentType;
 import de.calamanari.other.SourceLineInterpreter.Phrase;
 
+/**
+ * This class reformats the output (src-html) of the javadoc tool. It exists purely for legacy reasons not to break the existing content (L+F and links) on
+ * patterns-kompakt.de.<br>
+ * <b>This technique is not recommended</b> as it implicitly depends on the <i>output html-style</i> javadoc uses, hard to maintain over time.
+ * <p>
+ * <b>Usage:</b>
+ * <ul>
+ * <li>Generate javadoc with the extra option <code>-linksource -sourcetab 4</code> to a folder <code><i>javadoc</i></code></li>
+ * <li>Run <code>JavaDocSourceTransformer <i>javadoc/src-html</i></code></li>
+ * </ul>
+ * Transformation happens in-place (files will be modified).
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
 public class JavaDocSourceTransformer {
 
     private static final String HTML_END_OF_SPAN = "</span>";

@@ -1,5 +1,11 @@
 package de.calamanari.other;
 
+/**
+ * Represents a single line of source code found in the output of javadoc. {@link SourceLine}s are subject to reformatting while other lines will be left
+ * unchanged.
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
 public class SourceLine extends FileLine {
 
     public final int startPos;

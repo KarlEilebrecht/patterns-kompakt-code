@@ -3,6 +3,13 @@ package de.calamanari.other;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * For reformatting the source code output of javadoc we need a minimal understanding of<br>
+ * the raw input (distinguish source lines from supplementary text).<br>
+ * This interpreter deals with the source lines to split them into phrases that can be formatted individually.
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
 public class SourceLineInterpreter {
 
     CommentType commentType = CommentType.NONE;

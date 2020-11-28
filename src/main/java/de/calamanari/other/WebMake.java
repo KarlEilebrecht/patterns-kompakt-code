@@ -29,6 +29,15 @@ import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 
+/**
+ * Generator for the web content of patterns-kompakt.de<br>
+ * This is pure legacy (avoid breaking representation change and existing links from other websites).<br>
+ * The code is hard to maintain as it does a lot things manually (with a weird pseudo-DSL) much better supported by real documentation frameworks.
+ * <p>
+ * For starting a new project like this I would recommend using <a href="https://asciidoc.org/">https://asciidoc.org/</a>
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
 public class WebMake {
 
     private static final String PATTERNS = "patterns";
