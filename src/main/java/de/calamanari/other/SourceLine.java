@@ -10,11 +10,11 @@ public class SourceLine extends FileLine {
 
     public SourceLine(String rawLine) {
         super(rawLine);
-        int ancorNameStartPos = rawLine.lastIndexOf("<a id=\"line.") + 7;
+        int ancorNameStartPos = rawLine.lastIndexOf("<span id=\"line.") + 10;
         int ancorNameEndPos = rawLine.indexOf('\"', ancorNameStartPos);
         this.ancorName = rawLine.substring(ancorNameStartPos, ancorNameEndPos);
         this.startPos = ancorNameEndPos + 2;
-        this.endPos = rawLine.lastIndexOf("</a>");
+        this.endPos = rawLine.lastIndexOf("</span>");
     }
 
     public int indexOf(char ch) {

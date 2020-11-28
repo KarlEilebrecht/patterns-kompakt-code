@@ -102,7 +102,7 @@ public class JavaDocSourceHolder {
     }
 
     private boolean isSourceLine(String rawLine) {
-        return rawLine.indexOf("<span class=\"sourceLineNo\">") > -1;
+        return rawLine.indexOf("<span class=\"source-line-no\">") > -1;
     }
 
     public List<SourceLine> getSourceLines() {
