@@ -28,14 +28,24 @@ public class HashStrategyException extends RuntimeException {
 
     private static final long serialVersionUID = 8725285178884885688L;
 
+    /**
+     * @param message information
+     */
     public HashStrategyException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public HashStrategyException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public HashStrategyException(String message, Throwable cause) {
         super(message, cause);
     }

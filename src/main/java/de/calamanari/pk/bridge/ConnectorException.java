@@ -28,14 +28,24 @@ public class ConnectorException extends RuntimeException {
 
     private static final long serialVersionUID = 2708388633388267175L;
 
+    /**
+     * @param message information
+     */
     public ConnectorException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public ConnectorException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public ConnectorException(String message, Throwable cause) {
         super(message, cause);
     }

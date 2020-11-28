@@ -54,13 +54,16 @@ public final class Database {
         // no instances
     }
 
+    /**
+     * @param customerId mandatory
+     * @return BUILDER instance with customerId set
+     */
     public static Builder prepareCustomer(String customerId) {
         return new Builder(customerId);
     }
 
     /**
-     * Builder to avoid huge constructor
-     *
+     * Builder to avoid huge constructor for setting up our "database"
      */
     public static class Builder {
 
@@ -68,6 +71,10 @@ public final class Database {
         private final AddressEntity addressEntity;
         private final CustomerDwhInfoEntity.Builder customerBuilder;
 
+        /**
+         * initializes the builder (customer/address) for the given id
+         * @param customerId mandatory
+         */
         Builder(String customerId) {
             this.customerEntity = new CustomerEntity();
             customerEntity.setCustomerId(customerId);
@@ -77,7 +84,7 @@ public final class Database {
         }
 
         /**
-         * @param title
+         * @param title customer property
          * @return builder
          */
         public Builder withTitle(String title) {
@@ -86,7 +93,7 @@ public final class Database {
         }
 
         /**
-         * @param lastName
+         * @param lastName customer property
          * @return builder
          */
         public Builder withLastName(String lastName) {
@@ -95,7 +102,7 @@ public final class Database {
         }
 
         /**
-         * @param firstName
+         * @param firstName customer property
          * @return builder
          */
         public Builder withFirstName(String firstName) {
@@ -104,7 +111,7 @@ public final class Database {
         }
 
         /**
-         * @param phone
+         * @param phone customer property
          * @return builder
          */
         public Builder withPhone(String phone) {
@@ -113,7 +120,7 @@ public final class Database {
         }
 
         /**
-         * @param email
+         * @param email customer property
          * @return builder
          */
         public Builder withEmail(String email) {
@@ -122,7 +129,7 @@ public final class Database {
         }
 
         /**
-         * @param promotionOptIn
+         * @param promotionOptIn customer property
          * @return builder
          */
         public Builder withPromotionOptIn(boolean promotionOptIn) {
@@ -131,7 +138,7 @@ public final class Database {
         }
 
         /**
-         * @param addressId
+         * @param addressId address property
          * @return builder
          */
         public Builder withAddressId(String addressId) {
@@ -140,7 +147,7 @@ public final class Database {
         }
 
         /**
-         * @param street
+         * @param street address property
          * @return builder
          */
         public Builder withStreet(String street) {
@@ -149,7 +156,7 @@ public final class Database {
         }
 
         /**
-         * @param zipCode
+         * @param zipCode address property
          * @return builder
          */
         public Builder withZipCode(String zipCode) {
@@ -158,7 +165,7 @@ public final class Database {
         }
 
         /**
-         * @param city
+         * @param city address property
          * @return builder
          */
         public Builder withCity(String city) {
@@ -167,7 +174,7 @@ public final class Database {
         }
 
         /**
-         * @param country
+         * @param country address property
          * @return builder
          */
         public Builder withCountry(String country) {
@@ -176,7 +183,7 @@ public final class Database {
         }
 
         /**
-         * @param salutation
+         * @param salutation address property
          * @return builder
          */
         public Builder withSalutation(String salutation) {
@@ -185,7 +192,7 @@ public final class Database {
         }
 
         /**
-         * @param customerType
+         * @param customerType customer identifier
          * @return builder
          */
         public Builder withCustomerType(String customerType) {
@@ -194,7 +201,7 @@ public final class Database {
         }
 
         /**
-         * @param scorePoints
+         * @param scorePoints customer property
          * @return builder
          */
         public Builder withScorePoints(int scorePoints) {
@@ -223,7 +230,7 @@ public final class Database {
         }
 
         /**
-         * @param dueInvoice
+         * @param dueInvoice customer property
          * @return builder
          */
         public Builder withDueInvoice(boolean dueInvoice) {
@@ -232,7 +239,7 @@ public final class Database {
         }
 
         /**
-         * @param fraudSuspicion
+         * @param fraudSuspicion customer property
          * @return builder
          */
         public Builder withFraudSuspicion(boolean fraudSuspicion) {
@@ -241,7 +248,7 @@ public final class Database {
         }
 
         /**
-         * @param badPayer
+         * @param badPayer customer property
          * @return builder
          */
         public Builder withBadPayer(boolean badPayer) {

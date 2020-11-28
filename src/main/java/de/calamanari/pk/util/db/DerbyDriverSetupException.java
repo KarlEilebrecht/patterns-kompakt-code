@@ -28,14 +28,24 @@ public class DerbyDriverSetupException extends RuntimeException {
 
     private static final long serialVersionUID = 8957010821026518340L;
 
+    /**
+     * @param message information
+     */
     public DerbyDriverSetupException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public DerbyDriverSetupException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public DerbyDriverSetupException(String message, Throwable cause) {
         super(message, cause);
     }

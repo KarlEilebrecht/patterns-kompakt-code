@@ -167,6 +167,9 @@ public class TeamView extends JFrame {
      */
     public final JTextField txtInput = new JTextField("");
 
+    /**
+     * Indicates this {@link #dispose()} has previously been called on this view
+     */
     private volatile boolean disposed = false;
 
     /**
@@ -312,6 +315,9 @@ public class TeamView extends JFrame {
         LOGGER.debug("{} has been disposed", this.getClass().getSimpleName());
     }
 
+    /**
+     * @return true if {@link #dispose()} has previously been called on this view, otherwise false
+     */
     public boolean isDisposed() {
         return disposed;
     }

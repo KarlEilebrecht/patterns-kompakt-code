@@ -28,14 +28,24 @@ public class ProductManagerServerException extends RuntimeException {
 
     private static final long serialVersionUID = -7817630198726740705L;
 
+    /**
+     * @param message information
+     */
     public ProductManagerServerException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public ProductManagerServerException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public ProductManagerServerException(String message, Throwable cause) {
         super(message, cause);
     }

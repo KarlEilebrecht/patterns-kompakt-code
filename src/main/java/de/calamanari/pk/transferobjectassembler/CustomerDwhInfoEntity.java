@@ -77,6 +77,11 @@ public class CustomerDwhInfoEntity {
 
     // more flags and infos
 
+    /**
+     * Creates a new builder for easier construction
+     * @param customerId mandatory
+     * @return builder
+     */
     public static Builder forCustomerId(String customerId) {
         return new Builder(customerId);
     }

@@ -28,14 +28,24 @@ public class SequenceBlockManagementException extends RuntimeException {
 
     private static final long serialVersionUID = -3644999372939303663L;
 
+    /**
+     * @param message information
+     */
     public SequenceBlockManagementException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public SequenceBlockManagementException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public SequenceBlockManagementException(String message, Throwable cause) {
         super(message, cause);
     }

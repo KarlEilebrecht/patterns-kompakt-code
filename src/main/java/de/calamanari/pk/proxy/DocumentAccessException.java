@@ -28,14 +28,24 @@ public class DocumentAccessException extends RuntimeException {
 
     private static final long serialVersionUID = 5950320734737213201L;
 
+    /**
+     * @param message information
+     */
     public DocumentAccessException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public DocumentAccessException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public DocumentAccessException(String message, Throwable cause) {
         super(message, cause);
     }

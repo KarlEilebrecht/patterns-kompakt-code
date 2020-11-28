@@ -28,14 +28,24 @@ public class LciWrapperException extends RuntimeException {
 
     private static final long serialVersionUID = 1719391029100035026L;
 
+    /**
+     * @param message information
+     */
     public LciWrapperException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public LciWrapperException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public LciWrapperException(String message, Throwable cause) {
         super(message, cause);
     }

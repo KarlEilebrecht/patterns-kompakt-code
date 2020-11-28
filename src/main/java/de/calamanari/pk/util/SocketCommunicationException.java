@@ -30,14 +30,24 @@ public class SocketCommunicationException extends IOException {
 
     private static final long serialVersionUID = -7577507067206716008L;
 
+    /**
+     * @param message information
+     */
     public SocketCommunicationException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public SocketCommunicationException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public SocketCommunicationException(String message, Throwable cause) {
         super(message, cause);
     }

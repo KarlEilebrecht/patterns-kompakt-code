@@ -30,14 +30,50 @@ import java.util.Map;
  */
 public enum JavaWrapperType {
     //@formatter:off
+
+    /**
+     * boolean vs. Boolean
+     */
     BOOLEAN(boolean.class, Boolean.class, true),
+
+    /**
+     * byte vs. Byte
+     */
     BYTE(byte.class, Byte.class, true),
+
+    /**
+     * char vs. Character
+     */
     CHARACTER(char.class, Character.class, true),
+    
+    /**
+     * double vs. Double
+     */
     DOUBLE(double.class, Double.class, true),
+    
+    /**
+     * float vs. Float
+     */
     FLOAT(float.class, Float.class, true),
+    
+    /**
+     * int vs. Integer
+     */
     INTEGER(int.class, Integer.class, true),
+    
+    /**
+     * long vs. Long
+     */
     LONG(long.class, Long.class, true),
+    
+    /**
+     * short vs. Short
+     */
     SHORT(short.class, Short.class, true),
+    
+    /**
+     * void vs. Void
+     */
     VOID(void.class, Void.class, false);
 
     //@formatter:on
@@ -52,10 +88,27 @@ public enum JavaWrapperType {
         LOOKUP = Collections.unmodifiableMap(lookup);
     }
 
+    /**
+     * The primitive type that can be wrapped
+     */
     public final Class<?> primitiveType;
+
+    /**
+     * Wrapper type for Boxing in Java
+     */
     public final Class<?> wrapperType;
+
+    /**
+     * For symmetry reasons VOID is included, but you cannot create any primitive array of <b>void</b><br>
+     * This flag indicates this for generic processing.
+     */
     public final boolean primitiveArraysSupported;
 
+    /**
+     * @param primitiveType
+     * @param wrapperType
+     * @param primitiveArraysSupported always true except for {@link #VOID}
+     */
     JavaWrapperType(Class<?> primitiveType, Class<?> wrapperType, boolean primitiveArraysSupported) {
         this.primitiveType = primitiveType;
         this.wrapperType = wrapperType;
@@ -64,13 +117,17 @@ public enum JavaWrapperType {
 
     /**
      * Returns the {@link JavaWrapperType} instance if the given class is either a primitive or a wrapper type.
-     * @param clazz
+     * @param clazz primitive class or wrapper type (i.e. int.class or Integer.class)
      * @return wrappable type instance or null if the given class is not supported
      */
     public static JavaWrapperType forClass(Class<?> clazz) {
         return LOOKUP.get(clazz);
     }
 
+    /**
+     * For debugging (can't overwrite toString() of an enum)
+     * @return description
+     */
     public String getDescription() {
         return String.format("%s(primitiveType=%s%s, wrapperType=%s)", this.toString(), this.primitiveType.getSimpleName(),
                 (this == VOID ? " (no arrays)" : ""), this.wrapperType.getSimpleName());

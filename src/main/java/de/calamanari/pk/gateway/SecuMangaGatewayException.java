@@ -28,20 +28,26 @@ public class SecuMangaGatewayException extends RuntimeException {
 
     private static final long serialVersionUID = 1040347863727567113L;
 
+    /**
+     * @param message information
+     */
     public SecuMangaGatewayException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public SecuMangaGatewayException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public SecuMangaGatewayException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public SecuMangaGatewayException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 
 }

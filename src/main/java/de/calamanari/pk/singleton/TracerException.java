@@ -28,14 +28,24 @@ public class TracerException extends RuntimeException {
 
     private static final long serialVersionUID = 2133956562128610454L;
 
+    /**
+     * @param message information
+     */
     public TracerException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public TracerException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public TracerException(String message, Throwable cause) {
         super(message, cause);
     }

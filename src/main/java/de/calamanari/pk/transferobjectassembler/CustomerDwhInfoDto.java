@@ -102,6 +102,11 @@ public class CustomerDwhInfoDto implements Serializable {
 
     // more flags and infos
 
+    /**
+     * Creates a builder for fluent construction
+     * @param customerId mandatory
+     * @return builder
+     */
     public static Builder forCustomerId(String customerId) {
         return new Builder(customerId);
     }

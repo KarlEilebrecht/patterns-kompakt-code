@@ -28,14 +28,24 @@ public class ExampleScriptingFrameworkException extends RuntimeException {
 
     private static final long serialVersionUID = 369440618374874047L;
 
+    /**
+     * @param message information
+     */
     public ExampleScriptingFrameworkException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public ExampleScriptingFrameworkException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public ExampleScriptingFrameworkException(String message, Throwable cause) {
         super(message, cause);
     }

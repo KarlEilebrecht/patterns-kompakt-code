@@ -28,6 +28,9 @@ public class SimpleAccessException extends RuntimeException {
 
     private static final long serialVersionUID = 2310091500464152256L;
 
+    /**
+     * @param message information
+     */
     public SimpleAccessException(String message) {
         super(message);
     }

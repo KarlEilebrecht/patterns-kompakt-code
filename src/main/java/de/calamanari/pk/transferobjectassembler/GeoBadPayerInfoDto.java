@@ -79,6 +79,11 @@ public class GeoBadPayerInfoDto implements Serializable {
      */
     private boolean dueInvoice = false;
 
+    /**
+     * Returns a BUILDER to simplify construction
+     * @param customerId mandatory
+     * @return builder instance
+     */
     public static Builder forCustomer(String customerId) {
         return new Builder(customerId);
     }
@@ -258,13 +263,17 @@ public class GeoBadPayerInfoDto implements Serializable {
 
         private final GeoBadPayerInfoDto result;
 
+        /**
+         * Initializes the builder
+         * @param customerId mandatory
+         */
         Builder(String customerId) {
             result = new GeoBadPayerInfoDto();
             result.setCustomerId(customerId);
         }
 
         /**
-         * @param title
+         * @param title customer property
          * @return builder
          */
         public Builder withTitle(String title) {
@@ -273,7 +282,7 @@ public class GeoBadPayerInfoDto implements Serializable {
         }
 
         /**
-         * @param lastName
+         * @param lastName customer property
          * @return builder
          */
         public Builder withLastName(String lastName) {
@@ -282,7 +291,7 @@ public class GeoBadPayerInfoDto implements Serializable {
         }
 
         /**
-         * @param firstName
+         * @param firstName customer property
          * @return builder
          */
         public Builder withFirstName(String firstName) {
@@ -291,7 +300,7 @@ public class GeoBadPayerInfoDto implements Serializable {
         }
 
         /**
-         * @param zipCode
+         * @param zipCode address property
          * @return builder
          */
         public Builder withZipCode(String zipCode) {
@@ -300,7 +309,7 @@ public class GeoBadPayerInfoDto implements Serializable {
         }
 
         /**
-         * @param city
+         * @param city address property
          * @return builder
          */
         public Builder withCity(String city) {
@@ -309,7 +318,7 @@ public class GeoBadPayerInfoDto implements Serializable {
         }
 
         /**
-         * @param country
+         * @param country address property
          * @return builder
          */
         public Builder withCountry(String country) {
@@ -318,7 +327,7 @@ public class GeoBadPayerInfoDto implements Serializable {
         }
 
         /**
-         * @param customerType
+         * @param customerType customer property
          * @return builder
          */
         public Builder withCustomerType(String customerType) {
@@ -327,7 +336,7 @@ public class GeoBadPayerInfoDto implements Serializable {
         }
 
         /**
-         * @param dueInvoice
+         * @param dueInvoice customer property
          * @return builder
          */
         public Builder withDueInvoice(boolean dueInvoice) {

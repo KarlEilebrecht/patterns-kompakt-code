@@ -46,8 +46,8 @@ public class BoxingUtils {
      * <li>null will be converted to null</li>
      * <li>If the input array is already an array of boxed values, the given array will be returned <i>as-is</i>.</li>
      * </ul>
-     * @param <T>
-     * @param primitiveArray
+     * @param <T> expected type
+     * @param primitiveArray array of primitive values, i.e. int[]
      * @return boxed array
      * @throws IllegalArgumentException if the element type is not supported or the input is not an array or null
      */
@@ -89,8 +89,8 @@ public class BoxingUtils {
      * <li>null will be converted to null</li>
      * <li>If the input array is already an array of primitive values, the given array will be returned <i>as-is</i>.</li>
      * </ul>
-     * @param <T>
-     * @param wrapperArray
+     * @param <T> expected type
+     * @param wrapperArray array of boxed values like Integer[]
      * @return primitive array
      * @throws IllegalArgumentException if the element type is not supported or the input is not an array or null
      */

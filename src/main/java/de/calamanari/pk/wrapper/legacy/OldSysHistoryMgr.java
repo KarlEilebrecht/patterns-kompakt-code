@@ -27,6 +27,9 @@ package de.calamanari.pk.wrapper.legacy;
  */
 public class OldSysHistoryMgr {
 
+    /**
+     * NULL-OBJECT to return "no result" to the caller
+     */
     public static final String[] NO_RESULT = new String[0];
 
     /**

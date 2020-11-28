@@ -77,13 +77,13 @@ public class ItfaConfiguration implements Serializable {
     public static final BufferType DEFAULT_INDEXER_READ_BUFFER_TYPE = BufferType.MEMORY_MAPPED;
 
     /**
-     * Maximum numbers of entries in the file index for character positions <br>
+     * Maximum number of entries in the file index for character positions <br>
      * see {@link #DEFAULT_MAX_NUMBER_OF_CHAR_INDEX_ENTRIES}
      */
     int maxNumberOfCharIndexEntries = DEFAULT_MAX_NUMBER_OF_CHAR_INDEX_ENTRIES;
 
     /**
-     * Maximum numbers of entries in the file index for line positions <br>
+     * Maximum number of entries in the file index for line positions <br>
      * see {@link #DEFAULT_MAX_NUMBER_OF_LINE_INDEX_ENTRIES}
      */
     int maxNumberOfLineIndexEntries = DEFAULT_MAX_NUMBER_OF_LINE_INDEX_ENTRIES;
@@ -148,18 +148,36 @@ public class ItfaConfiguration implements Serializable {
         }
     }
 
+    /**
+     * Returns the maximum number of entries in the file index for character positions
+     * @return max entries
+     */
     public int getMaxNumberOfCharIndexEntries() {
         return maxNumberOfCharIndexEntries;
     }
 
+    /**
+     * Sets the Maximum number of entries in the file index for character positions <br>
+     * see {@link #DEFAULT_MAX_NUMBER_OF_CHAR_INDEX_ENTRIES}
+     * @param maxNumberOfCharIndexEntries max entries
+     */
     public void setMaxNumberOfCharIndexEntries(int maxNumberOfCharIndexEntries) {
         this.maxNumberOfCharIndexEntries = maxNumberOfCharIndexEntries;
     }
 
+    /**
+     * Returns the maximum number of entries in the file index for line positions
+     * @return max entries
+     */
     public int getMaxNumberOfLineIndexEntries() {
         return maxNumberOfLineIndexEntries;
     }
 
+    /**
+     * Sets the maximum number of entries in the file index for line positions <br>
+     * see {@link #DEFAULT_MAX_NUMBER_OF_LINE_INDEX_ENTRIES}
+     * @param maxNumberOfLineIndexEntries max entries
+     */
     public void setMaxNumberOfLineIndexEntries(int maxNumberOfLineIndexEntries) {
         this.maxNumberOfLineIndexEntries = maxNumberOfLineIndexEntries;
     }

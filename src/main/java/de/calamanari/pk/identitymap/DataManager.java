@@ -155,7 +155,7 @@ public final class DataManager {
 
         AddressEntity entity = Database.ADDRESSES.get(addressId);
 
-        // The database must always returns a fresh entity, otherwise the example was a little useless :-)
+        // The database must always return a fresh entity, otherwise the example was a little useless :-)
         return entity.shallowCopy();
     }
 

@@ -36,6 +36,11 @@ public final class LogUtils {
         // no instances
     }
 
+    /**
+     * @param logger to be tested
+     * @param level to be tested
+     * @return true if the given level is turned on for this logger
+     */
     public static boolean isLoggingEnabled(Logger logger, Level level) {
         boolean res = false;
         if (level != null) {
@@ -52,6 +57,12 @@ public final class LogUtils {
         return res;
     }
 
+    /**
+     * Logs the given message with the given level to the specified logger
+     * @param logger destination
+     * @param level requested log level
+     * @param message info
+     */
     public static void log(Logger logger, Level level, String message) {
         if (level != null) {
             //@formatter:off
@@ -66,6 +77,13 @@ public final class LogUtils {
         }
     }
 
+    /**
+     * Logs the given error message with the given level to the specified logger
+     * @param logger destination
+     * @param level requested log level
+     * @param message error info
+     * @param t exception to be attached
+     */
     public static void log(Logger logger, Level level, String message, Throwable t) {
         if (level != null) {
             //@formatter:off

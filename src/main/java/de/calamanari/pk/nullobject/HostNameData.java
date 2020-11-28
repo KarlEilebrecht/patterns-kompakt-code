@@ -93,6 +93,7 @@ public interface HostNameData extends Iterable<String>, Serializable {
     /**
      * Creates a copy of this object, so that the internal state of the copy will be independent.<br>
      * This is not a deep clone as the values will not be copied but referenced.
+     * @param <T> expected concrete class implementing {@link HostNameData}
      * @return copy of this object
      */
     public <T extends HostNameData> T copy();

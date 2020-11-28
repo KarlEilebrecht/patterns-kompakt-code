@@ -30,14 +30,24 @@ public class ExternalProcessManagementException extends IOException {
 
     private static final long serialVersionUID = -7116263797973971206L;
 
+    /**
+     * @param message error information
+     */
     public ExternalProcessManagementException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public ExternalProcessManagementException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public ExternalProcessManagementException(String message, Throwable cause) {
         super(message, cause);
     }

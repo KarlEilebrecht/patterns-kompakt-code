@@ -34,6 +34,9 @@ public class QueryRequestFuture {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryRequestFuture.class);
 
+    /**
+     * NULL-OBJECT to represent the case that there was no result
+     */
     public static final List<String[]> NO_RESULT = Collections.emptyList();
 
     /**

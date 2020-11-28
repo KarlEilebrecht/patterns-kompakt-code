@@ -28,14 +28,24 @@ public class DataManagerException extends RuntimeException {
 
     private static final long serialVersionUID = -2820416186330941462L;
 
+    /**
+     * @param message information
+     */
     public DataManagerException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public DataManagerException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public DataManagerException(String message, Throwable cause) {
         super(message, cause);
     }

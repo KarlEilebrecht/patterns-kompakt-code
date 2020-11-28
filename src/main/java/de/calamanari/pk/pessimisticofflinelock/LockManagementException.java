@@ -28,14 +28,24 @@ public class LockManagementException extends RuntimeException {
 
     private static final long serialVersionUID = 1623356216217118788L;
 
+    /**
+     * @param message information
+     */
     public LockManagementException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public LockManagementException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public LockManagementException(String message, Throwable cause) {
         super(message, cause);
     }

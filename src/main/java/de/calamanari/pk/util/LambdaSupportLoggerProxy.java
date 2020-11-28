@@ -84,7 +84,7 @@ public class LambdaSupportLoggerProxy implements Logger {
 
     /**
      * Creates a wrapper for the underlying logger with extended interface
-     * @param logger
+     * @param logger underlying logger for delegation
      * @return wrapper (enriched logger)
      */
     public static LambdaSupportLoggerProxy wrap(Logger logger) {
@@ -93,7 +93,7 @@ public class LambdaSupportLoggerProxy implements Logger {
 
     /**
      * This method performs a "cast" of the given supplier lambda expression to java.lang.Object to prepare it for later conditional execution by the logger.
-     * @param supplier
+     * @param supplier lambda expression (null will be handled gracefully)
      * @return supplier
      */
     public static final Object defer(Supplier<?> supplier) {

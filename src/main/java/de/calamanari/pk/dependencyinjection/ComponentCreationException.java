@@ -28,14 +28,24 @@ public class ComponentCreationException extends Exception {
 
     private static final long serialVersionUID = -190314414236972246L;
 
+    /**
+     * @param message information
+     */
     public ComponentCreationException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public ComponentCreationException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public ComponentCreationException(String message, Throwable cause) {
         super(message, cause);
     }

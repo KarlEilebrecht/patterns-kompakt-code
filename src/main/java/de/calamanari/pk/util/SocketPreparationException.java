@@ -28,14 +28,24 @@ public class SocketPreparationException extends RuntimeException {
 
     private static final long serialVersionUID = -1807346722092035633L;
 
+    /**
+     * @param message information
+     */
     public SocketPreparationException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public SocketPreparationException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public SocketPreparationException(String message, Throwable cause) {
         super(message, cause);
     }

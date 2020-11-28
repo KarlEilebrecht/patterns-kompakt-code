@@ -28,20 +28,26 @@ public class FileAccessException extends RuntimeException {
 
     private static final long serialVersionUID = 8330210665709133354L;
 
+    /**
+     * @param message information
+     */
     public FileAccessException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public FileAccessException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public FileAccessException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public FileAccessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 
 }

@@ -30,10 +30,17 @@ public class UnexpectedInterruptedException extends RuntimeException {
 
     private static final long serialVersionUID = 7947521031444207114L;
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public UnexpectedInterruptedException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public UnexpectedInterruptedException(String message, Throwable cause) {
         super(message, cause);
     }

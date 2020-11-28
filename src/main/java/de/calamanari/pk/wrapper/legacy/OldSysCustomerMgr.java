@@ -27,6 +27,9 @@ package de.calamanari.pk.wrapper.legacy;
  */
 public class OldSysCustomerMgr {
 
+    /**
+     * NULL-OBJECT to return and indicate "no result"
+     */
     public static final String[] NO_RESULT = new String[0];
 
     /**

@@ -28,14 +28,24 @@ public class DatabaseException extends RuntimeException {
 
     private static final long serialVersionUID = -8781818690533819219L;
 
+    /**
+     * @param message information
+     */
     public DatabaseException(String message) {
         super(message);
     }
 
+    /**
+     * @param cause Exception to be wrapped
+     */
     public DatabaseException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * @param message information
+     * @param cause Exception to be wrapped
+     */
     public DatabaseException(String message, Throwable cause) {
         super(message, cause);
     }
