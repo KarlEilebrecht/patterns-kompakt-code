@@ -35,6 +35,8 @@ import de.calamanari.pk.util.LambdaSupportLoggerProxy;
  * The code is hard to maintain as it does a lot things manually (with a weird pseudo-DSL) much better supported by real documentation frameworks.
  * <p>
  * For starting a new project like this I would recommend using <a href="https://asciidoc.org/">https://asciidoc.org/</a>
+ * <p>
+ * <b>Usage:</b> WebMake <i>&lt;destination&gt;</i> (doc-folder)
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
