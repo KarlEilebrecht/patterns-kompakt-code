@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Patterns kompakt - Entwurfstipps f&uuml;r Enterprise-Anwendungen</title>
+<link rel="stylesheet" href="patternskompakt.css" type="text/css">
+<meta name="description"     content="Dr. Gernot Starke">
+<meta name="keywords"        content="Java, C#, dotNET, Design-Patterns, Software-Architektur">
+<meta name="author"          content="Karl Eilebrecht, Dr. Gernot Starke, gs@gernotstarke.de">
+<meta name="DC.Language"     content="de">
+</head>
+
+
+<body bgcolor="#ffffff" alink="#000099">
+
+
+<div align="center">
+
+
+
+<table style="border:none;margin:none">
+<tr>
+
+<td bgcolor="#FFDEC0"><a href="http://www.patterns-kompakt.de"><img src="img/patterns_kompakt_web_a5.gif" width="960" height="170" border="0" alt="www.patterns-kompakt.de" /></a><br />
+
+
+
+
+
+<!--||| Anfang Tabelle mit Inhalt |||-->
+<table border="0" cellspacing="0" cellpadding="20">
+<tr>
+<td valign="top" width="180" nowrap>
+
+<ul>
+<li type="square"><span class="text"><a href="index.htm">Home</a></span></li>
+<li type="square"><span class="text"><a href="patterns.htm"><u>Patterns</u></a></span><br /></li>
+- <span class="text"><a href="./patterns/erzeugungsmuster.html">Erzeugungsmuster</a></span><br />
+- <span class="text"><a href="./patterns/verhaltensmuster.html">Verhaltensmuster</a></span><br />
+- <span class="text"><a href="./patterns/strukturmuster.html">Strukturmuster</a></span><br />
+- <span class="text"><a href="./patterns/verteilung.html">Verteilung</a></span><br />
+- <span class="text"><a href="./patterns/integration.html">Integration</a></span><br />
+- <span class="text"><a href="./patterns/persistenz.html">Persistenz</a></span><br />
+- <span class="text"><a href="./patterns/datenbankschluessel.html">Datenbankschl&uuml;ssel</a></span><br />
+- <span class="text"><a href="./patterns/sonstige_patterns.html">Sonstige Patterns</a></span><br />
+
+<li type="square"><span class="text"><a href="aboutus.htm">Die Autoren</a></span></li>
+<li type="square"><span class="text"><a href="errata.htm">Errata</a></span></li>
+<!-- <li type="square"><span class="text"><a href="linx.htm">Literatur & Links</a></span></li> -->
+<li type="square"><span class="text"><a href="https://www.springer.com/series/8297?detailsPage=titles" target="blank">IT kompakt</a></span></li>
+<li type="square"><span class="text"><a href="disclaimer.htm">Disclaimer</a></span></li>
+</ul>
+
+
+<span class="kontakt">
+<br><br><br>
+
+<b>Kontakt:</b><br>
+<a href="mailto:gs@gernotstarke.de"><img src="img/emailkegs.gif" width="174" height="95" alt="" border="0"></a>
+</span>
+<br />
+<br />
+<br />
+<br />
+<p></p>
+
+<!-- GS Logo -->
+<a href="http://www.gernotstarke.de"><img src="img/gernotlogo3.jpg" width="175" height="50" border="0" alt="www.gernotstarke.de"></a>
+
+<p></p>
+<a href="http://www.springer-vieweg.de" target="blank">
+<img src="img/springer-vieweg3.gif" width="175" height="29" alt="www.springer-vieweg.de" border="0"/>
+</a>
+
+
+
+</td>
+
+<!--||| Anfang  Textspalte |||-->
+<td valign="top" width="650">
+
+<span class="lesen">
+<p>
+
+<table border="0"><tr><td valign="top">
+<span class="lesen">
+<h3>Online-Material zu <b>Patterns kompakt</b></h3>
+<p />
+Hier m&ouml;chten wir unseren Lesern weitere Diagramme, Beispielszenarien
+und <a href="#CODE">Codebeispiele</a> zur Verf&uuml;gung stellen, f&uuml;r die im Buch kein
+Raum ist.
+<p />
+Das Material ist nach dem Motto <i>einsteigen und losfahren</i>
+aufgebaut. Nur selten gibt es Abh&auml;ngigkeiten zwischen den Beispielen, so dass
+Sie sich auf ein Pattern konzentrieren k&ouml;nnen.<br />
+Ganz bewusst haben wir jeweils ein anderes Szenario
+als im Buch gew&auml;hlt.<br />
+Das soll Ihnen die M&ouml;glichkeit geben, das Muster
+noch einmal aus einem anderen Blickwinkel zu betrachten.
+<p />
+Jedes Pattern ist lauff&auml;hig in Form eines Testcases. Spielen Sie mit den
+Log-Leveln, oder f&uuml;hren Sie weitere Debug-Ausgaben ein, wenn Ihnen etwas
+unklar sein sollte. Denken Sie auch ruhig mal dar&uuml;ber nach, ob das jeweils demonstrierte
+Pattern in dem Szenario der Wei&szlig;heit letzter Schluss ist, oder
+ob ein anderes vielleicht besser passen w&uuml;rde!
+<p />
+Wir laden Sie zum Ausprobieren, Experimentieren und Kritisieren ein.
+Berichten Sie uns von Ihren Erfahrungen und wo Sie Entwurfsmuster
+bereits erfolgreich anwenden konnten.
+<p />
+Viel Erfolg und vor allem Spa&szlig; bei Ihrer Arbeit!
+<p />
+<a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>, <a href="mailto:gs@gernotstarke.de">Gernot Starke</a><br />
+Januar 2019
+<p />
+&nbsp;
+<p />
+<a name="CODE" />
+<h3>Code-Beispiele</h3>
+Neben der M&ouml;glichkeit, sich die API der Klassen mit verlinktem Source-Code <a href="./javadoc/index.html" target="blank">online anzuschauen</a>, k&ouml;nnen Sie das Projekt mit den Codebeispielen hier herunterladen:
+<h4><a href="./download/pk-examples.zip">Download pk-examples.zip</a></h4>
+<p />
+Es hat sich zum Standard entwickelt, viele Basisfunktionali&auml;ten mit Bibliotheken
+abzudecken, die als externe Dependencies deklariert und aus Repositories geladen werden.<br />
+In der Vergangenheit haben wir noch versucht, ohne solche zus&auml;tzlichen Abh&auml;ngigkeiten auszukommen, weil
+das f&uuml;r Neulinge die H&uuml;rden erh&ouml;ht, Beispiele einfach mal auszuprobieren.<br /><br />
+Mittlerweile wird ein solcher Insel-Entwicklungsansatz aber immer schwieriger (das JDK wird verschlankt) und ist zunehmend fragw&uuml;rdig, weil er einfach <i>Best Practices</i> widerspricht.<br />
+Daher sind die Code-Beispiele jetzt als Maven-Projekt umgesetzt und setzen neben dem JDK 11 eine funktionierende Maven-Installation voraus.
+<p />
+Neben dem Archiv mit den Sourcen ben&ouml;tigen Sie:<br />
+<ul>
+<li>Java Platform (JDK) 11 (z.B. OpenJDK)</li>
+<li>Apache Maven (3.2.3 oder neuer)</li>
+</ul>
+Zu empfehlen ist eine IDE wie <a href="http://www.eclipse.org/" target="_blank">Eclipse</a>. <br />
+Wir haben au&szlig;erdem <a href="https://www.sonarlint.org/" target="_blank">SonarLint</a> im Einsatz.
+<p />
+&nbsp;
+<p />
+<h3>Das Letzte</h3>
+Kennen Sie die <i>Pattern-Wette des Teufels</i>?<br />
+Die Legende besagt, dass der Teufel (bildet sich 666 Stunden pro Tag weiter) irgendwann feststellte, dass es bei Entwurfsmustern
+viele Details zu beachten gibt. <i>&quot;Details klingt gut&quot;</i>, grinste er, <i>&quot;da stecke ich drin!&quot;</i><br />
+Seitdem erscheint er vielen Entwicklern im Traum <i>&quot;Wetten, dass Du es nicht schaffst, das folgende Pattern in Deinem
+aktuellen Projekt einzusetzen? Falls doch, sollst Du ber&uuml;hmt werden, anderfalls wird das Projekt mein sein!&quot;</i>
+<p />
+Diese Wette gewinnt fast immer der Teufel <i>- so oder so ...</i>
+</td>
+</tr></table>
+
+<!--||| Anfang Footer |||-->
+<tr>
+
+<td> </td>
+<td align="center">
+<hr>
+<span class="text">
+&copy; 2002-2019 &middot; Dr. Gernot Starke &middot; <a href="mailto:gs@gernotstarke.de">
+<img src="img/email.jpg" width="34" height="28" border="0" alt="Email"> E-Mail schreiben...</a>
+</span><br>
+<span class="tiny">
+Layout inspired by <a href="http://segert.net"> Verena Segert</a>
+und <a href="http://selfhtml.teamone.de">SELFHTML</a>).<br>
+Letzte &Auml;nderung 13. Januar 2019.
+</span><br>
+<span class="text">
+<a href="disclaimer.htm">Impressum und Ausschluss der Garantie (disclaimer)</a>
+<br>
+</td>
+</tr>
+
+
+</table>
+<!--||| Ende Footer |||-->
+
+</td>
+</tr>
+
+</table>
+
+</div>
+
+
+</body>
+</html>
