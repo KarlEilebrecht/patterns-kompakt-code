@@ -24,4 +24,7 @@ Nur nach vorheriger Kontrolle durch den <i>DocumentManagerSecurityProxy</i> werd
 
 Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus.
 
+<p />
+Ein weiteres Beispiel eines Proxies ist <code>de.calamanari.pk.util.<b>LambdaSupportLoggerProxy</b></code>, der implementiert wurde, um das Logging mit Lambdaausdr&uuml;cken in diesem Projekt bequemer zu machen. Er f&uuml;gt einem SLF4J-Logger (bei unver&auml;nderter Schnittstelle) das Verhalten &bdquo;Supplierevaluierung&ldquo; hinzu.
+
 ref::GOF,UNCLEBOB
