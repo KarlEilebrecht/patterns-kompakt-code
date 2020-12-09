@@ -14,6 +14,7 @@
 			<excludes>
 				<exclude>main/java/de/calamanari/other/**</exclude>
 				<exclude>test/java/de/calamanari/other/**</exclude>
+				<exclude>test/java/de/calamanari/**/*.md.backup</exclude>
 			</excludes>
 			<outputDirectory>/pk-examples-a5/src</outputDirectory>
 		</fileSet>
