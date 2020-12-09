@@ -34,7 +34,7 @@ By adjusting the log-level ([SLF4J](http://www.slf4j.org/)+[Logback](http://logb
 
 I invite you to experiment with the patterns and to think about the choice that was made. Maybe you will come to the conclusion that a different pattern would have been better for a particular scenario?
 
-Most important: **Have fun! :)**
+Most important: **Have fun! :smirk:**
 
 _Karl Eilebrecht, December 2020_
 
