@@ -58,6 +58,17 @@ _Karl Eilebrecht, December 2020_
 * [Strategy](src/test/java/de/calamanari/pk/strategy/README.md)
 * [Template Method](src/test/java/de/calamanari/pk/templatemethod/README.md)
 * [Observer](src/test/java/de/calamanari/pk/observer/README.md)
-* 
+
+### Structural Patterns
+
+* [Adapter](src/test/java/de/calamanari/pk/adapter/README.md)
+* [Bridge](src/test/java/de/calamanari/pk/bridge/README.md)
+* [Decorator](src/test/java/de/calamanari/pk/decorator/README.md)
+* [Facade](src/test/java/de/calamanari/pk/facade/README.md)
+* [Proxy](src/test/java/de/calamanari/pk/proxy/README.md)
+* [Model View Controller (MVC)](src/test/java/de/calamanari/pk/modelviewcontroller/README.md)
+* [Flyweight](src/test/java/de/calamanari/pk/flyweight/README.md)
+* [Composite](src/test/java/de/calamanari/pk/composite/README.md)
+
 
 
