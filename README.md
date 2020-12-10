@@ -70,5 +70,12 @@ _Karl Eilebrecht, December 2020_
 * [Flyweight](src/test/java/de/calamanari/pk/flyweight/README.md)
 * [Composite](src/test/java/de/calamanari/pk/composite/README.md)
 
+### Distribution
+
+* [Combined Method](src/test/java/de/calamanari/pk/combinedmethod/README.md)
+* [Data Transfer Object (DTO)](src/test/java/de/calamanari/pk/datatransferobject/README.md)
+* [Transfer Object Assembler](src/test/java/de/calamanari/pk/transferobjectassembler/README.md)
+* [Active Object](src/test/java/de/calamanari/pk/activeobject/README.md)
+* [Master-Slave](src/test/java/de/calamanari/pk/masterslave/README.md)
 
 
