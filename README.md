@@ -21,7 +21,7 @@ Once done with the preparation simply run `mvn clean install`. This will run tes
 * Install any IDE (i.e. [Eclipse](https://www.eclipse.org/downloads/)) for easier coding and better overview.
 * [SonarLint](https://www.sonarlint.org/) can help preventing bugs, and due to its built-in documentation it gives valuable insights about the programming language. At least I learned a lot by reviewing the reasoning behind the SonarLint rules.
 * At the time of writing I am using [Linux MINT](https://linuxmint.com/) inside a [Virtual Box](https://www.virtualbox.org/). This way, you don't need to worry about ruining your installation with a different JDK, IDE or Maven.
-* [Markdown](https://guides.github.com/features/mastering-markdown/) is a light-weight way to do necessary documentation _along with your code_. For editing I use [Ghostwriter](https://github.com/wereturtle/ghostwriter), which I found easy to install and pretty intuitive.
+* [Markdown](https://guides.github.com/features/mastering-markdown/) is a light-weight way to do necessary documentation _along with your code_. For editing on Linux I use [Ghostwriter](https://github.com/wereturtle/ghostwriter), which I found easy to install and pretty intuitive. On MacOS I use [MacDown](https://macdown.uranusjr.com/).
 * I use here a minimalistic template to introduce each scenario and describe a particular pattern. For lean documention of real projects I recommend taking a look at [arc42](https://docs.arc42.org/home/).
 
 ## Package Structure
