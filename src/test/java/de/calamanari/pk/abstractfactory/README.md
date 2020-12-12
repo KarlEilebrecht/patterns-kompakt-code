@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom Medical, market leader for artifical appendixes, needs to update parts of their internal software to support standard and secure file communication.
+Multiglom Medical, market leader for artificial appendixes, needs to update parts of their internal software to support standard and secure file communication.
 
 Because it is not yet clear, how many different formats will have to be supported in future the client looks for an extendable solution not limited to a single implementation.
 

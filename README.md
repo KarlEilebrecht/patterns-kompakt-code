@@ -78,4 +78,13 @@ _Karl Eilebrecht, December 2020_
 * [Active Object](src/test/java/de/calamanari/pk/activeobject/README.md)
 * [Master-Slave](src/test/java/de/calamanari/pk/masterslave/README.md)
 
+### Integration
+
+* [Wrapper](src/test/java/de/calamanari/pk/wrapper/README.md)
+* [Gateway](src/test/java/de/calamanari/pk/gateway/README.md)
+* [Plugin](src/test/java/de/calamanari/pk/plugin/README.md)
+* [Mapper](src/test/java/de/calamanari/pk/mapper/README.md)
+* [Dependency Injection](src/test/java/de/calamanari/pk/dependencyinjection/README.md)
+
+
 

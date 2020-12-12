@@ -50,7 +50,7 @@ Open [BuilderTest.java](BuilderTest.java) to start playing with this pattern. By
 
 ## Remarks
 * The example above shows the simplest form of a decorator (you may even argue that it is a [Proxy](../proxy/README.md)) as it only adds behavior without enriching the interface. More sophisticated  decorators add additional operations or state. 
-* Decorator classes are often called Wrapper because this name seems very intuitive, while the [Wrapper pattern](../wrapper/README.md) has a different focus.
+* Decorator classes are often called Wrapper. The [Wrapper pattern](../wrapper/README.md) described in our book focuses on a bunch of classes/subsystems/APIs while a decorator _wraps_ a single class.
 
 ## References
 
