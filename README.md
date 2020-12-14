@@ -86,5 +86,12 @@ _Karl Eilebrecht, December 2020_
 * [Mapper](src/test/java/de/calamanari/pk/mapper/README.md)
 * [Dependency Injection](src/test/java/de/calamanari/pk/dependencyinjection/README.md)
 
+### Persistence
+
+* [Identity Map](src/test/java/de/calamanari/pk/identitymap/README.md)
+* [Lazy Load](src/test/java/de/calamanari/pk/lazyload/README.md)
+* [Coarse-Grained Lock](src/test/java/de/calamanari/pk/coarsegrainedlock/README.md)
+* [Optimistic Offline Lock](src/test/java/de/calamanari/pk/optimisticofflinelock/README.md)
+* [Pessimistic Offline Lock](src/test/java/de/calamanari/pk/pessimisticofflinelock/README.md)
 
 

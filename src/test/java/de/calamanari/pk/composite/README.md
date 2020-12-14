@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom B2B, vendor of a CRM suite Manjok for small businesses, currently reworks the internal data model.
+Multiglom B2B, vendor of the CRM suite Manjok for small businesses, currently reworks the internal data model.
 
 Manjok supports the mapping of various levels of a customer's enterprise. They are represented by a couple of entities, such as holding, company, and division and staff member. One goal of the new design is to detect common aspects and build hierarchies to treat these entities in the same way in certain use cases.
 
