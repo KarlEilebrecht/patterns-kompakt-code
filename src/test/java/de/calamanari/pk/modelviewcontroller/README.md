@@ -43,7 +43,7 @@ The controller acts as an _[Observer](../observer/README.md)_ of the model and t
 
 ## Try it out!
 
-Open [ModelViewControllerTest.java](ModelViewController.java) to start playing with this pattern. By setting the log-level for this pattern to DEBUG in [logback.xml](../../../../../../../src/main/resources/logback.xml) you can watch the pattern working step by step.
+Open [ModelViewControllerTest.java](ModelViewControllerTest.java) to start playing with this pattern. By setting the log-level for this pattern to DEBUG in [logback.xml](../../../../../../../src/main/resources/logback.xml) you can watch the pattern working step by step.
 
 ## Remarks
 * Linda's MVC-variation above is called **Passive View**, because the _TeamController_ takes care of the view updates. Alternatively, the view could observe the model and update itself.

@@ -5,9 +5,9 @@
 
 ## Scenario
 
-Mrs. Freaklies, a progressive mom-and-pop store in Chicago, faces a problem with the voucher creation of the webshop.
+Mrs. Freaklies, a progressive mom-and-pop store in Chicago, faces a problem with the voucher creation of the web shop.
 
-Her daughter Linda who runs the IT for Mrs. Freakly has already identified the problem. EasyVoucher, a module of the Multiglom webshop leverages a database sequence and simply formats the voucher code as hex-code. Some evil customers seem to exploit that by guessing codes.
+Mrs. Freakly's grandchild Linda, who runs the IT for the shop, has already identified the problem. EasyVoucher, a module of the Multiglom webshop leverages a database sequence and simply formats the voucher code as hex-code. Some evil customers seem to exploit that by guessing codes.
 
 Multiglom did not react at all on Linda's the complaints, so she decided to implement her own extension. Thankfully, EasyVoucher has a hook for that. You can configure your own sequence (type long) for the voucher codes.
 
