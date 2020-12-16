@@ -100,3 +100,10 @@ _Karl Eilebrecht, December 2020_
 * [Sequence Block](src/test/java/de/calamanari/pk/sequenceblock/README.md)
 * [UUID](src/test/java/de/calamanari/pk/uuid/README.md)
 
+### Other Patterns
+
+* [Money](src/test/java/de/calamanari/pk/money/README.md)
+* [Null Object](src/test/java/de/calamanari/pk/nullobject/README.md)
+* [Registry](src/test/java/de/calamanari/pk/registry/README.md)
+* [Service Stub (Mock)](src/test/java/de/calamanari/pk/servicestub/README.md)
+* [Value Object](src/test/java/de/calamanari/pk/valueobject/README.md)
