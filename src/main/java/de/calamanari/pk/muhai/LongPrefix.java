@@ -126,7 +126,7 @@ public class LongPrefix implements Serializable {
     }
 
     /**
-     * @return length of the prefix (number of bits starting from the left [1 .. 63])
+     * @return length of the prefix (number of bits starting from the left [0 .. 63])
      */
     public int getLength() {
         return prefixString.length();
