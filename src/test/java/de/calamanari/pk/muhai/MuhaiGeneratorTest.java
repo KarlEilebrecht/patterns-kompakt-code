@@ -6,6 +6,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -104,4 +105,46 @@ public class MuhaiGeneratorTest {
 
     }
 
+    @Test
+    public void testLongs() {
+        String s = Long.toUnsignedString(Long.MAX_VALUE);
+        // 9223372036854775807
+        System.out.println(s);
+
+        System.out.println(Long.toUnsignedString(-1));
+
+        // 111111111111111111111111111111111111111111111111111111111111111
+        // 1000000000000000000000000000000000000000000000000000000000000000
+        System.out.println(Long.toBinaryString(Long.MIN_VALUE));
+
+        System.out.println(Long.toBinaryString(-1));
+
+        String binary = Long.toBinaryString(-1);
+
+        long l = Long.parseUnsignedLong(binary, 2);
+
+        System.out.println(l);
+
+        System.out.println(Long.toHexString(-1));
+
+        System.out.println(Long.toBinaryString(-1L << 0));
+
+        System.out.println(BigInteger.TWO.pow(62));
+
+        System.out.println(MuhaiUtils.toPaddedBinaryString(0L));
+        System.out.println(MuhaiUtils.toPaddedBinaryString(0L >> 64));
+
+        System.out.println(BigInteger.TWO.pow(62));
+        System.out.println(MuhaiUtils.toPaddedBinaryString(1L << 62));
+        System.out.println(MuhaiUtils.toPaddedIntString(1L << 62));
+        System.out.println(MuhaiUtils.toPaddedBinaryString(Long.MAX_VALUE));
+        System.out.println(MuhaiUtils.toPaddedIntString(Long.MAX_VALUE));
+
+        System.out.println(MuhaiUtils.toPaddedHexString(1L << 62));
+        System.out.println(MuhaiUtils.toPaddedHexString(Long.MAX_VALUE));
+
+        System.out.println(1L << 62);
+        System.out.println(Long.MAX_VALUE);
+
+    }
 }

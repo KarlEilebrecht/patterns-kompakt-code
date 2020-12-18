@@ -38,7 +38,6 @@ public class MuhaiGenerator implements Serializable {
      */
     private static final ThreadLocal<MessageDigest> DIGEST_HOLDER = ThreadLocal.withInitial(() -> {
         try {
-            // DO NOT CHANGE DIGEST! (would affect existing hash codes)
             return MessageDigest.getInstance("SHA-1");
         }
         catch (NoSuchAlgorithmException ex) {
