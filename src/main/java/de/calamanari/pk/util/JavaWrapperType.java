@@ -19,9 +19,11 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * This enum contains the known java primitives and their wrapper types as an easy lookup.
@@ -34,47 +36,47 @@ public enum JavaWrapperType {
     /**
      * boolean vs. Boolean
      */
-    BOOLEAN(boolean.class, Boolean.class, true),
+    BOOLEAN(boolean.class, Boolean.class, true, array -> Arrays.toString((boolean[])array)),
 
     /**
      * byte vs. Byte
      */
-    BYTE(byte.class, Byte.class, true),
+    BYTE(byte.class, Byte.class, true, array -> Arrays.toString((byte[])array)),
 
     /**
      * char vs. Character
      */
-    CHARACTER(char.class, Character.class, true),
+    CHARACTER(char.class, Character.class, true, array -> Arrays.toString((char[])array)),
     
     /**
      * double vs. Double
      */
-    DOUBLE(double.class, Double.class, true),
+    DOUBLE(double.class, Double.class, true, array -> Arrays.toString((double[])array)),
     
     /**
      * float vs. Float
      */
-    FLOAT(float.class, Float.class, true),
+    FLOAT(float.class, Float.class, true, array -> Arrays.toString((float[])array)),
     
     /**
      * int vs. Integer
      */
-    INTEGER(int.class, Integer.class, true),
+    INTEGER(int.class, Integer.class, true, array -> Arrays.toString((int[])array)),
     
     /**
      * long vs. Long
      */
-    LONG(long.class, Long.class, true),
+    LONG(long.class, Long.class, true, array -> Arrays.toString((long[])array)),
     
     /**
      * short vs. Short
      */
-    SHORT(short.class, Short.class, true),
+    SHORT(short.class, Short.class, true, array -> Arrays.toString((short[])array)),
     
     /**
      * void vs. Void
      */
-    VOID(void.class, Void.class, false);
+    VOID(void.class, Void.class, false, array -> "[]");
 
     //@formatter:on
 
@@ -105,14 +107,20 @@ public enum JavaWrapperType {
     public final boolean primitiveArraysSupported;
 
     /**
+     * A function that converts any array of the given primitive type to a string
+     */
+    public final Function<Object, String> primitiveArrayToStringFunction;
+
+    /**
      * @param primitiveType
      * @param wrapperType
      * @param primitiveArraysSupported always true except for {@link #VOID}
      */
-    JavaWrapperType(Class<?> primitiveType, Class<?> wrapperType, boolean primitiveArraysSupported) {
+    JavaWrapperType(Class<?> primitiveType, Class<?> wrapperType, boolean primitiveArraysSupported, Function<Object, String> arrayToStringFunction) {
         this.primitiveType = primitiveType;
         this.wrapperType = wrapperType;
         this.primitiveArraysSupported = primitiveArraysSupported;
+        this.primitiveArrayToStringFunction = arrayToStringFunction;
     }
 
     /**
@@ -122,6 +130,30 @@ public enum JavaWrapperType {
      */
     public static JavaWrapperType forClass(Class<?> clazz) {
         return LOOKUP.get(clazz);
+    }
+
+    /**
+     * Provides a convenient method to print an array, no matter whether it is primitive or not.
+     * @param array source object, which must be an array or null (returns <code>"null"</code>)
+     * @return the corresponding Arrays.toString() result for primitives arrays or any Object[]
+     * @throws {@link IllegalArgumentException} if the given array's component type is neither the primitive nor the wrapper type
+     */
+    public String arrayToString(Object array) {
+        String res = null;
+        if (array != null) {
+            Class<?> componentType = array.getClass().getComponentType();
+            if (componentType == this.primitiveType) {
+                res = primitiveArrayToStringFunction.apply(array);
+            }
+            else if (componentType == this.wrapperType) {
+                res = Arrays.toString((Object[]) array);
+            }
+            else {
+                throw new IllegalArgumentException(String.format("This method is only applicable to arrays of type %s or %s, found: %s", this.primitiveType,
+                        this.wrapperType, componentType));
+            }
+        }
+        return String.valueOf(res);
     }
 
     /**
