@@ -136,7 +136,7 @@ public class MuhaiUtils {
      * @return unsigned integer's binary hex-representation as String (max length 16), no padding, same as {@link Long#toHexString(long)}
      */
     public static String toHexString(long muhai) {
-        return Long.toBinaryString(muhai);
+        return Long.toHexString(muhai);
     }
 
     /**
@@ -147,7 +147,7 @@ public class MuhaiUtils {
      */
     public static long fromHexString(String muhai) {
         return parseMuhaiString(muhai, 16, () -> String.format("Invalid MUHAI, expected hex-String composed of (0 .. f) in range [%s .. %s], given: %s",
-                MIN_BIN_STRING, MAX_BIN_STRING, muhai));
+                MIN_HEX_STRING, MAX_HEX_STRING, muhai));
     }
 
     /**
@@ -172,8 +172,13 @@ public class MuhaiUtils {
      */
     static String removeLeftPaddingZeros(String muhai) {
         int startPos = 0;
-        while (muhai.charAt(startPos) == '0') {
-            startPos++;
+        for (int i = 0; i < muhai.length() - 1; i++) {
+            if (muhai.charAt(i) == '0') {
+                startPos++;
+            }
+            else {
+                break;
+            }
         }
         if (startPos > 0) {
             muhai = muhai.substring(startPos);
