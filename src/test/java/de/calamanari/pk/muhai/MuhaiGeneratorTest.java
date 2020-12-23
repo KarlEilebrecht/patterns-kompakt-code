@@ -4,10 +4,13 @@ import static de.calamanari.pk.muhai.MuhaiGenerator.IND_SPACER;
 import static de.calamanari.pk.muhai.MuhaiGenerator.IND_VALUE;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -15,14 +18,26 @@ import de.calamanari.pk.util.CloneUtils;
 
 public class MuhaiGeneratorTest {
 
+    private static final String UXP_ARR_EQUAL = "hash values should be different but are equal!";
+
     @Test
-    public void testUniquenessAndSerialization() throws Exception {
-        MuhaiGenerator generator = MuhaiGenerator.getInstance("101");
+    public void testSerialization() throws Exception {
+        MuhaiGenerator generator = new MuhaiGenerator(LongPrefix.fromBinaryString("101"));
 
-        assertSame(generator, CloneUtils.passByValue(generator));
+        MuhaiGenerator copy = CloneUtils.passByValue(generator);
 
-        assertSame(generator, MuhaiGenerator.getInstance("101"));
+        assertNotSame(generator, copy);
+        assertEquals(generator.getPrefix(), copy.getPrefix());
+        assertSame(MuhaiGenerator.EMPTY_BYTES, generator.getHashPepper());
+        assertSame(MuhaiGenerator.EMPTY_BYTES, copy.getHashPepper());
 
+        generator = new MuhaiGenerator(LongPrefix.fromBinaryString("01"), "PEPPER");
+
+        copy = CloneUtils.passByValue(generator);
+        assertSame(generator.getPrefix(), LongPrefix.STRAIGHT);
+        assertSame(copy.getPrefix(), LongPrefix.STRAIGHT);
+        assertArrayEquals("PEPPER".getBytes(StandardCharsets.UTF_8), generator.getHashPepper());
+        assertArrayEquals("PEPPER".getBytes(StandardCharsets.UTF_8), copy.getHashPepper());
     }
 
     @Test
@@ -36,53 +51,59 @@ public class MuhaiGeneratorTest {
         byte[] spacerBytesBothSides = new byte[] { IND_SPACER, 127, 45, 97, -126, IND_SPACER };
         byte[] spacerByteInTheMiddle = new byte[] { 127, 45, IND_SPACER, 97, -126 };
 
-        assertSame(empty, MuhaiGenerator.geminateSpacerBytes(empty));
-        assertSame(noSpacerByte, MuhaiGenerator.geminateSpacerBytes(noSpacerByte));
-        assertArrayEquals(new byte[] { IND_SPACER, IND_SPACER }, MuhaiGenerator.geminateSpacerBytes(justOneSpacerByte));
-        assertArrayEquals(new byte[] { IND_SPACER, IND_SPACER, IND_SPACER, IND_SPACER }, MuhaiGenerator.geminateSpacerBytes(twoSpacerBytes));
-        assertArrayEquals(new byte[] { IND_SPACER, IND_SPACER, 127, 45, 97, -126 }, MuhaiGenerator.geminateSpacerBytes(spacerByteAtStart));
-        assertArrayEquals(new byte[] { 127, 45, 97, -126, IND_SPACER, IND_SPACER }, MuhaiGenerator.geminateSpacerBytes(spacerByteAtEnd));
+        MuhaiGenerator generator = new MuhaiGenerator(LongPrefix.NONE);
+
+        assertSame(empty, generator.geminateSpacerBytes(empty));
+        assertSame(noSpacerByte, generator.geminateSpacerBytes(noSpacerByte));
+        assertArrayEquals(new byte[] { IND_SPACER, IND_SPACER }, generator.geminateSpacerBytes(justOneSpacerByte));
+        assertArrayEquals(new byte[] { IND_SPACER, IND_SPACER, IND_SPACER, IND_SPACER }, generator.geminateSpacerBytes(twoSpacerBytes));
+        assertArrayEquals(new byte[] { IND_SPACER, IND_SPACER, 127, 45, 97, -126 }, generator.geminateSpacerBytes(spacerByteAtStart));
+        assertArrayEquals(new byte[] { 127, 45, 97, -126, IND_SPACER, IND_SPACER }, generator.geminateSpacerBytes(spacerByteAtEnd));
         assertArrayEquals(new byte[] { IND_SPACER, IND_SPACER, 127, 45, 97, -126, IND_SPACER, IND_SPACER },
-                MuhaiGenerator.geminateSpacerBytes(spacerBytesBothSides));
-        assertArrayEquals(new byte[] { 127, 45, IND_SPACER, IND_SPACER, 97, -126 }, MuhaiGenerator.geminateSpacerBytes(spacerByteInTheMiddle));
+                generator.geminateSpacerBytes(spacerBytesBothSides));
+        assertArrayEquals(new byte[] { 127, 45, IND_SPACER, IND_SPACER, 97, -126 }, generator.geminateSpacerBytes(spacerByteInTheMiddle));
 
     }
 
     @Test
     public void testRawHashing() {
+        MuhaiGenerator generator = new MuhaiGenerator(LongPrefix.NONE);
         assertArrayEquals(new byte[] { -38, 57, -93, -18, 94, 107, 75, 13, 50, 85, -65, -17, -107, 96, 24, -112, -81, -40, 7, 9 },
-                MuhaiGenerator.computeHashBytes());
+                generator.computeHashBytes());
 
-        assertArrayEquals(MuhaiGenerator.computeHashBytes(), MuhaiGenerator.computeHashBytes((Object[]) null));
+        assertArrayEquals(generator.computeHashBytes(), generator.computeHashBytes((Object[]) null));
+
+        assertArrayEquals(generator.computeHashBytes("Blabla"), generator.computeHashBytes("Blabla".getBytes(StandardCharsets.UTF_8)));
+
+        assertArrayEquals(generator.computeHashBytes(new int[] { 1, 2, 3 }), generator.computeHashBytes(Arrays.toString(new int[] { 1, 2, 3 })));
+
+        int[][] complexArray = new int[2][3];
+        complexArray[0][1] = 7;
+        complexArray[1][2] = 7;
+        System.out.println(Arrays.deepToString(complexArray));
+
+        assertArrayEquals(generator.computeHashBytes((Object) complexArray),
+                generator.computeHashBytes(Arrays.deepToString(complexArray).getBytes(StandardCharsets.UTF_8)));
 
         String someNullString = null;
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes((Object[]) null), MuhaiGenerator.computeHashBytes(someNullString)));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes((Object[]) null), generator.computeHashBytes(someNullString)));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes("hanni", "van"), MuhaiGenerator.computeHashBytes("hann", "ivan")));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes("hanni", "van"), generator.computeHashBytes("hann", "ivan")));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes(""), MuhaiGenerator.computeHashBytes(someNullString)));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(""), generator.computeHashBytes(someNullString)));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes(""), MuhaiGenerator.computeHashBytes(new byte[] {})));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(""), generator.computeHashBytes(new byte[] {})));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes(""), MuhaiGenerator.computeHashBytes("", "")));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(""), generator.computeHashBytes("", "")));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes(""), MuhaiGenerator.computeHashBytes("", null)));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(""), generator.computeHashBytes("", null)));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes(null, ""), MuhaiGenerator.computeHashBytes("", null)));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(null, ""), generator.computeHashBytes("", null)));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes(null, null), MuhaiGenerator.computeHashBytes(null, null, null)));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(null, null), generator.computeHashBytes(null, null, null)));
 
-        assertFalse("hash values should be different but are equal!",
-                Arrays.equals(MuhaiGenerator.computeHashBytes("null"), MuhaiGenerator.computeHashBytes((String) null)));
+        assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes("null"), generator.computeHashBytes((String) null)));
 
         byte[] noSpacerByte = new byte[] { 127, 45, 97, -126 };
         byte[] justOneSpacerByte = new byte[] { IND_SPACER };
@@ -91,60 +112,49 @@ public class MuhaiGeneratorTest {
         byte[] spacerByteAtEnd = new byte[] { 127, 45, 97, -126, IND_SPACER };
         byte[] provokeSingleWithDoubleValueCollision = new byte[] { IND_SPACER, IND_SPACER, IND_SPACER, IND_VALUE, IND_SPACER, IND_SPACER };
 
-        assertFalse("hash values should be different but are equal!", Arrays.equals(MuhaiGenerator.computeHashBytes(noSpacerByte, spacerByteAtStart),
-                MuhaiGenerator.computeHashBytes(spacerByteAtEnd, noSpacerByte)));
+        assertFalse(UXP_ARR_EQUAL,
+                Arrays.equals(generator.computeHashBytes(noSpacerByte, spacerByteAtStart), generator.computeHashBytes(spacerByteAtEnd, noSpacerByte)));
 
-        assertFalse("hash values should be different but are equal!", Arrays.equals(MuhaiGenerator.computeHashBytes(justOneSpacerByte, twoSpacerBytes),
-                MuhaiGenerator.computeHashBytes(twoSpacerBytes, justOneSpacerByte)));
+        assertFalse(UXP_ARR_EQUAL,
+                Arrays.equals(generator.computeHashBytes(justOneSpacerByte, twoSpacerBytes), generator.computeHashBytes(twoSpacerBytes, justOneSpacerByte)));
 
         // we assume that collisions between keys composed of n parts and keys composed of m parts with m!=n are acceptable
-        assertArrayEquals(MuhaiGenerator.computeHashBytes(justOneSpacerByte, justOneSpacerByte),
-                MuhaiGenerator.computeHashBytes(provokeSingleWithDoubleValueCollision));
+        assertArrayEquals(generator.computeHashBytes(justOneSpacerByte, justOneSpacerByte), generator.computeHashBytes(provokeSingleWithDoubleValueCollision));
 
         MuhaiGenerator.cleanup();
 
     }
 
     @Test
-    public void testLongs() {
-        String s = Long.toUnsignedString(Long.MAX_VALUE);
-        // 9223372036854775807
-        System.out.println(s);
+    public void testRawHashingWithPepper() {
+        MuhaiGenerator generator = new MuhaiGenerator(LongPrefix.NONE, "");
+        assertSame(MuhaiGenerator.EMPTY_BYTES, generator.getHashPepper());
 
-        System.out.println(Long.toUnsignedString(-1));
+        generator = new MuhaiGenerator(LongPrefix.NONE, new byte[0]);
+        assertSame(MuhaiGenerator.EMPTY_BYTES, generator.getHashPepper());
 
-        // 111111111111111111111111111111111111111111111111111111111111111
-        // 1000000000000000000000000000000000000000000000000000000000000000
-        System.out.println(Long.toBinaryString(Long.MIN_VALUE));
+        generator = new MuhaiGenerator(LongPrefix.NONE, (String) null);
+        assertSame(MuhaiGenerator.EMPTY_BYTES, generator.getHashPepper());
 
-        System.out.println(Long.toBinaryString(-1));
+        generator = new MuhaiGenerator(LongPrefix.NONE, (byte[]) null);
+        assertSame(MuhaiGenerator.EMPTY_BYTES, generator.getHashPepper());
 
-        String binary = Long.toBinaryString(-1);
+        MuhaiGenerator generatorWithPepper = new MuhaiGenerator(LongPrefix.NONE, "PEP");
 
-        long l = Long.parseUnsignedLong(binary, 2);
+        Random rand = new Random(193774);
 
-        System.out.println(l);
+        for (int i = 0; i < 10_000; i++) {
+            String input = "val" + rand.nextLong();
+            assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(input), generatorWithPepper.computeHashBytes(input)));
 
-        System.out.println(Long.toHexString(-1));
-
-        System.out.println(Long.toBinaryString(-1L << 0));
-
-        System.out.println(BigInteger.TWO.pow(62));
-
-        System.out.println(MuhaiUtils.toPaddedBinaryString(0L));
-        System.out.println(MuhaiUtils.toPaddedBinaryString(0L >> 64));
-
-        System.out.println(BigInteger.TWO.pow(62));
-        System.out.println(MuhaiUtils.toPaddedBinaryString(1L << 62));
-        System.out.println(MuhaiUtils.toPaddedIntString(1L << 62));
-        System.out.println(MuhaiUtils.toPaddedBinaryString(Long.MAX_VALUE));
-        System.out.println(MuhaiUtils.toPaddedIntString(Long.MAX_VALUE));
-
-        System.out.println(MuhaiUtils.toPaddedHexString(1L << 62));
-        System.out.println(MuhaiUtils.toPaddedHexString(Long.MAX_VALUE));
-
-        System.out.println(1L << 62);
-        System.out.println(Long.MAX_VALUE);
+        }
+        MuhaiGenerator generatorWithPepper2 = new MuhaiGenerator(LongPrefix.NONE, "PEP2");
+        for (int i = 0; i < 10_000; i++) {
+            String input = "val" + rand.nextLong();
+            assertFalse(UXP_ARR_EQUAL, Arrays.equals(generator.computeHashBytes(input), generatorWithPepper2.computeHashBytes(input)));
+            assertFalse(UXP_ARR_EQUAL, Arrays.equals(generatorWithPepper.computeHashBytes(input), generatorWithPepper2.computeHashBytes(input)));
+        }
 
     }
+
 }

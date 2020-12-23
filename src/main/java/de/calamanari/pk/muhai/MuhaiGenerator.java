@@ -24,17 +24,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+
+import de.calamanari.pk.util.JavaWrapperType;
 
 public class MuhaiGenerator implements Serializable {
 
     private static final long serialVersionUID = 1212131876200805275L;
 
-    private static final ConcurrentHashMap<String, MuhaiGenerator> INSTANCES = new ConcurrentHashMap<>();
-
     /**
-     * Thread-local holder for message digest of type SHA-1, static, because it can be used with by any generator (independent from the prefix)
+     * Thread-local holder for message digest of type SHA-1, static, because it can be used by any generator (independent from the prefix), making generator
+     * instances light-weight.
      */
     private static final ThreadLocal<MessageDigest> DIGEST_HOLDER = ThreadLocal.withInitial(() -> {
         try {
@@ -76,28 +75,25 @@ public class MuhaiGenerator implements Serializable {
     static final byte[] EMPTY_BYTES = new byte[0];
 
     /**
-     * Prefix and cache key, the only non-transient information to be serialized for later resolving the registered instance, a SINGLETON per prefix.
+     * Prefix for all keys, also defines the keyspace of the generator
      */
-    private final String prefixString;
-
-    private final transient String someOtherPayload;
-
-    public static MuhaiGenerator getInstance(String prefix) {
-        return INSTANCES.computeIfAbsent(prefix, MuhaiGenerator::new);
-    }
-
-    private MuhaiGenerator(String prefix) {
-        this.prefixString = prefix;
-        this.someOtherPayload = "Banana_" + UUID.randomUUID();
-    }
+    private final LongPrefix prefix;
 
     /**
-     * Returns the cached instance of the digest after resetting it for the next use.
-     * @return clean digest
+     * Optional pepper to be added to hashing
      */
-    static MessageDigest initDigest() {
+    private final byte[] hashPepper;
+
+    /**
+     * Returns the cached instance of the digest after resetting it for the next use and updating it with the optional pepper.
+     * @return prepared digest
+     */
+    protected MessageDigest initDigest() {
         MessageDigest res = DIGEST_HOLDER.get();
         res.reset();
+        if (hashPepper.length > 0) {
+            res.update(hashPepper);
+        }
         return res;
     }
 
@@ -107,7 +103,7 @@ public class MuhaiGenerator implements Serializable {
      * @param srcValue value to be added
      * @param geminateZeroBytes if true all occurrences of 0 (the {@link #IND_SPACER}) will be doubled
      */
-    private static void addToDigest(MessageDigest md, Object srcValue, boolean geminateZeroBytes) {
+    protected void addToDigest(MessageDigest md, Object srcValue, boolean geminateZeroBytes) {
         byte[] sourceBytes = EMPTY_BYTES;
         if (srcValue == null) {
             md.update(IND_NULL);
@@ -119,16 +115,8 @@ public class MuhaiGenerator implements Serializable {
             }
         }
         else {
-            // we could add here support for arbitrary types (short, int, long, boolean etc.) with a
-            // positive impact on performance, but this would make the code very complex.
-            // I have decided to focus on the simple default case and leave special conversions to the clients of this class.
-            // Here we only support byte array and use UTF-8-encoded toString() for anything else.
-            // A conversion STRATEGY (convert(Object):String) could be an alternative implementation approach.
-            String sourceString = String.valueOf(srcValue);
-            if (!sourceString.isEmpty()) {
-                sourceBytes = sourceString.getBytes(StandardCharsets.UTF_8);
-            }
-            else {
+            sourceBytes = convertAttributeToByteArray(srcValue);
+            if (sourceBytes.length == 0) {
                 md.update(IND_EMPTY);
             }
         }
@@ -144,11 +132,41 @@ public class MuhaiGenerator implements Serializable {
     }
 
     /**
+     * Converts a given attribute to a byte array.
+     * <p>
+     * This default implementation performs String.valueOf(not-an-array) or Arrays.deepToString(array) and UTF-8-encodes the result.
+     * <p>
+     * <b>Note:</b> We could add here support for arbitrary types (short, int, long, boolean etc.) with a positive impact on performance, but this would make
+     * the code very complex. I have decided to focus on the simple default case and leave special conversions to the clients of this class.
+     * 
+     * @param srcValue NOT NULL
+     * @return a string replacing the attribute
+     */
+    protected byte[] convertAttributeToByteArray(Object srcValue) {
+        String sourceString = null;
+        Class<?> srcClass = srcValue.getClass();
+        if (srcClass.isArray()) {
+            Class<?> componentType = srcClass.getComponentType();
+            if (componentType.isPrimitive()) {
+                sourceString = JavaWrapperType.forClass(componentType).arrayToString(srcValue);
+            }
+            else {
+                sourceString = Arrays.deepToString((Object[]) srcValue);
+            }
+        }
+        else {
+            sourceString = String.valueOf(srcValue);
+        }
+
+        return (sourceString.isEmpty() ? EMPTY_BYTES : sourceString.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
      * Computes a hash over the given attributes
      * @param attributes source attributes (can be empty)
      * @return hash value
      */
-    static byte[] computeHashBytes(Object... attributes) {
+    protected byte[] computeHashBytes(Object... attributes) {
         MessageDigest md = initDigest();
         int numberOfAttributes = (attributes == null ? 0 : attributes.length);
         boolean geminateZeroBytes = (numberOfAttributes > 1);
@@ -167,7 +185,7 @@ public class MuhaiGenerator implements Serializable {
      * @param src not null
      * @return either src or a new longer byte sequence to replace the given one
      */
-    static byte[] geminateSpacerBytes(byte[] src) {
+    protected byte[] geminateSpacerBytes(byte[] src) {
         byte[] res = src;
         for (int i = 0; i < src.length; i++) {
             if (src[i] == IND_SPACER) {
@@ -213,16 +231,88 @@ public class MuhaiGenerator implements Serializable {
         return dest;
     }
 
-    public String toString() {
-        return this.prefixString + " -- " + this.someOtherPayload;
+    /**
+     * Constructor to create a new generator
+     * @param prefix bit sequence, also defines the keyspace of this generator, not null (instead use {@link LongPrefix#NONE}
+     * @param pepper an optional byte sequence to be included in all hash computations, null or empty array will turn the pepper off
+     */
+    public MuhaiGenerator(LongPrefix prefix, byte[] pepper) {
+        byte[] pepperBytes = EMPTY_BYTES;
+        if (pepper != null && pepper.length > 0) {
+            pepperBytes = Arrays.copyOf(pepper, pepper.length);
+        }
+        this.prefix = prefix;
+        this.hashPepper = pepperBytes;
     }
 
     /**
-     * Replaces the instance during deserialization with the SINGLETON per prefix, so that serialization won't create duplicates in the same VM.
-     * @return generator instance
+     * Constructor to create a new generator
+     * @param prefix bit sequence, also defines the keyspace of this generator, not null (instead use {@link LongPrefix#NONE}
+     * @param pepper an optional character sequence to be included in all hash computations, null or empty will turn the pepper off
      */
-    Object readResolve() {
-        return getInstance(this.prefixString);
+    public MuhaiGenerator(LongPrefix prefix, String pepper) {
+        this(prefix, pepper == null ? EMPTY_BYTES : pepper.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Constructor to create a new generator without a hash pepper
+     * @param prefix bit sequence, also defines the keyspace of this generator, not null (instead use {@link LongPrefix#NONE}
+     */
+    public MuhaiGenerator(LongPrefix prefix) {
+        this(prefix, EMPTY_BYTES);
+    }
+
+    /**
+     * @return the prefix this generator is using
+     */
+    public LongPrefix getPrefix() {
+        return prefix;
+    }
+
+    /**
+     * Returns a copy of the hash pepper byte sequence this generator uses.
+     * @return byte array, if the pepper was specified as a string these are the UTF-8 bytes
+     */
+    public byte[] getHashPepper() {
+        byte[] res = EMPTY_BYTES;
+        if (this.hashPepper.length > 0) {
+            res = Arrays.copyOf(hashPepper, hashPepper.length);
+        }
+        return res;
+    }
+
+    /**
+     * Computes a key (MUHAI) from the given attributes.
+     * @param attributes values to be included in hashing, an empty array is a valid special case
+     * @return key
+     */
+    public long createKey(Object... attributes) {
+        byte[] hashBytes = computeHashBytes(attributes);
+        // we fill the bit-sequence (8 bytes, 64 bits) subsequently from the left
+        long res = 0;
+        for (int i = 0; i < 7; i++) {
+            res = res | (hashBytes[i] & 0xff);
+            res = res << 8;
+        }
+        // The "& 0xff"-operation below makes an unsigned byte out of a Java signed byte,
+        // which is technically not necessary but will simplify later verification
+        res |= hashBytes[7] & 0xff;
+
+        if (prefix.getLength() > 0) {
+            // the right-shift below "creates room" for the prefix
+            res = prefix.applyTo(res >>> prefix.getLength());
+        }
+
+        return res;
+    }
+
+    /**
+     * @return description
+     */
+    public String toString() {
+        String prefixString = this.prefix.toBinaryString();
+        return MuhaiGenerator.class.getSimpleName() + "(prefix=" + (prefixString.isEmpty() ? "NONE>" : "'" + prefixString + "'") + ", hashPepper="
+                + (hashPepper.length == 0 ? "<NONE>" : Arrays.toString(hashPepper)) + ")";
     }
 
     /**
@@ -235,4 +325,5 @@ public class MuhaiGenerator implements Serializable {
     public static void cleanup() {
         DIGEST_HOLDER.remove();
     }
+
 }
