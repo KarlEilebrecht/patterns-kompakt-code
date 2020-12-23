@@ -21,15 +21,18 @@ package de.calamanari.pk.muhai;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * The {@link LongPrefix} is a VALUE-object that represents a <i>valid</i> prefix sequence for a long value to define keyspace. The size of the prefix can be up
- * to 63 bits. 64 bits is invalid because it would create a <i>strange keyspace</i> that has a single member (the prefix itself) but cannot contain any keys. A
- * valid special case is an empty prefix (2^64 keys).
+ * The {@link LongPrefix} is a VALUE-object that represents a <i>valid</i> prefix sequence for a long value to define a keyspace. The size of the prefix can be
+ * up to 63 bits. 64 bits is invalid because it would create a <i>strange keyspace</i> that has a single member (the prefix itself) but cannot contain any keys.
+ * A valid special case is an empty prefix (2^64 keys).
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class LongPrefix implements Serializable {
+public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     private static final long serialVersionUID = 1189853182590506689L;
 
@@ -37,12 +40,6 @@ public class LongPrefix implements Serializable {
      * Special case, an empty prefix means no prefix at all to leverage the maximum number of keys: 2^64.
      */
     public static final LongPrefix NONE = new LongPrefix("");
-
-    /**
-     * This single-bit prefix '0' (2^63 keys possible) causes the signed long representation to never turn negative. This is recommended if the storage
-     * (db-table) also uses signed longs and negative keys would cause confusion or any processing issues.
-     */
-    public static final LongPrefix POSITIVE = new LongPrefix("0");
 
     /**
      * This two-bits prefix '00' (2^62 keys possible) is a convenient default as it still spans a large keyspace, but eliminates the negative values when
@@ -53,33 +50,81 @@ public class LongPrefix implements Serializable {
     public static final LongPrefix DEFAULT = new LongPrefix("00");
 
     /**
+     * This single-bit prefix '0' (2^63 keys possible) causes the signed long representation to never turn negative. This is recommended if the storage
+     * (db-table) also uses signed longs and negative keys would cause confusion or any processing issues.
+     */
+    public static final LongPrefix POSITIVE = new LongPrefix("0");
+
+    /**
      * This two-bits prefix '01' (2^62 keys possible) spans a large keyspace, eliminates the negative values when represented as signed long and it reserves 3
      * subspaces (e.g. for migration purposes in future). The leading 1-bit on the left causes all keys to have the same length, no matter whether displayed as
-     * binary String (62), as signed long (19), unsigned integer (19) or hex String (16).
+     * binary String (62 digits), as signed long (19 digits), unsigned integer (19 digits) or hex String (16 digits).
      */
     public static final LongPrefix STRAIGHT = new LongPrefix("01");
 
     /**
-     * The prefix passed to the constructor
+     * This prefix sets the first 33 bits '0', so any key in that space of 2^31 keys will be a positive 32-bit integer.
+     */
+    public static final LongPrefix POSITIVE_31 = new LongPrefix("000000000000000000000000000000000");
+
+    /**
+     * This prefix sets the first 33 bits to '0' followed by a '1' (2^30 keys possible) creating a rather small keyspace with 3 optional subspaces. All keys are
+     * positive 32-bit-integer values. Because of the single '1' to the left, keys will all have the same length no matter if represented binary (31 digits), as
+     * signed integer (10 digits) or hex String (8 digits).
+     */
+    public static final LongPrefix STRAIGHT_30 = new LongPrefix("0000000000000000000000000000000001");
+
+    /**
+     * A common list of prefixes to avoid duplicates (static caching).
+     */
+    private static final Map<String, LongPrefix> STANDARD_PREFIXES;
+    static {
+        HashMap<String, LongPrefix> map = new HashMap<>();
+        map.put(NONE.toBinaryString(), NONE);
+        map.put(DEFAULT.toBinaryString(), DEFAULT);
+        map.put(POSITIVE.toBinaryString(), POSITIVE);
+        map.put(POSITIVE_31.toBinaryString(), POSITIVE_31);
+        map.put(STRAIGHT.toBinaryString(), STRAIGHT);
+        map.put(STRAIGHT_30.toBinaryString(), STRAIGHT_30);
+        STANDARD_PREFIXES = Collections.unmodifiableMap(map);
+    }
+
+    /**
+     * The prefix passed to the constructor<br />
+     * The only non-transient state to be included in serialization.
      */
     private final String prefixString;
 
     /**
      * The prefix as an 8-bytes long at the end of the bit vector.
      */
-    private final long prefixWithLeadingZeros;
+    private final transient long prefixWithLeadingZeros;
 
     /**
      * The prefix, but moved to the start of the bit vector, at the same time the start key of the keyspace.
      */
-    private final long prefixWithTrailingZeros;
+    private final transient long prefixWithTrailingZeros;
+
+    /**
+     * Returns the {@link LongPrefix} instance for the given prefix string, each character ('0' or '1') stands for a bit.
+     * @param prefixString composed of '0's and '1's, supports leading zeros, length in range [0 .. 63], empty String is valid, NOT NULL.
+     * @return prefix instance
+     * @throws InvalidPrefixException if the given prefix cannot be used
+     */
+    public static LongPrefix fromBinaryString(String prefixString) {
+        LongPrefix res = STANDARD_PREFIXES.get(prefixString);
+        if (res == null) {
+            res = new LongPrefix(prefixString);
+        }
+        return res;
+    }
 
     /**
      * Creates a custom prefix from the given bit vector.
      * @param prefix composed of 0s and 1s, length in range [0 .. 63], empty String is valid, NOT NULL.
      * @throws InvalidPrefixException if the given prefix cannot be used
      */
-    public LongPrefix(String prefix) {
+    private LongPrefix(String prefix) {
         if (prefix == null) {
             throw new InvalidPrefixException("Prefix must not be null, instead specify an empty prefix explicitly as an empty String.");
         }
@@ -100,29 +145,15 @@ public class LongPrefix implements Serializable {
 
         this.prefixString = prefix;
         this.prefixWithTrailingZeros = prefixBinary;
-        this.prefixWithLeadingZeros = prefixBinary >> (64 - prefix.length());
+        this.prefixWithLeadingZeros = prefixBinary >>> (64 - prefix.length());
     }
 
     /**
      * Returns the string representation of this prefix (provided at construction time), a character (0, 1) per bit.
-     * @return prefix
+     * @return prefix as a binary string, may have leading zeros
      */
-    public String getPrefixString() {
+    public String toBinaryString() {
         return prefixString;
-    }
-
-    /**
-     * @return the long representation of the prefix (8 bytes, prefix at the end of the bit vector)
-     */
-    public long getPrefixWithLeadingZeros() {
-        return prefixWithLeadingZeros;
-    }
-
-    /**
-     * @return the long representation of the prefix (8 bytes, prefix at the start of the bit vector)
-     */
-    public long getPrefixWithTrailingZeros() {
-        return prefixWithTrailingZeros;
     }
 
     /**
@@ -138,7 +169,36 @@ public class LongPrefix implements Serializable {
      * @return true if the leading bits from the left of the given long value match this prefix
      */
     public boolean match(long key) {
-        return (key >>> (64 - prefixString.length())) == prefixWithLeadingZeros;
+        return prefixString.isEmpty() || ((key >>> (64 - prefixString.length())) == prefixWithLeadingZeros);
+    }
+
+    /**
+     * Returns a new long value where the leading bits (length of prefix) have been <b>replaced</b> with the bits of the prefix. Trailing bits will remain
+     * unchanged.
+     * @param key source bits
+     * @return value with the leading prefix
+     */
+    public long applyTo(long key) {
+        long res = key;
+        if (prefixString.length() > 0) {
+            res = ((key << prefixString.length()) >>> prefixString.length()) | prefixWithTrailingZeros;
+        }
+        return res;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.prefixString.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj == this || (obj.getClass() == LongPrefix.class && ((LongPrefix) obj).prefixString.equals(this.prefixString)));
+    }
+
+    @Override
+    public int compareTo(LongPrefix other) {
+        return this.prefixString.compareTo(other.prefixString);
     }
 
     /**
@@ -149,16 +209,25 @@ public class LongPrefix implements Serializable {
         sb.append(LongPrefix.class.getSimpleName());
         sb.append("('");
         sb.append(this.prefixString);
-        sb.append("', length=");
+        sb.append("' [");
+        sb.append(prefixString.isEmpty() ? "<NONE>"
+                : String.format("%1$" + prefixString.length() + "s", Long.toBinaryString(prefixWithLeadingZeros)).replace(' ', '0'));
+        sb.append("], length=");
         sb.append(prefixString.length());
-        sb.append(", ");
-        sb.append(prefixString.length() == 0 ? "<EMPTY>" : Long.toBinaryString(prefixWithLeadingZeros));
         sb.append(", start key: ");
         sb.append(Long.toBinaryString(prefixWithTrailingZeros));
         sb.append(", size of keyspace: ");
         sb.append(BigInteger.TWO.pow(64 - prefixString.length()));
         sb.append(")");
         return sb.toString();
+    }
+
+    /**
+     * Replaces the instance during deserialization with, so that serialization won't create duplicates in the same VM.
+     * @return generator instance
+     */
+    Object readResolve() {
+        return fromBinaryString(this.prefixString);
     }
 
 }

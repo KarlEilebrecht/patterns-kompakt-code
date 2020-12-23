@@ -23,7 +23,7 @@ package de.calamanari.pk.muhai;
  * Exception to be thrown if the provided prefix is invalid, e.g. because it is too long or contains bad characters.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class InvalidPrefixException extends MuhaiException {
+public class InvalidPrefixException extends RuntimeException {
 
     private static final long serialVersionUID = 5969157132613727146L;
 
