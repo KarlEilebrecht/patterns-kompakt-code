@@ -106,6 +106,11 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
     private final transient long prefixWithTrailingZeros;
 
     /**
+     * Number of unique keys in this sub-keyspace of long defined by this prefix
+     */
+    private final transient BigInteger sizeOfKeyspace;
+
+    /**
      * Returns the {@link LongPrefix} instance for the given prefix string, each character ('0' or '1') stands for a bit.
      * @param prefixString composed of '0's and '1's, supports leading zeros, length in range [0 .. 63], empty String is valid, NOT NULL.
      * @return prefix instance
@@ -146,6 +151,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
         this.prefixString = prefix;
         this.prefixWithTrailingZeros = prefixBinary;
         this.prefixWithLeadingZeros = prefixBinary >>> (64 - prefix.length());
+        this.sizeOfKeyspace = BigInteger.TWO.pow(64 - prefix.length());
     }
 
     /**
@@ -161,6 +167,14 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
      */
     public int getLength() {
         return prefixString.length();
+    }
+
+    /**
+     * Returns the size of the keyspace with a maximum value of <code>2^64 = 18_446_744_073_709_551_616</code> keys (empty prefix).<br />
+     * @return number of unique keys in this sub-keyspace of long defined by this prefix
+     */
+    public BigInteger getSizeOfKeyspace() {
+        return this.sizeOfKeyspace;
     }
 
     /**
@@ -209,15 +223,11 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
         sb.append(LongPrefix.class.getSimpleName());
         sb.append("('");
         sb.append(this.prefixString);
-        sb.append("' [");
-        sb.append(prefixString.isEmpty() ? "<NONE>"
-                : String.format("%1$" + prefixString.length() + "s", Long.toBinaryString(prefixWithLeadingZeros)).replace(' ', '0'));
-        sb.append("], length=");
+        sb.append("'");
+        sb.append(", length=");
         sb.append(prefixString.length());
-        sb.append(", start key: ");
-        sb.append(Long.toBinaryString(prefixWithTrailingZeros));
         sb.append(", size of keyspace: ");
-        sb.append(BigInteger.TWO.pow(64 - prefixString.length()));
+        sb.append(sizeOfKeyspace);
         sb.append(")");
         return sb.toString();
     }

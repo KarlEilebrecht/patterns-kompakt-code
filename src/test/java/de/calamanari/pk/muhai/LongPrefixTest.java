@@ -56,6 +56,9 @@ public class LongPrefixTest {
             String prefixRand = Stream.generate(() -> "" + rand.nextInt(2)).limit(i).collect(Collectors.joining());
 
             LongPrefix longPrefixRand = LongPrefix.fromBinaryString(prefixRand);
+            if (i > 1) {
+                assertEquals((long) Math.pow(2.0d, 64 - i), longPrefixRand.getSizeOfKeyspace().longValue());
+            }
             assertEquals(prefixRand, longPrefixRand.toBinaryString());
             assertEquals(prefixRand.length(), longPrefixRand.getLength());
             assertEquals(prefixRand.compareTo(prefix0s), longPrefixRand.compareTo(longPrefix0s));
@@ -63,13 +66,19 @@ public class LongPrefixTest {
 
         }
 
+        // arithmetic overflow for 2^63
+        assertEquals(Long.MIN_VALUE, LongPrefix.fromBinaryString("0").getSizeOfKeyspace().longValue());
+        assertEquals(Long.MIN_VALUE, LongPrefix.fromBinaryString("1").getSizeOfKeyspace().longValue());
+
+        // 2^64, maximum number of unique keys representable by a long value
+        assertEquals("18446744073709551616", LongPrefix.NONE.getSizeOfKeyspace().toString());
+
         assertGetInvalidPrefixException(null);
         assertGetInvalidPrefixException(" 010");
         assertGetInvalidPrefixException("010 ");
         assertGetInvalidPrefixException("_");
         assertGetInvalidPrefixException(Stream.generate(() -> "0").limit(64).collect(Collectors.joining()));
         assertGetInvalidPrefixException(Stream.generate(() -> "1").limit(64).collect(Collectors.joining()));
-
     }
 
     @Test
