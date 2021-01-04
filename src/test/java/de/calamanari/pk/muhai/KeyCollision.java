@@ -42,6 +42,56 @@ import de.calamanari.pk.util.BoxingUtils;
 public class KeyCollision implements Comparable<KeyCollision> {
 
     /**
+     * Codec for writing {@link KeyCollision}s line by line to a file and read it back
+     */
+    public static final ItemStringCodec<KeyCollision> LINE_CODEC = new ItemStringCodec<>() {
+
+        @Override
+        public String itemToString(KeyCollision item) {
+            if (item == null) {
+                throw new IllegalArgumentException("Cannot encode null");
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(Long.toUnsignedString(item.key));
+            sb.append('@');
+            for (int i = 0; i < item.positions.length; i++) {
+                if (i > 0) {
+                    sb.append(";");
+                }
+                sb.append(Long.toUnsignedString(item.positions[i]));
+            }
+            return sb.toString();
+        }
+
+        @Override
+        public KeyCollision stringToItem(String line) {
+            if (line == null) {
+                throw new ItemConversionException("Cannot decode null");
+            }
+            int delimPos = line.indexOf('@');
+            int delimPos2 = line.indexOf(';');
+            if (delimPos < 1 || delimPos2 < delimPos || delimPos2 > line.length() - 2) {
+                throw new ItemConversionException("Line corrupted, expected <unsigned long>@<unsigned long>;<unsigned long>; ..., given: " + line);
+            }
+            KeyCollision res = null;
+            try {
+                long key = Long.parseUnsignedLong(line.substring(0, delimPos));
+                String positionsPart = line.substring(delimPos + 1);
+                Long[] rawPositions = Stream.of(positionsPart.split(";")).map(r -> Long.parseUnsignedLong(r)).toArray(Long[]::new);
+                long[] positions = BoxingUtils.unboxArray(rawPositions);
+                res = new KeyCollision(key, positions);
+            }
+            catch (RuntimeException ex) {
+                throw new ItemConversionException(
+                        String.format("Line corrupted, expected <unsigned long>@<unsigned long>;<unsigned long>; ..., given: %s", line), ex);
+            }
+            return res;
+        }
+
+    };
+
+    /**
      * generated key
      */
     private final long key;
@@ -161,56 +211,6 @@ public class KeyCollision implements Comparable<KeyCollision> {
 
     public String toString() {
         return KeyCollision.class.getSimpleName() + "(" + Long.toUnsignedString(this.key) + ", " + arrayToUnsignedString(this.positions) + ")";
-    }
-
-    /**
-     * Codec for writing {@link KeyCollision}s line by line to a file and read it back
-     */
-    public static class LineCodec implements ItemStringCodec<KeyCollision> {
-
-        @Override
-        public String itemToString(KeyCollision item) {
-            if (item == null) {
-                throw new IllegalArgumentException("Cannot encode null");
-            }
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(Long.toUnsignedString(item.key));
-            sb.append('@');
-            for (int i = 0; i < item.positions.length; i++) {
-                if (i > 0) {
-                    sb.append(";");
-                }
-                sb.append(Long.toUnsignedString(item.positions[i]));
-            }
-            return sb.toString();
-        }
-
-        @Override
-        public KeyCollision stringToItem(String line) {
-            if (line == null) {
-                throw new ItemConversionException("Cannot decode null");
-            }
-            int delimPos = line.indexOf('@');
-            int delimPos2 = line.indexOf(';');
-            if (delimPos < 1 || delimPos2 < delimPos || delimPos2 > line.length() - 2) {
-                throw new ItemConversionException("Line corrupted, expected <unsigned long>@<unsigned long>;<unsigned long>; ..., given: " + line);
-            }
-            KeyCollision res = null;
-            try {
-                long key = Long.parseUnsignedLong(line.substring(0, delimPos));
-                String positionsPart = line.substring(delimPos + 1);
-                Long[] rawPositions = Stream.of(positionsPart.split(";")).map(r -> Long.parseUnsignedLong(r)).toArray(Long[]::new);
-                long[] positions = BoxingUtils.unboxArray(rawPositions);
-                res = new KeyCollision(key, positions);
-            }
-            catch (RuntimeException ex) {
-                throw new ItemConversionException(
-                        String.format("Line corrupted, expected <unsigned long>@<unsigned long>;<unsigned long>; ..., given: %s", line), ex);
-            }
-            return res;
-        }
-
     }
 
 }

@@ -101,8 +101,9 @@ public class ItemConversionIterator<E, C extends ItemStringCodec<E>> implements 
 
     @Override
     public E next() {
-        E res = bufferedElement;
+        E res = null;
         if (this.hasNext()) {
+            res = bufferedElement;
             bufferedElement = null;
         }
         else {

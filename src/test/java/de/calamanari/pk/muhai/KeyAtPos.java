@@ -31,6 +31,42 @@ package de.calamanari.pk.muhai;
 public class KeyAtPos implements Comparable<KeyAtPos> {
 
     /**
+     * Codec for writing {@link KeyAtPos}s line by line to a file and read it back
+     */
+    public static final ItemStringCodec<KeyAtPos> LINE_CODEC = new ItemStringCodec<>() {
+
+        @Override
+        public String itemToString(KeyAtPos item) {
+            if (item == null) {
+                throw new IllegalArgumentException("Cannot encode null");
+            }
+            return String.join("@", Long.toUnsignedString(item.key), Long.toUnsignedString(item.pos));
+        }
+
+        @Override
+        public KeyAtPos stringToItem(String line) {
+            if (line == null) {
+                throw new ItemConversionException("Cannot decode null");
+            }
+            int delimPos = line.indexOf('@');
+            if (delimPos < 1 || delimPos > line.length() - 2) {
+                throw new ItemConversionException("Line corrupted, expected <unsigned long>@<unsigned long>, given: " + line);
+            }
+            KeyAtPos res = null;
+            try {
+                long key = Long.parseUnsignedLong(line.substring(0, delimPos));
+                long pos = Long.parseUnsignedLong(line.substring(delimPos + 1));
+                res = new KeyAtPos(key, pos);
+            }
+            catch (RuntimeException ex) {
+                throw new ItemConversionException(String.format("Line corrupted, expected <unsigned long>@<unsigned long>, given: %s", line), ex);
+            }
+            return res;
+        }
+
+    };
+
+    /**
      * generated key
      */
     private final long key;
@@ -105,39 +141,4 @@ public class KeyAtPos implements Comparable<KeyAtPos> {
         return KeyAtPos.class.getSimpleName() + "(" + Long.toUnsignedString(key) + ", " + Long.toUnsignedString(pos) + ")";
     }
 
-    /**
-     * Codec for writing {@link KeyAtPos}s line by line to a file and read it back
-     */
-    public static class LineCodec implements ItemStringCodec<KeyAtPos> {
-
-        @Override
-        public String itemToString(KeyAtPos item) {
-            if (item == null) {
-                throw new IllegalArgumentException("Cannot encode null");
-            }
-            return String.join("@", Long.toUnsignedString(item.key), Long.toUnsignedString(item.pos));
-        }
-
-        @Override
-        public KeyAtPos stringToItem(String line) {
-            if (line == null) {
-                throw new ItemConversionException("Cannot decode null");
-            }
-            int delimPos = line.indexOf('@');
-            if (delimPos < 1 || delimPos > line.length() - 2) {
-                throw new ItemConversionException("Line corrupted, expected <unsigned long>@<unsigned long>, given: " + line);
-            }
-            KeyAtPos res = null;
-            try {
-                long key = Long.parseUnsignedLong(line.substring(0, delimPos));
-                long pos = Long.parseUnsignedLong(line.substring(delimPos + 1));
-                res = new KeyAtPos(key, pos);
-            }
-            catch (RuntimeException ex) {
-                throw new ItemConversionException(String.format("Line corrupted, expected <unsigned long>@<unsigned long>, given: %s", line), ex);
-            }
-            return res;
-        }
-
-    }
 }
