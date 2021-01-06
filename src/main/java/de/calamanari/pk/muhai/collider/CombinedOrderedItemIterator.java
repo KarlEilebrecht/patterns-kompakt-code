@@ -1,4 +1,4 @@
-package de.calamanari.pk.muhai;
+package de.calamanari.pk.muhai.collider;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.muhai;
+package de.calamanari.pk.muhai.collider;
 
 import java.io.Serializable;
 

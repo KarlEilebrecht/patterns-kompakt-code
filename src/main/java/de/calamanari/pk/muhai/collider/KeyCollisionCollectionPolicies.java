@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.muhai;
+package de.calamanari.pk.muhai.collider;
 
 /**
  * This class provides convenient access to the standard policies for key collision collection.

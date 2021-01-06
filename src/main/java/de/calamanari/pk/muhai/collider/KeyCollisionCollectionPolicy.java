@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * ItemStringCodec
+ * KeyCollisionCollectionPolicy
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,28 +17,27 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.muhai;
+package de.calamanari.pk.muhai.collider;
 
 /**
- * The {@link ItemStringCodec} is an interface for a POLICY to transform an element to a String and vice-versa for writing/reading files.
+ * A {@link KeyCollisionCollectionPolicy} is a POLICY that defines how to collect collisions
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
- * @param <E> type of the elements
+ * @param <T> collision representation type
  */
-public interface ItemStringCodec<E> {
+public interface KeyCollisionCollectionPolicy<T extends KeyCollision<T>> {
 
     /**
-     * Encodes an item into a String that can be written as a single line
-     * @param item
-     * @return encoded item string, no line breaks
+     * FACTORY METHOD for collisions
+     * @param key the key that occurred at least twice
+     * @param positions at least 2 positions
+     * @return representation of the collision
      */
-    public String itemToString(E item);
+    public T createKeyCollision(long key, long... positions);
 
     /**
-     * Encodes an item into a String that can be written as a single line
-     * @param line encoded item string, no line breaks
-     * @return converted item
+     * @return the coded to transform items for storing in files
      */
-    public E stringToItem(String line) throws ItemConversionException;
+    public ItemStringCodec<T> getLineCodec();
 
 }

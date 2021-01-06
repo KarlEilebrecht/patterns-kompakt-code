@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.muhai;
+package de.calamanari.pk.muhai.collider;
 
 /**
  * {@link KeyAtPos} is a VALUE OBJECT that represents a key at a certain position.<br />

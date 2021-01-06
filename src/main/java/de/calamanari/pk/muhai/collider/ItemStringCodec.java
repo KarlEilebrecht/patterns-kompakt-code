@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * KeyCollisionProcessException
+ * ItemStringCodec
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,37 +17,28 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.muhai;
+package de.calamanari.pk.muhai.collider;
 
 /**
- * Unchecked exception used during key processing to indicate problems
+ * The {@link ItemStringCodec} is an interface for a POLICY to transform an element to a String and vice-versa for writing/reading files.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
+ * @param <E> type of the elements
  */
-public class KeyCollisionProcessException extends RuntimeException {
-
-    private static final long serialVersionUID = 8828416723549905460L;
+public interface ItemStringCodec<E> {
 
     /**
-     * @param message problem description
+     * Encodes an item into a String that can be written as a single line
+     * @param item
+     * @return encoded item string, no line breaks
      */
-    public KeyCollisionProcessException(String message) {
-        super(message);
-    }
+    public String itemToString(E item);
 
     /**
-     * @param cause for tunneling, e.g. in lambdas
+     * Encodes an item into a String that can be written as a single line
+     * @param line encoded item string, no line breaks
+     * @return converted item
      */
-    public KeyCollisionProcessException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * @param message context info
-     * @param cause error
-     */
-    public KeyCollisionProcessException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    public E stringToItem(String line) throws ItemConversionException;
 
 }

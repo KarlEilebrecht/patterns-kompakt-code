@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.muhai;
+package de.calamanari.pk.muhai.collider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,7 +42,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import de.calamanari.pk.muhai.KeyCollisionProcessor.SummaryBuilder;
+import de.calamanari.pk.muhai.LongPrefix;
+import de.calamanari.pk.muhai.MuhaiGenerator;
+import de.calamanari.pk.muhai.MuhaiUtils;
+import de.calamanari.pk.muhai.collider.KeyCollisionProcessor.SummaryBuilder;
 
 /**
  * MUHAI Key Collision Test - here we demonstrate the collision behavior by creating large amount of keys and detecting collisions.
@@ -102,6 +105,44 @@ public class KeyCollisionTest {
             double percComputed = KeyCollisionProcessor.computePercentage(perc0_01 * i, total);
             assertEquals(nf.format(perc), KeyCollisionProcessor.formatPercentage(percComputed));
         }
+
+    }
+
+    @Test
+    public void testSummary() throws Exception {
+        SummaryBuilder summaryBuilder = KeyCollisionProcessor.SummaryBuilder.forKeyspaceSizeAndNumberOfKeysGenerated(1024, 50);
+
+        summaryBuilder.addCollision(new TrackingKeyCollision(34, 17, 30));
+        summaryBuilder.addCollision(new TrackingKeyCollision(35, 18, 19, 20));
+        summaryBuilder.addCollision(new TrackingKeyCollision(400, 1, 2, 3));
+        summaryBuilder.addCollision(new TrackingKeyCollision(500, 40, 41));
+        summaryBuilder.addCollision(new TrackingKeyCollision(501, 42, 43));
+        summaryBuilder.addCollision(new TrackingKeyCollision(502, 44, 45, 46, 47));
+
+        KeyCollisionSummary summary = summaryBuilder.getResult();
+
+        assertEquals(1024, summary.getSizeOfKeyspace());
+        assertEquals(50, summary.getNumberOfKeysGenerated());
+        assertEquals(6, summary.getNumberOfCollidedKeys());
+        assertEquals(10, summary.getNumberOfCollisions());
+        assertEquals(2, summary.getFirstCollisionPosition());
+        assertEquals(3, summary.getMultiOccurrenceStats().size());
+        assertEquals(3L, summary.getMultiOccurrenceStats().get(2L));
+        assertEquals(2L, summary.getMultiOccurrenceStats().get(3L));
+        assertEquals(1L, summary.getMultiOccurrenceStats().get(4L));
+        String expectedDataPoints = "Number of keys generated;Collisions detected;Collisions expected|1;0;0|2;0;0|3;1;0|4;2;0|5;2;0|6;2;0|7;2;0|"
+                + "8;2;0|9;2;0|10;2;0|11;2;0|12;2;0|13;2;0|14;2;0|15;2;0|16;2;0|17;2;0|18;2;0|19;2;0|20;3;0|21;4;0|22;4;0|23;4;0|24;4;0|"
+                + "25;4;0|26;4;0|27;4;0|28;4;0|29;4;0|30;4;0|31;5;0|32;5;0|33;5;0|34;5;0|35;5;0|36;5;0|37;5;0|38;5;0|39;5;0|40;5;0|41;5;0|"
+                + "42;6;0|43;6;0|44;7;0|45;7;0|46;8;0|47;9;1|48;10;1|49;10;1|50;10;1";
+        assertEquals(expectedDataPoints, summary.getCollisionStatsPcsv());
+
+        String summaryJson = formatSummary(summary);
+
+        ObjectMapper mapper = createObjectMapper();
+
+        KeyCollisionSummary summary2 = mapper.readValue(summaryJson, KeyCollisionSummary.class);
+
+        assertEquals(summary.getCollisionStats(), summary2.getCollisionStats());
 
     }
 
@@ -170,44 +211,6 @@ public class KeyCollisionTest {
                 prefix32.getSizeOfKeyspace().longValue());
 
         LOGGER.info(formatSummary(summary));
-
-    }
-
-    @Test
-    public void testSummary() throws Exception {
-        SummaryBuilder summaryBuilder = KeyCollisionProcessor.SummaryBuilder.forKeyspaceSizeAndNumberOfKeysGenerated(1024, 50);
-
-        summaryBuilder.addCollision(new TrackingKeyCollision(34, 17, 30));
-        summaryBuilder.addCollision(new TrackingKeyCollision(35, 18, 19, 20));
-        summaryBuilder.addCollision(new TrackingKeyCollision(400, 1, 2, 3));
-        summaryBuilder.addCollision(new TrackingKeyCollision(500, 40, 41));
-        summaryBuilder.addCollision(new TrackingKeyCollision(501, 42, 43));
-        summaryBuilder.addCollision(new TrackingKeyCollision(502, 44, 45, 46, 47));
-
-        KeyCollisionSummary summary = summaryBuilder.getResult();
-
-        assertEquals(1024, summary.getSizeOfKeyspace());
-        assertEquals(50, summary.getNumberOfKeysGenerated());
-        assertEquals(6, summary.getNumberOfCollidedKeys());
-        assertEquals(10, summary.getNumberOfCollisions());
-        assertEquals(2, summary.getFirstCollisionPosition());
-        assertEquals(3, summary.getMultiOccurrenceStats().size());
-        assertEquals(3L, summary.getMultiOccurrenceStats().get(2L));
-        assertEquals(2L, summary.getMultiOccurrenceStats().get(3L));
-        assertEquals(1L, summary.getMultiOccurrenceStats().get(4L));
-        String expectedDataPoints = "Number of keys generated;Collisions detected;Collisions expected|1;0;0|2;0;0|3;1;0|4;2;0|5;2;0|6;2;0|7;2;0|"
-                + "8;2;0|9;2;0|10;2;0|11;2;0|12;2;0|13;2;0|14;2;0|15;2;0|16;2;0|17;2;0|18;2;0|19;2;0|20;3;0|21;4;0|22;4;0|23;4;0|24;4;0|"
-                + "25;4;0|26;4;0|27;4;0|28;4;0|29;4;0|30;4;0|31;5;0|32;5;0|33;5;0|34;5;0|35;5;0|36;5;0|37;5;0|38;5;0|39;5;0|40;5;0|41;5;0|"
-                + "42;6;0|43;6;0|44;7;0|45;7;0|46;8;0|47;9;1|48;10;1|49;10;1|50;10;1";
-        assertEquals(expectedDataPoints, summary.getCollisionStatsPcsv());
-
-        String summaryJson = formatSummary(summary);
-
-        ObjectMapper mapper = createObjectMapper();
-
-        KeyCollisionSummary summary2 = mapper.readValue(summaryJson, KeyCollisionSummary.class);
-
-        assertEquals(summary.getCollisionStats(), summary2.getCollisionStats());
 
     }
 
