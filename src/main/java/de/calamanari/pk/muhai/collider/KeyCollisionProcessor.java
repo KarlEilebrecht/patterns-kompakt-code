@@ -455,6 +455,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
                 res.result.getCollisionStats().add(dataPoint);
                 LOGGER.debug("Data point {}/{}: {}", (i + 1), numberOfDataPoints, dataPoint);
             }
+            LOGGER.info("Data point estimation complete.");
             res.numberOfKeysPerSlot = numberOfKeysPerSlot;
             return res;
         }

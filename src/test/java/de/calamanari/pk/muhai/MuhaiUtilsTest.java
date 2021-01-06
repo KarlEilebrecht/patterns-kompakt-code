@@ -60,10 +60,6 @@ public class MuhaiUtilsTest {
     @Test
     public void testPaddedIntString() {
 
-        System.out.println(MuhaiUtils.toIntString(Long.MIN_VALUE));
-        System.out.println(MuhaiUtils.toIntString(-1));
-        System.out.println(MuhaiUtils.toIntString(Long.MAX_VALUE));
-
         assertEquals("09223372036854775808", MuhaiUtils.toPaddedIntString(Long.MIN_VALUE));
         assertEquals("09223372036854775807", MuhaiUtils.toPaddedIntString(Long.MAX_VALUE));
         assertEquals("18446744073709551615", MuhaiUtils.toPaddedIntString(-1L));
