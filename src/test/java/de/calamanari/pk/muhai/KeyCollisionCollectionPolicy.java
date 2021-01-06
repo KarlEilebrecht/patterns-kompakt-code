@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * ItemConversionException
+ * KeyCollisionCollectionPolicy
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -20,27 +20,24 @@
 package de.calamanari.pk.muhai;
 
 /**
- * Exception to be thrown if an item could not be converted
+ * A {@link KeyCollisionCollectionPolicy} is a POLICY that defines how to collect collisions
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
+ * @param <T> collision representation type
  */
-public class ItemConversionException extends RuntimeException {
-
-    private static final long serialVersionUID = -1236491891620274345L;
+public interface KeyCollisionCollectionPolicy<T extends KeyCollision<T>> {
 
     /**
-     * @param message problem description
+     * FACTORY METHOD for collisions
+     * @param key the key that occurred at least twice
+     * @param positions at least 2 positions
+     * @return representation of the collision
      */
-    public ItemConversionException(String message) {
-        super(message);
-    }
+    public T createKeyCollision(long key, long... positions);
 
     /**
-     * @param message description
-     * @param cause caught exception
+     * @return the coded to transform items for storing in files
      */
-    public ItemConversionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    public ItemStringCodec<T> getLineCodec();
 
 }

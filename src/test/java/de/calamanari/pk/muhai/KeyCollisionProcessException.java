@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * ItemConversionException
+ * KeyCollisionProcessException
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -20,26 +20,33 @@
 package de.calamanari.pk.muhai;
 
 /**
- * Exception to be thrown if an item could not be converted
+ * Unchecked exception used during key processing to indicate problems
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class ItemConversionException extends RuntimeException {
+public class KeyCollisionProcessException extends RuntimeException {
 
-    private static final long serialVersionUID = -1236491891620274345L;
+    private static final long serialVersionUID = 8828416723549905460L;
 
     /**
      * @param message problem description
      */
-    public ItemConversionException(String message) {
+    public KeyCollisionProcessException(String message) {
         super(message);
     }
 
     /**
-     * @param message description
-     * @param cause caught exception
+     * @param cause for tunneling, e.g. in lambdas
      */
-    public ItemConversionException(String message, Throwable cause) {
+    public KeyCollisionProcessException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * @param message context info
+     * @param cause error
+     */
+    public KeyCollisionProcessException(String message, Throwable cause) {
         super(message, cause);
     }
 

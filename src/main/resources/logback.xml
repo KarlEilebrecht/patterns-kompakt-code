@@ -33,6 +33,7 @@
     <logger name="de.calamanari.pk.masterslave" level="INFO"/>
     <logger name="de.calamanari.pk.modelviewcontroller" level="INFO"/>
     <logger name="de.calamanari.pk.money" level="INFO"/>
+    <logger name="de.calamanari.pk.muhai" level="DEBUG"/>
     <logger name="de.calamanari.pk.nullobject" level="INFO"/>
     <logger name="de.calamanari.pk.objectpool" level="INFO"/>
     <logger name="de.calamanari.pk.observer" level="INFO"/>

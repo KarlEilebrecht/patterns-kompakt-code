@@ -32,6 +32,11 @@ import org.junit.Test;
 
 import de.calamanari.pk.util.CloneUtils;
 
+/**
+ * Test coverage for the LongPrefix
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
 public class LongPrefixTest {
 
     @Test
@@ -138,7 +143,7 @@ public class LongPrefixTest {
     }
 
     private void assertPrefixGetsAppliedProperly(LongPrefix prefix) {
-        for (long key : new long[] { Long.MIN_VALUE, -1L, 0L, Long.MAX_VALUE, (long) Integer.MIN_VALUE, (long) Integer.MAX_VALUE }) {
+        for (long key : new long[] { Long.MIN_VALUE, -1L, 0L, Long.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE }) {
             assertPrefixGetsAppliedProperly(prefix, key);
         }
 
@@ -159,7 +164,7 @@ public class LongPrefixTest {
 
     private void assertKeyRepresentationLength(int expectedLength, LongPrefix prefix, Function<Long, String> keyToStringFunction,
             boolean sameAsIntegerExpected) {
-        for (long key : new long[] { Long.MIN_VALUE, -1L, 0L, Long.MAX_VALUE, (long) Integer.MIN_VALUE, (long) Integer.MAX_VALUE }) {
+        for (long key : new long[] { Long.MIN_VALUE, -1L, 0L, Long.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE }) {
             long modifiedKey = prefix.applyTo(key);
             assertEquals(expectedLength, keyToStringFunction.apply(modifiedKey).length());
             if (sameAsIntegerExpected) {
@@ -180,7 +185,7 @@ public class LongPrefixTest {
 
     private void assertEffectivelyPositiveInt32(long key) {
         int keyAsInteger = (int) key;
-        assertEquals(key, (long) keyAsInteger);
+        assertEquals(key, keyAsInteger);
     }
 
     private void assertGetInvalidPrefixException(String prefix) {

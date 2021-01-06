@@ -27,13 +27,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Locale;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
@@ -45,43 +45,189 @@ import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.CloseUtils;
 
-public class KeyCollisionProcessor {
+/**
+ * A {@link KeyCollisionProcessor} generates a specified number of keys provided by a supplier in a keyspace and analyzes key collisions.
+ * <p>
+ * To support really large number of keys, this processor uses the disk to store the keys during operation.
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
+public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyCollisionProcessor.class);
 
-    private List<BufferedReader> openChunkReaders = Collections.emptyList();
+    /**
+     * For limiting log output of a single process step
+     */
+    private static final long MAX_PROGRESS_MESSAGES = 500;
 
-    public Summary scan(File outputDir, int maxKeysInMemory, int maxKeysInChunk, long sizeOfKeyspace, Supplier<Long> keyGenerator, long limit)
-            throws IOException {
+    /**
+     * For limiting stats we do not collect more collision data points, it also limits the stats map (distinct count of occurrences)
+     */
+    private static final int MAX_DATA_POINTS = 500;
 
-        LOGGER.info("Phase I: Key generation and chunked storage");
-        LOGGER.info("Processing run with {} keys to chunk files at {} ...", limit, outputDir);
-        long lastReportedPos = 0;
-        SummaryBuilder summaryBuilder = SummaryBuilder.forKeyspaceSizeAndNumberOfKeysGenerated(sizeOfKeyspace, limit);
+    /**
+     * for writing temp files (large data)
+     */
+    private final File outputDir;
+
+    /**
+     * defines how many keys we want to store in memory before writing to disk
+     */
+    private final int maxKeysInMemory;
+
+    /**
+     * defines the size (number of items) of a single file on the disk, it should be a multiple of {@link #maxKeysInMemory}
+     */
+    private final int maxKeysInChunk;
+
+    /**
+     * Defines how to handle collected collisions
+     */
+    private final KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy;
+
+    /**
+     * If true, we won't do any cleanup
+     */
+    private final boolean keepFiles;
+
+    /**
+     * Builder for the result report data
+     */
+    private SummaryBuilder summaryBuilder = null;
+
+    /**
+     * Currently open files
+     */
+    private List<BufferedReader> openChunkReaders = new ArrayList<>();
+
+    /**
+     * The limit in the current run
+     */
+    private long numberOfKeysToBeGenerated = 0;
+
+    /**
+     * To avoid too much log output we compute a threshold to limit log statements
+     */
+    private long reportingThreshold = 0;
+
+    /**
+     * total number of keys having any collisions
+     */
+    private long numberOfKeysInCollision = 0;
+
+    /**
+     * Creates a processor with default settings:
+     * <ul>
+     * <li>5M items in memory</li>
+     * <li>25M items per chunk</li>
+     * <li>{@link KeyCollisionCollectionPolicies#TRACK_POSITIONS_AND_DISCARD_KEYS}</li>
+     * <li>keepFiles=false (cleanup after successful processing)</li>
+     * </ul>
+     * @param outputDir storage location
+     * @return default processor instance
+     */
+    public static KeyCollisionProcessor<AnonymousTrackingKeyCollision> createDefaultProcessor(File outputDir) {
+        return new KeyCollisionProcessor<AnonymousTrackingKeyCollision>(outputDir, 5_000_000, 25_000_000,
+                KeyCollisionCollectionPolicies.TRACK_POSITIONS_AND_DISCARD_KEYS, false);
+    }
+
+    /**
+     * Creates a new processor with the given environment settings
+     * @param outputDir storage location
+     * @param maxKeysInMemory defines how many keys we want to store in memory before writing to disk
+     * @param maxKeysInChunk size (number of items) of a single file on the disk, it should be a multiple of maxKeysInMemory
+     * @param keyCollisionCollectionPolicy policy for storing/handling key collections
+     */
+    public KeyCollisionProcessor(File outputDir, int maxKeysInMemory, int maxKeysInChunk, KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy,
+            boolean keepFiles) {
+        this.outputDir = outputDir;
+        this.maxKeysInMemory = maxKeysInMemory;
+        this.maxKeysInChunk = maxKeysInChunk;
+        this.keyCollisionCollectionPolicy = keyCollisionCollectionPolicy;
+        this.keepFiles = keepFiles;
+    }
+
+    /**
+     * This method takes the specified number of keys from the given supplier and reports occurrences of the same key
+     * @param keySupplier key generator
+     * @param limit keys to be generated
+     * @param sizeOfKeyspace the total size of the keyspace (for computing the expected collions)
+     * @return collision summary
+     * @throws IOException on any problem with the file system
+     */
+    public KeyCollisionSummary process(Supplier<Long> keySupplier, long limit, long sizeOfKeyspace) throws IOException {
+
+        summaryBuilder = SummaryBuilder.forKeyspaceSizeAndNumberOfKeysGenerated(sizeOfKeyspace, limit);
+        this.numberOfKeysToBeGenerated = limit;
+
+        this.reportingThreshold = Math.max(1L, (limit / MAX_PROGRESS_MESSAGES));
+
+        List<File> chunkFiles = generateKeys(keySupplier);
+        List<File> collisionKeyFiles = detectCollisions(chunkFiles);
+        computeCollisionStats(collisionKeyFiles);
+
+        return summaryBuilder.getResult();
+    }
+
+    /**
+     * Phase I: create the keys and store them in chunk files
+     * @param keySupplier key generator
+     * @return list of created chunk files
+     * @throws IOException on any problem with the file system
+     */
+    private List<File> generateKeys(Supplier<Long> keySupplier) throws IOException {
         List<File> chunkFiles = null;
+        LOGGER.info("Phase I: Key generation and chunked storage");
+        LOGGER.info("Processing run with {} keys to chunk files at {} ...", numberOfKeysToBeGenerated, outputDir);
+        long lastReportedPos = 0;
         try (OrderedChunkFilewriter<KeyAtPos> ocfw = new OrderedChunkFilewriter<>(KeyAtPos.LINE_CODEC, outputDir, "keys-", maxKeysInMemory, maxKeysInChunk)) {
-            for (long pos = 0; pos < limit; pos++) {
-                ocfw.writeItem(new KeyAtPos(keyGenerator.get(), pos));
-                if (pos >= lastReportedPos + 10_000_000) {
-                    LOGGER.info("{} keys generated", pos);
+
+            for (long pos = 0; Long.compareUnsigned(pos, numberOfKeysToBeGenerated) < 0; pos++) {
+                ocfw.writeItem(new KeyAtPos(keySupplier.get(), pos));
+                if (Long.compareUnsigned(pos, lastReportedPos + reportingThreshold) >= 0) {
+                    String percString = formatPercentage(computePercentage(pos, numberOfKeysToBeGenerated));
+                    LOGGER.info("{} / {} keys generated ({} %) ...", pos, numberOfKeysToBeGenerated, percString);
                     lastReportedPos = pos;
                 }
             }
             ocfw.flush();
             chunkFiles = ocfw.getChunkFiles();
         }
-        LOGGER.info("{} keys generated", limit);
+        LOGGER.info("{} keys generated into {} chunk files", numberOfKeysToBeGenerated, chunkFiles.size());
+        return chunkFiles;
+    }
+
+    /**
+     * Phase II: Iterate over all keys in key-order and group occurrences
+     * @param keyChunkFiles input
+     * @return list of collision chunk files
+     * @throws IOException on any error with the file system
+     */
+    private List<File> detectCollisions(List<File> keyChunkFiles) throws IOException {
         LOGGER.info("Phase II: Collision detection");
-        LOGGER.info("Merging and iterating over {} chunk files ...", chunkFiles.size());
+        LOGGER.info("Merging and iterating over {} chunk files ...", keyChunkFiles.size());
         List<File> collisionKeyFiles = Collections.emptyList();
-        try (OrderedChunkFilewriter<KeyCollision> ocfw = new OrderedChunkFilewriter<>(KeyCollision.LINE_CODEC, outputDir, "collisions-", maxKeysInMemory,
-                maxKeysInChunk)) {
-            chunkFiles.forEach(this::openChunkReader);
+        try (OrderedChunkFilewriter<K> ocfw = new OrderedChunkFilewriter<>(keyCollisionCollectionPolicy.getLineCodec(), outputDir, "collisions-",
+                maxKeysInMemory, maxKeysInChunk)) {
+
+            keyChunkFiles.forEach(this::openAndRegisterChunkReader);
             Collection<Iterator<KeyAtPos>> chunkIterators = openChunkReaders.stream().map(this::toKeyIterator).collect(Collectors.toList());
             CombinedOrderedItemIterator<KeyAtPos> allKeysOrderedIterator = new CombinedOrderedItemIterator<KeyAtPos>(chunkIterators);
-            KeyCollisionIterator collisionIterator = new KeyCollisionIterator(allKeysOrderedIterator);
+
+            KeyCollisionIterator<K> collisionIterator = new KeyCollisionIterator<>(allKeysOrderedIterator, keyCollisionCollectionPolicy);
+
+            double lastPercReported = 0;
             while (collisionIterator.hasNext()) {
-                ocfw.writeItem(collisionIterator.next());
+                numberOfKeysInCollision++;
+                K item = collisionIterator.next();
+                ocfw.writeItem(item);
+                double perc = computePercentage(item.getFirstCollisionPosition(), numberOfKeysToBeGenerated);
+                if (perc >= lastPercReported + 1) {
+                    String percString = formatPercentage(perc);
+                    LOGGER.info("Collided key processed {} ({} %): {}", item, percString, item);
+                    lastPercReported = perc;
+                }
             }
             ocfw.flush();
             collisionKeyFiles = ocfw.getChunkFiles();
@@ -90,25 +236,42 @@ public class KeyCollisionProcessor {
             openChunkReaders.forEach(CloseUtils::closeResourceCatch);
             openChunkReaders.clear();
         }
-        chunkFiles.forEach(File::delete);
+        if (!keepFiles) {
+            LOGGER.info("Cleaning-up key files ...");
+            keyChunkFiles.forEach(this::deleteChunkFile);
+        }
+        else {
+            LOGGER.info("Leaving key chunk files on disk.");
+        }
+        LOGGER.info("Detected {} of {} keys involved in collisions", numberOfKeysInCollision, numberOfKeysToBeGenerated, keyChunkFiles.size());
+        return collisionKeyFiles;
+    }
 
+    /**
+     * Phase III: Iterate over the collisions ordered by occurrence and create statistics
+     * @param keyCollisionChunkFiles collision chunk files
+     */
+    private void computeCollisionStats(List<File> keyCollisionChunkFiles) {
         LOGGER.info("Phase III: Compute collision stats");
-        LOGGER.info("Merging and iterating over {} chunk files ...", collisionKeyFiles.size());
+        LOGGER.info("Merging and iterating over {} chunk files ...", keyCollisionChunkFiles.size());
         boolean firstCollision = true;
 
         try {
-            collisionKeyFiles.forEach(this::openChunkReader);
-            Collection<Iterator<KeyCollision>> chunkIterators = openChunkReaders.stream().map(this::toCollisionIterator).collect(Collectors.toList());
-            CombinedOrderedItemIterator<KeyCollision> allCollisionsOrderedIterator = new CombinedOrderedItemIterator<KeyCollision>(chunkIterators);
+            keyCollisionChunkFiles.forEach(this::openAndRegisterChunkReader);
+            Collection<Iterator<K>> chunkIterators = openChunkReaders.stream().map(this::toCollisionIterator).collect(Collectors.toList());
+            CombinedOrderedItemIterator<K> allCollisionsOrderedIterator = new CombinedOrderedItemIterator<K>(chunkIterators);
             long lastCollisionReportedAt = 0;
-            long collidedKeysTotal = 0;
+            long collidedKeysProcessed = 0;
+
             while (allCollisionsOrderedIterator.hasNext()) {
-                collidedKeysTotal++;
-                KeyCollision collision = allCollisionsOrderedIterator.next();
+                collidedKeysProcessed++;
+                K collision = allCollisionsOrderedIterator.next();
                 summaryBuilder.addCollision(collision);
-                if (limit < 1000 || firstCollision || collision.getPositions()[1] >= lastCollisionReportedAt + 100_000) {
-                    LOGGER.info("Collision detected: {}, total number of collided keys: {}", collision, collidedKeysTotal);
-                    lastCollisionReportedAt = collision.getPositions()[1];
+                long collisionPos = collision.getFirstCollisionPosition();
+                if (firstCollision || Long.compareUnsigned(collisionPos, lastCollisionReportedAt + reportingThreshold) >= 0) {
+                    String percString = formatPercentage(computePercentage(collidedKeysProcessed, numberOfKeysInCollision));
+                    LOGGER.info("Collided key processed {} / {} ({} %): {}", collidedKeysProcessed, numberOfKeysInCollision, percString, collision);
+                    lastCollisionReportedAt = collisionPos;
                     firstCollision = false;
                 }
             }
@@ -117,31 +280,59 @@ public class KeyCollisionProcessor {
             openChunkReaders.forEach(CloseUtils::closeResourceCatch);
             openChunkReaders.clear();
         }
-        collisionKeyFiles.forEach(File::delete);
+        if (!keepFiles) {
+            LOGGER.info("Cleaning-up collision chunk files ...");
+            keyCollisionChunkFiles.forEach(this::deleteChunkFile);
+        }
+        else {
+            LOGGER.info("Leaving collision chunk files on disk.");
+        }
 
-        return summaryBuilder.getResult();
+        LOGGER.info("Phase III: Collision stats collected.");
     }
 
-    private Iterator<KeyCollision> toCollisionIterator(BufferedReader br) {
-        return new ItemConversionIterator<KeyCollision, ItemStringCodec<KeyCollision>>(br, KeyCollision.LINE_CODEC);
+    /**
+     * @param chunkFile to be deleted
+     */
+    private void deleteChunkFile(File chunkFile) {
+        if (!chunkFile.delete()) {
+            LOGGER.error("Unable to delete chunk file " + chunkFile);
+        }
+
     }
 
+    /**
+     * @param br buffered reader for a chunk file (collisions)
+     * @return iterator
+     */
+    private Iterator<K> toCollisionIterator(BufferedReader br) {
+        return new ItemConversionIterator<K, ItemStringCodec<K>>(br, keyCollisionCollectionPolicy.getLineCodec());
+    }
+
+    /**
+     * @param br buffered reader for a chunk file (keys)
+     * @return iterator
+     */
     private Iterator<KeyAtPos> toKeyIterator(BufferedReader br) {
         return new ItemConversionIterator<KeyAtPos, ItemStringCodec<KeyAtPos>>(br, KeyAtPos.LINE_CODEC);
     }
 
-    private void openChunkReader(File chunkFile) {
+    /**
+     * Creates a reader for the given chunk and puts it into the list
+     * @param chunkFile file, a buffered reader shall be created for
+     */
+    private void openAndRegisterChunkReader(File chunkFile) {
         FileInputStream fis = null;
         BufferedReader res = null;
         try {
             fis = new FileInputStream(chunkFile);
-            BufferedInputStream bis = new BufferedInputStream(fis);
+            BufferedInputStream bis = new BufferedInputStream(fis, 500_000);
             GZIPInputStream gis = new GZIPInputStream(bis);
             InputStreamReader isr = new InputStreamReader(gis, StandardCharsets.UTF_8);
             res = new BufferedReader(isr);
         }
         catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new KeyCollisionProcessException("Error opening chunk file reader for " + chunkFile, ex);
         }
         finally {
             if (res == null && fis != null) {
@@ -173,196 +364,211 @@ public class KeyCollisionProcessor {
     }
 
     /**
-     * Helper method to make code above more readable
+     * Helper method to make computation formula code more readable
      * @param l (treaded as unsigned integer value)
      * @return Apfloat with a precision of 500
      */
     static Apfloat val(long l) {
         if (l < 0) {
-            int upper = (int) (l >>> 32);
-            int lower = (int) l;
-
-            BigInteger unsignedBigInteger = (BigInteger.valueOf(Integer.toUnsignedLong(upper))).shiftLeft(32)
-                    .add(BigInteger.valueOf(Integer.toUnsignedLong(lower)));
-            return new Apfloat(unsignedBigInteger, 500);
+            return new Apfloat(toUnsignedBigInteger(l), 500);
         }
         return new Apfloat(l, 500);
     }
 
-    private static class SummaryBuilder {
+    /**
+     * Shorthand for formatting completion status
+     * @param perc percentage
+     * @return percentage value with two decimal digits as a string
+     */
+    static String formatPercentage(double perc) {
+        NumberFormat nf = NumberFormat.getInstance(Locale.US);
+        nf.setMinimumFractionDigits(2);
+        nf.setMaximumFractionDigits(2);
+        return nf.format(perc);
+    }
 
-        private Summary result = new Summary();
+    /**
+     * compute percentage of completion
+     * @param processed number of items processed
+     * @param total number of items total
+     * @return percentage value
+     */
+    static double computePercentage(long processed, long total) {
+        BigInteger processedCollisions = toUnsignedBigInteger(processed).multiply(BigInteger.valueOf(10000));
+        BigInteger totalCollisions = toUnsignedBigInteger(total);
+        return processedCollisions.divide(totalCollisions).doubleValue() / 100;
+    }
 
+    /**
+     * Converts the given long into an unsigned big integer value for further computation
+     * @param l source value (negative included)
+     * @return unsigned big integer (negatives become positive after {@link Long#MAX_VALUE})
+     */
+    static BigInteger toUnsignedBigInteger(long l) {
+        int upper = (int) (l >>> 32);
+        int lower = (int) l;
+        return (BigInteger.valueOf(Integer.toUnsignedLong(upper))).shiftLeft(32).add(BigInteger.valueOf(Integer.toUnsignedLong(lower)));
+    }
+
+    /**
+     * This BUILDER helps to subsequently fill the summary from the different processing steps
+     * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+     *
+     */
+    static class SummaryBuilder {
+
+        /**
+         * summary to be built
+         */
+        private KeyCollisionSummary result = new KeyCollisionSummary();
+
+        /**
+         * for computation
+         */
+        private long numberOfKeysPerSlot = 0;
+
+        /**
+         * @param sizeOfKeyspace numbers of keys in total
+         * @param numberOfKeysGenerated number of keys we will process
+         * @return this builder
+         */
         static SummaryBuilder forKeyspaceSizeAndNumberOfKeysGenerated(long sizeOfKeyspace, long numberOfKeysGenerated) {
             SummaryBuilder res = new SummaryBuilder();
             res.result.setSizeOfKeyspace(sizeOfKeyspace);
             res.result.setNumberOfKeysGenerated(numberOfKeysGenerated);
-            int numberOfDataPoints = 500;
-            if (numberOfKeysGenerated < numberOfDataPoints) {
+            int numberOfDataPoints = MAX_DATA_POINTS;
+
+            if (Long.compareUnsigned(numberOfKeysGenerated, numberOfDataPoints) < 0) {
                 numberOfDataPoints = (int) numberOfKeysGenerated;
             }
-            long numberOfKeysPerSlot = numberOfKeysGenerated / numberOfDataPoints;
+
+            long numberOfKeysPerSlot = toUnsignedBigInteger(numberOfKeysGenerated).divide(BigInteger.valueOf(numberOfDataPoints)).longValue();
+            LOGGER.info("Computing estimates for expected collisions ...");
             for (int i = 0; i < numberOfDataPoints; i++) {
-                // initalize every slot with the upper bound and the computed expected number of collisions
-                long position = numberOfKeysPerSlot * (i + 1);
-                res.result.getCollisionStats().add(new DataPoint(position, 0L, computeExpectedNumberOfCollisions(sizeOfKeyspace, position)));
+                // initalize every slot with the upper bound of the slot and the computed expected number of collisions
+                long position = (numberOfKeysPerSlot * (i + 1));
+                KeyCollisionDataPoint dataPoint = new KeyCollisionDataPoint(position, 0L, computeExpectedNumberOfCollisions(sizeOfKeyspace, position));
+                res.result.getCollisionStats().add(dataPoint);
+                LOGGER.debug("Data point {}/{}: {}", (i + 1), numberOfDataPoints, dataPoint);
             }
+            res.numberOfKeysPerSlot = numberOfKeysPerSlot;
             return res;
         }
 
-        SummaryBuilder addCollision(KeyCollision collision) {
-            result.numberOfCollisions = result.numberOfCollisions + collision.getPositions().length - 1;
+        /**
+         * Analyzes the given collision and updates the stats
+         * @param collision a keys that occurred at least 2 times
+         * @return this builder
+         */
+        SummaryBuilder addCollision(KeyCollision<?> collision) {
+            result.numberOfCollisions = result.numberOfCollisions + collision.getNumberOfDuplicates();
             result.numberOfCollidedKeys++;
 
-            Long occurrenceCount = result.multiOccurrenceStats.get(collision.getPositions().length);
-            if (occurrenceCount == null) {
-                occurrenceCount = 1L;
+            long firstCollisionPosition = collision.getFirstCollisionPosition();
+            if (result.firstCollisionPosition == 0 || Long.compareUnsigned(firstCollisionPosition, result.firstCollisionPosition) < 0) {
+                result.firstCollisionPosition = firstCollisionPosition;
             }
-            else {
-                occurrenceCount++;
-            }
-            result.multiOccurrenceStats.put(collision.getPositions().length, occurrenceCount);
+
+            updateMultiOccurrenceStats(collision.getNumberOfKeyOccurrences());
 
             createOrUpdateDataPointForCollision(collision);
             return this;
         }
 
         /**
-         * Final action to obtain the result, afterwards this builder becomes invalid
+         * Counts and collects the number of times the key occurred (number of different positions)
+         * @param numberOfOccurences (this is the slot in the histogram)
+         */
+        private void updateMultiOccurrenceStats(long numberOfOccurences) {
+            Long occurrenceCount = result.multiOccurrenceStats.get(numberOfOccurences);
+            if (occurrenceCount == null) {
+                // This would create a new slot and potentially blast the memory over time if the keyspace is large
+                // and collisions are distributed
+                // The solution is to limit the size of the ordered map by pushing the element upwards
+                // Instead of exactly n occurrences we then express "up-to-n" occurrences in numberOfOccurences slot
+                if (result.multiOccurrenceStats.size() >= MAX_DATA_POINTS) {
+                    boolean foundSlotAbove = false;
+                    long maxOccurrenceCount = 0;
+                    for (long count : result.multiOccurrenceStats.keySet()) {
+                        maxOccurrenceCount = count;
+                        if (count > numberOfOccurences) {
+                            // save existing count of the slot
+                            occurrenceCount = result.multiOccurrenceStats.get(count) + 1L;
+
+                            // change histogram slot to be updated
+                            numberOfOccurences = count;
+                            foundSlotAbove = true;
+                            break;
+                        }
+                    }
+                    if (!foundSlotAbove) {
+                        // no slot found for more number of occurrences
+                        // thus, we push the maximum up without increasing the map size (effectively replace last element)
+                        occurrenceCount = result.multiOccurrenceStats.remove(maxOccurrenceCount) + 1L;
+                    }
+                }
+                else {
+                    // add a new slot to histogram map
+                    occurrenceCount = 1L;
+                }
+            }
+            else {
+                // update existing slot
+                occurrenceCount++;
+            }
+            result.multiOccurrenceStats.put(numberOfOccurences, occurrenceCount);
+        }
+
+        /**
+         * Final action to obtain the result, afterwards this builder becomes <b>invalid</b>
          * @return summary
          */
-        Summary getResult() {
+        KeyCollisionSummary getResult() {
             finalizeDataPoints();
-            Summary res = result;
+            KeyCollisionSummary res = result;
             result = null;
             return res;
         }
 
-        private void createOrUpdateDataPointForCollision(KeyCollision collision) {
-            List<DataPoint> dataPoints = result.collisionStats;
+        /**
+         * We collect data for {@link KeyCollisionProcessor#MAX_DATA_POINTS} slots, this method computes the correct slots and updates the detected collision
+         * count.
+         * @param collision to be added
+         */
+        private void createOrUpdateDataPointForCollision(KeyCollision<?> collision) {
+            List<KeyCollisionDataPoint> dataPoints = result.collisionStats;
             long[] positions = collision.getPositions();
-            // start with the second to (first position is not a collision)
-            for (int i = 1; i < positions.length; i++) {
-                long pos = positions[i];
-                int slot = (int) (pos % ((long) dataPoints.size()));
-                DataPoint dataPoint = dataPoints.get(slot);
-                DataPoint newDataPoint = new DataPoint(dataPoint.position, dataPoint.numberOfCollisionsDetected + 1, dataPoint.numberOfCollisionsExpected);
-                dataPoints.set(slot, newDataPoint);
+            if (positions.length > 0) {
+                // start with the second (first position is not a collision)
+                for (int i = 1; i < positions.length; i++) {
+                    long pos = positions[i];
+
+                    int slot = Math.min(toUnsignedBigInteger(pos).divide(BigInteger.valueOf(numberOfKeysPerSlot)).intValue(), dataPoints.size() - 1);
+                    KeyCollisionDataPoint dataPoint = dataPoints.get(slot);
+                    KeyCollisionDataPoint newDataPoint = new KeyCollisionDataPoint(dataPoint.getPosition(), dataPoint.getNumberOfCollisionsDetected() + 1L,
+                            dataPoint.getNumberOfCollisionsExpected());
+                    dataPoints.set(slot, newDataPoint);
+                }
             }
         }
 
+        /**
+         * So far, each slot contains the count of collisions in that slot. This terminal operation adds up the slot values, so that every collision count in a
+         * slot tells how many collisions have occurred "until now" (upper bound)<br />
+         * <p>
+         * This method must not be called twice.
+         */
         private void finalizeDataPoints() {
-            List<DataPoint> dataPoints = result.collisionStats;
-            long numberOfCollisionsDetected = dataPoints.get(0).numberOfCollisionsDetected;
-            for (int slot = 1; slot < dataPoints.size(); slot++) {
-                DataPoint current = dataPoints.get(slot);
-                numberOfCollisionsDetected = numberOfCollisionsDetected + current.numberOfCollisionsDetected;
-                DataPoint newDataPoint = new DataPoint(current.position, numberOfCollisionsDetected, current.numberOfCollisionsExpected);
+            LOGGER.info("Finalizing collision statistics (sum-up collisions) ...");
+            List<KeyCollisionDataPoint> dataPoints = result.collisionStats;
+            long numberOfCollisionsDetected = 0;
+            for (int slot = 0; slot < dataPoints.size(); slot++) {
+                KeyCollisionDataPoint current = dataPoints.get(slot);
+                KeyCollisionDataPoint newDataPoint = null;
+                numberOfCollisionsDetected = numberOfCollisionsDetected + current.getNumberOfCollisionsDetected();
+                newDataPoint = new KeyCollisionDataPoint(current.getPosition(), numberOfCollisionsDetected, current.getNumberOfCollisionsExpected());
                 dataPoints.set(slot, newDataPoint);
             }
-        }
-
-    }
-
-    /**
-     * result of the collision detection
-     */
-    public static class Summary {
-
-        private long sizeOfKeyspace = 0;
-
-        private long numberOfKeysGenerated = 0;
-
-        private long numberOfCollidedKeys = 0;
-
-        private long numberOfCollisions = 0;
-
-        private List<DataPoint> collisionStats = new ArrayList<>();
-
-        private Map<Integer, Long> multiOccurrenceStats = new TreeMap<>();
-
-        public long getNumberOfKeysGenerated() {
-            return numberOfKeysGenerated;
-        }
-
-        public void setNumberOfKeysGenerated(long numberOfKeysGenerated) {
-            this.numberOfKeysGenerated = numberOfKeysGenerated;
-        }
-
-        public long getNumberOfCollidedKeys() {
-            return numberOfCollidedKeys;
-        }
-
-        public void setNumberOfCollidedKeys(long numberOfCollidedKeys) {
-            this.numberOfCollidedKeys = numberOfCollidedKeys;
-        }
-
-        public long getNumberOfCollisions() {
-            return numberOfCollisions;
-        }
-
-        public void setNumberOfCollisions(long numberOfCollisions) {
-            this.numberOfCollisions = numberOfCollisions;
-        }
-
-        public Map<Integer, Long> getMultiOccurrenceStats() {
-            return multiOccurrenceStats;
-        }
-
-        public void setMultiOccurrenceStats(Map<Integer, Long> multiOccurrenceStats) {
-            this.multiOccurrenceStats = multiOccurrenceStats;
-        }
-
-        public long getSizeOfKeyspace() {
-            return sizeOfKeyspace;
-        }
-
-        public void setSizeOfKeyspace(long sizeOfKeyspace) {
-            this.sizeOfKeyspace = sizeOfKeyspace;
-        }
-
-        public List<DataPoint> getCollisionStats() {
-            return collisionStats;
-        }
-
-        public void setCollisionStats(List<DataPoint> collisionStats) {
-            this.collisionStats = collisionStats;
-        }
-
-    }
-
-    public static class DataPoint {
-
-        public static final String HEADER = "Generated Keys;Detected Collisions;Expected Collisions";
-
-        private final long position;
-
-        private final long numberOfCollisionsDetected;
-
-        private final long numberOfCollisionsExpected;
-
-        public DataPoint(long position, long numberOfCollisionsDetected, long numberOfCollisionsExpected) {
-            super();
-            this.position = position;
-            this.numberOfCollisionsDetected = numberOfCollisionsDetected;
-            this.numberOfCollisionsExpected = numberOfCollisionsExpected;
-        }
-
-        public long getPosition() {
-            return position;
-        }
-
-        public long getNumberOfCollisionsDetected() {
-            return numberOfCollisionsDetected;
-        }
-
-        public long getNumberOfCollisionsExpected() {
-            return numberOfCollisionsExpected;
-        }
-
-        @Override
-        public String toString() {
-            return "" + position + ";" + numberOfCollisionsDetected + ";" + numberOfCollisionsExpected;
         }
 
     }

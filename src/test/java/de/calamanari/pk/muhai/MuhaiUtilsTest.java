@@ -26,6 +26,11 @@ import java.util.function.Function;
 
 import org.junit.Test;
 
+/**
+ * Test coverage for the MuhaiUtils
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
 public class MuhaiUtilsTest {
 
     @Test

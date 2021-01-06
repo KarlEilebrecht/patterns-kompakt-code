@@ -43,6 +43,11 @@ import org.junit.Test;
 
 import de.calamanari.pk.util.CloneUtils;
 
+/**
+ * Test coverage for the MUHAI Generator
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
 public class MuhaiGeneratorTest {
 
     private static final String UXP_ARR_EQUAL = "hash values should be different but are equal!";
@@ -411,6 +416,7 @@ public class MuhaiGeneratorTest {
         MuhaiGenerator generator = new MuhaiGenerator(prefix) {
             private static final long serialVersionUID = -1682865430642303615L;
 
+            @Override
             protected MessageDigest initDigest() {
                 bb.reset();
                 return digest;
@@ -426,6 +432,7 @@ public class MuhaiGeneratorTest {
         MuhaiGenerator generator = new MuhaiGenerator(prefix, pepper) {
             private static final long serialVersionUID = -1682865430642303615L;
 
+            @Override
             protected MessageDigest initDigest() {
                 bb.reset();
                 return digest;

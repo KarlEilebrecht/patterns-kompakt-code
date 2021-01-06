@@ -81,7 +81,6 @@ public class KeyAtPos implements Comparable<KeyAtPos> {
      * @param pos treated as unsigned long
      */
     public KeyAtPos(long key, long pos) {
-        super();
         this.key = key;
         this.pos = pos;
     }
@@ -97,17 +96,22 @@ public class KeyAtPos implements Comparable<KeyAtPos> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         KeyAtPos other = (KeyAtPos) obj;
-        if (key != other.key)
+        if (key != other.key) {
             return false;
-        if (pos != other.pos)
+        }
+        if (pos != other.pos) {
             return false;
+        }
         return true;
     }
 
@@ -137,6 +141,7 @@ public class KeyAtPos implements Comparable<KeyAtPos> {
     /**
      * Description including the unsigned values
      */
+    @Override
     public String toString() {
         return KeyAtPos.class.getSimpleName() + "(" + Long.toUnsignedString(key) + ", " + Long.toUnsignedString(pos) + ")";
     }

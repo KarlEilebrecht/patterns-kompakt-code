@@ -36,7 +36,7 @@ public class CombinedOrderedItemIterator<E extends Comparable<E>> implements Ite
      */
     public CombinedOrderedItemIterator(Collection<Iterator<E>> sourceIterators) {
         this.sourceIterators = sourceIterators;
-        this.candidates = new PriorityQueue<>(this.sourceIterators.size());
+        this.candidates = new PriorityQueue<>(Math.max(1, this.sourceIterators.size()));
     }
 
     @Override

@@ -39,6 +39,9 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The {@link OrderedChunkFilewriter} writes items to files, so that a single file will not contain more that a specified number of items.<br />
  * The items will be written according to their natural order, so that a single chunk file will appear sorted.
@@ -51,6 +54,18 @@ import java.util.zip.GZIPOutputStream;
  * @param <E> type of the items
  */
 public class OrderedChunkFilewriter<E extends Comparable<E>> implements Closeable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderedChunkFilewriter.class);
+
+    /**
+     * Buffer for reading and writing files
+     */
+    private static final int IO_BUFFER_BYTES = 5_000_000;
+
+    /**
+     * Emergency stop at 5GB, it can create a big mess if the disk runs out of space ;)
+     */
+    public static final long LOW_DISK_SPACE_LIMIT_GB = 5;
 
     /**
      * buffer size
@@ -128,13 +143,15 @@ public class OrderedChunkFilewriter<E extends Comparable<E>> implements Closeabl
      * @throws IOException
      */
     private void writeBufferedItemsToNewChunkFile() throws IOException {
+        ensureEnoughDiskSpace();
         chunkNumber++;
         String chunkId = "00000" + chunkNumber;
         chunkId = chunkId.substring(chunkId.length() - 5);
 
-        File chunkFile = new File(outputDir, String.join(fileNamePrefix, "chunk-", chunkId, ".gz"));
+        File chunkFile = new File(outputDir, String.join("", fileNamePrefix, "chunk-", chunkId, ".gz"));
+        LOGGER.debug("Creating new chunk file: {} with {} items ...", chunkFile, buffer.size());
         try (FileOutputStream fos = new FileOutputStream(chunkFile);
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                BufferedOutputStream bos = new BufferedOutputStream(fos, IO_BUFFER_BYTES);
                 GZIPOutputStream gos = new GZIPOutputStream(bos);
                 OutputStreamWriter osw = new OutputStreamWriter(gos, StandardCharsets.UTF_8);
                 BufferedWriter destWriter = new BufferedWriter(osw)) {
@@ -149,6 +166,7 @@ public class OrderedChunkFilewriter<E extends Comparable<E>> implements Closeabl
         numberOfItemsInCurrentChunk = buffer.size();
         numberOfItemsWritten = numberOfItemsWritten + buffer.size();
         buffer.clear();
+        LOGGER.debug("New chunk file created, {} items written in total.", numberOfItemsWritten);
     }
 
     /**
@@ -156,18 +174,20 @@ public class OrderedChunkFilewriter<E extends Comparable<E>> implements Closeabl
      * @throws IOException
      */
     private void mergeBufferedItemsIntoCurrentChunkFile() throws IOException {
+        ensureEnoughDiskSpace();
         File chunkFile = chunkFiles.get(chunkNumber - 1);
         File tmpFile = new File(outputDir, chunkFile.getName() + "-merge");
         if (!chunkFile.renameTo(tmpFile)) {
             throw new IOException(String.format("Unable to prepare merge, could not rename %s to %s", chunkFile.getAbsolutePath(), tmpFile.toString()));
         }
+        LOGGER.debug("Merging {} buffered items into chunk file {} containing already {} items ...", buffer.size(), chunkFile, numberOfItemsInCurrentChunk);
         try (FileOutputStream fos = new FileOutputStream(chunkFile);
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                BufferedOutputStream bos = new BufferedOutputStream(fos, IO_BUFFER_BYTES);
                 GZIPOutputStream gos = new GZIPOutputStream(bos);
                 OutputStreamWriter osw = new OutputStreamWriter(gos, StandardCharsets.UTF_8);
                 BufferedWriter destWriter = new BufferedWriter(osw);
                 FileInputStream fis = new FileInputStream(tmpFile);
-                BufferedInputStream bis = new BufferedInputStream(fis);
+                BufferedInputStream bis = new BufferedInputStream(fis, IO_BUFFER_BYTES);
                 GZIPInputStream gis = new GZIPInputStream(bis);
                 InputStreamReader isr = new InputStreamReader(gis, StandardCharsets.UTF_8);
                 BufferedReader sourceReader = new BufferedReader(isr)) {
@@ -189,6 +209,17 @@ public class OrderedChunkFilewriter<E extends Comparable<E>> implements Closeabl
         numberOfItemsInCurrentChunk = numberOfItemsInCurrentChunk + buffer.size();
         numberOfItemsWritten = numberOfItemsWritten + buffer.size();
         buffer.clear();
+        LOGGER.debug("Merge complete, {} items written in total.", numberOfItemsWritten);
+    }
+
+    /**
+     * Check remaining space in file system
+     * @throws IOException if the space runs below {@link #LOW_DISK_SPACE_LIMIT_GB}
+     */
+    private void ensureEnoughDiskSpace() throws IOException {
+        if (outputDir.getUsableSpace() < (LOW_DISK_SPACE_LIMIT_GB * 1_073_741_824L)) {
+            throw new IOException("The file system reports less than " + LOW_DISK_SPACE_LIMIT_GB + " GB left on device, aborting!");
+        }
     }
 
     /**
@@ -198,7 +229,7 @@ public class OrderedChunkFilewriter<E extends Comparable<E>> implements Closeabl
     public synchronized void flush() throws IOException {
         if (!buffer.isEmpty()) {
             Collections.sort(buffer);
-            if (buffer.size() + numberOfItemsInCurrentChunk <= maxItemsInChunk) {
+            if (numberOfItemsInCurrentChunk > 0 && buffer.size() + numberOfItemsInCurrentChunk <= maxItemsInChunk) {
                 mergeBufferedItemsIntoCurrentChunkFile();
             }
             else {

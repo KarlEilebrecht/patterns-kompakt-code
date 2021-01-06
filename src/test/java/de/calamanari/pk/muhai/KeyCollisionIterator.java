@@ -33,8 +33,14 @@ import de.calamanari.pk.util.BoxingUtils;
  * This way the {@link KeyCollisionIterator} spools all the source items and only returns the collisions.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
+ * @param <T> collision representation type
  */
-public class KeyCollisionIterator implements Iterator<KeyCollision> {
+public class KeyCollisionIterator<K extends KeyCollision<K>> implements Iterator<K> {
+
+    /**
+     * Type indicator
+     */
+    private static final Long[] EMPTY_LONG_ARRAY = new Long[0];
 
     /**
      * The wrapped iterator
@@ -42,9 +48,14 @@ public class KeyCollisionIterator implements Iterator<KeyCollision> {
     private final Iterator<KeyAtPos> sourceIterator;
 
     /**
+     * for creating collision items
+     */
+    private final KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy;
+
+    /**
      * Next collision to be returned
      */
-    private KeyCollision bufferedItem = null;
+    private K bufferedItem = null;
 
     /**
      * single element prefetched from the underlying iterator
@@ -58,17 +69,19 @@ public class KeyCollisionIterator implements Iterator<KeyCollision> {
 
     /**
      * @param sourceIterator iterator returning elements in key-order
+     * @param keyCollisionCollectionPolicy policy for creating collision items
      */
-    public KeyCollisionIterator(Iterator<KeyAtPos> sourceIterator) {
+    public KeyCollisionIterator(Iterator<KeyAtPos> sourceIterator, KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy) {
         this.sourceIterator = sourceIterator;
+        this.keyCollisionCollectionPolicy = keyCollisionCollectionPolicy;
     }
 
     /**
      * Spool source iterator until we find the same key at at least two positions
      * @return detected multi-occurrence
      */
-    private KeyCollision findNextCollision() {
-        KeyCollision res = null;
+    private K findNextCollision() {
+        K res = null;
         while (!done && res == null && sourceIterator.hasNext()) {
             KeyAtPos base = readAhead;
             List<Long> rawPositions = new ArrayList<>();
@@ -87,8 +100,8 @@ public class KeyCollisionIterator implements Iterator<KeyCollision> {
                 }
             }
             if (rawPositions.size() > 1) {
-                long[] positions = BoxingUtils.unboxArray(rawPositions);
-                res = new KeyCollision(base.getKey(), positions);
+                long[] positions = BoxingUtils.unboxArray(rawPositions.toArray(EMPTY_LONG_ARRAY));
+                res = keyCollisionCollectionPolicy.createKeyCollision(base.getKey(), positions);
             }
         }
         return res;
@@ -113,8 +126,8 @@ public class KeyCollisionIterator implements Iterator<KeyCollision> {
     }
 
     @Override
-    public KeyCollision next() {
-        KeyCollision res = null;
+    public K next() {
+        K res = null;
         if (this.hasNext()) {
             res = bufferedItem;
             bufferedItem = null;

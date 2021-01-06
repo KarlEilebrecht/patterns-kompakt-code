@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * For working with files this ITERATOR returns the elements converted from the data the a buffered reader returns.
+ * For working with files this ITERATOR returns the elements converted from the data a buffered reader returns.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  * @param <E> element
