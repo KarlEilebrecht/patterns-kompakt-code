@@ -62,10 +62,10 @@ public class CountingKeyCollision implements KeyCollision<CountingKeyCollision> 
             }
             CountingKeyCollision res = null;
             try {
-                long key = Long.parseUnsignedLong(line.substring(0, delimPos));
-                long firstCollisionPosition = Long.parseUnsignedLong(line.substring(delimPos + 1, delimPos2));
-                long numberOfKeyOccurrences = Long.parseUnsignedLong(line.substring(delimPos2 + 1));
-                res = new CountingKeyCollision(key, firstCollisionPosition, numberOfKeyOccurrences);
+                long keyParsed = Long.parseUnsignedLong(line.substring(0, delimPos));
+                long firstCollisionPositionParsed = Long.parseUnsignedLong(line.substring(delimPos + 1, delimPos2));
+                long numberOfKeyOccurrencesParsed = Long.parseUnsignedLong(line.substring(delimPos2 + 1));
+                res = new CountingKeyCollision(keyParsed, firstCollisionPositionParsed, numberOfKeyOccurrencesParsed);
             }
             catch (RuntimeException ex) {
                 throw new ItemConversionException(String.format("Line corrupted, expected <unsigned long>@<unsigned long>#<unsigned long>, given: %s", line),
@@ -184,16 +184,7 @@ public class CountingKeyCollision implements KeyCollision<CountingKeyCollision> 
             return false;
         }
         CountingKeyCollision other = (CountingKeyCollision) obj;
-        if (firstCollisionPosition != other.firstCollisionPosition) {
-            return false;
-        }
-        if (key != other.key) {
-            return false;
-        }
-        if (numberOfKeyOccurrences != other.numberOfKeyOccurrences) {
-            return false;
-        }
-        return true;
+        return (firstCollisionPosition == other.firstCollisionPosition && key == other.key && numberOfKeyOccurrences == other.numberOfKeyOccurrences);
     }
 
     @Override

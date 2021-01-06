@@ -31,6 +31,7 @@ public interface ItemStringCodec<E> {
      * Encodes an item into a String that can be written as a single line
      * @param item
      * @return encoded item string, no line breaks
+     * @throws ItemConversionException on any error
      */
     public String itemToString(E item);
 
@@ -38,7 +39,8 @@ public interface ItemStringCodec<E> {
      * Encodes an item into a String that can be written as a single line
      * @param line encoded item string, no line breaks
      * @return converted item
+     * @throws ItemConversionException on any error
      */
-    public E stringToItem(String line) throws ItemConversionException;
+    public E stringToItem(String line);
 
 }

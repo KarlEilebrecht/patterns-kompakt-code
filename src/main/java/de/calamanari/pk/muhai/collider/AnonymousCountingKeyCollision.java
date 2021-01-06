@@ -45,7 +45,7 @@ public class AnonymousCountingKeyCollision implements KeyCollision<AnonymousCoun
         @Override
         public String itemToString(AnonymousCountingKeyCollision item) {
             if (item == null) {
-                throw new IllegalArgumentException("Cannot encode null");
+                throw new ItemConversionException("Cannot encode null");
             }
             return Long.toUnsignedString(item.firstCollisionPosition) + "#" + Long.toUnsignedString(item.numberOfKeyOccurrences);
         }
@@ -61,9 +61,9 @@ public class AnonymousCountingKeyCollision implements KeyCollision<AnonymousCoun
             }
             AnonymousCountingKeyCollision res = null;
             try {
-                long firstCollisionPosition = Long.parseUnsignedLong(line.substring(0, delimPos));
-                long numberOfKeyOccurrences = Long.parseUnsignedLong(line.substring(delimPos + 1));
-                res = new AnonymousCountingKeyCollision(0L, firstCollisionPosition, numberOfKeyOccurrences);
+                long firstCollisionPositionParsed = Long.parseUnsignedLong(line.substring(0, delimPos));
+                long numberOfKeyOccurrencesParsed = Long.parseUnsignedLong(line.substring(delimPos + 1));
+                res = new AnonymousCountingKeyCollision(0L, firstCollisionPositionParsed, numberOfKeyOccurrencesParsed);
             }
             catch (RuntimeException ex) {
                 throw new ItemConversionException(String.format("Line corrupted, expected <unsigned long>#<unsigned long>, given: %s", line), ex);
@@ -113,7 +113,7 @@ public class AnonymousCountingKeyCollision implements KeyCollision<AnonymousCoun
             }
         }
         if (posList.size() < 2) {
-            throw new IllegalArgumentException(String.format("A collision must contain at least two unique positions, given: key=%s, positions=%s",
+            throw new IllegalArgumentException(String.format("A collision must contain at least two unique positions, given: positions=%s",
                     TrackingKeyCollision.arrayToUnsignedString(positions)));
         }
         Collections.sort(posList, Long::compareUnsigned);
@@ -170,13 +170,7 @@ public class AnonymousCountingKeyCollision implements KeyCollision<AnonymousCoun
             return false;
         }
         AnonymousCountingKeyCollision other = (AnonymousCountingKeyCollision) obj;
-        if (firstCollisionPosition != other.firstCollisionPosition) {
-            return false;
-        }
-        if (numberOfKeyOccurrences != other.numberOfKeyOccurrences) {
-            return false;
-        }
-        return true;
+        return (firstCollisionPosition == other.firstCollisionPosition && numberOfKeyOccurrences == other.numberOfKeyOccurrences);
     }
 
     @Override

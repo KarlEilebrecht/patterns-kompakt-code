@@ -49,7 +49,7 @@ public class AnonymousTrackingKeyCollision implements KeyCollision<AnonymousTrac
         @Override
         public String itemToString(AnonymousTrackingKeyCollision item) {
             if (item == null) {
-                throw new IllegalArgumentException("Cannot encode null");
+                throw new ItemConversionException("Cannot encode null");
             }
 
             StringBuilder sb = new StringBuilder();
@@ -73,9 +73,9 @@ public class AnonymousTrackingKeyCollision implements KeyCollision<AnonymousTrac
             }
             AnonymousTrackingKeyCollision res = null;
             try {
-                Long[] rawPositions = Stream.of(line.split(";")).map(r -> Long.parseUnsignedLong(r)).toArray(Long[]::new);
-                long[] positions = BoxingUtils.unboxArray(rawPositions);
-                res = new AnonymousTrackingKeyCollision(positions);
+                Long[] rawPositions = Stream.of(line.split(";")).map(Long::parseUnsignedLong).toArray(Long[]::new);
+                long[] positionsParsed = BoxingUtils.unboxArray(rawPositions);
+                res = new AnonymousTrackingKeyCollision(positionsParsed);
             }
             catch (RuntimeException ex) {
                 throw new ItemConversionException(
@@ -164,10 +164,7 @@ public class AnonymousTrackingKeyCollision implements KeyCollision<AnonymousTrac
             return false;
         }
         AnonymousTrackingKeyCollision other = (AnonymousTrackingKeyCollision) obj;
-        if (!Arrays.equals(positions, other.positions)) {
-            return false;
-        }
-        return true;
+        return Arrays.equals(positions, other.positions);
     }
 
     @Override

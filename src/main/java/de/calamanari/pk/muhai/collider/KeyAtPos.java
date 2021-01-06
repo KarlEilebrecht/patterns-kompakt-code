@@ -38,7 +38,7 @@ public class KeyAtPos implements Comparable<KeyAtPos> {
         @Override
         public String itemToString(KeyAtPos item) {
             if (item == null) {
-                throw new IllegalArgumentException("Cannot encode null");
+                throw new ItemConversionException("Cannot encode null");
             }
             return String.join("@", Long.toUnsignedString(item.key), Long.toUnsignedString(item.pos));
         }
@@ -54,9 +54,9 @@ public class KeyAtPos implements Comparable<KeyAtPos> {
             }
             KeyAtPos res = null;
             try {
-                long key = Long.parseUnsignedLong(line.substring(0, delimPos));
-                long pos = Long.parseUnsignedLong(line.substring(delimPos + 1));
-                res = new KeyAtPos(key, pos);
+                long keyParsed = Long.parseUnsignedLong(line.substring(0, delimPos));
+                long posParsed = Long.parseUnsignedLong(line.substring(delimPos + 1));
+                res = new KeyAtPos(keyParsed, posParsed);
             }
             catch (RuntimeException ex) {
                 throw new ItemConversionException(String.format("Line corrupted, expected <unsigned long>@<unsigned long>, given: %s", line), ex);
@@ -106,13 +106,7 @@ public class KeyAtPos implements Comparable<KeyAtPos> {
             return false;
         }
         KeyAtPos other = (KeyAtPos) obj;
-        if (key != other.key) {
-            return false;
-        }
-        if (pos != other.pos) {
-            return false;
-        }
-        return true;
+        return (key == other.key && pos == other.pos);
     }
 
     @Override

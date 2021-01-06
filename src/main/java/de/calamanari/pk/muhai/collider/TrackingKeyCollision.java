@@ -49,7 +49,7 @@ public class TrackingKeyCollision implements KeyCollision<TrackingKeyCollision> 
         @Override
         public String itemToString(TrackingKeyCollision item) {
             if (item == null) {
-                throw new IllegalArgumentException("Cannot encode null");
+                throw new ItemConversionException("Cannot encode null");
             }
 
             StringBuilder sb = new StringBuilder();
@@ -76,11 +76,11 @@ public class TrackingKeyCollision implements KeyCollision<TrackingKeyCollision> 
             }
             TrackingKeyCollision res = null;
             try {
-                long key = Long.parseUnsignedLong(line.substring(0, delimPos));
+                long keyParsed = Long.parseUnsignedLong(line.substring(0, delimPos));
                 String positionsPart = line.substring(delimPos + 1);
-                Long[] rawPositions = Stream.of(positionsPart.split(";")).map(r -> Long.parseUnsignedLong(r)).toArray(Long[]::new);
-                long[] positions = BoxingUtils.unboxArray(rawPositions);
-                res = new TrackingKeyCollision(key, positions);
+                Long[] rawPositions = Stream.of(positionsPart.split(";")).map(Long::parseUnsignedLong).toArray(Long[]::new);
+                long[] positionsParsed = BoxingUtils.unboxArray(rawPositions);
+                res = new TrackingKeyCollision(keyParsed, positionsParsed);
             }
             catch (RuntimeException ex) {
                 throw new ItemConversionException(
@@ -217,13 +217,7 @@ public class TrackingKeyCollision implements KeyCollision<TrackingKeyCollision> 
             return false;
         }
         TrackingKeyCollision other = (TrackingKeyCollision) obj;
-        if (key != other.key) {
-            return false;
-        }
-        if (!Arrays.equals(positions, other.positions)) {
-            return false;
-        }
-        return true;
+        return (key == other.key && Arrays.equals(positions, other.positions));
     }
 
     @Override

@@ -113,7 +113,7 @@ public class CombinedOrderedItemIterator<E extends Comparable<E>> implements Ite
         @Override
         public boolean equals(Object obj) {
             boolean res = false;
-            if (obj != null && this.getClass().isAssignableFrom(obj.getClass())) {
+            if (obj != null && this.getClass() == obj.getClass()) {
                 @SuppressWarnings("unchecked")
                 CandidateWithOrigin other = (CandidateWithOrigin) obj;
                 res = this.item.equals(other.item);

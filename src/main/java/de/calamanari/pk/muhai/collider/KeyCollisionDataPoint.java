@@ -109,16 +109,8 @@ public class KeyCollisionDataPoint implements Serializable, Comparable<KeyCollis
             return false;
         }
         KeyCollisionDataPoint other = (KeyCollisionDataPoint) obj;
-        if (numberOfCollisionsDetected != other.numberOfCollisionsDetected) {
-            return false;
-        }
-        if (numberOfCollisionsExpected != other.numberOfCollisionsExpected) {
-            return false;
-        }
-        if (position != other.position) {
-            return false;
-        }
-        return true;
+        return (numberOfCollisionsDetected == other.numberOfCollisionsDetected && numberOfCollisionsExpected == other.numberOfCollisionsExpected
+                && position == other.position);
     }
 
     @Override

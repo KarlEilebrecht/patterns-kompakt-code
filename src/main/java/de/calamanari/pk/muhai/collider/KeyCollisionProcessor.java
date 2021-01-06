@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +35,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Supplier;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
@@ -128,8 +129,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @return default processor instance
      */
     public static KeyCollisionProcessor<AnonymousTrackingKeyCollision> createDefaultProcessor(File outputDir) {
-        return new KeyCollisionProcessor<AnonymousTrackingKeyCollision>(outputDir, 5_000_000, 25_000_000,
-                KeyCollisionCollectionPolicies.TRACK_POSITIONS_AND_DISCARD_KEYS, false);
+        return new KeyCollisionProcessor<>(outputDir, 5_000_000, 25_000_000, KeyCollisionCollectionPolicies.TRACK_POSITIONS_AND_DISCARD_KEYS, false);
     }
 
     /**
@@ -156,7 +156,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @return collision summary
      * @throws IOException on any problem with the file system
      */
-    public KeyCollisionSummary process(Supplier<Long> keySupplier, long limit, long sizeOfKeyspace) throws IOException {
+    public KeyCollisionSummary process(LongSupplier keySupplier, long limit, long sizeOfKeyspace) throws IOException {
 
         summaryBuilder = SummaryBuilder.forKeyspaceSizeAndNumberOfKeysGenerated(sizeOfKeyspace, limit);
         this.numberOfKeysToBeGenerated = limit;
@@ -176,7 +176,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @return list of created chunk files
      * @throws IOException on any problem with the file system
      */
-    private List<File> generateKeys(Supplier<Long> keySupplier) throws IOException {
+    private List<File> generateKeys(LongSupplier keySupplier) throws IOException {
         List<File> chunkFiles = null;
         LOGGER.info("Phase I: Key generation and chunked storage");
         LOGGER.info("Processing run with {} keys to chunk files at {} ...", numberOfKeysToBeGenerated, outputDir);
@@ -184,7 +184,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         try (OrderedChunkFilewriter<KeyAtPos> ocfw = new OrderedChunkFilewriter<>(KeyAtPos.LINE_CODEC, outputDir, "keys-", maxKeysInMemory, maxKeysInChunk)) {
 
             for (long pos = 0; Long.compareUnsigned(pos, numberOfKeysToBeGenerated) < 0; pos++) {
-                ocfw.writeItem(new KeyAtPos(keySupplier.get(), pos));
+                ocfw.writeItem(new KeyAtPos(keySupplier.getAsLong(), pos));
                 if (Long.compareUnsigned(pos, lastReportedPos + reportingThreshold) >= 0) {
                     String percString = formatPercentage(computePercentage(pos, numberOfKeysToBeGenerated));
                     LOGGER.info("{} / {} keys generated ({} %) ...", pos, numberOfKeysToBeGenerated, percString);
@@ -213,7 +213,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
             keyChunkFiles.forEach(this::openAndRegisterChunkReader);
             Collection<Iterator<KeyAtPos>> chunkIterators = openChunkReaders.stream().map(this::toKeyIterator).collect(Collectors.toList());
-            CombinedOrderedItemIterator<KeyAtPos> allKeysOrderedIterator = new CombinedOrderedItemIterator<KeyAtPos>(chunkIterators);
+            CombinedOrderedItemIterator<KeyAtPos> allKeysOrderedIterator = new CombinedOrderedItemIterator<>(chunkIterators);
 
             KeyCollisionIterator<K> collisionIterator = new KeyCollisionIterator<>(allKeysOrderedIterator, keyCollisionCollectionPolicy);
 
@@ -243,7 +243,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         else {
             LOGGER.info("Leaving key chunk files on disk.");
         }
-        LOGGER.info("Detected {} of {} keys involved in collisions", numberOfKeysInCollision, numberOfKeysToBeGenerated, keyChunkFiles.size());
+        LOGGER.info("Detected {} of {} keys involved in collisions", numberOfKeysInCollision, numberOfKeysToBeGenerated);
         return collisionKeyFiles;
     }
 
@@ -259,7 +259,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         try {
             keyCollisionChunkFiles.forEach(this::openAndRegisterChunkReader);
             Collection<Iterator<K>> chunkIterators = openChunkReaders.stream().map(this::toCollisionIterator).collect(Collectors.toList());
-            CombinedOrderedItemIterator<K> allCollisionsOrderedIterator = new CombinedOrderedItemIterator<K>(chunkIterators);
+            CombinedOrderedItemIterator<K> allCollisionsOrderedIterator = new CombinedOrderedItemIterator<>(chunkIterators);
             long lastCollisionReportedAt = 0;
             long collidedKeysProcessed = 0;
 
@@ -295,10 +295,12 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @param chunkFile to be deleted
      */
     private void deleteChunkFile(File chunkFile) {
-        if (!chunkFile.delete()) {
-            LOGGER.error("Unable to delete chunk file " + chunkFile);
+        try {
+            Files.delete(chunkFile.toPath());
         }
-
+        catch (IOException ex) {
+            LOGGER.error("Unable to delete chunk file {}", chunkFile);
+        }
     }
 
     /**
@@ -306,7 +308,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @return iterator
      */
     private Iterator<K> toCollisionIterator(BufferedReader br) {
-        return new ItemConversionIterator<K, ItemStringCodec<K>>(br, keyCollisionCollectionPolicy.getLineCodec());
+        return new ItemConversionIterator<>(br, keyCollisionCollectionPolicy.getLineCodec());
     }
 
     /**
@@ -314,13 +316,15 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @return iterator
      */
     private Iterator<KeyAtPos> toKeyIterator(BufferedReader br) {
-        return new ItemConversionIterator<KeyAtPos, ItemStringCodec<KeyAtPos>>(br, KeyAtPos.LINE_CODEC);
+        return new ItemConversionIterator<>(br, KeyAtPos.LINE_CODEC);
     }
 
     /**
      * Creates a reader for the given chunk and puts it into the list
      * @param chunkFile file, a buffered reader shall be created for
      */
+    // suppressing this try-with-resource sonar rule because this method is intended to supply open resources
+    @SuppressWarnings("java:S2093")
     private void openAndRegisterChunkReader(File chunkFile) {
         FileInputStream fis = null;
         BufferedReader res = null;

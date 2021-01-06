@@ -207,7 +207,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj == this || (obj.getClass() == LongPrefix.class && ((LongPrefix) obj).prefixString.equals(this.prefixString)));
+        return obj != null && (obj == this || (obj.getClass() == LongPrefix.class && ((LongPrefix) obj).prefixString.equals(this.prefixString)));
     }
 
     @Override
@@ -218,6 +218,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
     /**
      * Returns a description
      */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(LongPrefix.class.getSimpleName());

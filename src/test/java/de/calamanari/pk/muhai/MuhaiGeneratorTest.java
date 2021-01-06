@@ -66,8 +66,8 @@ public class MuhaiGeneratorTest {
         generator = new MuhaiGenerator(LongPrefix.fromBinaryString("01"), "PEPPER");
 
         copy = CloneUtils.passByValue(generator);
-        assertSame(generator.getPrefix(), LongPrefix.STRAIGHT);
-        assertSame(copy.getPrefix(), LongPrefix.STRAIGHT);
+        assertSame(LongPrefix.STRAIGHT, generator.getPrefix());
+        assertSame(LongPrefix.STRAIGHT, copy.getPrefix());
         assertArrayEquals("PEPPER".getBytes(StandardCharsets.UTF_8), generator.getHashPepper());
         assertArrayEquals("PEPPER".getBytes(StandardCharsets.UTF_8), copy.getHashPepper());
     }

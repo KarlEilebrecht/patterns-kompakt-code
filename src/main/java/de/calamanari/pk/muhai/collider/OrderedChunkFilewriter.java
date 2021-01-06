@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -203,9 +204,7 @@ public class OrderedChunkFilewriter<E extends Comparable<E>> implements Closeabl
                 subsequent = true;
             }
         }
-        if (!tmpFile.delete()) {
-            throw new IOException(String.format("Unable to delete temp-file after merge: %s", tmpFile.toString()));
-        }
+        Files.delete(tmpFile.toPath());
         numberOfItemsInCurrentChunk = numberOfItemsInCurrentChunk + buffer.size();
         numberOfItemsWritten = numberOfItemsWritten + buffer.size();
         buffer.clear();
