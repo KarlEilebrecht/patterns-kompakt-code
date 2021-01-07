@@ -47,6 +47,7 @@ Open [ObserverTest.java](ObserverTest.java) to start playing with this pattern. 
 ## Remarks
 * The major challenges with this pattern are keeping control over registering (and unregistering!) observers on the one hand and not to block the notification thread on the other. Additionally, observing many sources running in separate threads can be tricky.
 * A message queue (e.g. Kafka or RabbitMQ) can be involved to further decouple Observable and Observer, but it also makes the scenario more complex.
+* A special variation of this pattern can be found in [KeyCollisionIterator](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/KeyCollisionIterator.java). The observer is just a BiConsumer defined in the [KeyCollisionProcessor](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/KeyCollisionProcessor.java) that reports progress of the feeding progress _inside_ the aggregating iterator.
 
 ## References
 

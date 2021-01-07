@@ -45,6 +45,7 @@ Open [IteratorTest.java](IteratorTest.java) to start playing with this pattern. 
 
 ## Remarks
 * As mentioned in the book, while Iterators are quite handy from the usage perspective, they effectively hide potentially important aspects. The client of an Iterator does not (want to) know, how the iteration works, but sometimes this knowledge is crucial. Especially, in conjunction with internal lazy loading or prefetching there can be surprising performance or memory effects.
+* The [CombinedOrderedItemIterator](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/CombinedOrderedItemIterator.java) combines multiple iterators. [KeyCollisionIterator](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/KeyCollisionIterator.java) internally performs an aggregation.
 
 ## References
 

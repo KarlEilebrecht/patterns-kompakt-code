@@ -26,6 +26,7 @@ Open [ValueObjectTest.java](ValueObjectTest.java) to start playing with this pat
 * [Identity Field](../identityfield/README.md), [Money](../money/README.md) and also [Null Object](../nullobject/README.md) are value objects.
 * [Records](https://openjdk.java.net/jeps/359) simplify implementing _ValueObject_s in Java.
 * The above _Fraction_ implementation shows a common pitfall when defining equality deviating from the representational state. If you put 1/3, 2/6 and 4/12 into a `HashSet`, it will afterwards contain just a single entry.
+* A family of _Value Obects_ can be found here: [KeyAtPos](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/KeyAtPos.java), [CountingKeyCollision](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/CountingKeyCollision.java), [TrackingKeyCollision](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/TrackingKeyCollision.java), [AnonymousCountingKeyCollision](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/AnonymousCountingKeyCollision.java), [AnonymousTrackingKeyCollision](../../../../../../../src/main/java/de/calamanari/pk/muhai/collider/AnonymousTrackingKeyCollision.java). These objects simplify sorting and processing because they define a natural order.
 
 ## References
 
