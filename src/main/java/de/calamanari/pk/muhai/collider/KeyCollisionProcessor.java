@@ -19,6 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.muhai.collider;
 
+import static de.calamanari.pk.util.LambdaSupportLoggerProxy.defer;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.CloseUtils;
+import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 
 /**
  * A {@link KeyCollisionProcessor} generates a specified number of keys provided by a supplier in a keyspace and analyzes key collisions.
@@ -55,7 +58,7 @@ import de.calamanari.pk.util.CloseUtils;
  */
 public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KeyCollisionProcessor.class);
+    private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(KeyCollisionProcessor.class));
 
     /**
      * For limiting log output of a single process step
@@ -186,15 +189,17 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
             for (long pos = 0; Long.compareUnsigned(pos, numberOfKeysToBeGenerated) < 0; pos++) {
                 ocfw.writeItem(new KeyAtPos(keySupplier.getAsLong(), pos));
                 if (Long.compareUnsigned(pos, lastReportedPos + reportingThreshold) >= 0) {
-                    String percString = formatPercentage(computePercentage(pos, numberOfKeysToBeGenerated));
-                    LOGGER.info("Phase I: {} / {} keys generated ({} %) ...", pos, numberOfKeysToBeGenerated, percString);
+                    final long posF = pos;
+                    LOGGER.info("Phase I: {} / {} keys generated ({} %) ...", defer(() -> Long.toUnsignedString(posF)),
+                            defer(() -> Long.toUnsignedString(numberOfKeysToBeGenerated)),
+                            defer(() -> formatPercentage(computePercentage(posF, numberOfKeysToBeGenerated))));
                     lastReportedPos = pos;
                 }
             }
             ocfw.flush();
             chunkFiles = ocfw.getChunkFiles();
         }
-        LOGGER.info("Phase I: {} keys generated into {} chunk files", numberOfKeysToBeGenerated, chunkFiles.size());
+        LOGGER.info("Phase I: {} keys generated into {} chunk files", defer(() -> Long.toUnsignedString(numberOfKeysToBeGenerated)), chunkFiles.size());
         return chunkFiles;
     }
 
@@ -239,7 +244,8 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         else {
             LOGGER.info("Phase II: Leaving key chunk files on disk.");
         }
-        LOGGER.info("Phase II: Detected {} of {} keys involved in collisions", numberOfKeysInCollision, numberOfKeysToBeGenerated);
+        LOGGER.info("Phase II: Detected {} of {} keys involved in collisions", defer(() -> Long.toUnsignedString(numberOfKeysInCollision)),
+                defer(() -> Long.toUnsignedString(numberOfKeysToBeGenerated)));
         return collisionKeyFiles;
     }
 
@@ -265,8 +271,10 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
                 summaryBuilder.addCollision(collision);
                 long collisionPos = collision.getFirstCollisionPosition();
                 if (firstCollision || Long.compareUnsigned(collisionPos, lastCollisionReportedAt + reportingThreshold) >= 0) {
-                    String percString = formatPercentage(computePercentage(collidedKeysProcessed, numberOfKeysInCollision));
-                    LOGGER.info("Phase III: {} / {} collided keys processed ({} %) ...", collidedKeysProcessed, numberOfKeysInCollision, percString);
+                    final long collidedKeysProcessedF = collidedKeysProcessed;
+                    LOGGER.info("Phase III: {} / {} collided keys processed ({} %) ...", defer(() -> Long.toUnsignedString(collidedKeysProcessedF)),
+                            defer(() -> Long.toUnsignedString(numberOfKeysInCollision)),
+                            defer(() -> formatPercentage(computePercentage(collidedKeysProcessedF, numberOfKeysInCollision))));
                     lastCollisionReportedAt = collisionPos;
                     firstCollision = false;
                 }
@@ -428,9 +436,9 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         private void reportCollisionAggregationProgress(long consumed, long returned) {
             double perc = computePercentage(consumed, numberOfKeysToBeGenerated);
             if (perc >= lastPercReported + 1) {
-                String percString = formatPercentage(perc);
-                LOGGER.info("Phase II: {} collided keys detected, {} / {} keys processed ({} %) ...", returned, consumed, numberOfKeysToBeGenerated,
-                        percString);
+                LOGGER.info("Phase II: {} collided keys detected, {} / {} keys processed ({} %) ...", defer(() -> Long.toUnsignedString(returned)),
+                        defer(() -> Long.toUnsignedString(consumed)), defer(() -> Long.toUnsignedString(numberOfKeysToBeGenerated)),
+                        defer(() -> formatPercentage(perc)));
                 lastPercReported = perc;
             }
         }
