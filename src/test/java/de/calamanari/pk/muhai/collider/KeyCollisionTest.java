@@ -153,7 +153,7 @@ public class KeyCollisionTest {
 
         KeyCollisionProcessor<?> proc = KeyCollisionProcessor.createDefaultProcessor(tempDirectory);
 
-        KeyCollisionSummary summary = proc.process(() -> sequence.incrementAndGet(), 10000, 100_000_000);
+        KeyCollisionSummary summary = proc.process(() -> sequence.incrementAndGet(), 100, 100_000);
 
         assertEquals(0L, summary.getNumberOfCollidedKeys());
         assertEquals(0L, summary.getNumberOfCollisions());
@@ -193,8 +193,12 @@ public class KeyCollisionTest {
     }
 
     @Test
-    @Ignore("Generates the full 4_294_967_296 keys in a 32-bit keyspace, runs a couple of hours and temporarily consumes more than 50 GB of disk space")
-    public void testWith32BitsKeyspace() throws Exception {
+    @Ignore("""
+            - Generates 2^32 = 4_294_967_296 keys in a 32-bit keyspace
+            - runs very long and temporarily consumes more than 50 GB of disk space
+            - Hint: You should specify -Xmx to limit the total memory consumption of the process
+            """)
+    public void testWith32BitsKeyspaceFullInteger32() throws Exception {
 
         LongPrefix prefix32 = LongPrefix.fromBinaryString(Stream.generate(() -> "0").limit(32).collect(Collectors.joining()));
 
@@ -204,11 +208,40 @@ public class KeyCollisionTest {
 
         AtomicLong sequence = new AtomicLong();
 
-        KeyCollisionProcessor<?> proc = new KeyCollisionProcessor<>(tempDirectory, 5_000_000, 25_000_000,
-                KeyCollisionCollectionPolicies.TRACK_POSITIONS_AND_DISCARD_KEYS, true);
+        // If enough memory is available set chunk size = memory buffer size to avoid any file merges (performance boost)
+        // The settings below ran fine with 4GB memory
+        KeyCollisionProcessor<?> proc = new KeyCollisionProcessor<>(tempDirectory, 40_000_000, 40_000_000,
+                KeyCollisionCollectionPolicies.TRACK_POSITIONS_AND_DISCARD_KEYS, false);
 
         KeyCollisionSummary summary = proc.process(() -> generator.createKey((Long) sequence.incrementAndGet()), prefix32.getSizeOfKeyspace().longValue(),
                 prefix32.getSizeOfKeyspace().longValue());
+
+        LOGGER.info(formatSummary(summary));
+
+    }
+
+    @Test
+    @Ignore("""
+            - Generates 2^32 = 4_294_967_296 keys in a 64-bit keyspace
+            - runs very long and temporarily consumes more than 50 GB of disk space
+            - Hint: You should specify -Xmx to limit the total memory consumption of the process
+            """)
+    public void testWith62BitsKeyspaceFullInteger32() throws Exception {
+
+        LongPrefix prefix = LongPrefix.DEFAULT;
+        MuhaiGenerator generator = new MuhaiGenerator(prefix);
+
+        long numberOfKeysToGenerate = (long) Math.pow(2, 32);
+
+        AtomicLong sequence = new AtomicLong();
+
+        // If enough memory is available set chunk size = memory buffer size to avoid any file merges (performance boost)
+        // The settings below ran fine with 4GB memory
+        KeyCollisionProcessor<?> proc = new KeyCollisionProcessor<>(tempDirectory, 40_000_000, 40_000_000,
+                KeyCollisionCollectionPolicies.TRACK_POSITIONS_AND_DISCARD_KEYS, false);
+
+        KeyCollisionSummary summary = proc.process(() -> generator.createKey((Long) sequence.incrementAndGet()), numberOfKeysToGenerate,
+                prefix.getSizeOfKeyspace().longValue());
 
         LOGGER.info(formatSummary(summary));
 
