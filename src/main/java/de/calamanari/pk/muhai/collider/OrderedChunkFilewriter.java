@@ -47,7 +47,9 @@ import org.slf4j.LoggerFactory;
  * The {@link OrderedChunkFilewriter} writes items to files, so that a single file will not contain more that a specified number of items.<br />
  * The items will be written according to their natural order, so that a single chunk file will appear sorted.
  * <p>
- * The chunks will be g-zipped to safe disk space.
+ * The chunks will be g-zipped to lower disk space consumption. As a <b>safety mechanism</b>, to prevent running out of disk space, an
+ * {@link OrderedChunkFilewriter} will <b>abort operation</b> and throw an {@link IOException} should the available space in the file system go below
+ * {@value #LOW_DISK_SPACE_LIMIT_GB} GB.
  * <p>
  * Instances are NOT safe to be accessed by multiple threads concurrently.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
