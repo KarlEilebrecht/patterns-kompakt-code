@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.BiConsumer;
 
 import de.calamanari.pk.util.BoxingUtils;
 
@@ -53,6 +54,11 @@ public class KeyCollisionIterator<K extends KeyCollision<K>> implements Iterator
     private final KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy;
 
     /**
+     * For smooth progress reports we need to intercept the aggregation
+     */
+    private final BiConsumer<Long, Long> progressObserver;
+
+    /**
      * Next collision to be returned
      */
     private K bufferedItem = null;
@@ -68,12 +74,24 @@ public class KeyCollisionIterator<K extends KeyCollision<K>> implements Iterator
     private boolean done;
 
     /**
+     * number of items consumed from the source
+     */
+    private long consumedItems = 0;
+
+    /**
+     * number of aggregated items returned by this iterator
+     */
+    private long returnedItems = 0;
+
+    /**
      * @param sourceIterator iterator returning elements in key-order
      * @param keyCollisionCollectionPolicy policy for creating collision items
      */
-    public KeyCollisionIterator(Iterator<KeyAtPos> sourceIterator, KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy) {
+    public KeyCollisionIterator(Iterator<KeyAtPos> sourceIterator, KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy,
+            BiConsumer<Long, Long> progressObserver) {
         this.sourceIterator = sourceIterator;
         this.keyCollisionCollectionPolicy = keyCollisionCollectionPolicy;
+        this.progressObserver = progressObserver;
     }
 
     /**
@@ -92,6 +110,8 @@ public class KeyCollisionIterator<K extends KeyCollision<K>> implements Iterator
 
             while (sourceIterator.hasNext()) {
                 readAhead = sourceIterator.next();
+                consumedItems++;
+                progressObserver.accept(consumedItems, returnedItems);
                 if (readAhead.getKey() == base.getKey()) {
                     rawPositions.add(readAhead.getPos());
                 }
@@ -135,6 +155,7 @@ public class KeyCollisionIterator<K extends KeyCollision<K>> implements Iterator
         else {
             throw new NoSuchElementException("End of input");
         }
+        returnedItems++;
         return res;
 
     }

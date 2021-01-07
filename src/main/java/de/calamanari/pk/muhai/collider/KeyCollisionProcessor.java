@@ -179,7 +179,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
     private List<File> generateKeys(LongSupplier keySupplier) throws IOException {
         List<File> chunkFiles = null;
         LOGGER.info("Phase I: Key generation and chunked storage");
-        LOGGER.info("Processing run with {} keys to chunk files at {} ...", numberOfKeysToBeGenerated, outputDir);
+        LOGGER.info("Phase I: Processing run with {} keys to chunk files at {} ...", numberOfKeysToBeGenerated, outputDir);
         long lastReportedPos = 0;
         try (OrderedChunkFilewriter<KeyAtPos> ocfw = new OrderedChunkFilewriter<>(KeyAtPos.LINE_CODEC, outputDir, "keys-", maxKeysInMemory, maxKeysInChunk)) {
 
@@ -187,14 +187,14 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
                 ocfw.writeItem(new KeyAtPos(keySupplier.getAsLong(), pos));
                 if (Long.compareUnsigned(pos, lastReportedPos + reportingThreshold) >= 0) {
                     String percString = formatPercentage(computePercentage(pos, numberOfKeysToBeGenerated));
-                    LOGGER.info("{} / {} keys generated ({} %) ...", pos, numberOfKeysToBeGenerated, percString);
+                    LOGGER.info("Phase I: {} / {} keys generated ({} %) ...", pos, numberOfKeysToBeGenerated, percString);
                     lastReportedPos = pos;
                 }
             }
             ocfw.flush();
             chunkFiles = ocfw.getChunkFiles();
         }
-        LOGGER.info("{} keys generated into {} chunk files", numberOfKeysToBeGenerated, chunkFiles.size());
+        LOGGER.info("Phase I: {} keys generated into {} chunk files", numberOfKeysToBeGenerated, chunkFiles.size());
         return chunkFiles;
     }
 
@@ -206,28 +206,24 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      */
     private List<File> detectCollisions(List<File> keyChunkFiles) throws IOException {
         LOGGER.info("Phase II: Collision detection");
-        LOGGER.info("Merging and iterating over {} chunk files ...", keyChunkFiles.size());
+        LOGGER.info("Phase II: Merging and iterating over {} chunk files ...", keyChunkFiles.size());
         List<File> collisionKeyFiles = Collections.emptyList();
         try (OrderedChunkFilewriter<K> ocfw = new OrderedChunkFilewriter<>(keyCollisionCollectionPolicy.getLineCodec(), outputDir, "collisions-",
                 maxKeysInMemory, maxKeysInChunk)) {
+
+            CollisionAggregationProgressObserver observer = new CollisionAggregationProgressObserver();
 
             keyChunkFiles.forEach(this::openAndRegisterChunkReader);
             Collection<Iterator<KeyAtPos>> chunkIterators = openChunkReaders.stream().map(this::toKeyIterator).collect(Collectors.toList());
             CombinedOrderedItemIterator<KeyAtPos> allKeysOrderedIterator = new CombinedOrderedItemIterator<>(chunkIterators);
 
-            KeyCollisionIterator<K> collisionIterator = new KeyCollisionIterator<>(allKeysOrderedIterator, keyCollisionCollectionPolicy);
+            KeyCollisionIterator<K> collisionIterator = new KeyCollisionIterator<>(allKeysOrderedIterator, keyCollisionCollectionPolicy,
+                    observer::reportCollisionAggregationProgress);
 
-            double lastPercReported = 0;
             while (collisionIterator.hasNext()) {
                 numberOfKeysInCollision++;
                 K item = collisionIterator.next();
                 ocfw.writeItem(item);
-                double perc = computePercentage(item.getFirstCollisionPosition(), numberOfKeysToBeGenerated);
-                if (perc >= lastPercReported + 1) {
-                    String percString = formatPercentage(perc);
-                    LOGGER.info("Collided key processed {} ({} %): {}", item, percString, item);
-                    lastPercReported = perc;
-                }
             }
             ocfw.flush();
             collisionKeyFiles = ocfw.getChunkFiles();
@@ -237,13 +233,13 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
             openChunkReaders.clear();
         }
         if (!keepFiles) {
-            LOGGER.info("Cleaning-up key files ...");
+            LOGGER.info("Phase II: Cleaning-up key files ...");
             keyChunkFiles.forEach(this::deleteChunkFile);
         }
         else {
-            LOGGER.info("Leaving key chunk files on disk.");
+            LOGGER.info("Phase II: Leaving key chunk files on disk.");
         }
-        LOGGER.info("Detected {} of {} keys involved in collisions", numberOfKeysInCollision, numberOfKeysToBeGenerated);
+        LOGGER.info("Phase II: Detected {} of {} keys involved in collisions", numberOfKeysInCollision, numberOfKeysToBeGenerated);
         return collisionKeyFiles;
     }
 
@@ -253,7 +249,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      */
     private void computeCollisionStats(List<File> keyCollisionChunkFiles) {
         LOGGER.info("Phase III: Compute collision stats");
-        LOGGER.info("Merging and iterating over {} chunk files ...", keyCollisionChunkFiles.size());
+        LOGGER.info("Phase III: Merging and iterating over {} chunk files ...", keyCollisionChunkFiles.size());
         boolean firstCollision = true;
 
         try {
@@ -270,7 +266,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
                 long collisionPos = collision.getFirstCollisionPosition();
                 if (firstCollision || Long.compareUnsigned(collisionPos, lastCollisionReportedAt + reportingThreshold) >= 0) {
                     String percString = formatPercentage(computePercentage(collidedKeysProcessed, numberOfKeysInCollision));
-                    LOGGER.info("Collided key processed {} / {} ({} %): {}", collidedKeysProcessed, numberOfKeysInCollision, percString, collision);
+                    LOGGER.info("Phase III: {} / {} collided keys processed ({} %) ...", collidedKeysProcessed, numberOfKeysInCollision, percString);
                     lastCollisionReportedAt = collisionPos;
                     firstCollision = false;
                 }
@@ -281,11 +277,11 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
             openChunkReaders.clear();
         }
         if (!keepFiles) {
-            LOGGER.info("Cleaning-up collision chunk files ...");
+            LOGGER.info("Phase III: Cleaning-up collision chunk files ...");
             keyCollisionChunkFiles.forEach(this::deleteChunkFile);
         }
         else {
-            LOGGER.info("Leaving collision chunk files on disk.");
+            LOGGER.info("Phase III: Leaving collision chunk files on disk.");
         }
 
         LOGGER.info("Phase III: Collision stats collected.");
@@ -412,6 +408,33 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         int upper = (int) (l >>> 32);
         int lower = (int) l;
         return (BigInteger.valueOf(Integer.toUnsignedLong(upper))).shiftLeft(32).add(BigInteger.valueOf(Integer.toUnsignedLong(lower)));
+    }
+
+    /**
+     * OBSERVER to frequently display progress information during collision aggregation
+     */
+    private class CollisionAggregationProgressObserver {
+
+        /**
+         * state of the progress observer
+         */
+        private double lastPercReported = 0;
+
+        /**
+         * logs the progress information
+         * @param consumed number of items read from the source
+         * @param returned number of aggregated items returned
+         */
+        private void reportCollisionAggregationProgress(long consumed, long returned) {
+            double perc = computePercentage(consumed, numberOfKeysToBeGenerated);
+            if (perc >= lastPercReported + 1) {
+                String percString = formatPercentage(perc);
+                LOGGER.info("Phase II: {} collided keys detected, {} / {} keys processed ({} %) ...", returned, consumed, numberOfKeysToBeGenerated,
+                        percString);
+                lastPercReported = perc;
+            }
+        }
+
     }
 
     /**
