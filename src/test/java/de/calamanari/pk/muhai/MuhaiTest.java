@@ -180,7 +180,7 @@ public class MuhaiTest {
 
     @Test
     @Ignore("""
-            - Generates 1_000_000 keys in a 32-bit keyspace
+            - Generates 1_000_000 keys in a 62-bit keyspace
             - Disabled, because it takes a while
             """)
     public void testCollisionsInLongKeySpace() throws Exception {
