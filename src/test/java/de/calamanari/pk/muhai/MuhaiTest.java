@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * HUHAI Test - demonstrates the Mostly Unique Hashed Attributes Identifier (MUHAI) pattern.
+ * MUHAI Test - demonstrates the Mostly Unique Hashed Attributes Identifier (MUHAI) pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
