@@ -92,7 +92,6 @@ public class AnonymousTrackingKeyCollision implements KeyCollision<AnonymousTrac
     private final long[] positions;
 
     /**
-     * @param key the key that occurred at least twice
      * @param positions at least 2 positions
      */
     public AnonymousTrackingKeyCollision(long... positions) {

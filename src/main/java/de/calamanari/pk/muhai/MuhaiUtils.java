@@ -20,8 +20,6 @@
 package de.calamanari.pk.muhai;
 
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A couple of utilities and shorthands for dealing with MUHAIs (the type long in Java is signed).
@@ -42,12 +40,12 @@ public class MuhaiUtils {
     /**
      * Minimum muhai represented as an unsigned binary String, left-padded with zeros, length 64.
      */
-    public static final String MIN_BIN_STRING = Stream.generate(() -> "0").limit(64).collect(Collectors.joining());
+    public static final String MIN_BIN_STRING = "0000000000000000000000000000000000000000000000000000000000000000";
 
     /**
      * Maximum muhai represented as an unsigned binary String. Be aware that this is the equivalent of the java long-value <b><code>-1</code></b>.
      */
-    public static final String MAX_BIN_STRING = Stream.generate(() -> "1").limit(64).collect(Collectors.joining());
+    public static final String MAX_BIN_STRING = "1111111111111111111111111111111111111111111111111111111111111111";
 
     /**
      * Minimum muhai represented as an unsigned integer hex-String, left-padded with zeros, length 16.

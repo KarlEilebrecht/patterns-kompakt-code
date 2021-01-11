@@ -141,6 +141,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @param maxKeysInMemory defines how many keys we want to store in memory before writing to disk
      * @param maxKeysInChunk size (number of items) of a single file on the disk, it should be a multiple of maxKeysInMemory
      * @param keyCollisionCollectionPolicy policy for storing/handling key collections
+     * @param keepFiles leave all temporary processing files in place for further analysis
      */
     public KeyCollisionProcessor(File outputDir, int maxKeysInMemory, int maxKeysInChunk, KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy,
             boolean keepFiles) {

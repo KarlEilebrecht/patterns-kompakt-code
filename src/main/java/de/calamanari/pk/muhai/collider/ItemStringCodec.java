@@ -29,7 +29,7 @@ public interface ItemStringCodec<E> {
 
     /**
      * Encodes an item into a String that can be written as a single line
-     * @param item
+     * @param item element to be converted to a string
      * @return encoded item string, no line breaks
      * @throws ItemConversionException on any error
      */

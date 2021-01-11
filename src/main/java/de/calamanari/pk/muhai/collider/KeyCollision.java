@@ -62,7 +62,7 @@ public interface KeyCollision<T extends KeyCollision<T>> extends Comparable<T>, 
     }
 
     /**
-     * @return number of positions after first occurrence, in other words <code>{@link #getNumberOfOccurrences()}-1</code>
+     * @return number of positions after first occurrence, in other words <code>{@link #getNumberOfKeyOccurrences()}-1</code>
      */
     default long getNumberOfDuplicates() {
         return getNumberOfKeyOccurrences() - 1;

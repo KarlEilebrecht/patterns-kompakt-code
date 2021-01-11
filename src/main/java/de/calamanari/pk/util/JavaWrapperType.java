@@ -136,7 +136,7 @@ public enum JavaWrapperType {
      * Provides a convenient method to print an array, no matter whether it is primitive or not.
      * @param array source object, which must be an array or null (returns <code>"null"</code>)
      * @return the corresponding Arrays.toString() result for primitives arrays or any Object[]
-     * @throws {@link IllegalArgumentException} if the given array's component type is neither the primitive nor the wrapper type
+     * @throws IllegalArgumentException if the given array's component type is neither the primitive nor the wrapper type
      */
     public String arrayToString(Object array) {
         String res = null;

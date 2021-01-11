@@ -28,7 +28,7 @@ import java.util.List;
  * Often this is sufficient for statistics.
  * <p>
  * This VALUE OBJECT stores the the second position and defines equality on its members.
- * <p />
+ * <p>
  * The type long is treated here unsigned, using {@link Long#compareUnsigned(long, long)} for sorting positions.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *

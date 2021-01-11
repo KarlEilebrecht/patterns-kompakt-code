@@ -34,7 +34,7 @@ import de.calamanari.pk.util.BoxingUtils;
  * This way the {@link KeyCollisionIterator} spools all the source items and only returns the collisions.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
- * @param <T> collision representation type
+ * @param <K> collision representation type (tells how much payload has to be carried)
  */
 public class KeyCollisionIterator<K extends KeyCollision<K>> implements Iterator<K> {
 
@@ -86,6 +86,7 @@ public class KeyCollisionIterator<K extends KeyCollision<K>> implements Iterator
     /**
      * @param sourceIterator iterator returning elements in key-order
      * @param keyCollisionCollectionPolicy policy for creating collision items
+     * @param progressObserver hook for reporting on every consumed source element
      */
     public KeyCollisionIterator(Iterator<KeyAtPos> sourceIterator, KeyCollisionCollectionPolicy<K> keyCollisionCollectionPolicy,
             BiConsumer<Long, Long> progressObserver) {

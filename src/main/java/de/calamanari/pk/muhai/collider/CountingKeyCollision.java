@@ -27,7 +27,7 @@ import java.util.List;
  * A {@link CountingKeyCollision} is a key that occurred at two or more positions counting but not storing multi-occurrences.
  * <p>
  * This VALUE OBJECT stores the key and the second position and defines equality on its members.
- * <p />
+ * <p>
  * The type long is treated here unsigned, using {@link Long#compareUnsigned(long, long)} for sorting positions.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
