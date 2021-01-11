@@ -99,6 +99,7 @@ _Karl Eilebrecht, December 2020_
 * [Identity Field](src/test/java/de/calamanari/pk/identityfield/README.md)
 * [Sequence Block](src/test/java/de/calamanari/pk/sequenceblock/README.md)
 * [UUID](src/test/java/de/calamanari/pk/uuid/README.md)
+* [MUHAI](src/test/java/de/calamanari/pk/muhai/README.md)
 
 ### Other Patterns
 
