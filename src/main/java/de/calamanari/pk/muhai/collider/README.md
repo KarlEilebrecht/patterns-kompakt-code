@@ -74,6 +74,14 @@ The result, [KeyCollisionSummary](KeyCollisionSummary.java) along with the detec
 
 The calculation is based on the function depicted above and leverages [apfloat](http://www.apfloat.org/apfloat_java/tutorial.html) for high precision computation on large numbers. MUHAIs based on cryptographic hashes should follow the expectation curve quite well, an indicator of randomness. Nevertheless, for small keyspaces don't be surprised to see the first collision earlier than you thought!
 
+In a simulation run with keyspace size 2^32 = 4.294.967.296 in total 4.294.967.296 keys have been generated.
+
 ![sim1](../../../../../../../../doc/patterns/images/coll32bit-detail.svg)
 
-The graphic shows the number of detected collisions (y-axis) after **n** generated keys (x-axis) as blue columns. The green line shows the expected number of collisions c(4.294.967.296, n). 
+The graphic above shows the number of detected collisions (y-axis) after **n** generated keys (x-axis) as blue columns. The green line shows the expected number of collisions c(4.294.967.296, n). 
+
+Below you can see depicted how many collided keys (y-axis, logarithmic scale) occurred how often (x-axis).  
+
+![sim1a](../../../../../../../../doc/patterns/images/coll32bit-hist.svg)
+
+By far most of the keys occurred only twice in this simulation. No key occurred more that 12 times.
