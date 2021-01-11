@@ -55,8 +55,8 @@ public class ItemConversionIterator<E, C extends ItemStringCodec<E>> implements 
 
     /**
      * Creates the iterator as a decorator for given reader
-     * @param sourceReader
-     * @param codec
+     * @param sourceReader the wrapped reader
+     * @param codec for item conversion
      */
     public ItemConversionIterator(BufferedReader sourceReader, C codec) {
         this.sourceReader = sourceReader;
@@ -65,7 +65,7 @@ public class ItemConversionIterator<E, C extends ItemStringCodec<E>> implements 
 
     /**
      * Closes the underlying resources
-     * @throws IOException
+     * @throws IOException in case of problems with the underyling reader
      */
     public void close() throws IOException {
         sourceReader.close();
