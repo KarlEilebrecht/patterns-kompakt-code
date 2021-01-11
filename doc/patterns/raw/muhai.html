@@ -1,0 +1,55 @@
+ord::0704
+<h2>MUHAI</h2>
+
+<h5>Datenbankschl&uuml;ssel</h5>
+
+<h4>MUHAI (Mostly Unique Hashed Attributes Identifier) erzeugt einen nahezu eindeutigen Schl&uuml;ssel durch das Hashen der Werte von einem oder mehrerer Datensatzattribute.</h4>
+
+<h3>Beispiel</h3>
+
+Die Firma Multiglom Smart Business, Anbieter der Web Shop Suite WANNAWEB, m&ouml;chte die Analysefunktionen der Software erweitern.
+Anstatt die Abfragen direkt auf den Tabellen des Shops laufen zu lassen, wurde ein neues DWH-Schema ergänzt, das regelm&auml;&szlig;ig aktualisiert wird.
+Jeden Tag sollen einige Millionen S&auml;tze aus unterschiedlichen Quellen importiert werden.
+
+<p />
+
+W&auml;hrend man f&uuml;r andere Daten jeweils einen Record-Identifikator gefunden hat, der als PK genutzt werden kann,
+steht das Team bei einem Import vor einem Problem. Der logische Key eines Datensatzes besteht aus einer Komposition mehrerer Felder.
+
+<p />
+
+img::muhai_dx.png
+
+<p />
+
+W&uuml;rde man diesen Key als Composite-PK definieren, g&auml;be es einerseits erhebliche Performance-Probleme, und andererseits w&auml;re der Umgang mit den Composite-Keys bei Abfragen eine ziemliche Qual.
+
+<p />
+
+Um das Problem zu l&ouml;sen, wird zun&auml;chst ein kryptographischer Hashwert (hier SHA1) über die Attributwerte gebildet, die den Datensatz identifizieren.
+Ein Teil des Hashes (z.B. die ersten 64 bits) wird in einen INT64-Bit-Integer-Wert konvertiert. 
+
+<p />
+
+img::muhai_cx.png
+<area shape="rect" coords="14,190,305,280" href="MuhaiGenerator">
+<area shape="rect" coords="13,23,245,155" href="LongPrefix">
+
+<p />
+
+<p />
+
+img::muhai_ex.png
+
+<p />
+
+
+Nun haben die Keys in der Datenbank den Typ INT64 und sind sowohl f&uuml;r Maschine als auch Mensch gut vertr&auml;glich.
+
+Die Kollisionswahrscheinlichkeit ist sehr niedrig, Kollisionen k&ouml;nnen aber prinzipiell auftreten. MUHAIs eignen sich daher f&uuml;r alle Szenarien, in denen wenige Kollisionen irrelevant sind oder bei denen man (durch Simulation aller m&ouml;glichen Keys) vorab garantieren kann, dass keine Kollisionen auftreten werden.   
+
+<p />
+
+Um das Zusammenspiel im Detail beobachten zu k&ouml;nnen, setzen Sie den log-level auf DEBUG in der logback.xml und f&uuml;hren den zugeh&ouml;rigen TestCase aus. Eine kleines Toolkit erlaubt zudem, mehrere Milliarden von Schl&uuml;sseln zu generieren und auf Kollisionen hin zu pr&uuml;fen. Eine Implementierung der Sch&auml;tzfunktion aus dem Buch finden Sie dort auch.
+
+ref::<a href="https://github.com/KarlEilebrecht/patterns-kompakt-code/blob/main/src/test/java/de/calamanari/pk/muhai/README.md">github(<img src="./images/usukban2.png" height="15% width="15%" border=0/>)</a>

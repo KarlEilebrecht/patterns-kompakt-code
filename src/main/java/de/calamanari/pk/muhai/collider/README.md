@@ -36,7 +36,7 @@ So we need something else ...
 The simplicity of the in-memory-solution above results from the random access capability. 
 Alternatively, we can process elements sequentially and make use of the power of sorting.
 
-![collider](collider-simple.svg)
+![collider](../../../../../../../../doc/patterns/images/collider-simple.svg)
 
 The flow depicted above allows us to store most of the data in a data store and only a rather small portion of data in memory at a time.
 
@@ -54,7 +54,7 @@ This scenario is an ideal candidate for leveraging [Apache Spark](https://spark.
 
 However, the code examples for the book are all written in Java. Spark jobs should be implemented in Scala. Mixing Scala and Java in the same project ist not ideal, also the _dependency trail_ (number of required libraries) of Spark is significant.
 
-![collider](collider.svg)
+![collider](../../../../../../../../doc/patterns/images/collider.svg)
 
 Finally, I decided to implement the sequential approach single-threaded in plain Java and took the chance to show the patterns [Value Object](../../../../../../../test/java/de/calamanari/pk/valueobject/README.md), [Iterator](../../../../../../../test/java/de/calamanari/pk/iterator/README.md), [Decorator](../../../../../../../test/java/de/calamanari/pk/decorator/README.md), [Policy](../../../../../../../test/java/de/calamanari/pk/policy/README.md) and [Factoy Method](../../../../../../../test/java/de/calamanari/pk/factorymethod/README.md) playing together in a further scenario.
 
@@ -62,14 +62,18 @@ Finally, I decided to implement the sequential approach single-threaded in plain
 * **Phase II:** Find collections as tuples (key, positions[]) and store the new tuples again in chunk files. The chunk files are ordered by the first collision position, means the _second position_ in the positions array is the sorting criteria.
 * **Phase III:** Iterate _orderly_ over all chunks at the same time. The outcome is a single ordered stream of all collisions. We can now gather some insights about collisions to create the summary.
 
-![collider](collider-classes.svg)
+![collider](../../../../../../../../doc/patterns/images/collider-classes.svg)
 
 The [KeyCollisionProcessor](KeyCollisionProcessor.java) is a convenient tool to test large sequences of keys for collisions. Memory consumption (buffering) is configurable. There is also an option to leave all the intermediate result files (e.g. the keys at their positions) in place after completion for further investigation.
 
 The result, [KeyCollisionSummary](KeyCollisionSummary.java) along with the detected collision counts (question 4 from above) also includes the _expected number of collisions_. 
 
-![formula](collision_formula.svg)
+![formula](../../../../../../../../doc/patterns/images/collision_formula.svg)
 
-The calculation is based on the function depicted above and leverages [apfloat](http://www.apfloat.org/apfloat_java/tutorial.html) for high precision computation. MUHAIs based on cryptographic hashes should follow the expectation curve quite well, an indicator of randomness. Nevertheless, for small keyspaces don't be surprised to see the first collision earlier than you thought!
+> Thanks to [Dmitry Dodin](https://de.linkedin.com/in/dodin-dmitry-56398295), data scientist and a great colleague, for helping me to transform the series _Sn_ into the formula _c(m,n)_.
 
-Thanks to [Dmitry Dodin](https://de.linkedin.com/in/dodin-dmitry-56398295), data scientist and a great colleague, for helping me to transform the series _Sn_ into the formula _c(m,n)_.
+The calculation is based on the function depicted above and leverages [apfloat](http://www.apfloat.org/apfloat_java/tutorial.html) for high precision computation on large numbers. MUHAIs based on cryptographic hashes should follow the expectation curve quite well, an indicator of randomness. Nevertheless, for small keyspaces don't be surprised to see the first collision earlier than you thought!
+
+![sim1](../../../../../../../../doc/patterns/images/coll32bit-detail.svg)
+
+The graphic shows the number of detected collisions (y-axis) after **n** generated keys (x-axis) as blue columns. The green line shows the expected number of collisions c(4.294.967.296, n). 
