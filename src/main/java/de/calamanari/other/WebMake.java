@@ -179,7 +179,11 @@ public class WebMake {
                 sb.append(", ");
             }
             ref = ref.trim();
-            String link = "<a href=\"../linx.htm#" + ref + "\">" + ref + "</a>";
+            String link = ref;
+            if (!ref.startsWith("<")) {
+                // absolute
+                link = "<a href=\"../linx.htm#" + ref + "\">" + ref + "</a>";
+            }
             sb.append(link);
             i++;
         }
@@ -497,7 +501,13 @@ public class WebMake {
             data.patternDescription = escape(h4);
         }
         else if (line.startsWith("ref::")) {
-            data.bookRefs = line.substring(5) + ",PK";
+            String refs = line.substring(5);
+            if (refs.length() > 0) {
+                data.bookRefs = refs + ",PK";
+            }
+            else {
+                data.bookRefs = "PK";
+            }
         }
         else {
             data.contentLines.add(escape(line));
