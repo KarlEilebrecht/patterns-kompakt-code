@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2688"
+   height="1336"
+   overflow="hidden"
+   version="1.1"
+   id="svg307"
+   sodipodi:docname="coll32bit-hist.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata311">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1978"
+     inkscape:window-height="1119"
+     id="namedview309"
+     showgrid="false"
+     inkscape:zoom="0.39985205"
+     inkscape:cx="1492.7164"
+     inkscape:cy="689.40939"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg307" />
+  <defs
+     id="defs131">
+    <clipPath
+       id="clip0">
+      <rect
+         x="2388"
+         y="704"
+         width="2688"
+         height="1336"
+         id="rect2" />
+    </clipPath>
+    <clipPath
+       id="clip1">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect5" />
+    </clipPath>
+    <clipPath
+       id="clip2">
+      <rect
+         x="2645"
+         y="1080"
+         width="2381"
+         height="758"
+         id="rect8" />
+    </clipPath>
+    <clipPath
+       id="clip3">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect11" />
+    </clipPath>
+    <clipPath
+       id="clip4">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect14" />
+    </clipPath>
+    <clipPath
+       id="clip5">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect17" />
+    </clipPath>
+    <clipPath
+       id="clip6">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect20" />
+    </clipPath>
+    <clipPath
+       id="clip7">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect23" />
+    </clipPath>
+    <clipPath
+       id="clip8">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect26" />
+    </clipPath>
+    <clipPath
+       id="clip9">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect29" />
+    </clipPath>
+    <clipPath
+       id="clip10">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect32" />
+    </clipPath>
+    <clipPath
+       id="clip11">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect35" />
+    </clipPath>
+    <clipPath
+       id="clip12">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect38" />
+    </clipPath>
+    <clipPath
+       id="clip13">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect41" />
+    </clipPath>
+    <clipPath
+       id="clip14">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect44" />
+    </clipPath>
+    <clipPath
+       id="clip15">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect47" />
+    </clipPath>
+    <clipPath
+       id="clip16">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect50" />
+    </clipPath>
+    <clipPath
+       id="clip17">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect53" />
+    </clipPath>
+    <clipPath
+       id="clip18">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect56" />
+    </clipPath>
+    <clipPath
+       id="clip19">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect59" />
+    </clipPath>
+    <clipPath
+       id="clip20">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect62" />
+    </clipPath>
+    <clipPath
+       id="clip21">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect65" />
+    </clipPath>
+    <clipPath
+       id="clip22">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect68" />
+    </clipPath>
+    <clipPath
+       id="clip23">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect71" />
+    </clipPath>
+    <clipPath
+       id="clip24">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect74" />
+    </clipPath>
+    <clipPath
+       id="clip25">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect77" />
+    </clipPath>
+    <clipPath
+       id="clip26">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect80" />
+    </clipPath>
+    <clipPath
+       id="clip27">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect83" />
+    </clipPath>
+    <clipPath
+       id="clip28">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect86" />
+    </clipPath>
+    <clipPath
+       id="clip29">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect89" />
+    </clipPath>
+    <clipPath
+       id="clip30">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect92" />
+    </clipPath>
+    <clipPath
+       id="clip31">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect95" />
+    </clipPath>
+    <clipPath
+       id="clip32">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect98" />
+    </clipPath>
+    <clipPath
+       id="clip33">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect101" />
+    </clipPath>
+    <clipPath
+       id="clip34">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect104" />
+    </clipPath>
+    <clipPath
+       id="clip35">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect107" />
+    </clipPath>
+    <clipPath
+       id="clip36">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect110" />
+    </clipPath>
+    <clipPath
+       id="clip37">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect113" />
+    </clipPath>
+    <clipPath
+       id="clip38">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect116" />
+    </clipPath>
+    <clipPath
+       id="clip39">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect119" />
+    </clipPath>
+    <clipPath
+       id="clip40">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect122" />
+    </clipPath>
+    <clipPath
+       id="clip41">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect125" />
+    </clipPath>
+    <clipPath
+       id="clip42">
+      <rect
+         x="2389"
+         y="704"
+         width="2684"
+         height="1334"
+         id="rect128" />
+    </clipPath>
+  </defs>
+  <rect
+     style="fill:#ffffff"
+     id="rect133"
+     height="1333"
+     width="2685"
+     y="1"
+     x="1" />
+  <g
+     id="g137"
+     clip-path="url(#clip1)"
+     transform="translate(-2388,-704)">
+    <path
+       style="fill:none;stroke:#d9d9d9;stroke-width:3.4375;stroke-linejoin:round;stroke-miterlimit:10"
+       inkscape:connector-curvature="0"
+       id="path135"
+       stroke-miterlimit="10"
+       d="m 2645.5,1751.56 h 2378 m -2378,-84.01 h 2378 m -2378,-84 h 2378 m -2378,-84 h 2378 m -2378,-84 h 2378 m -2378,-84.01 h 2378 m -2378,-84 h 2378 m -2378,-83 h 2378 m -2378,-84.04 h 2378" />
+  </g>
+  <g
+     id="g141"
+     clip-path="url(#clip2)"
+     transform="translate(-2388,-704)">
+    <path
+       style="fill:#2f5597"
+       inkscape:connector-curvature="0"
+       id="path139"
+       d="m 2719.09,1089.04 h 68 V 1835 h -68 z m 217.01,40 h 67 V 1835 h -67 z m 216,50 h 67.01 V 1835 h -67.01 z m 216.01,59 h 68 V 1835 h -68 z m 216.01,65 h 68 V 1835 h -68 z m 216,71.01 h 68.01 V 1835 h -68.01 z m 216.01,76 h 68 V 1835 h -68 z m 217.01,81 h 67 V 1835 h -67 z m 216.01,83 h 68 V 1835 h -68 z m 216,79.01 h 68.01 V 1835 h -68.01 z m 216.01,77 h 68 V 1835 h -68 z" />
+  </g>
+  <g
+     id="g145"
+     clip-path="url(#clip3)"
+     transform="translate(-2388,-704)">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#d9d9d9;stroke-width:3.4375;stroke-linejoin:round;stroke-miterlimit:10"
+       inkscape:connector-curvature="0"
+       id="path143"
+       stroke-miterlimit="10"
+       d="m 2645.5,1834.5 h 2378" />
+  </g>
+  <g
+     id="g149"
+     clip-path="url(#clip4)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text147"
+       transform="translate(2659.27,1057)"
+       font-size="41"
+       font-weight="400">790007654</text>
+  </g>
+  <g
+     id="g153"
+     clip-path="url(#clip5)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text151"
+       transform="translate(2875.46,1097)"
+       font-size="41"
+       font-weight="400">263338120</text>
+  </g>
+  <g
+     id="g157"
+     clip-path="url(#clip6)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text155"
+       transform="translate(3102.1,1147)"
+       font-size="41"
+       font-weight="400">65832805</text>
+  </g>
+  <g
+     id="g161"
+     clip-path="url(#clip7)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text159"
+       transform="translate(3318.29,1206)"
+       font-size="41"
+       font-weight="400">13170621</text>
+  </g>
+  <g
+     id="g165"
+     clip-path="url(#clip8)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text163"
+       transform="translate(3544.93,1271)"
+       font-size="41"
+       font-weight="400">2198034</text>
+  </g>
+  <g
+     id="g169"
+     clip-path="url(#clip9)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text167"
+       transform="translate(3771.58,1342)"
+       font-size="41"
+       font-weight="400">313431</text>
+  </g>
+  <g
+     id="g173"
+     clip-path="url(#clip10)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text171"
+       transform="translate(3998.22,1418)"
+       font-size="41"
+       font-weight="400">39182</text>
+  </g>
+  <g
+     id="g177"
+     clip-path="url(#clip11)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text175"
+       transform="translate(4224.86,1499)"
+       font-size="41"
+       font-weight="400">4219</text>
+  </g>
+  <g
+     id="g181"
+     clip-path="url(#clip12)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text179"
+       transform="translate(4451.5,1582)"
+       font-size="41"
+       font-weight="400">435</text>
+  </g>
+  <g
+     id="g185"
+     clip-path="url(#clip13)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text183"
+       transform="translate(4678.14,1661)"
+       font-size="41"
+       font-weight="400">49</text>
+  </g>
+  <g
+     id="g189"
+     clip-path="url(#clip14)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#404040"
+       id="text187"
+       transform="translate(4904.79,1738)"
+       font-size="41"
+       font-weight="400">6</text>
+  </g>
+  <g
+     id="g193"
+     clip-path="url(#clip15)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text191"
+       transform="translate(2586.05,1846)"
+       font-size="41"
+       font-weight="400">1</text>
+  </g>
+  <g
+     id="g197"
+     clip-path="url(#clip16)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text195"
+       transform="translate(2565.15,1763)"
+       font-size="41"
+       font-weight="400">10</text>
+  </g>
+  <g
+     id="g201"
+     clip-path="url(#clip17)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text199"
+       transform="translate(2544.25,1679)"
+       font-size="41"
+       font-weight="400">100</text>
+  </g>
+  <g
+     id="g205"
+     clip-path="url(#clip18)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text203"
+       transform="translate(2523.35,1595)"
+       font-size="41"
+       font-weight="400">1000</text>
+  </g>
+  <g
+     id="g209"
+     clip-path="url(#clip19)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text207"
+       transform="translate(2502.45,1511)"
+       font-size="41"
+       font-weight="400">10000</text>
+  </g>
+  <g
+     id="g213"
+     clip-path="url(#clip20)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text211"
+       transform="translate(2481.55,1427)"
+       font-size="41"
+       font-weight="400">100000</text>
+  </g>
+  <g
+     id="g217"
+     clip-path="url(#clip21)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text215"
+       transform="translate(2460.65,1343)"
+       font-size="41"
+       font-weight="400">1000000</text>
+  </g>
+  <g
+     id="g221"
+     clip-path="url(#clip22)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text219"
+       transform="translate(2439.75,1260)"
+       font-size="41"
+       font-weight="400">10000000</text>
+  </g>
+  <g
+     id="g225"
+     clip-path="url(#clip23)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text223"
+       transform="translate(2418.85,1176)"
+       font-size="41"
+       font-weight="400">100000000</text>
+  </g>
+  <g
+     id="g229"
+     clip-path="url(#clip24)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text227"
+       transform="translate(2503.58,1092)"
+       font-size="41"
+       font-weight="400">1E+09</text>
+  </g>
+  <g
+     id="g233"
+     clip-path="url(#clip25)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text231"
+       transform="translate(2742.87,1900)"
+       font-size="41"
+       font-weight="400">2</text>
+  </g>
+  <g
+     id="g237"
+     clip-path="url(#clip26)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text235"
+       transform="translate(2959.06,1900)"
+       font-size="41"
+       font-weight="400">3</text>
+  </g>
+  <g
+     id="g241"
+     clip-path="url(#clip27)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text239"
+       transform="translate(3175.25,1900)"
+       font-size="41"
+       font-weight="400">4</text>
+  </g>
+  <g
+     id="g245"
+     clip-path="url(#clip28)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text243"
+       transform="translate(3391.44,1900)"
+       font-size="41"
+       font-weight="400">5</text>
+  </g>
+  <g
+     id="g249"
+     clip-path="url(#clip29)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text247"
+       transform="translate(3607.63,1900)"
+       font-size="41"
+       font-weight="400">6</text>
+  </g>
+  <g
+     id="g253"
+     clip-path="url(#clip30)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text251"
+       transform="translate(3823.83,1900)"
+       font-size="41"
+       font-weight="400">7</text>
+  </g>
+  <g
+     id="g257"
+     clip-path="url(#clip31)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text255"
+       transform="translate(4040.02,1900)"
+       font-size="41"
+       font-weight="400">8</text>
+  </g>
+  <g
+     id="g261"
+     clip-path="url(#clip32)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text259"
+       transform="translate(4256.21,1900)"
+       font-size="41"
+       font-weight="400">9</text>
+  </g>
+  <g
+     id="g265"
+     clip-path="url(#clip33)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text263"
+       transform="translate(4461.95,1900)"
+       font-size="41"
+       font-weight="400">10</text>
+  </g>
+  <g
+     id="g269"
+     clip-path="url(#clip34)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text267"
+       transform="translate(4678.14,1900)"
+       font-size="41"
+       font-weight="400">11</text>
+  </g>
+  <g
+     id="g273"
+     clip-path="url(#clip35)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text271"
+       transform="translate(4894.34,1900)"
+       font-size="41"
+       font-weight="400">12</text>
+  </g>
+  <g
+     id="g277"
+     clip-path="url(#clip36)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:46px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text275"
+       transform="translate(3683.7,1969)"
+       font-size="46"
+       font-weight="400"># times seen &gt; 1</text>
+  </g>
+  <text
+     font-weight="400"
+     font-size="83"
+     id="text287"
+     style="font-weight:400;font-size:68.42431641px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959;stroke-width:0.8243894"
+     x="602.25085"
+     y="116.5906">MUHAI-simulation, keyspace size 2^32 = 4294967296</text>
+  <g
+     id="g293"
+     clip-path="url(#clip40)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:64px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text291"
+       transform="translate(3428.54,901)"
+       font-size="64"
+       font-weight="400">Occurrences Histogram</text>
+  </g>
+  <g
+     id="g297"
+     clip-path="url(#clip41)"
+     transform="translate(-2388,-704)">
+    <rect
+       style="fill:#2f5597"
+       id="rect295"
+       height="22"
+       width="23"
+       y="980"
+       x="3584" />
+  </g>
+  <g
+     id="g301"
+     clip-path="url(#clip42)"
+     transform="translate(-2388,-704)">
+    <text
+       style="font-weight:400;font-size:41px;font-family:Calibri, Calibri_MSFontService, sans-serif;fill:#595959"
+       id="text299"
+       transform="translate(3616.38,1003)"
+       font-size="41"
+       font-weight="400">number of items</text>
+  </g>
+  <rect
+     style="fill:none;stroke:#d9d9d9;stroke-width:3.4375;stroke-linejoin:round;stroke-miterlimit:10"
+     id="rect303"
+     stroke-miterlimit="10"
+     height="1333"
+     width="2685"
+     y="1.5"
+     x="1.5" />
+</svg>
