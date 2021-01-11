@@ -21,7 +21,7 @@ Some questions to be answered after generating and testing **n** keys are:
 3. How many times did the same keys occur?
 4. How many collisions occurred after *k* generated keys?
 
-Finding collisions in a list of keys is a _holistic_ operation, because you need all keys. Even the last created key could collide with any key created before. Thus, first of all, we must collect _all keys_with some payload.
+Finding collisions in a list of keys is a _holistic_ operation, because you need all keys. Even the last created key could collide with any key created before. Thus, first of all, we must collect _all keys_ with some payload.
 
 For a small number of keys we can do everything in memory. A HashMap that maps keys to payload (e.g. positions we found the key) serves as the collection data structure. For each generated key we either create a new entry in the map or update the payload (add position) if the key was present before. In a second step we iterate over the map entries and discard each key that only has a single occurrence. As a result, we know all collisions (question 1), the involved keys (question 2) as well as the number of collisions for each key. The latter information can be taken to answer question 3 and 4.
 
