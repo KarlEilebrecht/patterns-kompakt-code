@@ -58,9 +58,9 @@ However, the code examples for the book are all written in Java. Spark jobs shou
 
 Finally, I decided to implement the sequential approach single-threaded in plain Java and took the chance to show the patterns [Value Object](../../../../../../../test/java/de/calamanari/pk/valueobject/README.md), [Iterator](../../../../../../../test/java/de/calamanari/pk/iterator/README.md), [Decorator](../../../../../../../test/java/de/calamanari/pk/decorator/README.md), [Policy](../../../../../../../test/java/de/calamanari/pk/policy/README.md) and [Factoy Method](../../../../../../../test/java/de/calamanari/pk/factorymethod/README.md) playing together in a further scenario.
 
-* **Phase I:** Generate the keys and create tuples (key, position). These keys will be stored in a chunk file of configurable size. Each chunk is ordered by key.
-* **Phase II:** Find collections as tuples (key, positions[]) and store the new tuples again in chunk files. The chunk files are ordered by the first collision position, means the _second position_ in the positions array is the sorting criteria.
-* **Phase III:** Iterate _orderly_ over all chunks at the same time. The outcome is a single ordered stream of all collisions. We can now gather some insights about collisions to create the summary.
+* **Phase I:** Generate the keys and create tuples (key, position). These keys will be stored in a chunk file of configurable size. Each chunk is **ordered by key**.
+* **Phase II:** Find collisions as tuples (key, positions[]) and store the new tuples again in chunk files. The chunk files are ordered by the first collision position, means the _second position_ in the positions array is the **sort criterion**.
+* **Phase III:** Iterate _orderly_ over all chunks at the same time. The outcome is a single **ordered stream** of all collisions. We can now gather insights about collisions to create the summary.
 
 ![collider](../../../../../../../../doc/patterns/images/collider-classes.svg)
 
@@ -84,4 +84,4 @@ Below you can see depicted how many collided keys (y-axis, logarithmic scale) oc
 
 ![sim1a](../../../../../../../../doc/patterns/images/coll32bit-hist.svg)
 
-By far most of the keys occurred only twice in this simulation. No key occurred more that 12 times.
+By far most of the collided keys occurred only twice in this simulation. No key occurred more that 12 times.
