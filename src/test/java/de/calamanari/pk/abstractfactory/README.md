@@ -17,7 +17,7 @@ _Main Features_
 
 * Write output String to file
 * Return the effective size (bytes) of the written output
-* Return textual description about output file
+* Return textual description of the output file
 * Read file to String
 * Return textual info about source file
 * Support standard (plain text) file support

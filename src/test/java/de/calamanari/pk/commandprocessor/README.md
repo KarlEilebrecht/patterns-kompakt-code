@@ -12,7 +12,7 @@ In this scenario we want to apply the **Command Processor Pattern** to _execute 
 
 ![Test](../../../../../../../doc/patterns/images/command_processor_cn.png)
 
-We have identified "typing text" (append/delete letters) as a actions (commands) that shall support undo. So the command processor needs to manage sequences of executing, undoing and redoing commands.
+We have identified "typing text" (append/delete letters) as actions (commands) that shall support undo. So the command processor needs to manage sequences of executing, undoing and redoing commands.
 
 ![Test](../../../../../../../doc/patterns/images/command_processor_cx.png)
 

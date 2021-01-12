@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom Logistics provides a tool to its clients for order management. Originally planned as a workaround the software has become quite popular due to its simplicity and focus. However, clients are missing an undo/redo for the text input component.
+Multiglom Logistics provides a tool for order management to its clients. Originally planned as a workaround the software has become quite popular due to its simplicity and focus. However, clients are missing an undo/redo for the text input component.
 
 It was decided to add this functionality with the upcoming release.
 
@@ -32,7 +32,7 @@ In this scenario we want to apply the **Command Pattern** to _encapsulate a requ
 
 ![Test](../../../../../../../doc/patterns/images/command_cn.png)
 
-We have identified "typing text" (append/delete letters) as a actions (commands) that shall support undo.
+We have identified "typing text" (append/delete letters) as actions (commands) that shall support undo.
 
 ![Test](../../../../../../../doc/patterns/images/command_cx.png)
 
@@ -45,8 +45,8 @@ Open [CommandTest.java](CommandTest.java) to start playing with this pattern. By
 _See also [Command Processor](../commandprocessor/README.md)._
 
 ## Remarks
-* The Command pattern looks simple in the first place and gets tricky when it comes to the details. A command encapsulates _what to do_ in _what context_. This means commands _include_ or _assume_ state.
-* Commands usually _defer_ execution. The latter is an interesting aspect when you use the Command pattern in more complex scenarios. A good example is the user context: A properly authenticated and authorized user performs an action. Now you want encapsulate that action in a command to be stored in a queue or database to eventually execute it later leveraging a scheduler. How do you restore the user context at the later execution time of that command?
+* The Command pattern looks simple in the first place and gets tricky when it comes to the details. A command encapsulates _what to do_ in _what context_. This means: commands _include_ or _assume_ state.
+* Commands usually _defer_ execution. The latter is an interesting aspect when you use the Command pattern in more complex scenarios. A good example is the user context: A properly authenticated and authorized user performs an action. Now you want to encapsulate that action in a command to be stored in a queue or database to eventually execute it later leveraging a scheduler. How do you restore the user context at the later execution time of that command?
 * Technically, Lambda expressions (closures) are a kind of Command. Programming languages have found different ways to handle the context problem of the deferred execution when accessing variables (see also [Java Lambda Expressions](https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html#accessing-local-variables)).
 
 ## References

@@ -31,7 +31,7 @@ As a consequence, it can no longer happen that any change to a _Customer_ record
 Open [OptimisticOfflineLockTest.java](OptimisticOfflineLockTest.java) to start playing with this pattern. By setting the log-level for this pattern to DEBUG in [logback.xml](../../../../../../../src/main/resources/logback.xml) you can watch the pattern working step by step.
 
 ## Remarks
-* As discussed in the book the user experience _Optimistic Offline Lock_ may be bad if you expect many conflicts or if repeating the operation after updating with latest version is painful for the user. Here, a differences visualization on field level or (automatic) merge utilities can help. However, sometimes [Pessimistic Offline Lock](../pessimisticofflinelock/README.md) may be the better choice.  
+* As discussed in the book the user experience _Optimistic Offline Lock_ creates may be bad if you expect many conflicts or if repeating the operation after updating with latest version is painful for the user. Here, a differences visualization on field level or (automatic) merge utilities can help. However, sometimes [Pessimistic Offline Lock](../pessimisticofflinelock/README.md) may be the better choice.  
 
 ## References
 

@@ -36,13 +36,13 @@ In this scenario we want to apply the **Gateway Pattern** to create _an object t
 
 ![Test](../../../../../../../doc/patterns/images/gateway_vn.png)
 
-We have identified the _SecuMangaServer_ and a part of its interface we further want to make accessible in the new version of IELO while isolating the third-party software deployment as far as possible from our software.
+We have identified the _SecuMangaServer_ and a part of its interface we want to leverage in the new version of IELO while isolating the third-party software deployment as far as possible from our software.
 
 ![Test](../../../../../../../doc/patterns/images/gateway_cx.png)
 
 The _SecuMangaGatewayServer_ runs together with the legacy _SecuMangaServer_ in an isolated (secured) environment where open ports and a partially undocumented RPC-interface are unproblematic. The _SecuMangaGatewayServer_ provides a small well-documented web service interface to its clients with a feature set reduced to the still required SecuManga-decoder functionality. It is impossible for any client to bypass the gateway.
 
-Now a developers can use a **mock gateway** to simplify integration testing.
+Now developers can use a **mock gateway** to simplify integration testing.
 
 ## Try it out!
 

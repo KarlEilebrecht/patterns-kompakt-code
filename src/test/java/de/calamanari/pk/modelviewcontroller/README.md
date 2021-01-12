@@ -39,7 +39,7 @@ Linda has identified the three parts _TeamModel_ (the data, members of a team), 
 
 ![Test](../../../../../../../doc/patterns/images/model_view_controller_cx.png)
 
-The controller acts as an _[Observer](../observer/README.md)_ of the model and the view to update both accordingly. If for example a team has less than 2 members a read mark will be displayed (invalid team), as long as there are less than 4 members you will see a yellow mark to indicate a small team.
+The controller acts as an _[Observer](../observer/README.md)_ of the model and the view to update both accordingly. If for example a team has less than 2 members a red mark will be displayed (invalid team), as long as there are less than 4 members you will see a yellow mark to indicate a small team.
 
 ## Try it out!
 

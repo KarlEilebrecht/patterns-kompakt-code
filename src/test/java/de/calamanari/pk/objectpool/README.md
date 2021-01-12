@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Here we don't have a concrete scenario, the example just shows some aspects of object pools. Additionally - and **strictly only for demonstration** I have included an ancient implementation of a thread pool, because it is still useful to explain problems like ramp-up, pool shrinking and cleaning returned objects.
+Here we don't have any concrete scenario, the example just shows some aspects of object pools. Additionally - and **strictly only for demonstration** I have included an ancient implementation of a thread pool, because it is still useful to explain problems like ramp-up, pool shrinking and cleaning returned objects.
 
 ### Requirements Overview
 
@@ -26,7 +26,7 @@ No.|Quality|Motivation
 3|Limitation|Instances contain references to resources which are limited. Ensure there is only a limited number of instances active at the same time.
 
 ## Choice of Pattern
-We want to demonstrate the **Object Pool Pattern** to _manage the reuse of objects when it is either expensive to create and object or there is a limit on the number objects of a particular type that can be created_ (Shalloway-Trott). 
+We want to demonstrate the **Object Pool Pattern** to _manage the reuse of objects when it is either expensive to create an object or there is a limit on the number objects of a particular type that can be created_ (Shalloway-Trott). 
 
 ![Test](../../../../../../../doc/patterns/images/object_pool_cn.png)
 
@@ -47,7 +47,7 @@ Open [ObjectPoolTest.java](ObjectPoolTest.java) resp. [SimpleThreadPoolTest.java
 * Object pools can greatly speed-up applications. Sometimes, they are even inevitable to prevent resource exhaustion.
 * The more features (warm-up, shrinking, cleaning, error handling etc.), the more testing effort. Prefer managed pools (e.g. [Apache Commons Pool](https://commons.apache.org/proper/commons-pool/) over hand-made implementations.
 * As mentioned in the book, object pools can have unwanted side-effects on memory management. Always keep in mind that pooled objects stay longer in memory, often for the lifetime of the application.
-* No longer use any old thread pools, Java has the ExecutorService! :)
+* No longer use any old thread pools, Java has the ExecutorService! :wink:
 
 ## References
 

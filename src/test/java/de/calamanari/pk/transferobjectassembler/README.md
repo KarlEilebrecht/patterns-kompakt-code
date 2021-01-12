@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom Sillitek, vendor of the Product Management Suite PMS, has recently introdued [Data Transfer Objects](../datatransferobject/README.md) to improve the the new distributed architecture replacing the monolithic deployment.
+Multiglom Sillitek, vendor of the Product Management Suite PMS, has recently introdued [Data Transfer Objects](../datatransferobject/README.md) to improve the new distributed architecture replacing the monolithic deployment.
 
 It was discovered that the introduction of the DTO improved the performance but certain use cases like the "bad payer check" are still not back to the old responsiveness as they are dealing with several business objects and now with several DTOs to be transmitted over the network.
 

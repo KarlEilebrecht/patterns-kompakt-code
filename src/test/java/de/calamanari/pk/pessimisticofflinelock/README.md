@@ -5,9 +5,9 @@
 
 ## Scenario
 
-Multiglom B2B, vendor of the CRM suite Manjok for small businesses, faces a series of complaints about their customer management module. Due to the way the workflow is organized and because the current data model focuses on the _Customer_, concurrent business transactions modify the customer entity. The currently implemented [optimistic](../optimisticofflinelock/README.md) locking approach causes to a lot of extra work (repetition) and thus frustration.
+Multiglom B2B, vendor of the CRM suite Manjok for small businesses, faces a series of complaints about their customer management module. Due to the way the workflow is organized and because the current data model focuses on the _Customer_, possibly concurrent business transactions need to modify the same customer instance. The currently implemented [optimistic](../optimisticofflinelock/README.md) locking approach causes to a lot of extra work (repetition) and thus frustration to the users.
 
-Users want _exclusive access_ to the customer data while they are working on it. For better workflow management they would like to know in advance if another user (and who) is currently working on a customer they want to access.
+People want _exclusive access_ to the customer data while they are working on it. For better workflow management they would like to know in advance if another user (and who) is currently working on a customer they want to access.
 
 ## Choice of Pattern
 In this scenario we want to apply the **Pessimistic Offline Lock Pattern** to _prevent conflicts between concurrent business transactions by allowing only one business transaction at a time to access data_ (Fowler). 

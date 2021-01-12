@@ -30,8 +30,8 @@ Open [FlyweightTest.java](FlyweightTest.java) to start playing with this pattern
 
 ## Remarks
 * In backend development I have rarely seen this pattern implemented _explicitly_. However, very often you can see the principles of this pattern applied, when the goal is to reduce duplication of expensive objects which - initialized once - are thread-safe (final).
-* Please not that the pool inside the CounterFlyweightFactory has a **different purpose** than a typical object pool. When applying the [Object Pool pattern](../objectpool/README.md) we want to ensure that a pooled object is *not* used in parallel. In the Flyweight scenario it is the opposite, here we want to ensure all clients are using the same instance (in parallel). Flyweights do not need to be returned to the pool nor do they need any cleaning.
-* :cactus: Before implementing Flyweight be sure it really makes sense. In the book you can find some tips to estimate a possible benefit. Often the effect on memory consumption and performance will not justify the complexity this pattern adds.
+* Please note that the pool inside the CounterFlyweightFactory has a **different purpose** than a typical object pool. When applying the [Object Pool pattern](../objectpool/README.md) we want to ensure that a pooled object is *not* used in parallel. In the Flyweight scenario it is the opposite, here we want to ensure all clients are using the same instance (concurrently). Flyweights do not need to be returned to the pool nor do they need any cleaning.
+* :cactus: Before implementing Flyweight be sure it really makes sense. In the book you can find some tips to estimate the possible benefit. Often the effect regarding memory consumption and performance will not justify the considerable complexity this pattern adds.
 
 ## References
 

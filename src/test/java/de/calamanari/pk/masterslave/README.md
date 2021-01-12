@@ -18,7 +18,7 @@ The palindrome test checks if the sequence is exactly the same when being read f
 
 ![Test](../../../../../../../doc/patterns/images/master_slave_cx.png)
 
-The _PalindromeCheckMaster_ (virtually) cuts the input sequence into subsequences, each of these partitions becomes by a _PalindromeCheckSlaveTask_. A configurable number of threads (the slaves) execute the slave tasks asynchronously.
+The _PalindromeCheckMaster_ (virtually) cuts the input sequence into subsequences, each of these partitions becomes a _PalindromeCheckSlaveTask_. A configurable number of threads (the slaves) execute the slave tasks asynchronously.
 
 ![Test](../../../../../../../doc/patterns/images/master_slave_dx.png)
 

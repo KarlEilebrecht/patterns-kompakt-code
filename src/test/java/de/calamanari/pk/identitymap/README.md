@@ -15,7 +15,7 @@ In this scenario we want to apply the **Identity Map Pattern** to _ensure that e
 
 ![Test](../../../../../../../doc/patterns/images/identity_map_cn.png)
 
-The finder either returns the requested entity from internal map or performs a lookup on the underlying database to put the entity into the map. This happens transparent for the client that works with a particular entity.
+The finder either returns the requested entity from internal map or performs a lookup on the underlying database to put the entity into the map. This happens transparent to the client that works with a particular entity.
 
 ![Test](../../../../../../../doc/patterns/images/identity_map_dn.png)
 

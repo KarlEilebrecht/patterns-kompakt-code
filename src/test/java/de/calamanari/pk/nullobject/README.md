@@ -33,7 +33,7 @@ Open [NullObjectTest.java](NullObjectTest.java) to start playing with this patte
 ## Remarks
 * It is a nice topic for (dogma) discussions whether returning `null` should be always considered evil or not :smirk:. However, there are examples for return types that **should never be null**, i.e. `List`, `Map` and `array[]`, especially, as it can be avoided so easily.
 * An empty aggregation should return a Null-[Iterator](../iterator/README.md) rather than **null** if the underlying aggregation is empty.
-* A _Null Object_ pattern can be applied _implicitly_ (clients can handle the value correctly but not distinguish it from any regular result) or _explicitly_ (clients can test it to react on the special case). In the latter case the API usually exposes the _Null Object_ (constant) for comparing results against. E.g. sometimes clients need to distinguish between a regularly returned empty list and an _empty list Null Object_ that was returned because of a special case.
+* The _Null Object_ pattern can be applied _implicitly_ (clients can handle the value correctly but not distinguish it from any regular result) or _explicitly_ (clients can test it to react on the special case). In the latter case the API usually exposes the _Null Object_ (constant) for comparing results against. E.g. sometimes clients need to distinguish between a regularly returned empty list and an _empty list Null Object_ that was returned because of a special case.
 * (Fowler) introduces the _Null Object_ as a special case of the [_Special Case pattern_](https://martinfowler.com/eaaCatalog/specialCase.html).
 
 ## References

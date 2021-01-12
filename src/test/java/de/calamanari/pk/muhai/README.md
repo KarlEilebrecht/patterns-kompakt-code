@@ -29,7 +29,7 @@ _Table 1. Quality Goals_
 No.|Quality|Motivation
 ---|-------|----------
 1|Performance|It is crucial to use a single identifier of type INT64, so that the underlying database is capable of processing queries with an acceptable response time.
-2|Usability|One goal is query flexibility, even custom queries may have to be supported, soon. Thus keys must be easy to simplify joins.
+2|Usability|One goal is query flexibility, even custom queries may have to be supported, soon. Thus keys shall be user-friendly to simplify joins.
 
 ## Choice of Pattern
 In this scenario we want to apply the **MUHAI Pattern** to _map a list of attributes to a handy identifier that is almost unique by hashing the combination of values_. 
@@ -53,8 +53,9 @@ For this scenario a MUHAI is _unique enough_, because we know that we most likel
 Open [MuhaiTest.java](MuhaiTest.java) to start playing with this pattern. By setting the log-level for this pattern to DEBUG in [logback.xml](../../../../../../../src/main/resources/logback.xml) you can watch the pattern working. In the **[collider package](../../../../../../main/java/de/calamanari/pk/muhai/collider/README.md)** you can find a little toolkit for creating and analyzing billions of generated keys (see also [KeyCollisionTest](collider/KeyCollisionTest.java)).
 
 ## Remarks
-* Using a [prefix](../../../../../../main/java/de/calamanari/pk/muhai/LongPrefix.java) for MUHAIs is not required but recommended. Sacrificing bits reduces the size of the keyspace and thus increases the likelihood of collisions, which may sound scaring. But for most scenarios a keyspace of 2^62 keys should be still sufficient. On the other hand, the prefix ensures that you won't run negative if any system (e.g. Java) uses signed 64-bit datatypes. Also, you get up to 3 **backup keyspaces** that can be used in future, should you ever face the need for a complicated data merge or migration.
-* If you plan to use MUHAIs do some simulation upfront. This won't take too much time but will increase your confidence and help convincing other stakeholders.
+* MUHAI only works if the underlying hash-function produces (pseudo-)randomly distributed values without any structure or tendency inside the bit sequence of the generated hash value. [Cryptographic hash-functions](https://en.wikipedia.org/wiki/Cryptographic_hash_function) (here [SHA1](https://en.wikipedia.org/wiki/SHA-1)) fulfill this precondition (otherwise they would be vulnarable).
+* Using any [prefix](../../../../../../main/java/de/calamanari/pk/muhai/LongPrefix.java) for MUHAIs is not required but recommended. Sacrificing bits reduces the size of the keyspace and thus increases the likelihood of collisions, which may sound scaring. But for most scenarios a keyspace of 2^62 keys should be still sufficient. On the other hand, the prefix ensures that you won't run negative if any system (e.g. Java) uses signed 64-bit datatypes. Also, you get up to 3 **backup keyspaces** that can be used in future, should you ever face the need for a complicated data merge or migration.
+* If you plan to use MUHAIs some upfront-simulation is highly recommended. This won't take too much time but will increase your confidence and help convincing other stakeholders.
 * The [MuhaiGenerator](../../../../../../main/java/de/calamanari/pk/muhai/LongPrefix.java) has a [hash pepper](https://en.wikipedia.org/wiki/Pepper_\(cryptography\)) option. This is a simple way of pseudonymization. Usually, within the same keyspace (database) you won't use different peppers. However, you can safely do so, because the chance of collision only depends on the number of generated keys. If you create **n** keys without any pepper vs. **n/2** keys with pepper1 and **n/2** with pepper2, the expected number of collisions after generating the **n** keys remains the same.
 * INT32 (4 billion keys possible) is in general too small for MUHAIs.
 

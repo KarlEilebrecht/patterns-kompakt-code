@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom Sillitek, vendor of the Product Management Suite PMS, step by step reworks the architecture of its software. It has been decided to write a new client-facing customer information module and rework the backend later resp. at a slower pace. A goal of the architects is keep the new modules decoupled from the legacy data model.
+Multiglom Sillitek, vendor of the Product Management Suite PMS, step by step reworks the architecture of its software. It has been decided to write a new client-facing customer information module and rework the backend later resp. at a slower pace. A main goal of the architects is keeping the new modules decoupled from the legacy data model.
 
 The team now faces the problem that the new client module expects _CustomerInfo_ instances while the old backend has all the required data but in different format spread over a couple of submodules.
 

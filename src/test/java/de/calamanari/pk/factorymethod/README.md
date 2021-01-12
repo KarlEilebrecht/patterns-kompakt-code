@@ -27,7 +27,7 @@ _Table 1. Quality Goals_
 No.|Quality|Motivation
 ---|-------|----------
 1|Customizability|It shall be easy to integrate new voucher creation methods based on client requirements.
-2|Extendability|The concrete vouche (its properties) shall not be restricted.
+2|Extendability|The concrete voucher (its properties) shall not be restricted.
 3|Testability|The design shall encourage testing decoupled from the rest of the application.
 
 ## Choice of Pattern
@@ -39,7 +39,7 @@ We have identified the _Voucher_ as an object to be created, where we have limit
 
 ![Test](../../../../../../../doc/patterns/images/factory_method_cx.png)
 
-In the given solution a base class for vouchers has been defined with properties we assume to be common for most concrete scenarios. The creation process has been encapsulated in a concrete voucher creator inheriting from the _AbstractVoucherCreator_. For the two pilot clients there are now the _FreakliesShopVoucherCreator_ which creates _FreakliesShopVoucher_s and the _MoronStoreVoucherCreator_ producing _MoronStoreVoucher_s.
+In the given solution a base class for vouchers has been defined with properties we assume to be common for most concrete scenarios. The creation process has been encapsulated in a concrete voucher creator inheriting from the _AbstractVoucherCreator_. For the two pilot clients there are now the _FreakliesShopVoucherCreator_ which creates _FreakliesShopVouchers_ and the _MoronStoreVoucherCreator_ producing _MoronStoreVouchers_.
 
 As requested the vouchers for Mrs. Freakly contain an additional field `serialNumber`, which is not part of a MoronStore voucher.
 

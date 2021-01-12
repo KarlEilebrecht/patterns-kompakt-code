@@ -8,7 +8,7 @@
 Multiglom Care Ltd. among other systems maintains a legacy application.
 Due to pressing legal requirements they need to add any kind of [ledger](https://en.wikipedia.org/wiki/Ledger) very quickly.
 
-The engineering department has identified the need for a tracing component that writes messages to a trace file. These messages can come from various locations (classes) in application logic. 
+The engineering department has identified the need for a tracing component that writes messages to a trace file. These messages can come from various locations (classes) in the application logic. 
 
 It shall be ensured that (static) access is possible and the written messages won't corrupt each other when being appended to the file.
 Messages shall be written in the order they were produced.
@@ -21,8 +21,8 @@ The purpose of the tracer is common write access to the destination file avoidin
 
 _Main Features_
 
-* Provide central tracer component with static access.
-* The tracer shall have a single synchronous method `trace(String)` (when call returns, message has been written).
+* Provide a central tracer component with static access.
+* The tracer shall have a single method `trace(String)` (when call returns, message has been written).
 
 ### Quality Goals
 
@@ -42,7 +42,7 @@ The Tracer is the object that shall exist only once to encapsulate the synchroni
 
 ![Test](../../../../../../../doc/patterns/images/singleton_cx.png)
 
-However, both implementations fulfill the requirement. There is static access, and they both protect the destination file from corruption by synchronizing write access.
+However, both implementations fulfill the requirements. There is static access, and they both protect the destination file from corruption by synchronizing write access.
 
 ## Try it out!
 

@@ -8,7 +8,7 @@
 
 [KeyCollisionProcessor](KeyCollisionProcessor.java) and its supplementary classes have been created to support collision behavior analysis for [MUHAI](../../../../../../../test/java/de/calamanari/pk/muhai/README.md).
 
-The processor can analyze billions of generated keys to find collisions and report a few statistics. I in general recommend some simulation before using MUHAIs. If you're lucky, you can test all the keys that may ever occur in your key-universe and maybe you can show that there won't be collisions at all. In any case, simulation insights can help you to get more confidence or convince other stakeholders.
+The processor can analyze billions of generated keys to find collisions and report a few statistics. I in general recommend some simulation before using MUHAIs. If you're lucky, you can test all the keys that may ever occur in your key-universe and maybe you can even show that there won't be collisions at all. In any case, simulation insights can help you to get more confidence or convince other stakeholders.
 
 ## Collision detection and collection
 

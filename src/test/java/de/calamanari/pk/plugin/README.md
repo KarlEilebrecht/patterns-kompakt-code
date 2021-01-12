@@ -34,7 +34,7 @@ In this scenario we want to apply the **Plugin Pattern** to _link classes during
 
 ![Test](../../../../../../../doc/patterns/images/plugin_cn.png)
 
-In the scenario above _macros_ shall be added by configuration. The implementor of a plugin just needs to implement a some interfaces (SPI) and to provide an artifact that can be looked up by Devnull at runtime. 
+In the scenario above _macros_ shall be added by configuration. The implementor of a plugin just needs to implement some interfaces (SPI) and to provide an artifact that can be looked up by Devnull at runtime. 
 
 ![Test](../../../../../../../doc/patterns/images/plugin_cx.png)
 

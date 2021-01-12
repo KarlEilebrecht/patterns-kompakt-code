@@ -12,7 +12,7 @@ The engineering team wants to replace the solution with an asynchronous search.
 
 ### Requirements Overview
 
-The purpose of the new search-by-person-feature is a decoupled search functionality, so that the user won't have to wait for the result, is unblocked to other tasks and can even cancel a search run.
+The purpose of the new search-by-person-feature is a decoupled search functionality, so that the user won't have to wait for the result, is unblocked to do other tasks and can even cancel a search run.
 
 _Main Features_
 

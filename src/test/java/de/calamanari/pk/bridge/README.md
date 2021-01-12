@@ -40,9 +40,9 @@ We have identified two aspects which should evolve independently from each other
 
 ![Test](../../../../../../../doc/patterns/images/bridge_cx.png)
 
-The connector family can now evolve independently from the family of _PersonDataConnector_s.
+The connector family can now evolve independently from the family of _PersonDataConnectors_.
 
-In the following deployment diagram shows how the connectors for external systems can be further decoupled by configuration. 
+Below you can see depicted how the connectors for external systems can be further decoupled by configuration. 
 
 ![Test](../../../../../../../doc/patterns/images/bridge_px.png)
 
@@ -54,7 +54,7 @@ Open [BridgeTest.java](BridgeTest.java) to start playing with this pattern. By s
 
 ## Remarks
 * Bridge is definitely not an easy pattern (see also (Shalloway-Trott)) and adds some complexity to a project. It may need more explanation (documentation) to be sure everybody understands the motivation and the implementation correctly.
-* Unfortunately, the name "bridge" often creates confusion. The term has real-world meanings (e.g. a bridge over a river or a network bridge) that do not map intuitively to the idea behind the bridge pattern. So, you may see classes named "Bridge" which don't have anything to do with this pattern. 
+* Unfortunately, the name "bridge" often creates confusion. The term has real-world meanings (e.g. a bridge over a river or a network bridge) that do not map intuitively to the idea behind the bridge pattern. So, you may see classes named "Bridge" which don't have anything to do with this pattern.
 
 ## References
 

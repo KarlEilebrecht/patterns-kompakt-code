@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom B2B, vendor of the CRM suite Manjok for small businesses, got a couple of customer complaints about performance problems in the finance module. Investigations have shown that the problem is related to invoices, especially if there are many. Due to the fact how invoices are stored it takes too much time for loading, even if the user is only interested in the overview and not in the details.
+Multiglom B2B, vendor of the CRM suite Manjok for small businesses, got a couple of customer complaints about performance problems in the finance module. Investigations have shown that the issue is related to invoices, especially if there are many. Due to the fact how invoices are stored it takes too much time to load them, even if the user is only interested in the overview and not in the details.
 
 The goal is improving the invoice list view performance without affecting the application functionality.
 
@@ -20,7 +20,7 @@ Initially, the supplier only partially fills the _LazyLoadObject_ with data.
 
 When the client later tries to access not yet loaded information, a retrieval process gets triggered. The latter happens transparent to the client.
 
-In the given scenario the _Invoice_ is the object which takes long to entirely load it. Thus we implement _Invoice_ as a _LazyLoad_ object.
+In the given scenario the _Invoice_ is the object which takes long to load it entirely. Thus we implement _Invoice_ as a _LazyLoad_ object.
 
 ![Test](../../../../../../../doc/patterns/images/lazy_load_cx.png)
 

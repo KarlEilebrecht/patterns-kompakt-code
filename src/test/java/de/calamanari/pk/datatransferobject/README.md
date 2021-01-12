@@ -7,7 +7,7 @@
 
 Multiglom Sillitek develops the Product Management Suite PMS. For the last 20 years PMS had a monolithic architecture, which is currently being replaced with a distributed approach. The client module, which was previously an integrated part of PMS, now potentially sits in a different process running on a different node.
 
-In a first iteration remote interfaces have been added to all entities and the remaining logic remained the same. For some business objects (e.g. the _Customer_) a certain slowness has been discovered because of the traffic the simple remoting causes. Latencies are piling up.
+In a first iteration remote interfaces have been added to all entities and the remaining logic stayed the same. For some business objects (e.g. the _Customer_) a certain slowness has been discovered because of the traffic this simple remote access approach causes. Latencies are piling up.
 
 ## Choice of Pattern
 In this scenario we want to apply the **Data Transfer Object Pattern** to create _an object that carries data between processes in order to reduce the number of method calls_ (Fowler). 

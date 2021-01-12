@@ -34,13 +34,13 @@ In this scenario we want to apply the **Template Method Pattern** to _define the
 
 ![Test](../../../../../../../doc/patterns/images/template_method_cn.png)
 
-In the defined scenario we assume that the String Codec has some general code. Thus there is an abstract base class _AbstractTemplateMethodStringCodec_ with this common logic. The encryption and decryption shall happen in concrete subclasses, `encode`, `decode` as well as `checkValid` are _Template Method_s. The _ExampleTemplateMethodStringCodec_ is currently the only concrete implementation.
+In the defined scenario we assume that the String Codec has some general code. Thus there is an abstract base class _AbstractTemplateMethodStringCodec_ with this common logic. The encryption and decryption shall happen in concrete subclasses, `encode`, `decode` as well as `checkValid` are _Template Methods_. The _ExampleTemplateMethodStringCodec_ is currently the only concrete implementation.
 
 You can see this depicted below on the left side.
 
 ![Test](../../../../../../../doc/patterns/images/template_method_cx.png)
 
-There is a more interesting example of _Template Method_ in the `util`-package. You can see the _AbstractConsoleServer_ with its subclasses above on the right side. I use external processes in some pattern examples to make them a little more interesting. The _AbstractConsoleServer_ only provides basic functionality and declares _Template Method_s for the remaining logic. The same is true for the _AbstractThreadedSocketServer_ which adds the magic of threading. Finally, the _EchoServer_ is a concrete subclass that implements the remaining _Template Method_s to be functional.
+There is a more interesting example of _Template Method_ in the `util`-package. You can see the _AbstractConsoleServer_ with its subclasses above on the right side. I use external processes in some pattern examples to make them a little more interesting. The _AbstractConsoleServer_ only provides basic functionality and declares _Template Methods_ for the remaining logic. The same is true for the _AbstractThreadedSocketServer_ which adds the magic of threading. Finally, the _EchoServer_ is a concrete subclass that implements the remaining _Template Methods_ to be functional.
 
 
 ## Try it out!
@@ -48,8 +48,9 @@ There is a more interesting example of _Template Method_ in the `util`-package. 
 Open [TemplateMethodTest.java](TemplateMethodTest.java) to start playing with this pattern. By setting the log-level for this pattern to DEBUG in [logback.xml](../../../../../../../src/main/resources/logback.xml) you can watch the pattern working step by step. Be aware that I have redirected the output of the _EchoServer_ (running in the background) to the log output for better visualization. 
 
 ## Remarks
-* Template method is an excellent way to realize abstraction looking "over-engineered". The classes get smaller with better focus.
+* Template method is an excellent way to realize abstraction not appearing "over-engineered". The classes get smaller with better focus.
 * Template method can potentially impede testing as it uses inheritance: You implicitly run the construction process of the base class. So, it is a good idea to avoid any heavy-weight actions in the constructor chain.
+* The [MuhaiGenerator](../../../../../../../src/main/java/de/calamanari/pk/muhai/MuhaiGenerator.java) implements _Template Method_ to allow subclasses to change details of the MUHAI-creation process without having to re-implement the whole generator.
 
 ## References
 
