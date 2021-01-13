@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom Crapjew, a vendor of compostable jewels, has decided to rework its legacy home-grown CRM-platform BABBLER rather than replacing it.
+Multiglom Crapjuls, a vendor of compostable jewels, has decided to rework its legacy home-grown CRM-platform BABBLER rather than replacing it.
 
 Team Gogo is in charge to rework the way the different modules deal with properties. Currently, it is a mix of property file access, database calls and startup parameters. After discussing different approaches the decision was made to provide a central facility where properties can be queried (read-access).
 

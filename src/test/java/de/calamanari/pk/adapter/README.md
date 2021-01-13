@@ -5,7 +5,7 @@
 
 ## Scenario
 
-Multiglom Crapjew, a vendor of compostable jewels, is currently running a large IT-project to refurbish its CRM-platform BABBLER.
+Multiglom Crapjuls, a vendor of compostable jewels, is currently running a large IT-project to refurbish its CRM-platform BABBLER.
 
 BABBLER is quite aged, so it was decided to renovate module by module including a fresh data model under the hood. A couple of weeks before the planned release a serious problem has been discovered. Team Gogo has made great progress with their application TARGET and is only waiting for the data for the _PersonView_, which is only a small aspect of TARGET but crucial for the release. Unfortunately, it is now clear that the module NEWPEOPLE won't make it into the upcoming release. Endless discussions about multitenancy aspects have ruined the timeline and eroded the confidence about delivery.
 
