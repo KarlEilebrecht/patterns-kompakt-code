@@ -66,11 +66,9 @@ Finally, I decided to implement the sequential approach single-threaded in plain
 
 The [KeyCollisionProcessor](KeyCollisionProcessor.java) is a convenient tool to test large sequences of keys for collisions. Memory consumption (buffering) is configurable. There is also an option to leave all the intermediate result files (e.g. the keys at their positions) in place after completion for further investigation.
 
-The result, [KeyCollisionSummary](KeyCollisionSummary.java) along with the detected collision counts (question 4 from above) also includes the _expected number of collisions_. 
+The result, [KeyCollisionSummary](KeyCollisionSummary.java) along with the detected collision counts (question 4 from above) also includes the **_[expected number of collisions](collisionExpectation.md)_**. 
 
-![formula](../../../../../../../../doc/patterns/images/collision_formula.svg)
-
-> Thanks to [Dmitry Dodin](https://de.linkedin.com/in/dodin-dmitry-56398295), data scientist and a great colleague, for helping me to transform the series _Sn_ into the formula _c(m,n)_.
+[![formula](../../../../../../../../doc/patterns/images/collision_formula.svg)](collisionExpectation.md)
 
 The calculation is based on the function depicted above and leverages [apfloat](http://www.apfloat.org/apfloat_java/tutorial.html) for high precision computation on large numbers. MUHAIs based on cryptographic hashes should follow the expectation curve quite well, an indicator of randomness. Nevertheless, for small keyspaces don't be surprised to see the first collision earlier than you thought!
 
