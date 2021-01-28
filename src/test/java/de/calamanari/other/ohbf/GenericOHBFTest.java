@@ -212,15 +212,15 @@ public class GenericOHBFTest {
 
         assertTrue(bloom.put("Bla"));
 
-        assertTrue(bloom.contains("Bla"));
+        assertTrue(bloom.mightContain("Bla"));
 
-        assertFalse(bloom.contains("Bla1"));
+        assertFalse(bloom.mightContain("Bla1"));
         long numberOfElementsInserted = 1;
         for (int i = 0; i < 99; i++) {
             if (bloom.put(i)) {
                 numberOfElementsInserted++;
             }
-            assertTrue(bloom.contains(i));
+            assertTrue(bloom.mightContain(i));
             assertEquals(i, numberOfElementsInserted - 2);
             assertTrue(Math.abs(bloom.getEstimatedNumberOfElementsInserted() - numberOfElementsInserted) <= 3);
             LOGGER.debug("Puts: " + (i + 1) + ", successful inserts: " + numberOfElementsInserted + ", estimatedNumberOfInserts: "
@@ -230,7 +230,7 @@ public class GenericOHBFTest {
         int falseClaims = 0;
         int correctClaims = 0;
         for (int i = 100; i < 1_000_000; i++) {
-            if (bloom.contains(i)) {
+            if (bloom.mightContain(i)) {
                 falseClaims++;
             }
             else {
@@ -259,9 +259,9 @@ public class GenericOHBFTest {
 
         assertTrue(bloom.put("Bla"));
 
-        assertTrue(bloom.contains("Bla"));
+        assertTrue(bloom.mightContain("Bla"));
 
-        assertFalse(bloom.contains("Bla1"));
+        assertFalse(bloom.mightContain("Bla1"));
         int numberOfInserts = 0;
         for (int i = 0; i < 99; i++) {
             if (bloom.put(i)) {
@@ -311,7 +311,7 @@ public class GenericOHBFTest {
             else {
                 falseClaims++;
             }
-            assertTrue(bloom.contains(i));
+            assertTrue(bloom.mightContain(i));
         }
 
         assertTrue(numberOfElementsInserted >= bloom.getEstimatedNumberOfElementsInserted());
@@ -320,7 +320,7 @@ public class GenericOHBFTest {
         assertTrue(Math.abs(bloom.getEstimatedNumberOfElementsInserted() - numberOfElementsInserted) <= 300_000);
 
         for (int i = 10_000_000; i < 100_000_000; i++) {
-            if (bloom.contains(i)) {
+            if (bloom.mightContain(i)) {
                 falseClaims++;
             }
             else {
@@ -355,7 +355,7 @@ public class GenericOHBFTest {
             else {
                 falseClaims++;
             }
-            assertTrue(bloom.contains(i));
+            assertTrue(bloom.mightContain(i));
         }
 
         assertEquals(0, falseClaims);
@@ -365,7 +365,7 @@ public class GenericOHBFTest {
         assertTrue(((double) bloom.getEstimatedNumberOfElementsInserted()) / numberOfElementsInserted >= (98d / 100d));
 
         for (int i = 100_000; i < 100_000_000; i++) {
-            if (bloom.contains(i)) {
+            if (bloom.mightContain(i)) {
                 falseClaims++;
             }
             else {

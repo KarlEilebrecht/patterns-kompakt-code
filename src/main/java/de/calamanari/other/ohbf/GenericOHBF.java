@@ -39,8 +39,8 @@ import de.calamanari.pk.util.AtomicFixedLengthBitVector;
  * Furthermore, selecting the "right" k hash-functions can be a headache, sometimes highly depending on the use-case and its data types. So, why not spending
  * more effort for computing a single well-investigated cryptographic hash? No need to "guess" any hash functions anymore, and with a large k most likely
  * comparable speed.<br/>
- * Soon I realized that I was obviously not the first one reasoning about this (hybris-alert! :)) - and found the conference paper <i>One-Hashing Bloom
- * Filter</i> published 2015 by Jianyuan Lu, Tong Yang, Yi Wang, Huichen Dai, Linxiao Jin, Haoyu Song and Bin Liu, which can be found at <a href=
+ * Soon I realized that I was obviously not the first one reasoning about this :) - and found the conference paper <i>One-Hashing Bloom Filter</i> published
+ * 2015 by Jianyuan Lu, Tong Yang, Yi Wang, Huichen Dai, Linxiao Jin, Haoyu Song and Bin Liu, which can be found at <a href=
  * "https://www.researchgate.net/publication/284283336_One-Hashing_Bloom_Filter">https://www.researchgate.net/publication/284283336_One-Hashing_Bloom_Filter</a>.
  * <p>
  * The authors have successfully demonstrated that the k independent hash-functions a bloom filter requires can be replaced by leveraging the output of a single
@@ -175,7 +175,7 @@ public class GenericOHBF implements Serializable {
      * @param attributes key, optionally composed of multiple values
      * @return true if the key is probably in the filter, false if it is guaranteed not
      */
-    public boolean contains(Object... attributes) {
+    public boolean mightContain(Object... attributes) {
         byte[] hashBytes = hasher.computeHashBytes(attributes);
         int[] hashOffsets = new int[2];
         for (Partition partition : partitions) {
