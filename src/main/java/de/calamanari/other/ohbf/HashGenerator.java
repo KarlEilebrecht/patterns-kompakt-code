@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * PartitionerTest
+ * HashGenerator 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -19,28 +19,26 @@
 //@formatter:on
 package de.calamanari.other.ohbf;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.Test;
+import java.io.Serializable;
 
 /**
- * Test coverage for the Partitioner
+ * Interface for generators to compute a hash value of fixed length (see {@link #getHashLength()}) over a number of attributes
+ * <p>
+ * Instances must be thread-safe.
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class PartitionerTest {
+public interface HashGenerator extends Serializable {
 
-    @Test
-    public void testBasics() {
-        Partitioner partitioner = new Partitioner();
-        partitioner.computePartitions(2_000_070_000, 27);
+    /**
+     * @param attributes content to be hashed
+     * @return computed hash as a byte array
+     */
+    byte[] computeHashBytes(Object... attributes);
 
-        int[] partitions = partitioner.computePartitions(40, 11);
-
-        assertEquals(11, partitions.length);
-
-        assertTrue(Partitioner.calculateWaste(partitions, 40) >= 0);
-    }
-
+    /**
+     * Returns the fixed length of the generated hash
+     * @return number of bytes in the array returned by {@link #computeHashBytes(Object...)}
+     */
+    int getHashLength();
 }

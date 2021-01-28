@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 
 /**
- * The {@link Partitioner} tries to find an optimal partion setup, see {@link #computePartitions(long, int)}
+ * The {@link Partitioner} tries to find a suitable partion setup, see {@link #computePartitions(long, int)}
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
@@ -71,111 +71,7 @@ public class Partitioner {
     }
 
     /**
-     * Performs a recursive optimization of the partitions from left to right.
-     * @param desiredSize total size (including all partitions)
-     * @param currentSizeIndexes the partitions, each size index represents a partition of a certain size
-     * @param currentWaste the best (minimum warte) we could achieve so far, trying to get better
-     * @param start where to start optimization (partitions to the left considered final)
-     * @return optimization result or currentSizeIndexes if there was no better solution
-     */
-    private int[] optimize(long desiredSize, int[] currentSizeIndexes, long currentWaste, int start) {
-
-        OptimizationData run = new OptimizationData();
-
-        run.currentWaste = currentWaste;
-        run.desiredSize = desiredSize;
-        run.numberOfPartitions = currentSizeIndexes.length;
-        run.bestResult = currentSizeIndexes;
-        run.sizeIndexes = Arrays.copyOf(currentSizeIndexes, currentSizeIndexes.length);
-        run.start = start;
-        run.leadSizeIdx = run.sizeIndexes[run.start];
-        if (start >= run.numberOfPartitions) {
-            // ignore
-        }
-        else if (start == run.numberOfPartitions - 1) {
-            // last partition reached (right end), here we can only optimize by diminishing this partition
-            minimizeLastPartition(run);
-        }
-        else {
-            // when optimizing subsequent partions we need to compute the size of the ignored partitions on the left
-            // to later calculate the correct total size
-            run.sumBefore = 0;
-            for (int i = 0; i < start; i++) {
-                run.sumBefore = run.sumBefore + VALID_PARTITION_SIZES[run.sizeIndexes[i]];
-            }
-            performBumpedLeadSubsequenceOptimization(run);
-        }
-        return run.bestResult;
-    }
-
-    /**
-     * The idea is that the current set of partitions (of equal size) is bigger than the desired size (guaranteed by the steps before) and we want to reduce the
-     * waste by finding a setup of partitions that fits better.
-     * <p>
-     * This method therefore plays with the lead (first partition counting from the left), computes the average size for the remaining partitions and then
-     * applies the logic again to the partitions on the right (after the lead).
-     * <p>
-     * The algorithm starts with the lead as is and then tries to bump it to affect the subsequent partition sizes.
-     * @param run data of the current run
-     */
-    private void performBumpedLeadSubsequenceOptimization(OptimizationData run) {
-        run.leadSizeIdxUpperBound = (run.start == 0 ? VALID_PARTITION_SIZES.length : (run.sizeIndexes[run.start - 1] + 1));
-        for (run.newLeadSizeIdx = run.leadSizeIdx; run.newLeadSizeIdx < run.leadSizeIdxUpperBound; run.newLeadSizeIdx++) {
-            long remainder = run.desiredSize - run.sumBefore - VALID_PARTITION_SIZES[run.newLeadSizeIdx];
-            run.avgSize = (int) Math.ceil(((double) remainder) / (run.numberOfPartitions - run.start - 1));
-            if (run.avgSize > 0 && optimizeSubsequentPartitionsBasedOnAverage(run)) {
-                // stop the search, because the result is optimal
-                break;
-            }
-        }
-    }
-
-    /**
-     * Now we set all subsequent partitions to the computed average and concentrate on this subset of partitions.
-     * @param run data of the current run
-     * @return true if we found an optimal result (waste <= 1)
-     */
-    private boolean optimizeSubsequentPartitionsBasedOnAverage(OptimizationData run) {
-        int avgSizeIdx = findNextSizeIdx(run.avgSize);
-        run.sizeIndexes[run.start] = run.newLeadSizeIdx;
-        Arrays.fill(run.sizeIndexes, run.start + 1, run.sizeIndexes.length, avgSizeIdx);
-        long waste = calculateWaste(run.sizeIndexes, run.desiredSize);
-        if (waste > 1) {
-            int[] optimizedSizeIndexes = optimize(run.desiredSize, run.sizeIndexes, Math.min(waste, run.currentWaste), run.start + 1);
-            long optimizedWaste = calculateWaste(optimizedSizeIndexes, run.desiredSize);
-            if (optimizedWaste <= 1 || optimizedWaste < calculateWaste(run.bestResult, run.desiredSize)) {
-                run.bestResult = optimizedSizeIndexes;
-                if (optimizedWaste <= 1) {
-                    return true;
-                }
-            }
-        }
-        else {
-            run.bestResult = run.sizeIndexes;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * If there is only one partition on the right, we can only try to diminish it
-     * @param run data of the current run
-     */
-    private void minimizeLastPartition(OptimizationData run) {
-        for (int decreasedIdx = run.leadSizeIdx; decreasedIdx > 0; decreasedIdx--) {
-            run.sizeIndexes[run.start]--;
-            if (run.sizeIndexes[run.start] < 1 || calculateWaste(run.sizeIndexes, run.desiredSize) < 0) {
-                run.sizeIndexes[run.start]++;
-                break;
-            }
-        }
-        if (calculateWaste(run.sizeIndexes, run.desiredSize) < run.currentWaste) {
-            run.bestResult = run.sizeIndexes;
-        }
-    }
-
-    /**
-     * Tries to find an optimal set of partitions to fit the desired size. Each partition's size is 2^m, m in range [1..29]. <br/>
+     * Computes set of partitions to fit the desired size, if possible all of the same size (average). Each partition's size is 2^m, m in range [1..29]. <br/>
      * The returned array does not contain the absolute size of the partitions but the powers, means [m1,m2,m3, ...]. <br/>
      * The same m (and thus partition size) can occur multiple times.
      * @param desiredSize total size all partitions together shall reach
@@ -186,11 +82,13 @@ public class Partitioner {
         int[] res = new int[numberOfPartitions];
         int avgSize = (int) Math.ceil(((double) desiredSize) / numberOfPartitions);
         int sizeIdx = findNextSizeIdx(avgSize);
-        Arrays.fill(res, sizeIdx);
-        long waste = calculateWaste(res, desiredSize);
-        if (waste > 1) {
-            res = optimize(desiredSize, res, waste, 0);
+        Arrays.fill(res, sizeIdx - 1);
+        int candidate = 0;
+        while (calculateWaste(res, desiredSize) < 0) {
+            res[candidate]++;
+            candidate++;
         }
+        LOGGER.debug("Partitions: {}", defer(() -> Arrays.toString(res)));
         return res;
     }
 
@@ -211,66 +109,4 @@ public class Partitioner {
         return res;
     }
 
-    /**
-     * Parameter container to avoid huge parameter lists
-     *
-     */
-    private class OptimizationData {
-
-        /**
-         * the sum of partition sizes to the left (outside current optimization area)
-         */
-        long sumBefore;
-
-        /**
-         * Don't bump subsequent indexes higher (does not make sense from left to right)
-         */
-        int leadSizeIdxUpperBound;
-
-        /**
-         * the partition setup
-         */
-        int[] sizeIndexes;
-
-        /**
-         * average size computed as start size for subsequent partions on the right
-         */
-        int avgSize;
-
-        /**
-         * desired total size (goal)
-         */
-        long desiredSize;
-
-        /**
-         * The index (on the left) we have fixed to concentrate on the partitions to the right
-         */
-        int leadSizeIdx;
-
-        /**
-         * Computed (increased) updated lead size index
-         */
-        int newLeadSizeIdx;
-
-        /**
-         * Position in the sizeIndexes array where to start optimization
-         */
-        int start;
-
-        /**
-         * Waste that was computed for the best setup (the smaller the better) before calling this subsequent optimization
-         */
-        long currentWaste;
-
-        /**
-         * currently best result that could befound in this run
-         */
-        int[] bestResult;
-
-        /**
-         * fixed number of partitions
-         */
-        int numberOfPartitions;
-
-    }
 }
