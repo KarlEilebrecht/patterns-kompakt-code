@@ -281,7 +281,8 @@ public class AtomicFixedLengthBitVector implements Serializable {
      * <ul>
      * <li>Consider memory consumption, this operation will create a copy and thus double the required memory.</li>
      * <li>This operation is not atomic. It is still safe to be called concurrently with other operations on this bit vector, but this may lead to unexpected
-     * results.</li> </lu>
+     * results.</li>
+     * </ul>
      * @return copy of the internal long array
      */
     public long[] toLongArray() {
