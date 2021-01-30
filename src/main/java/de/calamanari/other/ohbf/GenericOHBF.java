@@ -72,7 +72,7 @@ import de.calamanari.pk.util.AtomicFixedLengthBitVector;
  * I could demonstrate that the technique works and leads to a configurable and reliable bloom filter. It is easy to use and does not require the user to do any
  * complicated "guessing". The measured false-positive rate being less than the configured rate and the results from
  * {@link #getEstimatedNumberOfElementsInserted()} compared to the measured insert count indicate high reliability. It is interesting how well theory (see
- * formulas at <a href="https://en.wikipedia.org/wiki/Bloom_filter">https://en.wikipedia.org/wiki/Bloom_filter</a> fit the measurements, at least for the few
+ * formulas at <a href="https://en.wikipedia.org/wiki/Bloom_filter">https://en.wikipedia.org/wiki/Bloom_filter</a> fits the measurements, at least for the few
  * tests I did.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
