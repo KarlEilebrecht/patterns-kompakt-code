@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.calamanari.pk.muhai.LongPrefix;
 import de.calamanari.pk.muhai.MuhaiException;
 import de.calamanari.pk.muhai.MuhaiGenerator;
@@ -36,18 +39,23 @@ import de.calamanari.pk.muhai.MuhaiGenerator;
  */
 public class HashGenerators {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HashGenerators.class);
+
     /**
      * Returns a hash generator with an output greater than or equals to the requested bit count
      * @param bitCount number of required bits in each hash
      * @return hash generator instance that fulfills the requirements
      */
     public static HashGenerator createInstance(int bitCount) {
+        HashGenerator res = null;
         if (bitCount <= DefaultHashGenerator.MAX_BITS) {
-            return DefaultHashGenerator.getInstance(bitCount);
+            res = DefaultHashGenerator.getInstance(bitCount);
         }
         else {
-            return new CompositeHashGenerator(bitCount);
+            res = new CompositeHashGenerator(bitCount);
         }
+        LOGGER.debug("Created {}", res);
+        return res;
     }
 
     /**
@@ -183,6 +191,12 @@ public class HashGenerators {
         public void release() {
             messageDigestHolder.remove();
         }
+
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName() + " [hashBits=" + (hashLength * 8) + "]";
+        }
+
     }
 
     /**
@@ -252,6 +266,11 @@ public class HashGenerators {
         @Override
         public int getHashLength() {
             return hashLength;
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName() + " [hashBits=" + (hashLength * 8) + "]";
         }
 
     }
