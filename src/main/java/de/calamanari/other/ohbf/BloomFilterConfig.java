@@ -68,7 +68,7 @@ public class BloomFilterConfig implements Serializable {
         this.requiredNumberOfBitsM = (long) Math.ceil(mApprox);
         this.numberOfInsertedElementsN = numberOfInsertedElementsN;
         this.falsePositiveRateEpsilon = falsePositiveRateEpsilon;
-        this.numberOfHashesK = (int) Math.ceil(kApprox);
+        this.numberOfHashesK = (int) Math.max(1, Math.ceil(kApprox));
 
     }
 
@@ -86,7 +86,7 @@ public class BloomFilterConfig implements Serializable {
         this.requiredNumberOfBitsM = requiredNumberOfBitsM;
         this.numberOfInsertedElementsN = (long) Math.ceil(nApprox);
         this.falsePositiveRateEpsilon = falsePositiveRateEpsilon;
-        this.numberOfHashesK = (int) Math.ceil(kApprox);
+        this.numberOfHashesK = (int) Math.max(1, Math.ceil(kApprox));
 
     }
 
@@ -100,7 +100,7 @@ public class BloomFilterConfig implements Serializable {
         this.requiredNumberOfBitsM = requiredNumberOfBitsM;
         this.numberOfInsertedElementsN = numberOfInsertedElementsN;
         this.falsePositiveRateEpsilon = Math.pow(Math.E, lnEpsilon);
-        this.numberOfHashesK = (int) Math.ceil(kApprox);
+        this.numberOfHashesK = (int) Math.max(1, Math.ceil(kApprox));
     }
 
     /**

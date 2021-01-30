@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * GenericOHBF2Test
+ * GenericOHBFTest
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -25,72 +25,183 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.other.ohbf.GenericOHBFFirstAttempt.Partition;
 import de.calamanari.pk.util.CloneUtils;
 
 /**
  * Test coverage for the Generic one-hashing bloom filter
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
+ * @deprecated This implementation tends to create too much waste, {@link GenericOHBF} is the successor
  */
-public class GenericOHBFTest {
+@Deprecated(since = "N/A", forRemoval = false)
+public class GenericOHBFFirstAttemptTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericOHBFTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericOHBFFirstAttemptTest.class);
 
     @Test
     public void testEstimation() {
 
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 1, 1));
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 0, 1));
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 0, 0));
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 1, 0));
-        assertEquals(1, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 1, 0));
-        assertEquals(2, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 2, 1));
-        assertEquals(2, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 4, 1));
-        assertEquals(3, GenericOHBF.computeEstimatedNumberOfElementsInserted(2, 4, 1));
-        assertEquals(197, GenericOHBF.computeEstimatedNumberOfElementsInserted(86, 100, 1));
-        assertEquals(66, GenericOHBF.computeEstimatedNumberOfElementsInserted(86, 100, 3));
-        assertEquals(Long.MAX_VALUE, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 2, 0));
+        assertEquals(0, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(0, 1, 1));
+        assertEquals(0, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(0, 0, 1));
+        assertEquals(0, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(0, 0, 0));
+        assertEquals(0, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(0, 1, 0));
+        assertEquals(1, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(1, 1, 0));
+        assertEquals(2, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(1, 2, 1));
+        assertEquals(2, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(1, 4, 1));
+        assertEquals(3, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(2, 4, 1));
+        assertEquals(197, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(86, 100, 1));
+        assertEquals(66, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(86, 100, 3));
+        assertEquals(Long.MAX_VALUE, GenericOHBFFirstAttempt.computeEstimatedNumberOfElementsInserted(1, 2, 0));
+
+    }
+
+    @Test
+    public void testPartitions() {
+        Partitioner partitioner = new Partitioner();
+
+        int[] partitions = partitioner.computePartitions(513, 4);
+
+        assertEquals(4, partitions.length);
+
+        int expectedM = IntStream.of(partitions).map(i -> (int) Math.pow(2, i)).sum();
+
+        int expectedTotalHashBitCount = IntStream.of(partitions).sum();
+
+        Partition[] partitionArray = GenericOHBFFirstAttempt.createPartitions(new BloomFilterConfig(0.1d, 513));
+
+        assertEquals(expectedM, GenericOHBFFirstAttempt.computeEffectiveM(partitionArray));
+
+        assertEquals(expectedTotalHashBitCount, GenericOHBFFirstAttempt.computeRequiredHashBitCount(partitionArray));
 
     }
 
     @Test
     public void testVectorPositionComputation() {
-        byte[] hashBytes = new byte[8];
+        byte[] hashBytes = new byte[2];
 
-        long pos = GenericOHBF.fetchBitPosition(hashBytes, 0, 9);
+        Partition p1 = new Partition(0, 8);
+        Partition p2 = new Partition(256, 8);
+
+        int[] hashOffsets = new int[2];
+
+        long pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p1);
 
         assertEquals(0, pos);
 
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p2);
 
-        assertEquals(9, pos);
+        assertEquals(256, pos);
 
-        hashBytes = new byte[6];
+        hashBytes = new byte[] { 13, -1 };
 
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
+        hashOffsets = new int[2];
 
-        assertEquals(9, pos);
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p1);
 
-        hashBytes[5] = 1;
+        assertEquals(13, pos);
 
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p2);
 
-        assertEquals(9, pos);
+        assertEquals(511, pos);
 
-        hashBytes[2] = -1;
-        hashBytes[3] = -1;
-        hashBytes[4] = -1;
-        hashBytes[5] = -1;
+        hashBytes = new byte[2];
+        p1 = new Partition(0, 4);
+        p2 = new Partition(16, 8);
+        hashOffsets = new int[2];
 
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p1);
 
-        assertEquals(17, pos);
+        assertEquals(0, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p2);
+
+        assertEquals(16, pos);
+
+        p1 = new Partition(0, 4);
+        p2 = new Partition(16, 12);
+
+        hashBytes = new byte[] { sByte("00010000"), sByte("00000010") };
+        hashOffsets = new int[2];
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p1);
+
+        assertEquals(1, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p2);
+
+        assertEquals(18, pos);
+
+        for (int i = 0; i < 256; i++) {
+
+            for (int k = 0; k < 16; k++) {
+                int k2 = k << 4;
+                hashBytes = new byte[] { (byte) k2, (byte) i };
+                hashOffsets = new int[2];
+
+                pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p1);
+
+                assertEquals(k, pos);
+
+                pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p2);
+
+                assertEquals(i + 16, pos);
+
+            }
+
+        }
+
+        p1 = new Partition(0, 3);
+        p2 = new Partition(8, 9);
+        Partition p3 = new Partition(520, 4);
+
+        hashBytes = new byte[] { sByte("00100000"), sByte("00111111") };
+        hashOffsets = new int[2];
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p1);
+
+        assertEquals(1, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p2);
+
+        assertEquals(11, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p3);
+
+        assertEquals(535, pos);
+
+        hashBytes = new byte[] { sByte("00100000"), sByte("00111111"), sByte("10000001") };
+        hashOffsets = new int[2];
+
+        Partition p4 = new Partition(536, 7);
+        Partition p5 = new Partition(664, 1);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p1);
+
+        assertEquals(1, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p2);
+
+        assertEquals(11, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p3);
+
+        assertEquals(535, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p4);
+
+        assertEquals(600, pos);
+
+        pos = GenericOHBFFirstAttempt.fetchBitPosition(hashBytes, hashOffsets, p5);
+
+        assertEquals(665, pos);
 
     }
 
@@ -99,7 +210,7 @@ public class GenericOHBFTest {
 
         BloomFilterConfig config = new BloomFilterConfig(100, 0.0001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        GenericOHBFFirstAttempt bloom = new GenericOHBFFirstAttempt(config);
 
         assertTrue(bloom.put("Bla"));
 
@@ -111,8 +222,6 @@ public class GenericOHBFTest {
             if (bloom.put(i)) {
                 numberOfElementsInserted++;
             }
-            LOGGER.debug("Puts: " + (i + 1) + ", successful inserts: " + numberOfElementsInserted + ", estimatedNumberOfInserts: "
-                    + bloom.getEstimatedNumberOfElementsInserted() + ", bitsInUse: " + bloom.getNumberOfBitsUsed());
             assertTrue(bloom.mightContain(i));
             assertEquals(i, numberOfElementsInserted - 2);
             assertTrue(Math.abs(bloom.getEstimatedNumberOfElementsInserted() - numberOfElementsInserted) <= 3);
@@ -148,7 +257,7 @@ public class GenericOHBFTest {
 
         BloomFilterConfig config = new BloomFilterConfig(100, 0.0001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        GenericOHBFFirstAttempt bloom = new GenericOHBFFirstAttempt(config);
 
         assertTrue(bloom.put("Bla"));
 
@@ -161,7 +270,7 @@ public class GenericOHBFTest {
                 numberOfInserts++;
             }
         }
-        GenericOHBF clone = CloneUtils.passByValue(bloom);
+        GenericOHBFFirstAttempt clone = CloneUtils.passByValue(bloom);
 
         assertEquals(bloom.getConfig(), clone.getConfig());
 
@@ -191,7 +300,7 @@ public class GenericOHBFTest {
     public void testManyElementsAtLowFalsePositiveRate() {
         BloomFilterConfig config = new BloomFilterConfig(10_000_000, 0.000001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        GenericOHBFFirstAttempt bloom = new GenericOHBFFirstAttempt(config);
         int correctClaims = 0;
         int falseClaims = 0;
         long numberOfElementsInserted = 0;
@@ -236,11 +345,11 @@ public class GenericOHBFTest {
 
         BloomFilterConfig config = new BloomFilterConfig(100000, 0.0000001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        GenericOHBFFirstAttempt bloom = new GenericOHBFFirstAttempt(config);
         int correctClaims = 0;
         int falseClaims = 0;
 
-        long numberOfElementsInserted = 0;
+        long numberOfElementsInserted = 10;
 
         for (int i = 0; i < 100_000; i++) {
             if (bloom.put(i)) {
@@ -276,6 +385,35 @@ public class GenericOHBFTest {
         double falsePositiveRate = ((double) falseClaims) / 100_000_000;
         assertTrue(falsePositiveRate <= config.getFalsePositiveRateEpsilon());
         LOGGER.debug("Correct claims: {}, false claims: {} ({})", correctClaims, falseClaims, nf.format(falsePositiveRate));
+    }
+
+    @Test
+    public void testHelpers() {
+        for (int i = 0; i < 256; i++) {
+            byte b = (byte) i;
+            String s = bString(b);
+            byte b2 = sByte(s);
+            assertEquals(i, b2 & 0xff);
+        }
+    }
+
+    /**
+     * Convenience method to convert a binary string into a byte
+     * @param bits8 string of length 8, composed of 0 and 1
+     * @return the parsed byte
+     */
+    private byte sByte(String bits8) {
+        return (byte) Integer.parseUnsignedInt(bits8, 2);
+    }
+
+    /**
+     * Converts the given byte into its binary representation
+     * @param b source byte
+     * @return binary string of length 8, left-padded with 0s
+     */
+    private String bString(byte b) {
+        String res = "00000000" + Integer.toBinaryString(b & 0xff);
+        return res.substring(res.length() - 8);
     }
 
 }

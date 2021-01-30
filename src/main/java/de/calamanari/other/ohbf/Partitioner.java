@@ -40,16 +40,16 @@ public class Partitioner {
     /**
      * we allow partitions from 2 up to 2^{@value #NUMBER_OF_VALID_PARTITION_SIZES} elements
      */
-    private static final int NUMBER_OF_VALID_PARTITION_SIZES = 29;
+    private static final int NUMBER_OF_VALID_PARTITION_SIZES = 31;
 
     /**
      * we allow partitions from 2 up to 2^{@value #NUMBER_OF_VALID_PARTITION_SIZES} elements
      */
-    private static final int[] VALID_PARTITION_SIZES;
+    private static final long[] VALID_PARTITION_SIZES;
     static {
-        int[] sizes = new int[NUMBER_OF_VALID_PARTITION_SIZES + 1];
+        long[] sizes = new long[NUMBER_OF_VALID_PARTITION_SIZES + 1];
         for (int i = 1; i <= NUMBER_OF_VALID_PARTITION_SIZES; i++) {
-            sizes[i] = (int) Math.pow(2, i);
+            sizes[i] = (long) Math.pow(2, i);
         }
         VALID_PARTITION_SIZES = sizes;
         LOGGER.debug("Valid partion sizes: {}", defer(() -> Arrays.toString(VALID_PARTITION_SIZES)));
@@ -79,16 +79,30 @@ public class Partitioner {
      * @return m-array
      */
     public int[] computePartitions(long desiredSize, int numberOfPartitions) {
-        int[] res = new int[numberOfPartitions];
-        int avgSize = (int) Math.ceil(((double) desiredSize) / numberOfPartitions);
-        int sizeIdx = findNextSizeIdx(avgSize);
-        Arrays.fill(res, sizeIdx - 1);
+        int[] res = computeAvgSizePartitions(desiredSize, numberOfPartitions);
         int candidate = 0;
         while (calculateWaste(res, desiredSize) < 0) {
             res[candidate]++;
             candidate++;
         }
         LOGGER.debug("Partitions: {}", defer(() -> Arrays.toString(res)));
+        return res;
+    }
+
+    /**
+     * Computes set of partitions to fit <b>&lt;= desired size</b>, all of the same size (average), where the partition's size is 2^m, m in range [1..29]. <br/>
+     * The returned array does not contain the absolute size of the partitions but the powers, means [m1,m2,m3, ...]. <br/>
+     * The same m (and thus partition size) can occur multiple times.
+     * @param desiredSize total size all partitions together shall reach
+     * @param numberOfPartitions requested number of partitions (fixed)
+     * @return m-array
+     */
+    public int[] computeAvgSizePartitions(long desiredSize, int numberOfPartitions) {
+        int[] res = new int[numberOfPartitions];
+        int avgSize = (int) Math.ceil(((double) desiredSize) / numberOfPartitions);
+        int sizeIdx = findNextSizeIdx(avgSize);
+        Arrays.fill(res, sizeIdx - 1);
+        LOGGER.debug("Average size partitions: {}", defer(() -> Arrays.toString(res)));
         return res;
     }
 

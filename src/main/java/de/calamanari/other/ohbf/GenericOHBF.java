@@ -31,7 +31,7 @@ import de.calamanari.pk.muhai.MuhaiGenerator;
 import de.calamanari.pk.util.AtomicFixedLengthBitVector;
 
 /**
- * The {@link GenericOHBF} is a general-purpose thread-safe serializable fixed-size <b>One-Hashing Bloom Filter</b>.
+ * The {@link GenericOHBFFirstAttempt} is a general-purpose thread-safe serializable fixed-size <b>One-Hashing Bloom Filter</b>.
  * <p>
  * After playing with cryptographic hashes in 2020 to create keys (see {@link MuhaiGenerator}) and being fascinated about the randomness of these hashes, I
  * wondered if it was possible to leverage the output of a single cryptographic hash to "simulate" multiple hash-functions required for a bloom filter. The
@@ -49,31 +49,38 @@ import de.calamanari.pk.util.AtomicFixedLengthBitVector;
  * Their partition mechanism creates k partitions to fit m, where the individual partition sizes are unique and prime. This way they can "simulate k
  * hash-functions" using modulo(partition size) to find the bit to set in each partition for a particular hashed input.
  * <p>
- * While I find the modulo-approach with prime-aligned partitions clever, I wondered if we were able to omit that. The point is: We assume the hash to be random
- * and not to contain any internal patterns (otherwise the cryptographic hash would be vulnerable. So, for randomization we should not need any additional
- * sophisticated shuffling. The challenge is finding a mechanism to derive k pseudo-hash-values to set bits in the k partitions.
+ * While I find the modulo-approach with prime-aligned partitions clever, I wondered if we were able to avoid that. The point is: We assume the hash to be
+ * random and not to contain any internal patterns (otherwise the cryptographic hash would be vulnerable). So, for randomization we should not need any
+ * additional sophisticated shuffling. The challenge is finding a mechanism to derive k pseudo-hash-values to set bits in the k partitions.
  * <p>
  * My idea was to use hash-bits as-is. Assumption: every integer number created of b bits from left to right should be random in range [0..2^b].<br/>
- * Thus we can create k partitions, where the length of each partition is the 2^b closest to the average (m/k). The sum(b1, b2, ...bn) is the number of
- * hash-bits required to directly derive the indexes for all the k partitions. One obvious disadvantage is the potential waste, because partition sizes cannot
- * be chosen arbitrary and must be aligned to some 2^x.
+ * Thus we can create k partitions and derive k random numbers from the hash. Finally, we distribute the random number (range [0..2^x] to the partition's bits
+ * <b>in a fair manner</b>.
  * <p>
- * Anyway, I decided this to be an interesting POC and implemented this class. Performance was not my main concern, I wanted to create a filter that is easy to
- * use to encourage experimentation.
+ * I decided this to be an interesting POC and implemented this class. Performance was not my main concern, I wanted to create a filter that is easy to use to
+ * encourage experimentation. However, one goal was to avoid the modulo operation to distribute the pseudo-random numbers to the partitions.
  * <p>
- * While the results look promising, it is still an experiment. One thing I learned was that the partition sizes cannot be chosen arbitrarily. My first
- * partition optimizer tried to fit m with k partitions of any 2^x-lengths (choosing x arbitrarily down to two), which creates a potentially very unbalanced
- * partition setup but minimizes waste. Unfortunately, this leads to a rather bad and unpredictable real false-positive-rate. I have not investigated this
- * further, but I believe that this can be explained to be a "premature virtual decrease of k", because the tiny partitions are "full" right after a few
- * inserts. So, the current {@link Partitioner} works differently. It creates partitions as close as possible to the average, accepting more waste. There may be
- * further edge-cases and issues I am not aware of.
+ * One thing I learned quickly was, that the partition sizes cannot be chosen arbitrarily. The best results can be achieved if the k partitions are all of the
+ * same size. Having larger size differences between partitions in the same setup leads to an unpredictable behavior of the measured false-positive rate. I
+ * believe that this can be explained to be a "premature virtual decrease of k", because the tiny partitions get "full" right after a few inserts (making the
+ * related k irrelevant). Thus I decided to make the partition size fixed as <code>Math.ceil(m/k)</code>. Assuming I can create a fair distribution this also
+ * reduces the waste (defined as vector size minus configured m) to a minimum. As a result <b>the maximum waste is <code>k - 1 + 63</code> bits</b> because the
+ * bit vector is aligned to 64 bits (long-based), not counting some structural overhead this specific implementation comes with.
+ * <p>
+ * <b>Conclusion:</b>
+ * <p>
+ * I could demonstrate that the technique works and leads to a configurable and reliable bloom filter. It is easy to use and does not require the user to do any
+ * complicated "guessing". The measured false-positive rate being less than the configured rate and the results from
+ * {@link #getEstimatedNumberOfElementsInserted()} compared to the measured insert count indicate high reliability. It is interesting how well theory (see
+ * formulas at <a href="https://en.wikipedia.org/wiki/Bloom_filter">https://en.wikipedia.org/wiki/Bloom_filter</a> fit the measurements, at least for the few
+ * tests I did.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
 public class GenericOHBF implements Serializable {
 
-    private static final long serialVersionUID = 2617291704844763246L;
+    private static final long serialVersionUID = 2617291705844763246L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericOHBF.class);
 
@@ -93,19 +100,14 @@ public class GenericOHBF implements Serializable {
     private final AtomicLong bitsInUseCounter = new AtomicLong();
 
     /**
-     * Partitions to manage the k results
-     */
-    private final Partition[] partitions;
-
-    /**
      * Hash generator for this filter
      */
     private final HashGenerator hasher;
 
     /**
-     * The number of bits we use (the vector may have up to 63 more unusable bits)
+     * size of the partition related to k, close to m/k, partitionSize &gt;= m/k
      */
-    private final long effectiveNumberOfBitsM;
+    private final long partitionSize;
 
     /**
      * Creates a new empty filter based on the give configuration
@@ -113,10 +115,9 @@ public class GenericOHBF implements Serializable {
      */
     public GenericOHBF(BloomFilterConfig config) {
         this.config = config;
-        this.partitions = createPartitions(config);
-        this.effectiveNumberOfBitsM = computeEffectiveM(partitions);
-        this.vector = new AtomicFixedLengthBitVector(effectiveNumberOfBitsM);
-        this.hasher = HashGenerators.createInstance(computeRequiredHashBitCount(partitions));
+        this.partitionSize = (long) Math.ceil(((double) config.getRequiredNumberOfBitsM()) / config.getNumberOfHashesK());
+        this.vector = new AtomicFixedLengthBitVector(partitionSize * config.getNumberOfHashesK());
+        this.hasher = HashGenerators.createInstance(computeRequiredHashBitCount(config.getNumberOfHashesK()));
         if (LOGGER.isDebugEnabled()) {
             long waste = this.getWaste();
             double percentage = (((double) waste) / config.getRequiredNumberOfBitsM()) * 100d;
@@ -139,7 +140,7 @@ public class GenericOHBF implements Serializable {
      * @return number of bits usable, the internal bit-vector is 64-aligned (long) and may be up to 63 bits bigger
      */
     public long getSize() {
-        return effectiveNumberOfBitsM;
+        return partitionSize * config.getNumberOfHashesK();
     }
 
     /**
@@ -158,9 +159,8 @@ public class GenericOHBF implements Serializable {
     public boolean put(Object... attributes) {
         boolean res = false;
         byte[] hashBytes = hasher.computeHashBytes(attributes);
-        int[] hashOffsets = new int[2];
-        for (Partition partition : partitions) {
-            long position = fetchBitPosition(hashBytes, hashOffsets, partition);
+        for (int i = 0; i < config.getNumberOfHashesK(); i++) {
+            long position = fetchBitPosition(hashBytes, i, partitionSize);
             boolean modified = vector.setBitIfNotPresent(position);
             res = res || modified;
             if (modified) {
@@ -177,9 +177,8 @@ public class GenericOHBF implements Serializable {
      */
     public boolean mightContain(Object... attributes) {
         byte[] hashBytes = hasher.computeHashBytes(attributes);
-        int[] hashOffsets = new int[2];
-        for (Partition partition : partitions) {
-            long position = fetchBitPosition(hashBytes, hashOffsets, partition);
+        for (int i = 0; i < config.getNumberOfHashesK(); i++) {
+            long position = fetchBitPosition(hashBytes, i, partitionSize);
             if (!vector.isBitSet(position)) {
                 return false;
             }
@@ -196,12 +195,10 @@ public class GenericOHBF implements Serializable {
 
     /**
      * Estimates the number elements in the bloom filter based on X ({@link #getNumberOfBitsUsed()}), k and m
-     * <p>
-     * <b>Note:</b> Above 90% bits used (1s) the estimation starts deviating heavily from the real number of inserts.
      * @return rough estimate or -1 if the estimation is not possible (filter full)
      */
     public long getEstimatedNumberOfElementsInserted() {
-        return computeEstimatedNumberOfElementsInserted(getNumberOfBitsUsed(), effectiveNumberOfBitsM, partitions.length);
+        return computeEstimatedNumberOfElementsInserted(getNumberOfBitsUsed(), getSize(), config.getNumberOfHashesK());
     }
 
     /**
@@ -210,8 +207,8 @@ public class GenericOHBF implements Serializable {
      */
     public String getBitVectorAsPaddedBinaryString() {
         String res = this.vector.toPaddedBinaryString();
-        if (effectiveNumberOfBitsM < res.length()) {
-            res = res.substring(res.length() - (int) effectiveNumberOfBitsM);
+        if (getSize() < res.length()) {
+            res = res.substring(res.length() - (int) getSize());
         }
         return res;
     }
@@ -231,8 +228,6 @@ public class GenericOHBF implements Serializable {
     /**
      * Formula (Swamidass &amp; Baldi (2007), see <a
      * href=https://en.wikipedia.org/wiki/Bloom_filter#Approximating_the_number_of_items_in_a_Bloom_filter">https://en.wikipedia.org/wiki/Bloom_filter#Approximating_the_number_of_items_in_a_Bloom_filter</a>)
-     * <p>
-     * <b>Note:</b> Above 90% bits used (1s) the estimation starts deviating heavily from the real number of inserts.
      * @param x number of 1-bits in the filter, <b>0 &lt;= x &lt;= m</b>
      * @param m available bits, <b>m &gt; 0</b>
      * @param k number of hash-functions (here partitions), <b>k &gt; 0</b>
@@ -250,128 +245,52 @@ public class GenericOHBF implements Serializable {
     }
 
     /**
-     * Computes the size of the bit vector based on the partition layout
-     * @param partitions space for the k's result bits
-     * @return total size of the bit vector
-     */
-    static long computeEffectiveM(Partition[] partitions) {
-        long res = 0;
-        for (Partition p : partitions) {
-            res = res + (long) Math.pow(2, p.bitCount);
-        }
-        return res;
-    }
-
-    /**
      * Computes the required length of the hash bit vector
-     * @param partitions space for the k's result bits
+     * @param k number of partitions
      * @return length of the hash to be computed in bits
      */
-    static int computeRequiredHashBitCount(Partition[] partitions) {
-        int res = 0;
-        for (Partition p : partitions) {
-            res = res + p.bitCount;
-        }
-        return res;
-    }
+    static int computeRequiredHashBitCount(int k) {
 
-    /**
-     * Estimates best partition layout based on k and m
-     * @param config settings for k and m
-     * @return List of partitions
-     */
-    static Partition[] createPartitions(BloomFilterConfig config) {
-        Partitioner partitioner = new Partitioner();
-        int[] bitCounts = partitioner.computePartitions(config.getRequiredNumberOfBitsM(), config.getNumberOfHashesK());
-
-        Partition[] res = new Partition[bitCounts.length];
-
-        long offset = 0;
-        for (int i = 0; i < bitCounts.length; i++) {
-            int bitCount = bitCounts[i];
-            res[i] = new Partition(offset, bitCount);
-            offset = offset + (long) Math.pow(2, bitCount);
-        }
-        return res;
+        // hash bits are precious, thus we limit the consumption for 1 partition to 16 bits
+        // each next 32-bit hash will overlap with the last one by 16 bits
+        return (k < 2 ? 32 : ((k - 1) * 16));
     }
 
     /**
      * This method derives the next bit position (to check or to verify) from the given hash
      * @param hashBytes bytes from the hash
-     * @param hashOffsets [0] byte position, [2] bit position in that byte, this state array will be modified in each run
      * @param partition the partition (in other words the k's hash function to compute)
+     * @param partitionSize size of the partition i.e. (m/k)
      * @return bit position in the global bit vector of the bloom filter
      */
-    static long fetchBitPosition(byte[] hashBytes, int[] hashOffsets, Partition partition) {
-        int byteOffset = hashOffsets[0];
-        int byteBitOffset = hashOffsets[1];
+    static long fetchBitPosition(byte[] hashBytes, int partition, long partitionSize) {
 
-        long bitsToFetch = partition.bitCount;
-        long bitMaskOffset = 0;
+        // instead of moving the reader by 4 bytes, we move only 2 bytes per partition ("shingled" hash conversion)
+        int byteOffset = partition * 2;
 
         long position = 0;
-        while (bitsToFetch > 0) {
+
+        for (int i = byteOffset; i < byteOffset + 4; i++) {
+
+            // move the bits from the last byte to the left (fill from left to right)
+            position = position << 8;
 
             // put the bits of the unsigned byte to the right of the long
-            long bitMask = hashBytes[byteOffset] & 0xff;
+            long bitMask = hashBytes[i] & 0xff;
 
-            // the number of bits taken from the byte not already used before
-            int bitsTaken = 8 - byteBitOffset;
-            if (bitsToFetch < bitsTaken) {
-                long numberOfBitsToDiscardOnTheRight = bitsTaken - bitsToFetch;
-                // remove the bits we do not want to fetch
-                bitMask = bitMask >>> numberOfBitsToDiscardOnTheRight;
-                bitsTaken = (int) bitsToFetch;
-            }
-
-            // move the byte's bits to the left, discard already used bits on the left (before offset)
-            bitMask = bitMask << (64L - bitsTaken);
-
-            // move the bits to the right by the number of bits already set in the position value (fill from left to right)
-            bitMask = bitMask >>> bitMaskOffset;
-
-            // copy the bits taken from the current byte into the position value (OR)
+            // copy the bits into the position
             position = position | bitMask;
 
-            bitsToFetch = bitsToFetch - bitsTaken;
-            bitMaskOffset = bitMaskOffset + bitsTaken;
-            byteBitOffset = byteBitOffset + bitsTaken;
-            if (byteBitOffset == 8) {
-                // byte complete, take next byte
-                byteBitOffset = 0;
-                byteOffset = byteOffset + 1;
-            }
         }
-        // now the position value is complete but sits on the left, so we need to shift it to the right
-        // and we need to add the partition offset to make a global bit vector position out of the local position
-        position = (position >>> (64L - partition.bitCount)) + partition.offset;
-        hashOffsets[0] = byteOffset;
-        hashOffsets[1] = byteBitOffset;
+
+        // now we have an unsigned 32-bit position, which must be distributed "fair" to the partition elements
+        // a good explanation can be found here: https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+        position = (position * partitionSize) >>> 32L;
+
+        // Now make a global vector position out of the partition-local position
+        position = (partitionSize * partition) + position;
+
         return position;
-    }
-
-    /**
-     * A partition keeps the bit count (implicitly the size) of the partition together with the bit vector offset
-     *
-     */
-    static class Partition implements Serializable {
-
-        private static final long serialVersionUID = 7484425282484833804L;
-
-        final long offset;
-
-        final int bitCount;
-
-        Partition(long offset, int bitCount) {
-            this.offset = offset;
-            this.bitCount = bitCount;
-        }
-
-        @Override
-        public String toString() {
-            return this.getClass().getSimpleName() + " [offset=" + offset + ", bitCount=" + bitCount + "]";
-        }
-
     }
 
 }
