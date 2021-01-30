@@ -138,9 +138,9 @@ public class GenericOHBFTest {
         NumberFormat nf = NumberFormat.getInstance(Locale.US);
         nf.setMaximumFractionDigits(15);
         double falsePositiveRate = ((double) falseClaims) / 1_000_000;
-        assertTrue(falsePositiveRate <= config.getFalsePositiveRateEpsilon());
 
         LOGGER.debug("Correct claims: {}, false claims: {} ({})", correctClaims, falseClaims, nf.format(falsePositiveRate));
+        assertTrue(falsePositiveRate <= config.getFalsePositiveRateEpsilon());
     }
 
     @Test

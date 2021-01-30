@@ -253,7 +253,7 @@ public class GenericOHBF implements Serializable {
 
         // hash bits are precious, thus we limit the consumption for 1 partition to 16 bits
         // each next 32-bit hash will overlap with the last one by 16 bits
-        return (k < 2 ? 32 : ((k - 1) * 16));
+        return (k + 1) * 16;
     }
 
     /**
