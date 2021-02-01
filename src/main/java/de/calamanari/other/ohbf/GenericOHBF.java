@@ -152,7 +152,9 @@ public class GenericOHBF implements Serializable {
     }
 
     /**
-     * Puts the given key into the bloom filter
+     * Puts the given key into the bloom filter.
+     * <p>
+     * Please refer to the documentation of {@link MuhaiGenerator} to understand how the attributes are handled.
      * @param attributes key, optionally composed of multiple values
      * @return true if the bloom filter changed (item was not in the filter before), otherwise false
      */
@@ -172,6 +174,8 @@ public class GenericOHBF implements Serializable {
 
     /**
      * Checks whether the key is in the bloom filter, with a certain probability of false-positive results and no false-negatives.
+     * <p>
+     * Please refer to the documentation of {@link MuhaiGenerator} to understand how the attributes are handled.
      * @param attributes key, optionally composed of multiple values
      * @return true if the key is probably in the filter, false if it is guaranteed not
      */

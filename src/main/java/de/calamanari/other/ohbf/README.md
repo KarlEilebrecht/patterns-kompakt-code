@@ -18,10 +18,10 @@ While I find the modulo-approach with prime-aligned partitions clever, I wondere
 ## Goals
 
 * Implement a Bloom filter (fun :smirk:)
-* Create a convenient implementation that lets me specify the number of elements I plan to insert _n_ or the number of bits I want to use _m_ and the false-positive rate I want to achieve. All other settings should be left to automatic estimation, because there are formulas.
+* Create a convenient implementation that lets me specify the number of elements I plan to insert _n_ or the number of bits I want to use _m_ and the false-positive rate I want to achieve. All other settings should be left to automatically derived estimation.
 * My Bloom filter shall use a single cryptographic hash.
 * I want to avoid complicated partitioning and especially the modulo-stage.
-* Performance is relevant but not a major concern. It is more important to create an implementation that is easy to use and to understand.
+* Performance is not a major concern. It is more important to create an implementation that is easy to understand and to use.
 
 
 
@@ -78,12 +78,15 @@ I decided to go back to the drawing-board. Obviously, the goal must be choosing 
 
 ## Results
 
-In general for small _n_ I saw fluctuation regarding the false-positive rate, but I blame the low numbers here. I decided to start above _n=10000_ and quite stable numbers. In my multi-setup tests the false-positive rate _epsilon_ did not deviate more than +/- 10% from the configured one, better/worse around 50/50. The estimation of elements in the filter never deviated much more than 3.015% from the counted number of elements.
+In general for small _n_ I saw fluctuation regarding the measured false-positive rate _epsilon_, but I blame the low numbers here. I decided to start above _n=10000_ and got good quite stable numbers. In my multi-setup tests the false-positive rate _epsilon_ did not deviate more than +/- 10% from the configured one, better/worse around 50/50. The estimation of elements in the filter never deviated much more than 3.015% from the counted number of elements.
 
-I did not do any performance tests. I am not even sure if this would make sense, because for simplification and convenience reasons this implementation uses data structures and instructions which are not performance-optimized (besides avoiding modulo). However, the tests involve hundreds of million times the Bloom filter gets accessed and still run within an acceptable time. Taking into account that the implementation is thread-safe (overhead!) and performance was not my main concern, this is not bad.
+I did not do any performance tests. I am not even sure if this made much sense, because for simplification and convenience reasons this implementation uses data structures and instructions which are not performance-optimized (besides avoiding modulo).
+
+### Further Thoughts
+
+Obviously, the implementation could be refined and improved. As a first step I recommend more systematic testing to better explain under which circumstances _epsilon_ derails, and what lets the estimation of elements in the filter deviate for different setups between practically zero and around 3%. The second thing to investigate would be making the best use of the hash bits. The "shingled conversion" was a best guess solution, maybe there is more to achieve. Also, it would be interesting if there was any more efficient approach than _hash chaining_ to generate the required hash bits for _k > 31_.
 
 ### Conclusion
 
 I could demonstrate that the idea works and leads to a convenient, configurable and reliable bloom filter with a **maximum waste of _k - 1 + 63_ bits** (the 63 come from the 64-bit-alignment of the bit vector based on type long). It is easy to use and does not require the user to do any complicated "guessing". 
 
-Obviously, the implementation could be refined and improved. As a first step I recommend more systematic testing to better explain under which circumstances _epsilon_ derails, and what lets the estimation of elements in the filter deviate for different setups between practically zero and around 3%. The second thing to investigate would be making the best use of the hash bits. The "shingled conversion" was a best guess solution, but maybe there is more to achieve. Also, it would be interesting if there was any more efficient approach than _hash chaining_ to generate the required hash bits for _k > 31_.
