@@ -9,7 +9,7 @@ I always found [Bloom filters](https://en.wikipedia.org/wiki/Bloom_filter) inter
 
 After playing with cryptographic hashes in 2020 to create keys (see [MUHAI](../../../../../../test/java/de/calamanari/pk/muhai/README.md)) and being fascinated about the _randomness_ of these hashes, I wondered if it was possible to leverage the output of a single cryptographic hash to "simulate" multiple hash-functions required for a Bloom Filter. The point is: a cryptographic hash computation may be expensive, but iterating over the input _k_-times (for computing _k_ _cheap_ hash-functions) isn't for free either. Furthermore, selecting _k_ independent "good" hash-functions can be a headache, sometimes highly depending on the use-case and its data types. So, why not spending more effort for computing a single well-investigated cryptographic hash? No need to "guess" any hash functions anymore, and with a large _k_ most likely comparable speed.
 
-Soon, I realized that I was obviously not the first one reasoning about this :smirk: - and found the conference paper _[One-Hashing Bloom Filter](https://www.researchgate.net/publication/284283336_One-Hashing_Bloom_Filter)_ published in 2015 by Jianyuan Lu, Tong Yang, Yi Wang, Huichen Dai, Linxiao Jin, Haoyu Song and Bin Liu.
+Soon, I realized that I was obviously not the first one reasoning about this :smirk: - and found the conference paper _[One-Hashing Bloom Filter](https://www.researchgate.net/publication/284283336%5FOne-Hashing%5FBloom%5FFilter)_ published in 2015 by Jianyuan Lu, Tong Yang, Yi Wang, Huichen Dai, Linxiao Jin, Haoyu Song and Bin Liu.
 The authors have successfully demonstrated that the _k_ independent hash-functions a bloom filter requires can be replaced by leveraging the output of a single cryptographic hash.
 Therefore, they suggest a multi-stage approach, where the first stage is computing a single hash followed by the application to _k_ partitions of the filter (forming together _m* >= m_ bits). Their partition mechanism creates _k_ partitions to fit _m_ as good as possible, where the individual partition sizes are unique, prime and close to each other. This way they can "simulate _k_ hash-functions" using modulo(partition size _m<sub>i</sub>_) to find the bit to set in each partition for a particular hashed input. Finding a good partition setup with minimal waste _(m* - m)_ based on primes is of course not trivial. However, the authors have demonstrated that the waste is acceptable and the resulting bloom filter outperforms certain other techniques.
 
@@ -17,7 +17,7 @@ While I find the modulo-approach with prime-aligned partitions clever, I wondere
 
 ## Goals
 
-* Implement a Bloom filter (fun :smirk:)
+* Implement a Bloom filter :smirk:
 * Create a convenient implementation that lets me specify the number of elements I plan to insert _n_ or the number of bits I want to use _m_ and the false-positive rate I want to achieve. All other settings should be left to automatically derived estimation.
 * My Bloom filter shall use a single cryptographic hash.
 * I want to avoid complicated partitioning and especially the modulo-stage.
@@ -78,15 +78,15 @@ I decided to go back to the drawing-board. Obviously, the goal must be choosing 
 
 ## Results
 
-In general for small _n_ I saw fluctuation regarding the measured false-positive rate _epsilon_, but I blame the low numbers here. I decided to start above _n=10000_ and got good quite stable numbers. In my multi-setup tests the false-positive rate _epsilon_ did not deviate more than +/- 10% from the configured one, better/worse around 50/50. The estimation of elements in the filter never deviated much more than 3.015% from the counted number of elements.
+In general for small _n_ I saw fluctuation regarding the measured false-positive rate _epsilon_, but I blame the low numbers here. I decided to start above _n=10000_ and got good quite stable numbers. In my multi-setup tests the false-positive rate _epsilon_ did not deviate more than +/- 10% from the configured one, better/worse around 50/50. The estimation of elements in the filter never deviated more than 3.015% from the counted number of elements.
 
 I did not do any performance tests. I am not even sure if this made much sense, because for simplification and convenience reasons this implementation uses data structures and instructions which are not performance-optimized (besides avoiding modulo).
 
-### Further Thoughts
-
-Obviously, the implementation could be refined and improved. As a first step I recommend more systematic testing to better explain under which circumstances _epsilon_ derails, and what lets the estimation of elements in the filter deviate for different setups between practically zero and around 3%. The second thing to investigate would be making the best use of the hash bits. The "shingled conversion" was a best guess solution, maybe there is more to achieve. Also, it would be interesting if there was any more efficient approach than _hash chaining_ to generate the required hash bits for _k > 31_.
 
 ### Conclusion
 
 I could demonstrate that the idea works and leads to a convenient, configurable and reliable bloom filter with a **maximum waste of _k - 1 + 63_ bits** (the 63 come from the 64-bit-alignment of the bit vector based on type long). It is easy to use and does not require the user to do any complicated "guessing". 
 
+### Further Thoughts
+
+Obviously, the implementation could be refined and improved. As a first step I recommend more systematic testing to better explain under which circumstances _epsilon_ derails, and what lets the estimation of elements in the filter deviate for different setups between practically zero and around 3%. The second thing to investigate would be making the best use of the hash bits. The "shingled conversion" was a best guess solution, maybe there is more to achieve. Also, it would be interesting if there was any more efficient approach than _hash chaining_ to generate the required hash bits for _k > 31_.

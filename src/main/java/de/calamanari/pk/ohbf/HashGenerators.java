@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.other.ohbf;
+package de.calamanari.pk.ohbf;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

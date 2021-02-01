@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.other.ohbf;
+package de.calamanari.pk.ohbf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

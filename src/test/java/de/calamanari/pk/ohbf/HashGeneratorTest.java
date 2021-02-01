@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.other.ohbf;
+package de.calamanari.pk.ohbf;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotSame;
@@ -31,8 +31,8 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import de.calamanari.other.ohbf.HashGenerators.CompositeHashGenerator;
-import de.calamanari.other.ohbf.HashGenerators.DefaultHashGenerator;
+import de.calamanari.pk.ohbf.HashGenerators.CompositeHashGenerator;
+import de.calamanari.pk.ohbf.HashGenerators.DefaultHashGenerator;
 import de.calamanari.pk.util.CloneUtils;
 
 /**
