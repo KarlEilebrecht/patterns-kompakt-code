@@ -36,7 +36,7 @@ I invite you to experiment with the patterns and to think about the choice that 
 
 Most important: **Have fun! :smirk:**
 
-_Karl Eilebrecht, December 2020_
+_Karl Eilebrecht, February 2021_
 
 
 ## The Patterns
@@ -108,3 +108,7 @@ _Karl Eilebrecht, December 2020_
 * [Registry](src/test/java/de/calamanari/pk/registry/README.md)
 * [Service Stub (Mock)](src/test/java/de/calamanari/pk/servicestub/README.md)
 * [Value Object](src/test/java/de/calamanari/pk/valueobject/README.md)
+
+### Experimental Stuff
+
+* [Generic One-Hashing Bloom Filter](src/main/java/de/calamanari/other/ohbf/README.md)
