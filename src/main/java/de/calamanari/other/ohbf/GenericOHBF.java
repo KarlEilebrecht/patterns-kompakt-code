@@ -31,7 +31,7 @@ import de.calamanari.pk.muhai.MuhaiGenerator;
 import de.calamanari.pk.util.AtomicFixedLengthBitVector;
 
 /**
- * The {@link GenericOHBFFirstAttempt} is a general-purpose thread-safe serializable fixed-size <b>One-Hashing Bloom Filter</b>.
+ * The {@link GenericOHBF} is a general-purpose thread-safe serializable fixed-size <b>One-Hashing Bloom Filter</b>.
  * <p>
  * After playing with cryptographic hashes in 2020 to create keys (see {@link MuhaiGenerator}) and being fascinated about the randomness of these hashes, I
  * wondered if it was possible to leverage the output of a single cryptographic hash to "simulate" multiple hash-functions required for a bloom filter. The
