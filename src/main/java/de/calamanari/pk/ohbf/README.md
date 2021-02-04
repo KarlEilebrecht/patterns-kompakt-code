@@ -34,7 +34,7 @@ While I find the modulo-approach with prime-aligned partitions clever, I wondere
 
 My idea was to use hash-bits as-is. Assumption: any _b_ bits taken from the hash can be considered random, thus every integer number created of _b_ bits from left to right should be random in range _[ 0 .. 2^b )_. Thus, we can create _k_ partitions and derive _k_ random numbers from the hash (read, convert, distribute). 
 
-![Test](../../../../../../../doc/patterns/images/partitioning-rcd.svg)
+![Test](../../../../../../../doc/patterns/images/partitioning-rcd-var.svg)
 
 The _k_ numbers are the results from _k_ _virtual hash functions_ and can be used directly to set bits in the k partitions. 
 
@@ -90,7 +90,11 @@ I decided to go back to the drawing-board. Obviously, the goal must be choosing 
 
 ![Test](../../../../../../../doc/patterns/images/partitioning-ohbf2.svg)
 
-Assuming _h<sub>i</sub>_ to be _random enough_, I only need to efficiently distribute the _h<sub>i</sub> .. h<sub>k</sub>_ in range _[ 0 .. 2^x )_ to the partition's bits _[ 0 .. m<sub>a</sub>-1 )_ **in a fair manner**. To avoid modulo for each of the _k_ partition indexes I convert 4 bytes of the hash into a an unsigned 32-bit integer, convert it into a long (64 bits), multiply it by the partition size followed by a right-shift by 32 bits. You can find a [nice article](https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/) written by Prof. Daniel Lemire about this technique. 
+Assuming _h<sub>i</sub>_ to be _random enough_, I only need to efficiently distribute the _h<sub>i</sub> .. h<sub>k</sub>_ in range _[ 0 .. 2^x )_ to the partition's bits _[ 0 .. m<sub>a</sub>-1 )_ **in a fair manner**. 
+
+![Test](../../../../../../../doc/patterns/images/partitioning-rcd.svg)
+
+To avoid modulo for each of the _k_ partition indexes I convert 4 bytes of the hash into a an unsigned 32-bit integer, convert it into a long (64 bits), multiply it by the partition size followed by a right-shift by 32 bits. You can find a [nice article](https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/) written by Prof. Daniel Lemire about this technique. 
 
 ![Test](../../../../../../../doc/patterns/images/partitioning-distribution.svg)
 
