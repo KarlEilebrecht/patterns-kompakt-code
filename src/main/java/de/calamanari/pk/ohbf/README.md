@@ -11,7 +11,12 @@ After playing with cryptographic hashes in 2020 to create keys (see [MUHAI](../.
 
 Soon, I realized that I was obviously not the first one reasoning about this :smirk: - and found the conference paper _[One-Hashing Bloom Filter](https://www.researchgate.net/publication/284283336%5FOne-Hashing%5FBloom%5FFilter)_ published in 2015 by Jianyuan Lu, Tong Yang, Yi Wang, Huichen Dai, Linxiao Jin, Haoyu Song and Bin Liu.
 The authors have successfully demonstrated that the _k_ independent hash-functions a bloom filter requires can be replaced by leveraging the output of a single cryptographic hash.
-Therefore, they suggest a multi-stage approach, where the first stage is computing a single hash followed by the application to _k_ partitions of the filter (forming together _m* >= m_ bits). Their partition mechanism creates _k_ partitions to fit _m_ as good as possible, where the individual partition sizes are unique, prime and close to each other. This way they can "simulate _k_ hash-functions" using modulo(partition size _m<sub>i</sub>_) to find the bit to set in each partition for a particular hashed input. Finding a good partition setup with minimal waste _(m* - m)_ based on primes is of course not trivial. However, the authors have demonstrated that the waste is acceptable and the resulting bloom filter outperforms certain other techniques.
+
+![Test](../../../../../../../doc/patterns/images/partitioning-original.svg) 
+![Test](../../../../../../../doc/patterns/images/partitioning-ohbf.svg)
+
+Therefore, they suggest a multi-stage approach (right image above), where the first stage is computing a single hash followed by the application to _k_ partitions of the filter (forming together _m* >= m_ bits). 
+Their partition mechanism creates _k_ partitions to fit _m_ as good as possible, where the individual partition sizes are unique, prime and close to each other. This way they can "simulate _k_ hash-functions" using modulo(partition size _m<sub>i</sub>_) to find the bit to set in each partition for a particular hashed input. Finding a good partition setup with minimal waste _(m* - m)_ based on primes is of course not trivial. However, the authors have demonstrated that the waste is acceptable and the resulting bloom filter outperforms certain other techniques.
 
 While I find the modulo-approach with prime-aligned partitions clever, I wondered if we were able to avoid that kind of complexity. The point is: We assume the hash bits to be random and not to contain any internal patterns (otherwise the cryptographic hash would be vulnerable). So, for uniform (random-like) distribution we should not need any additional sophisticated shuffling. The challenge should be finding an efficient mechanism to derive _k_ pseudo-hash-values to set bits in the k partitions, so that these partitions are going to fill up uniformly.
 
@@ -27,7 +32,15 @@ While I find the modulo-approach with prime-aligned partitions clever, I wondere
 
 ## Concept
 
-My idea was to use hash-bits as-is. Assumption: any _b_ bits taken from the hash can be considered random, thus every integer number created of _b_ bits from left to right should be random in range _[ 0 .. 2^b )_. Thus, we can create _k_ partitions and derive _k_ random numbers from the hash. The _k_ numbers are the results from _k_ _virtual hash functions_ and can be used directly to set bits in the k partitions. Given these numbers are random we do not need any modulo, we just need enough hash bits to read for computing indexes. Modern hash functions like SHA-family provided by the JDK provide you with 512 bits per hash run out of the box, and the optimal _k_ is often not too high. So, a single hash run should provide us with the desired input to derive all the indexes for the _k_ partitions.
+My idea was to use hash-bits as-is. Assumption: any _b_ bits taken from the hash can be considered random, thus every integer number created of _b_ bits from left to right should be random in range _[ 0 .. 2^b )_. Thus, we can create _k_ partitions and derive _k_ random numbers from the hash (read, convert, distribute). 
+
+![Test](../../../../../../../doc/patterns/images/partitioning-rcd.svg)
+
+The _k_ numbers are the results from _k_ _virtual hash functions_ and can be used directly to set bits in the k partitions. 
+
+![Test](../../../../../../../doc/patterns/images/partitioning-ohbf2-fa.svg)
+
+Given these numbers are random we do not need any modulo, we just need enough hash bits to read for computing indexes. Modern hash functions like SHA-family provided by the JDK provide you with 512 bits per hash run out of the box, and the optimal _k_ is often not too high. So, a single hash run should provide us with the desired input to derive all the indexes for the _k_ partitions.
 
 ## Measuring success
 Luckily, a Bloom filter based on cryptographic hashing is easy to test, because you don't need to care about the input's nature, it just has to be unique. Thus, for feeding the filter and testing you can just employ an upcounting sequence. The first _n_ element you test and insert, followed by an arbitrary number of subsequent elements you just test. 
@@ -73,7 +86,19 @@ For the time being I decided to drop the optimizer and to ignore the waste issue
 
 The results were actually not too bad. The false-positive rate was below the configured/predicted rate in most of my tests. Furthermore, the common estimation for Bloom filters, the [prediction of the number of elements in the filter](https://en.wikipedia.org/wiki/Bloom_filter#Approximating_the_number_of_items_in_a_Bloom_filter) based on the count of 1s worked quite well. Only the high waste deviation (sometimes low, in other cases close to _m/k_) made the solution uncomely. A main motivation to use bloom filters is memory efficiency, so, if the configured _n_ is large and the estimated _k_ is low, the difference between expected and real memory consumption could be too high.
 
-I decided to go back to the drawing-board. Obviously, the goal must be choosing a single fixed partition size independent from _2^x_. Best would be to use _m<sub>a</sub> = Math.ceil(m/k)_. If so, the maximum waste would be _k-1_ and thus negligible. But this idea leads to a new problem: Each value _h<sub>i</sub>_ I read from the hash bits (result of one of the _k_ virtual hash-functions) is by definition in a range _[ 0 .. 2^x )_, while the partition bit index can now be any natural number in range _[ 0 .. m<sub>a</sub> )_. Assuming _h<sub>i</sub>_ to be _random enough_, I only need to efficiently distribute the _h<sub>i</sub> .. h<sub>k</sub>_ in range _[ 0 .. 2^x )_ to the partition's bits _[ 0 .. m<sub>a</sub>-1 )_ **in a fair manner**. To avoid modulo for each of the _k_ partition indexes I convert 4 bytes of the hash into a an unsigned 32-bit integer, convert it into a long (64 bits), multiply it by the partition size followed by a right-shift by 32 bits. You can find a [nice article](https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/) written by Prof. Daniel Lemire about this technique. While this is a couple of times faster than modulo and easy to implement in Java, the need to consume 32 bits per hash worried me (it requires _k * 32_ hash bits). Thus, I decided to implement what I call _shingled conversion_. While reading the bits from the hash I move the pointer only by 2 bytes (16 bits) instead of 4, hoping that the new dependency between _h<sub>i</sub>_ and _h<sub>i-1</sub>_ would not kill the uniform distribution of the _k_ hashes _h<sub>0</sub> .. h<sub>k-1</sub>_. Instead of _k * 32_ hash bits this technique only requires _(k+1) * 16_ hash bits. So, with _k < 32_ a single SHA-512 hash meets the requirements, above [HashGenerators](HashGenerators.java) uses chained salted hashes relying on the [avalanche effect](https://en.wikipedia.org/wiki/Avalanche_effect). This of course has a negative impact on performance. I will ignore this for the moment. This would be subject to optimization.
+I decided to go back to the drawing-board. Obviously, the goal must be choosing a single fixed partition size independent from _2^x_. Best would be to use _m<sub>a</sub> = Math.ceil(m/k)_. If so, the maximum waste would be _k-1_ and thus negligible. But this idea leads to a new problem: Each value _h<sub>i</sub>_ I read from the hash bits (result of one of the _k_ virtual hash-functions) is by definition in a range _[ 0 .. 2^x )_, while the partition bit index can now be any natural number in range _[ 0 .. m<sub>a</sub> )_.
+
+![Test](../../../../../../../doc/patterns/images/partitioning-ohbf2.svg)
+
+Assuming _h<sub>i</sub>_ to be _random enough_, I only need to efficiently distribute the _h<sub>i</sub> .. h<sub>k</sub>_ in range _[ 0 .. 2^x )_ to the partition's bits _[ 0 .. m<sub>a</sub>-1 )_ **in a fair manner**. To avoid modulo for each of the _k_ partition indexes I convert 4 bytes of the hash into a an unsigned 32-bit integer, convert it into a long (64 bits), multiply it by the partition size followed by a right-shift by 32 bits. You can find a [nice article](https://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/) written by Prof. Daniel Lemire about this technique. 
+
+![Test](../../../../../../../doc/patterns/images/partitioning-distribution.svg)
+
+While this is a couple of times faster than modulo and easy to implement in Java, the need to consume 32 bits per hash worried me (it requires _k * 32_ hash bits). Thus, I decided to implement what I call _shingled conversion_. While reading the bits from the hash I move the pointer only by 2 bytes (16 bits) instead of 4, hoping that the new dependency between _h<sub>i</sub>_ and _h<sub>i-1</sub>_ would not kill the uniform distribution of the _k_ hashes _h<sub>0</sub> .. h<sub>k-1</sub>_. 
+
+![Test](../../../../../../../doc/patterns/images/partitioning-rcd-shingled.svg)
+
+Instead of _k * 32_ hash bits this technique only requires _(k+1) * 16_ hash bits. So, with _k < 32_ a single SHA-512 hash meets the requirements, above [HashGenerators](HashGenerators.java) uses chained salted hashes relying on the [avalanche effect](https://en.wikipedia.org/wiki/Avalanche_effect). This of course has a negative impact on performance. I will ignore this for the moment. This would be subject to optimization.
 
 
 ## Results
