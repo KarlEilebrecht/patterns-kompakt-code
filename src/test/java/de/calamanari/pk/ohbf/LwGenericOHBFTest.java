@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * GenericOHBFTest
+ * LwGenericOHBFTest
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.stream.LongStream;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.util.CloneUtils;
-import de.calamanari.pk.util.TimeUtils;
 
 /**
  * Test coverage for the Generic one-hashing bloom filter
@@ -41,68 +39,16 @@ import de.calamanari.pk.util.TimeUtils;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class GenericOHBFTest {
+public class LwGenericOHBFTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericOHBFTest.class);
-
-    @Test
-    public void testEstimation() {
-
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 1, 1));
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 0, 1));
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 0, 0));
-        assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 1, 0));
-        assertEquals(1, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 1, 0));
-        assertEquals(2, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 2, 1));
-        assertEquals(2, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 4, 1));
-        assertEquals(3, GenericOHBF.computeEstimatedNumberOfElementsInserted(2, 4, 1));
-        assertEquals(197, GenericOHBF.computeEstimatedNumberOfElementsInserted(86, 100, 1));
-        assertEquals(66, GenericOHBF.computeEstimatedNumberOfElementsInserted(86, 100, 3));
-        assertEquals(Long.MAX_VALUE, GenericOHBF.computeEstimatedNumberOfElementsInserted(1, 2, 0));
-
-    }
-
-    @Test
-    public void testVectorPositionComputation() {
-        byte[] hashBytes = new byte[8];
-
-        long pos = GenericOHBF.fetchBitPosition(hashBytes, 0, 9);
-
-        assertEquals(0, pos);
-
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
-
-        assertEquals(9, pos);
-
-        hashBytes = new byte[6];
-
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
-
-        assertEquals(9, pos);
-
-        hashBytes[5] = 1;
-
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
-
-        assertEquals(9, pos);
-
-        hashBytes[2] = -1;
-        hashBytes[3] = -1;
-        hashBytes[4] = -1;
-        hashBytes[5] = -1;
-
-        pos = GenericOHBF.fetchBitPosition(hashBytes, 1, 9);
-
-        assertEquals(17, pos);
-
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(LwGenericOHBFTest.class);
 
     @Test
     public void testBasics() {
 
         BloomFilterConfig config = new BloomFilterConfig(100, 0.0001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        LwGenericOHBF bloom = new LwGenericOHBF(config);
 
         assertTrue(bloom.put("Bla"));
 
@@ -151,7 +97,7 @@ public class GenericOHBFTest {
 
         BloomFilterConfig config = new BloomFilterConfig(100, 0.0001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        LwGenericOHBF bloom = new LwGenericOHBF(config);
 
         assertTrue(bloom.put("Bla"));
 
@@ -164,7 +110,7 @@ public class GenericOHBFTest {
                 numberOfInserts++;
             }
         }
-        GenericOHBF clone = CloneUtils.passByValue(bloom);
+        LwGenericOHBF clone = CloneUtils.passByValue(bloom);
 
         assertEquals(bloom.getConfig(), clone.getConfig());
 
@@ -221,7 +167,7 @@ public class GenericOHBFTest {
             for (double epsilon : epsilons) {
                 BloomFilterConfig config = new BloomFilterConfig(n, epsilon);
 
-                GenericOHBF bloom = new GenericOHBF(config);
+                LwGenericOHBF bloom = new LwGenericOHBF(config);
 
                 int correctClaims = 0;
                 int falseClaims = 0;
@@ -286,7 +232,7 @@ public class GenericOHBFTest {
     public void testManyElementsAtLowFalsePositiveRate() {
         BloomFilterConfig config = new BloomFilterConfig(10_000_000, 0.000001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        LwGenericOHBF bloom = new LwGenericOHBF(config);
         int correctClaims = 0;
         int falseClaims = 0;
         long numberOfElementsInserted = 0;
@@ -331,7 +277,7 @@ public class GenericOHBFTest {
 
         BloomFilterConfig config = new BloomFilterConfig(100000, 0.0000001d);
 
-        GenericOHBF bloom = new GenericOHBF(config);
+        LwGenericOHBF bloom = new LwGenericOHBF(config);
         int correctClaims = 0;
         int falseClaims = 0;
 
@@ -371,78 +317,6 @@ public class GenericOHBFTest {
         double falsePositiveRate = ((double) falseClaims) / 100_000_000;
         assertTrue(falsePositiveRate <= config.getFalsePositiveRateEpsilon());
         LOGGER.debug("Correct claims: {}, false claims: {} ({})", correctClaims, falseClaims, nf.format(falsePositiveRate));
-    }
-
-    @Test
-    @Ignore("Takes time")
-    public void testReduction() {
-
-        long startTimeNanos = System.nanoTime();
-        long rangeUpperBound = 71;
-
-        long[] counters = new long[(int) rangeUpperBound];
-        for (long l = Integer.MIN_VALUE; l <= Integer.MAX_VALUE; l++) {
-            long unsigned = l & 0x00000000ffffffffL;
-            int reduced = (int) ((unsigned * rangeUpperBound) >>> 32L);
-            counters[reduced]++;
-        }
-
-        long sum = LongStream.of(counters).sum();
-
-        long numberOfPossibleValues = (long) Math.pow(2, 32);
-
-        double mp = ((double) numberOfPossibleValues) / rangeUpperBound;
-
-        assertEquals(mp, LongStream.of(counters).average().getAsDouble(), 0.01);
-        assertEquals(numberOfPossibleValues, sum);
-
-        long[] last = new long[] { Long.MAX_VALUE };
-        LongStream.of(counters).forEach(l -> {
-            if (last[0] != Long.MAX_VALUE) {
-                assertTrue(Math.abs(last[0] - l) <= 1);
-            }
-            last[0] = l;
-        });
-
-        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
-        LOGGER.info("testReduction successful! Elapsed time: {} s", elapsedTimeString);
-
-    }
-
-    @Test
-    @Ignore("Long running")
-    public void testModulo() {
-
-        long startTimeNanos = System.nanoTime();
-        long rangeUpperBound = 71;
-
-        long[] counters = new long[(int) rangeUpperBound];
-        for (long l = Integer.MIN_VALUE; l <= Integer.MAX_VALUE; l++) {
-            long unsigned = l & 0x00000000ffffffffL;
-            int reduced = (int) (unsigned % rangeUpperBound);
-            counters[reduced]++;
-        }
-
-        long sum = LongStream.of(counters).sum();
-
-        long numberOfPossibleValues = (long) Math.pow(2, 32);
-
-        double mp = ((double) numberOfPossibleValues) / rangeUpperBound;
-
-        assertEquals(mp, LongStream.of(counters).average().getAsDouble(), 0.01);
-        assertEquals(numberOfPossibleValues, sum);
-
-        long[] last = new long[] { Long.MAX_VALUE };
-        LongStream.of(counters).forEach(l -> {
-            if (last[0] != Long.MAX_VALUE) {
-                assertTrue(Math.abs(last[0] - l) <= 1);
-            }
-            last[0] = l;
-        });
-
-        String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
-        LOGGER.info("testModulo successful! Elapsed time: {} s", elapsedTimeString);
-
     }
 
 }

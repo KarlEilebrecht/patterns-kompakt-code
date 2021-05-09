@@ -53,7 +53,8 @@
     <logger name="de.calamanari.pk.valueobject" level="INFO"/>
     <logger name="de.calamanari.pk.visitor" level="INFO"/>
     <logger name="de.calamanari.pk.wrapper" level="INFO"/>
-    <logger name="de.calamanari.other.ohbf" level="INFO"/>
+    <logger name="de.calamanari.pk.ohbf" level="INFO"/>
+    <logger name="de.calamanari.pk.ohbf.bloombox" level="DEBUG"/>
 
 
     <root level="INFO">

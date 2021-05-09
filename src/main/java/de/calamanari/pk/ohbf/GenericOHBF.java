@@ -19,7 +19,6 @@
 //@formatter:on
 package de.calamanari.pk.ohbf;
 
-import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicLong;
@@ -78,7 +77,7 @@ import de.calamanari.pk.util.AtomicFixedLengthBitVector;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class GenericOHBF implements Serializable {
+public class GenericOHBF implements BloomFilter {
 
     private static final long serialVersionUID = 2617291705844763246L;
 
@@ -111,6 +110,7 @@ public class GenericOHBF implements Serializable {
 
     /**
      * Creates a new empty filter based on the give configuration
+     * 
      * @param config static settings for the filter
      */
     public GenericOHBF(BloomFilterConfig config) {
@@ -131,22 +131,27 @@ public class GenericOHBF implements Serializable {
     /**
      * @return the static configuration of the filter provided to the constructor
      */
+    @Override
     public BloomFilterConfig getConfig() {
         return config;
     }
 
     /**
      * Returns the size of this bloom filter (m)
+     * 
      * @return number of bits usable, the internal bit-vector is 64-aligned (long) and may be up to 63 bits bigger
      */
+    @Override
     public long getSize() {
         return partitionSize * config.getNumberOfHashesK();
     }
 
     /**
      * For technical reasons the filter uses more bits than configured. This is called waste.
+     * 
      * @return number of bits acquired but not required resp. unused
      */
+    @Override
     public long getWaste() {
         return vector.getSize() - config.getRequiredNumberOfBitsM();
     }
@@ -155,9 +160,11 @@ public class GenericOHBF implements Serializable {
      * Puts the given key into the bloom filter.
      * <p>
      * Please refer to the documentation of {@link MuhaiGenerator} to understand how the attributes are handled.
+     * 
      * @param attributes key, optionally composed of multiple values
      * @return true if the bloom filter changed (item was not in the filter before), otherwise false
      */
+    @Override
     public boolean put(Object... attributes) {
         boolean res = false;
         byte[] hashBytes = hasher.computeHashBytes(attributes);
@@ -176,9 +183,11 @@ public class GenericOHBF implements Serializable {
      * Checks whether the key is in the bloom filter, with a certain probability of false-positive results and no false-negatives.
      * <p>
      * Please refer to the documentation of {@link MuhaiGenerator} to understand how the attributes are handled.
+     * 
      * @param attributes key, optionally composed of multiple values
      * @return true if the key is probably in the filter, false if it is guaranteed not
      */
+    @Override
     public boolean mightContain(Object... attributes) {
         byte[] hashBytes = hasher.computeHashBytes(attributes);
         for (int i = 0; i < config.getNumberOfHashesK(); i++) {
@@ -193,28 +202,45 @@ public class GenericOHBF implements Serializable {
     /**
      * @return the total number of 1s in this bloom filter's bit-vector
      */
+    @Override
     public long getNumberOfBitsUsed() {
         return bitsInUseCounter.get();
     }
 
     /**
      * Estimates the number elements in the bloom filter based on X ({@link #getNumberOfBitsUsed()}), k and m
+     * 
      * @return rough estimate or -1 if the estimation is not possible (filter full)
      */
+    @Override
     public long getEstimatedNumberOfElementsInserted() {
         return computeEstimatedNumberOfElementsInserted(getNumberOfBitsUsed(), getSize(), config.getNumberOfHashesK());
     }
 
     /**
      * Only for debugging, for easier checking (single consistent vector) longs appear from right (LSB) to left
+     * 
      * @return a string composed of 0s and 1s, may be huge and will fail if the vector exceeds any reasonable size!
      */
+    @Override
     public String getBitVectorAsPaddedBinaryString() {
         String res = this.vector.toPaddedBinaryString();
         if (getSize() < res.length()) {
             res = res.substring(res.length() - (int) getSize());
         }
         return res;
+    }
+
+    /**
+     * Returns a copy of the internal long array representing the bit vector.
+     * <p>
+     * This operation is meant for scenarios dealing with many instances of bloom filters for fast matching after creation.
+     * 
+     * @return copy of the long array representing the internal bit vector
+     */
+    @Override
+    public long[] getBitVectorAsLongArray() {
+        return this.vector.toLongArray();
     }
 
     /**
@@ -232,6 +258,7 @@ public class GenericOHBF implements Serializable {
     /**
      * Formula (Swamidass &amp; Baldi (2007), see <a
      * href=https://en.wikipedia.org/wiki/Bloom_filter#Approximating_the_number_of_items_in_a_Bloom_filter">https://en.wikipedia.org/wiki/Bloom_filter#Approximating_the_number_of_items_in_a_Bloom_filter</a>)
+     * 
      * @param x number of 1-bits in the filter, <b>0 &lt;= x &lt;= m</b>
      * @param m available bits, <b>m &gt; 0</b>
      * @param k number of hash-functions (here partitions), <b>k &gt; 0</b>
@@ -250,6 +277,7 @@ public class GenericOHBF implements Serializable {
 
     /**
      * Computes the required length of the hash bit vector
+     * 
      * @param k number of partitions
      * @return length of the hash to be computed in bits
      */
@@ -262,6 +290,7 @@ public class GenericOHBF implements Serializable {
 
     /**
      * This method derives the next bit position (to check or to verify) from the given hash
+     * 
      * @param hashBytes bytes from the hash
      * @param partition the partition (in other words the k's hash function to compute)
      * @param partitionSize size of the partition i.e. (m/k)

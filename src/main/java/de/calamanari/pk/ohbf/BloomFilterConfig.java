@@ -29,6 +29,7 @@ import java.util.Locale;
  * <p>
  * See <a href=
  * "https://en.wikipedia.org/wiki/Bloom_filter#Optimal_number_of_hash_functions">https://en.wikipedia.org/wiki/Bloom_filter#Optimal_number_of_hash_functions</a>
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
@@ -55,6 +56,22 @@ public class BloomFilterConfig implements Serializable {
      * Number of hashes (hash functions) required for the filter
      */
     private final int numberOfHashesK;
+
+    /**
+     * <b>FOR INTERNAL USE ONLY</b>
+     * <p>
+     * Re-creates an instance with exact values, wrong usage may create inconsistent configurations.
+     * 
+     * @param requiredNumberOfBitsM size limitation for the bloom filter vector
+     * @param numberOfInsertedElementsN expected number of elements that will be inserted (max)
+     * @param falsePositiveRateEpsilon desired false-positive rate
+     * @param numberOfHashesK number of hashed to be used (partitions)
+     * @return instance with the exact values
+     */
+    public static BloomFilterConfig createUnchecked(long requiredNumberOfBitsM, long numberOfInsertedElementsN, double falsePositiveRateEpsilon,
+            int numberOfHashesK) {
+        return new BloomFilterConfig(requiredNumberOfBitsM, numberOfInsertedElementsN, falsePositiveRateEpsilon, numberOfHashesK);
+    }
 
     /**
      * @param numberOfInsertedElementsN expected number of elements that will be inserted (max)
@@ -101,6 +118,23 @@ public class BloomFilterConfig implements Serializable {
         this.numberOfInsertedElementsN = numberOfInsertedElementsN;
         this.falsePositiveRateEpsilon = Math.pow(Math.E, lnEpsilon);
         this.numberOfHashesK = (int) Math.max(1, Math.ceil(kApprox));
+    }
+
+    /**
+     * <b>FOR INTERNAL USE ONLY</b>
+     * <p>
+     * Re-creates an instance with exact values, wrong usage may create inconsistent configurations.
+     * 
+     * @param requiredNumberOfBitsM size limitation for the bloom filter vector
+     * @param numberOfInsertedElementsN expected number of elements that will be inserted (max)
+     * @param falsePositiveRateEpsilon desired false-positive rate
+     * @param numberOfHashesK number of hashed to be used (partitions)
+     */
+    private BloomFilterConfig(long requiredNumberOfBitsM, long numberOfInsertedElementsN, double falsePositiveRateEpsilon, int numberOfHashesK) {
+        this.requiredNumberOfBitsM = requiredNumberOfBitsM;
+        this.numberOfInsertedElementsN = numberOfInsertedElementsN;
+        this.falsePositiveRateEpsilon = falsePositiveRateEpsilon;
+        this.numberOfHashesK = numberOfHashesK;
     }
 
     /**

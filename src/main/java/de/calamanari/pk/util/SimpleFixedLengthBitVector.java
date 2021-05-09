@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * AtomicFixedLengthBitVector 
+ * SimpleFixedLengthBitVector 
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -19,17 +19,17 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import java.util.concurrent.atomic.AtomicLongArray;
+import java.util.Arrays;
 
 /**
- * {@link AtomicFixedLengthBitVector} is a fixed-size bit-vector implementation for concurrent access.
+ * {@link SimpleFixedLengthBitVector} is a fixed-size bit-vector implementation. It is <b>not safe</b> to be used by multiple threads concurrently.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
+public class SimpleFixedLengthBitVector implements FixedLengthBitVector {
 
-    private static final long serialVersionUID = -8895199789391156337L;
+    private static final long serialVersionUID = -7795199789391156117L;
 
     /**
      * Marks an empty long
@@ -44,7 +44,7 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
     /**
      * Long array (bit store), one long stores 64 bits
      */
-    private final AtomicLongArray vector;
+    private final long[] vector;
 
     /**
      * Creates a new bit vector of the given size aligned to multiples of 64.
@@ -53,7 +53,7 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
      * 
      * @param size &gt;=1
      */
-    public AtomicFixedLengthBitVector(long size) {
+    public SimpleFixedLengthBitVector(long size) {
         if (size <= 0) {
             throw new IllegalArgumentException(String.format("Size must be >= 1, given: %d", size));
         }
@@ -66,18 +66,19 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
 
         this.size = vectorSizeL * 64;
 
-        this.vector = new AtomicLongArray((int) vectorSizeL);
+        this.vector = new long[(int) vectorSizeL];
 
     }
 
     /**
-     * Creates the bit vector from the given number of longs, see {@link #toLongArray()}
+     * Creates the bit vector from the given number of longs, see {@link #toLongArray()}<br>
+     * <b>Important:</b> For efficiency reasons we do not copy the given array but reference it internally!
      * 
      * @param longArray data
      */
-    public AtomicFixedLengthBitVector(long[] longArray) {
-        this.vector = new AtomicLongArray(longArray);
-        this.size = this.vector.length() * 64L;
+    public SimpleFixedLengthBitVector(long[] longArray) {
+        this.vector = longArray;
+        this.size = this.vector.length * 64L;
     }
 
     /**
@@ -96,12 +97,7 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
         // this is the pattern we want to "OR" with the long value from the vector
         long singleBitMask = 1L << position;
 
-        boolean success = false;
-        do {
-            long found = vector.get(longIdx);
-            long update = found | singleBitMask;
-            success = (found == update) || vector.compareAndSet(longIdx, found, update);
-        } while (!success);
+        vector[longIdx] = vector[longIdx] | singleBitMask;
     }
 
     /**
@@ -122,17 +118,13 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
         // this is the pattern we want to "OR" with the long value from the vector
         long singleBitMask = 1L << position;
 
-        boolean success = false;
-        do {
-            long found = vector.get(longIdx);
-            if ((found & singleBitMask) == singleBitMask) {
-                // bit is already set
-                break;
-            }
-            long update = found | singleBitMask;
-            success = (found == update) || vector.compareAndSet(longIdx, found, update);
-        } while (!success);
-        return success;
+        long found = vector[longIdx];
+        if ((found & singleBitMask) == singleBitMask) {
+            // bit is already set
+            return false;
+        }
+        vector[longIdx] = found | singleBitMask;
+        return true;
     }
 
     /**
@@ -151,12 +143,7 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
         // this is the pattern we want to "AND" with the long value from the vector
         long singleBitMask = (1L << position) ^ -1L;
 
-        boolean success = false;
-        do {
-            long found = vector.get(longIdx);
-            long update = found & singleBitMask;
-            success = (found == update) || vector.compareAndSet(longIdx, found, update);
-        } while (!success);
+        vector[longIdx] = vector[longIdx] & singleBitMask;
     }
 
     /**
@@ -178,17 +165,13 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
         // this is the pattern we want to "AND" with the long value from the vector
         long singleBitMask = (1L << position) ^ -1L;
 
-        boolean success = false;
-        do {
-            long found = vector.get(longIdx);
-            if ((found | singleBitMask) == singleBitMask) {
-                // bit is not set
-                break;
-            }
-            long update = found & singleBitMask;
-            success = (found == update) || vector.compareAndSet(longIdx, found, update);
-        } while (!success);
-        return success;
+        long found = vector[longIdx];
+        if ((found | singleBitMask) == singleBitMask) {
+            // bit is not set
+            return false;
+        }
+        vector[longIdx] = found & singleBitMask;
+        return true;
     }
 
     /**
@@ -206,12 +189,7 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
         // this is the pattern we want to "XOR" with the long value from the vector
         long singleBitMask = 1L << position;
 
-        boolean success = false;
-        do {
-            long found = vector.get(longIdx);
-            long update = found ^ singleBitMask;
-            success = (found == update) || vector.compareAndSet(longIdx, found, update);
-        } while (!success);
+        vector[longIdx] = vector[longIdx] ^ singleBitMask;
     }
 
     /**
@@ -228,7 +206,7 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
         // this is the pattern we want to "AND" with the long value from the vector for testing
         long singleBitMask = 1L << position;
 
-        return (singleBitMask & vector.get(longIdx)) == singleBitMask;
+        return (singleBitMask & vector[longIdx]) == singleBitMask;
     }
 
     /**
@@ -243,44 +221,34 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
         int longIdx = (int) (position >>> 6L);
 
         // right shift by position modulo 64, then AND with 1 (00000...0001), result is either 1 or 0
-        return (int) ((vector.get(longIdx) >> (position & 63)) & 1L);
+        return (int) ((vector[longIdx] >> (position & 63)) & 1L);
     }
 
     /**
      * Counts the 1-bits in the vector from left to right.
-     * <p>
-     * <b>Important:</b> This operation is not atomic but subsequently counts the bits in the underlying long values. Thus calling {@link #setBit(long)} or
-     * {@link #flipBit(long)} concurrently is safe but may lead to unexpected results because the effect on the overall count will depend on the position the
-     * concurrent change happens.
      * 
      * @return number of bits set to 1 in this vector
      */
     @Override
     public long countNumberOfBitsSet() {
         long res = 0;
-        for (int i = 0; i < vector.length(); i++) {
-            long l = vector.get(i);
+        for (int i = 0; i < vector.length; i++) {
+            long l = vector[i];
             if (l != EMPTY_LONG) {
                 for (long bitPos = 0; bitPos < 64; bitPos++) {
                     res = res + ((l >> bitPos) & 1L);
                 }
             }
         }
-
         return res;
     }
 
     /**
      * Sets all bits in this vector to 0.
-     * <p>
-     * <b>Important:</b> This operation is not atomic but consists on a sequence of updates. Calling it concurrently with other operations on this vector is
-     * safe but may lead to surprising results.
      */
     @Override
     public void clear() {
-        for (int i = 0; i < vector.length(); i++) {
-            vector.set(i, EMPTY_LONG);
-        }
+        Arrays.fill(vector, EMPTY_LONG);
     }
 
     /**
@@ -294,29 +262,18 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
     }
 
     /**
-     * Returns the long-array representation of this bit vector
-     * <p>
-     * <b>Important:</b>
-     * <ul>
-     * <li>Consider memory consumption, this operation will create a copy and thus double the required memory.</li>
-     * <li>This operation is not atomic. It is still safe to be called concurrently with other operations on this bit vector, but this may lead to unexpected
-     * results.</li>
-     * </ul>
+     * Returns a reference to the internal long-array of this bit vector
      * 
-     * @return copy of the internal long array
+     * @return reference to the internal long array
      */
     @Override
     public long[] toLongArray() {
-        long[] res = new long[vector.length()];
-        for (int i = 0; i < vector.length(); i++) {
-            res[i] = vector.get(i);
-        }
-        return res;
+        return vector;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "[size: " + this.size + ", size of long vector: " + this.vector.length() + "]";
+        return this.getClass().getSimpleName() + "[size: " + this.size + ", size of long vector: " + this.vector.length + "]";
     }
 
     /**
@@ -328,12 +285,51 @@ public class AtomicFixedLengthBitVector implements FixedLengthBitVector {
     public String toPaddedBinaryString() {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = vector.length() - 1; i >= 0; i--) {
-            String binary = Long.toBinaryString(vector.get(i));
+        for (int i = vector.length - 1; i >= 0; i--) {
+            String binary = Long.toBinaryString(vector[i]);
             binary = "0000000000000000000000000000000000000000000000000000000000000000" + binary;
             binary = binary.substring(binary.length() - 64);
             sb.append(binary);
         }
         return sb.toString();
+    }
+
+    /**
+     * Utility method that performs a logical AND and returns true if all 1-bits in cmp are also present in src.<br>
+     * E.g. <code>res = compareAND(src, 0, cmp, 0, 1)</code> is equivalent to <code>res = (src[0] &amp; cmp[0]) == cmp[0]</code>
+     * <p>
+     * To simplify usage the effective array length of src and cmp is irrelevant and independent from the given length, the operation automatically performs
+     * right-padding with zeros.
+     * 
+     * @param src source array with long values
+     * @param srcPos position to start in the source, <b>array index</b> (not the bit index), <code>&gt;=0</code>
+     * @param cmp comparison array
+     * @param cmpPos position to start in the comparison array, <b>array index</b> (not the bit index), <code>&gt;=0</code>
+     * @param length number of longs to compare, for 0 or negative length this method gracefully returns true
+     * @return true if all 1-bits in cmp are also set in src
+     * @throws ArrayIndexOutOfBoundsException if srcPos or cmpPos were negative
+     * @throws NullPointerException if src or cmp were null
+     */
+    public static final boolean compareAND(long[] src, int srcPos, long[] cmp, int cmpPos, int length) {
+        if (srcPos < 0 || cmpPos < 0) {
+            throw new ArrayIndexOutOfBoundsException("Array indexes must not be negative, given: srcPos=" + srcPos + ", cmpPos=" + cmpPos);
+        }
+        int srcLen = src.length;
+        int cmpLen = cmp.length;
+        for (int i = 0; i < length; i++) {
+            int cmpIdx = cmpPos + i;
+            if (cmpIdx >= cmpLen) {
+                // means: the remainder of the pattern cmp consists of zeros, so AND will return zeros
+                // no matter how src looks like
+                return true;
+            }
+            int srcIdx = srcPos + i;
+            long srcVal = (srcIdx < srcLen) ? src[srcIdx] : EMPTY_LONG;
+            long cmpVal = cmp[cmpIdx];
+            if ((srcVal & cmpVal) != cmpVal) {
+                return false;
+            }
+        }
+        return true;
     }
 }

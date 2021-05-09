@@ -25,6 +25,7 @@ import org.junit.Test;
 
 /**
  * Test coverage for the bloom filter configuration and estimation
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
