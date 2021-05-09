@@ -39,6 +39,16 @@ import org.slf4j.Marker;
 import org.slf4j.event.Level;
 import org.slf4j.spi.LoggingEventBuilder;
 
+/**
+ * Test coverage for logger PROXY
+ * 
+ * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
+ *
+ */
+// I disagree with the Sonar rule below, because mixing syntax (sometimes with eq(), sometimes without)
+// is also confusing. It is not the first time I scratched my head because I FORGOT an eq(), thus I prefer
+// to consequently write eq() when using Mockito
+@SuppressWarnings("java:S6068")
 public class LambdaSupportLoggerProxyTest {
 
     @Test

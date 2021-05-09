@@ -51,14 +51,14 @@ public abstract class AbstractEnterpriseUnit implements EnterpriseNode {
      * 
      * @param name enterprise unit name
      */
-    public AbstractEnterpriseUnit(String name) {
+    protected AbstractEnterpriseUnit(String name) {
         this.name = name;
     }
 
     /**
      * Creates unit, name not set, yet
      */
-    public AbstractEnterpriseUnit() {
+    protected AbstractEnterpriseUnit() {
 
     }
 

@@ -54,7 +54,7 @@ public abstract class AbstractConsoleServer {
      * 
      * @param serverName name of this server
      */
-    public AbstractConsoleServer(String serverName) {
+    protected AbstractConsoleServer(String serverName) {
         this.serverName = serverName;
     }
 

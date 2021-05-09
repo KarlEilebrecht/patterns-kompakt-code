@@ -44,7 +44,7 @@ public abstract class AbstractWorker {
      * 
      * @param name person's name
      */
-    public AbstractWorker(String name) {
+    protected AbstractWorker(String name) {
         this.setName(name);
     }
 

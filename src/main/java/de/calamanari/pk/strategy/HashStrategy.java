@@ -37,7 +37,7 @@ public abstract class HashStrategy {
      * 
      * @param name (ascii-letters, ciphers and underscore only!)
      */
-    public HashStrategy(String name) {
+    protected HashStrategy(String name) {
         this.name = name;
     }
 

@@ -243,6 +243,7 @@ public class KeyCollisionTest {
         KeyCollisionSummary summary = proc.process(() -> generator.createKey((Long) sequence.incrementAndGet()), numberOfKeysToGenerate,
                 prefix.getSizeOfKeyspace().longValue());
 
+        assertEquals(numberOfKeysToGenerate, sequence.get());
         LOGGER.info(formatSummary(summary));
 
     }

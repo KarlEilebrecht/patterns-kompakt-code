@@ -36,7 +36,7 @@ public abstract class InputCommand {
      * 
      * @param receiver the component we delegate to for executing the action
      */
-    public InputCommand(TextComponent receiver) {
+    protected InputCommand(TextComponent receiver) {
         this.receiver = receiver;
     }
 

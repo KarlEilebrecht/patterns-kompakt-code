@@ -64,7 +64,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
      * 
      * @param serverName name of the new server
      */
-    public AbstractThreadedSocketServer(String serverName) {
+    protected AbstractThreadedSocketServer(String serverName) {
         super(serverName);
         this.executorService = createExecutorService();
     }
