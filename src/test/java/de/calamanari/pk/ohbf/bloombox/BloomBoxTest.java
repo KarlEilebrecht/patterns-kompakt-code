@@ -454,7 +454,7 @@ public class BloomBoxTest {
 
     }
 
-    // @Ignore("Use this method to start the demo UI application")
+    @Ignore("Use this method to start the demo UI application")
     @Test
     public void testBloomBoxDemoUI() {
 
