@@ -104,7 +104,7 @@ public class BloomBoxDemoView extends JFrame {
     public final JLabel lblBloomBoxIcon;
     {
         try {
-            lblBloomBoxIcon = new JLabel(new ImageIcon(ImageIO.read(this.getClass().getResource("bloombox_small.png"))));
+            lblBloomBoxIcon = new JLabel(new ImageIcon(ImageIO.read(BloomBoxDemoView.class.getResource("/bloombox_small.png"))));
             lblBloomBoxIcon.setMinimumSize(new Dimension(100, 100));
             lblBloomBoxIcon.setMaximumSize(new Dimension(100, 100));
             lblBloomBoxIcon.setBorder(new LineBorder(new Color(238, 238, 238), 12));
