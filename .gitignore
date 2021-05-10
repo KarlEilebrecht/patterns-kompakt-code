@@ -10,3 +10,4 @@ doc/javadoc/
 .settings
 .classpath
 *.backup
+/.project
