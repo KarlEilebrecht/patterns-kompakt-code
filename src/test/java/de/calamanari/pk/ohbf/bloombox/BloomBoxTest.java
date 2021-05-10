@@ -454,11 +454,11 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Use this method to start the demo UI application")
+    // @Ignore("Use this method to start the demo UI application")
     @Test
     public void testBloomBoxDemoUI() {
 
-        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes.bbx"), Collections.emptyMap());
+        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_10K.bbx"), Collections.emptyMap());
 
         BloomBoxQueryRunner runner = new BloomBoxQueryRunner(bloomBox);
 
