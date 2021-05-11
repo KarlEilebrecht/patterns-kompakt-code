@@ -71,7 +71,7 @@ public class BloomBoxDemoView extends JFrame {
     /**
      * monospaced font for better readability
      */
-    private static final Font MONOSPACED_BIGGER = new Font("monospaced", Font.PLAIN, 14);
+    private static final Font MONOSPACED_BIGGER = new Font("monospaced", Font.PLAIN, 18);
 
     /**
      * center panel
@@ -130,7 +130,7 @@ public class BloomBoxDemoView extends JFrame {
 
                     @Override
                     public int getHeight() {
-                        return 25;
+                        return 28;
                     }
                 };
             }
@@ -148,6 +148,8 @@ public class BloomBoxDemoView extends JFrame {
         tarBloomBoxOutput.setFont(MONOSPACED_BIGGER);
         tarBloomBoxOutput.setEditable(false);
         tarBloomBoxOutput.setLineWrap(true);
+        tarBloomBoxOutput.setBackground(new Color(238, 238, 238));
+        tarBloomBoxOutput.setForeground(Color.DARK_GRAY);
     }
 
     /**
