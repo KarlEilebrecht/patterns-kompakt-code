@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -440,7 +439,7 @@ public class BloomBoxTest {
 
         feeder.close();
 
-        File testBox = new File("/mytemp/birdstrikes_10K.bbx");
+        File testBox = new File("/mytemp/birdstrikes_10Ka.bbx");
 
         bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
                 + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php\n"
@@ -705,7 +704,7 @@ public class BloomBoxTest {
                 }
             }
 
-            Collections.shuffle(Arrays.asList(columnBuffer));
+            Collections.shuffle(columnBuffer, rand);
 
             for (int i = 0; i < numberOfRows; i++) {
                 if (columnBuffer.get(i) == 1) {
