@@ -388,6 +388,7 @@ public class BloomBoxTest {
         columnNames = null;
         lineNumber = -1;
 
+        // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
         Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
                 .filter(Predicate.not(Map::isEmpty)).forEach(argMap -> feeder.addRow(argMap));
 
@@ -430,6 +431,7 @@ public class BloomBoxTest {
         columnNames = null;
         lineNumber = -1;
 
+        // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
         Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
                 .filter(Predicate.not(Map::isEmpty)).map(m -> this.enrichMap(m, randomTable)).forEach(argMap -> feeder.addRow(argMap));
 
@@ -457,7 +459,7 @@ public class BloomBoxTest {
     @Test
     public void testBloomBoxDemoUI() {
 
-        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_10K.bbx"), Collections.emptyMap());
+        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes.bbx"), Collections.emptyMap());
 
         BloomBoxQueryRunner runner = new BloomBoxQueryRunner(bloomBox);
 
