@@ -22,6 +22,7 @@ package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link QueryDelegate} decouples both the {@link BloomBoxQueryRunner} and the {@link BloomBoxDataStore} from the details of the query execution and the
@@ -30,7 +31,7 @@ import java.util.List;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface QueryDelegate extends Serializable {
+public interface QueryDelegate extends ProbabilityIndexAware, Serializable {
 
     /**
      * @return a flag per query that tells whether it is broken, this way a we can avoid executing an erratic query multiple times
@@ -41,6 +42,18 @@ public interface QueryDelegate extends Serializable {
      * @return list of internal queries to be executed per record vector
      */
     public InternalQuery[] getQueries();
+
+    @Override
+    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap);
+
+    /**
+     * Concrete delegate implementations may decide to delay writing the final counts, thus this method must be called before retrieving results.
+     * <p>
+     * The default implementation is a no-op.
+     */
+    default void finish() {
+        // no-op by default
+    }
 
     /**
      * @return list of results (same orders as queries), results (counts) will be updated during execution
@@ -55,4 +68,16 @@ public interface QueryDelegate extends Serializable {
      */
     public void execute(long[] vector, int startPos);
 
+    /**
+     * Executes the query with probabilities
+     * <p>
+     * The default implementation delegates to {@link #execute(long[], int)} ignoring the probabilities
+     * 
+     * @param vector source
+     * @param startPos position where to start
+     * @param probabilities vector with the probabilities to compute the match probability
+     */
+    default void execute(long[] vector, int startPos, float[] probabilities) {
+        this.execute(vector, startPos);
+    }
 }

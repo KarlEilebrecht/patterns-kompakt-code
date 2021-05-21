@@ -66,6 +66,11 @@ public class NegationExpression implements BbqExpression {
     }
 
     @Override
+    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+        return 1.0d - delegateExpression.computeProbability(probabilities, resultCache);
+    }
+
+    @Override
     public long getExpressionId() {
         return this.expressionId;
     }

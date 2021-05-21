@@ -66,6 +66,28 @@ public class OrExpression implements BbqExpression {
         return res;
     }
 
+    @Override
+    @SuppressWarnings({ "java:S3824" })
+    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+
+        // note: the warning above is suppressed because "computeIfAbsent" fails when called recursively
+
+        Double res = resultCache.get(expressionId);
+        if (res == null) {
+
+            // A OR B = NOT (NOT(A) AND NOT(B)) := 1.0 - ( (1.0 - P(A)) * (1.0 - P(B)))
+
+            double combinedComplementProbability = -1;
+            for (BbqExpression expression : expressions) {
+                double complementProbability = 1.0d - expression.computeProbability(probabilities, resultCache);
+                combinedComplementProbability = combinedComplementProbability < 0 ? complementProbability
+                        : combinedComplementProbability * complementProbability;
+            }
+            res = combinedComplementProbability < 0 ? 1.0 : 1.0d - combinedComplementProbability;
+        }
+        return res;
+    }
+
     /**
      * Matches the expressions and returns on the first true
      * 

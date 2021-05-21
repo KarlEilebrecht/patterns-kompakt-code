@@ -23,6 +23,7 @@ package de.calamanari.pk.ohbf.bloombox;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +42,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.ohbf.BloomFilterConfig;
+import de.calamanari.pk.ohbf.LwGenericOHBF;
 import de.calamanari.pk.ohbf.bloombox.demo.BloomBoxDemoController;
 import de.calamanari.pk.ohbf.bloombox.demo.BloomBoxDemoView;
 import de.calamanari.pk.util.SimpleFixedLengthBitVector;
@@ -53,6 +56,8 @@ import de.calamanari.pk.util.SimpleFixedLengthBitVector;
  */
 public class BloomBoxTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BloomBoxTest.class);
+
+    private static final char UTF8BOM = (char) 65279;
 
     private Random rand = null;
 
@@ -473,6 +478,94 @@ public class BloomBoxTest {
 
     }
 
+    @Ignore("Use this method to start the demo UI application (LP)")
+    @Test
+    public void testBloomBoxDemoUI_LP() {
+
+        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/lp/LIVE_Panel_2018_AUSTRALIA_V2_20181015_no_LPID.bbx"), Collections.emptyMap());
+
+        BloomBoxQueryRunner runner = new BloomBoxQueryRunner(bloomBox);
+
+        final BloomBoxDemoView view = new BloomBoxDemoView();
+
+        view.setVisible(true);
+
+        new BloomBoxDemoController(view, bloomBox, runner);
+
+        Awaitility.await().atMost(30, TimeUnit.DAYS).until(view::isDisposed);
+
+    }
+
+    private LpValueMeta lpValueMeta = null;
+
+    @Ignore
+    @Test
+    public void testCreateLpValueDictionary() throws Exception {
+
+        lpValueMeta = new LpValueMeta();
+
+        // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
+        Files.lines(new File("/mytemp/lp/LP19 Data Map_20200220-values.csv").toPath(), StandardCharsets.UTF_8).filter(Predicate.not(String::isBlank))
+                .forEach(lpValueMeta::feedCategoryValue);
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Map<String, String>> entry : lpValueMeta.categoryValueMap.entrySet()) {
+            sb.append(entry.getKey());
+            sb.append(":\n");
+            for (Map.Entry<String, String> valueEntry : entry.getValue().entrySet()) {
+                sb.append("          ");
+                sb.append(valueEntry.getKey());
+                sb.append("=");
+                sb.append(valueEntry.getValue());
+                sb.append("\n");
+            }
+        }
+        LOGGER.info(sb.toString());
+
+    }
+
+    LpAuCsvMeta lpAuCsvMeta = null;
+
+    @Ignore
+    @Test
+    public void testCreateLpAuBox() throws Exception {
+
+        lpAuCsvMeta = new LpAuCsvMeta();
+
+        this.numberOfColumns = 14079;
+        int numberOfRows = 5_000;
+        // @formatter:off
+        this.bloomBox = BloomBox.forNumberOfRows(numberOfRows)
+                                .withNumberOfColumns(this.numberOfColumns)
+                                .withFalsePositiveRateEpsilon(0.0005)
+                                .build();
+        // @formatter:on
+
+        DataStoreFeeder feeder = bloomBox.getFeeder();
+
+        // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
+        Files.lines(new File("/mytemp/lp/LIVE_Panel_2018_AUSTRALIA_V2_20181015_no_LPID.csv").toPath(), StandardCharsets.UTF_8)
+                .filter(Predicate.not(String::isBlank)).map(lpAuCsvMeta::lineToArgMap).filter(Predicate.not(Map::isEmpty)).forEach(m -> this.feed(feeder, m));
+
+        LOGGER.info("Feeding complete: " + lpAuCsvMeta.lineNumber + " entries processed.");
+
+        feeder.close();
+
+        File testBox = new File("/mytemp/lp/LIVE_Panel_2018_AUSTRALIA_V2_20181015_no_LPID.bbx");
+
+        bloomBox.setDescription("BloomBox created from LIVE_Panel_2018_AUSTRALIA_V2_20181015_no_LPID.csv");
+
+        bloomBox.saveToFile(testBox);
+
+        assertEquals(numberOfRows, bloomBox.getDataStore().getNumberOfRows());
+
+    }
+
+    private void feed(DataStoreFeeder feeder, Map<String, String> argMap) {
+        // LOGGER.info(argMap.toString());
+        feeder.addRow(argMap);
+    }
+
     /**
      * Creates a single generated row following the given instructions
      * 
@@ -723,6 +816,127 @@ public class BloomBoxTest {
             else {
                 return "0";
             }
+        }
+
+    }
+
+    private static class LpValueMeta {
+
+        String currentCategory = null;
+
+        Map<String, Map<String, String>> categoryValueMap = new LinkedHashMap<>();
+
+        int lineNumber = -1;
+
+        String[] columnNames = null;
+
+        void feedCategoryValue(String line) {
+            lineNumber++;
+            if (lineNumber > 0) {
+                String[] parts = line.split(";", -1);
+                if (lineNumber == 1) {
+                    this.columnNames = parts;
+                }
+                else {
+                    if (!parts[0].isBlank()) {
+                        currentCategory = parts[0];
+                    }
+                    Map<String, String> keyValueMap = categoryValueMap.computeIfAbsent(currentCategory, key -> new LinkedHashMap<>());
+                    keyValueMap.put(parts[1], parts[2]);
+                }
+            }
+
+        }
+
+    }
+
+    private static class LpAuCsvMeta {
+
+        Map<String, String> currentValueMap = new LinkedHashMap<>();
+
+        int lineNumber = -1;
+
+        String[] columnNames = null;
+
+        DistinctValueCapper limiter = null;
+
+        Map<String, String> lineToArgMap(String line) {
+            lineNumber++;
+            String[] parts = line.split(",", -1);
+
+            if (parts[0].charAt(0) == UTF8BOM) {
+                parts[0] = parts[0].substring(1);
+            }
+
+            if (lineNumber == 0) {
+                this.columnNames = parts;
+                this.limiter = new DistinctValueCapper(columnNames, 100);
+                LOGGER.debug("Found header with {} columns", columnNames.length);
+            }
+            else {
+                currentValueMap.clear();
+                for (int i = 0; i < columnNames.length; i++) {
+                    String name = columnNames[i].trim();
+                    String value = parts[i].trim();
+                    if (limiter.canInsert(i, value)) {
+                        currentValueMap.put(name, value);
+                    }
+                    else {
+                        currentValueMap.put(name, "other");
+                    }
+                }
+            }
+
+            return currentValueMap;
+        }
+
+    }
+
+    private static class DistinctValueCapper {
+
+        private static final int MAX_INSERTION_COUNT = 10_000_000;
+
+        private final int[] counters;
+
+        private final int maxDistinctValueCount;
+
+        private final LwGenericOHBF store;
+
+        private int insertionCount = 0;
+
+        private final String[] columnNames;
+
+        DistinctValueCapper(String[] columnNames, int maxDistinctValueCount) {
+            this.maxDistinctValueCount = maxDistinctValueCount;
+            this.columnNames = columnNames;
+            this.counters = new int[this.columnNames.length];
+
+            BloomFilterConfig config = new BloomFilterConfig(MAX_INSERTION_COUNT, 0.001);
+
+            this.store = new LwGenericOHBF(config);
+
+        }
+
+        boolean canInsert(int columnIdx, String value) {
+            boolean res = true;
+            if (store.put(columnIdx, value)) {
+                // new value detected
+                if (counters[columnIdx] < maxDistinctValueCount) {
+                    counters[columnIdx]++;
+                    if (counters[columnIdx] >= maxDistinctValueCount) {
+                        LOGGER.debug("Limiting values for column {} ({}) - max={}.", columnIdx, columnNames[columnIdx], maxDistinctValueCount);
+                    }
+                    insertionCount++;
+                    if (insertionCount > MAX_INSERTION_COUNT) {
+                        throw new RuntimeException("Number of filter insertions exceeded maximum!");
+                    }
+
+                }
+                else {
+                    res = false;
+                }
+            }
+            return res;
         }
 
     }

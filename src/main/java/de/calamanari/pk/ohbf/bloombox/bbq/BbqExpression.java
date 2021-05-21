@@ -49,6 +49,17 @@ public interface BbqExpression extends Serializable {
     public boolean match(long[] source, int startPos, Map<Long, Boolean> resultCache);
 
     /**
+     * Computes the probability of a {@link #match(long[], int, Map)}
+     * 
+     * @param probabilities probability vector
+     * @param resultCache caches the probability per expression
+     * @return probability
+     */
+    default double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+        return 1.0;
+    }
+
+    /**
      * @return unique id of this expression, see {@link ExpressionIdUtil}
      */
     public long getExpressionId();

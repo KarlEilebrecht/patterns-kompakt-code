@@ -21,6 +21,7 @@
 package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
@@ -31,7 +32,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class InternalQuery implements Serializable {
+public class InternalQuery implements ProbabilityIndexAware, Serializable {
 
     private static final long serialVersionUID = -7248298268398187149L;
 
@@ -93,6 +94,13 @@ public class InternalQuery implements Serializable {
         return baseQuery;
     }
 
+    @Override
+    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap) {
+        baseQuery.prepareProbabilityIndex(probabilityIndexMap);
+        Arrays.stream(subQueries).forEach(query -> query.prepareProbabilityIndex(probabilityIndexMap));
+
+    }
+
     /**
      * Applies this query to the given long array (a single record's vector from the store)
      * 
@@ -112,6 +120,36 @@ public class InternalQuery implements Serializable {
             for (int i = 0; i < numberOfSubQueries; i++) {
                 if (subQueries[i].execute(source, startPos, resultCache)) {
                     result.incrementSubQueryCount(i);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Applies this query to the given long array (a single record's vector from the store) with probabilities
+     * 
+     * @param source long array
+     * @param startPos start position of the vector in the source array
+     * @param probabilities vector with probabilities for computing match probability
+     * @param resultCache we avoid duplicate work by keeping results for already executed expressions
+     * @param probabilityResultCache for caching already computed probabilities
+     * @param result to be updated
+     */
+    public void execute(long[] source, int startPos, float[] probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache,
+            PbBloomBoxQueryResult result) {
+
+        int numberOfSubQueries = subQueries.length;
+
+        double baseMatchProbability = baseQuery.execute(source, startPos, probabilities, resultCache, probabilityResultCache);
+
+        if (baseMatchProbability > 0.0) {
+            result.incrementBaseQuerySum(baseMatchProbability);
+            for (int i = 0; i < numberOfSubQueries; i++) {
+
+                double subMatchProbability = subQueries[i].execute(source, startPos, probabilities, resultCache, probabilityResultCache);
+                if (subMatchProbability > 0.0) {
+                    result.incrementSubQuerySum(i, subMatchProbability);
                 }
             }
         }

@@ -23,6 +23,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.Arrays;
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.ProbabilityIndexAware;
 import de.calamanari.pk.util.SimpleFixedLengthBitVector;
 
 /**
@@ -31,7 +32,7 @@ import de.calamanari.pk.util.SimpleFixedLengthBitVector;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BinaryMatchExpression implements BbqExpression {
+public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAware {
 
     private static final long serialVersionUID = -2940750763497459402L;
 
@@ -54,6 +55,11 @@ public class BinaryMatchExpression implements BbqExpression {
      * column value to match
      */
     private final String argValue;
+
+    /**
+     * index in the probability vector of a row
+     */
+    private int probabilityIndex = -1;
 
     /**
      * @param argName name of the "column"
@@ -88,13 +94,26 @@ public class BinaryMatchExpression implements BbqExpression {
     }
 
     @Override
+    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+        return probabilityIndex < 0 ? 1.0 : probabilities[probabilityIndex];
+    }
+
+    @Override
     public long getExpressionId() {
         return this.expressionId;
     }
 
     @Override
+    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap) {
+        long key = ExpressionIdUtil.createExpressionId(argName);
+        Integer index = probabilityIndexMap.get(key);
+        this.probabilityIndex = index != null ? index : -1;
+    }
+
+    @Override
     public String toString() {
-        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} )";
+        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} "
+                + (probabilityIndex < 0 ? "" : "pi[" + probabilityIndex + "]") + " )";
     }
 
     @Override
@@ -107,7 +126,13 @@ public class BinaryMatchExpression implements BbqExpression {
         sb.append(argName);
         sb.append("==");
         sb.append(argValue);
-        sb.append("} )");
+        sb.append("}");
+        if (probabilityIndex > 0) {
+            sb.append("[pi");
+            sb.append(probabilityIndex);
+            sb.append("]");
+        }
+        sb.append(" )");
         sb.append("\n");
     }
 

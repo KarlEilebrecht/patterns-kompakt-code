@@ -72,6 +72,27 @@ public class AndExpression implements BbqExpression {
         return res;
     }
 
+    @Override
+    @SuppressWarnings({ "java:S3824" })
+    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+
+        // note: the warning above is suppressed because "computeIfAbsent" fails when called recursively
+
+        Double res = resultCache.get(expressionId);
+        if (res == null) {
+
+            // AND: multiply probabilities
+
+            double combinedProbability = -1;
+            for (BbqExpression expression : expressions) {
+                double probability = expression.computeProbability(probabilities, resultCache);
+                combinedProbability = combinedProbability < 0 ? probability : combinedProbability * probability;
+            }
+            res = combinedProbability < 0 ? 0.0 : combinedProbability;
+        }
+        return res;
+    }
+
     /**
      * Matches the expressions and returns on the first false
      * 

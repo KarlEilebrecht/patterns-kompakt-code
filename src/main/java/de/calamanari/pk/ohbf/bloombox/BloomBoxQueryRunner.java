@@ -514,7 +514,11 @@ public class BloomBoxQueryRunner {
 
         Arrays.stream(queries).forEach(query -> results.add(new BloomBoxQueryResult(query.getName(), query.subQueryLabels)));
 
-        dataStore.dispatch(new SimpleQueryDelegate(queries, results));
+        QueryDelegate queryDelegate = new SimpleQueryDelegate(queries, results);
+
+        dataStore.dispatch(queryDelegate);
+
+        queryDelegate.finish();
         logExecutionResults(results);
 
         return results;

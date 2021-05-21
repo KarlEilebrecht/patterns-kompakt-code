@@ -126,7 +126,7 @@ public class BloomBoxQueryResult implements Serializable {
     }
 
     /**
-     * @return array with the sub query counts
+     * @return array with the sub query counts (reference to the internal array)
      */
     public long[] getSubQueryCounts() {
         return subQueryCounts;
@@ -140,7 +140,7 @@ public class BloomBoxQueryResult implements Serializable {
     }
 
     /**
-     * @return array with the sub query labels
+     * @return array with the sub query labels (reference to the internal array)
      */
     public String[] getSubQueryLabels() {
         return subQueryLabels;

@@ -73,6 +73,11 @@ public enum BbqBooleanLiteral implements BbqExpression {
     }
 
     @Override
+    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+        return booleanValue ? 1.0 : 0.0;
+    }
+
+    @Override
     public long getExpressionId() {
         return expressionId;
     }
