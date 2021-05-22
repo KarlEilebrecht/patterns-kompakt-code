@@ -27,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+
 /**
  * A {@link BbqExpression} is any technical representation of an expression of the BBQ-language.
  * <p>
@@ -55,7 +57,7 @@ public interface BbqExpression extends Serializable {
      * @param resultCache caches the probability per expression
      * @return probability
      */
-    default double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+    default double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
         return 1.0;
     }
 

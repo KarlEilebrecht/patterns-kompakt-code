@@ -75,9 +75,9 @@ public interface QueryDelegate extends ProbabilityIndexAware, Serializable {
      * 
      * @param vector source
      * @param startPos position where to start
-     * @param probabilities vector with the probabilities to compute the match probability
+     * @param probabilities vector supplier for the probabilities to compute the match probability
      */
-    default void execute(long[] vector, int startPos, float[] probabilities) {
+    default void execute(long[] vector, int startPos, ProbabilityVectorSupplier probabilities) {
         this.execute(vector, startPos);
     }
 }

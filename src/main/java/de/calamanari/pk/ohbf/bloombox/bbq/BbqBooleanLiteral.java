@@ -22,6 +22,8 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+
 /**
  * Although the BBQ-language does not allow specifying anything like TRUE or FALSE, during the optimization process it can still happen that a condition gets
  * detected that must be always TRUE or always FALSE, e.g. <code>(color=blue or color!=blue)</code>.
@@ -73,7 +75,7 @@ public enum BbqBooleanLiteral implements BbqExpression {
     }
 
     @Override
-    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+    public double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
         return booleanValue ? 1.0 : 0.0;
     }
 

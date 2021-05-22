@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.ProbabilityIndexAware;
+import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
 import de.calamanari.pk.util.SimpleFixedLengthBitVector;
 
 /**
@@ -94,8 +95,8 @@ public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAwa
     }
 
     @Override
-    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
-        return probabilityIndex < 0 ? 1.0 : probabilities[probabilityIndex];
+    public double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
+        return probabilityIndex < 0 ? 1.0 : probabilities.getProbabilityVector()[probabilityIndex];
     }
 
     @Override

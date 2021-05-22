@@ -136,8 +136,8 @@ public class InternalQuery implements ProbabilityIndexAware, Serializable {
      * @param probabilityResultCache for caching already computed probabilities
      * @param result to be updated
      */
-    public void execute(long[] source, int startPos, float[] probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache,
-            PbBloomBoxQueryResult result) {
+    public void execute(long[] source, int startPos, ProbabilityVectorSupplier probabilities, Map<Long, Boolean> resultCache,
+            Map<Long, Double> probabilityResultCache, PbBloomBoxQueryResult result) {
 
         int numberOfSubQueries = subQueries.length;
 

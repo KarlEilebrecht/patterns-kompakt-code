@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * ProbabilityIndexAware
+ * ProbabilityVectorSupplier
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,25 +17,27 @@
  * limitations under the License.
  */
 //@formatter:on
-
 package de.calamanari.pk.ohbf.bloombox;
 
-import java.util.Map;
-
-import de.calamanari.pk.ohbf.bloombox.bbq.ExpressionIdUtil;
+import java.io.Serializable;
 
 /**
- * Interface to pass probability information downwards the query and expression hierarchy.
+ * The {@link ProbabilityVectorSupplier} allows delaying the computation of the probability vector for a single row, which might be time consuming.
+ * <p>
+ * <b>Note:<b> This is by intention not a lambda because lambdas are not serializable and cannot cache data.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface ProbabilityIndexAware {
+public interface ProbabilityVectorSupplier extends Serializable {
 
     /**
-     * To be called before execution to prepare expressions with the probability index.
-     * 
-     * @param probabilityIndexMap key is the {@link ExpressionIdUtil}-encoded column name, value is the index in the probability vector (aka column index)
+     * To be returned by dummy implementations of {@link #getProbabilityVector()}
      */
-    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap);
+    public static final float[] NONE = new float[0];
+
+    default float[] getProbabilityVector() {
+        return NONE;
+    }
+
 }

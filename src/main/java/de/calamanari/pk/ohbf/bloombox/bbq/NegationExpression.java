@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+
 /**
  * A {@link NegationExpression} wraps another {@link BbqExpression} and inverts its result.
  * 
@@ -66,7 +68,7 @@ public class NegationExpression implements BbqExpression {
     }
 
     @Override
-    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+    public double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
         return 1.0d - delegateExpression.computeProbability(probabilities, resultCache);
     }
 

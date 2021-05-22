@@ -109,7 +109,7 @@ public class SimpleQueryDelegate implements QueryDelegate {
     }
 
     @Override
-    public void execute(long[] vector, int startPos, float[] probabilities) {
+    public void execute(long[] vector, int startPos, ProbabilityVectorSupplier probabilities) {
         resultCache.clear();
         probabilityResultCache.clear();
         ensurePbResultsInitialized();

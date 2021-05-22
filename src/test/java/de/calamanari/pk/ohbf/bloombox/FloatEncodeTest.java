@@ -2,7 +2,12 @@ package de.calamanari.pk.ohbf.bloombox;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -30,21 +35,38 @@ public class FloatEncodeTest {
     @Test
     public void testEncodeDecodeFloats() {
 
+        ProbabilityVectorCodec codec = ProbabilityVectorCodec.getInstance();
+
         float[] source = new float[] {};
 
-        float[] target = decodeFloats(encodeFloats(source));
+        float[] target = codec.decode(codec.encode(source));
 
         assertEquals(Arrays.toString(source), Arrays.toString(target));
 
         source = new float[] { 0.0f };
-        target = decodeFloats(encodeFloats(source));
+        target = codec.decode(codec.encode(source));
 
         assertEquals(Arrays.toString(source), Arrays.toString(target));
 
         source = new float[] { 0.9010f, 1.98f, 0.9999f, 0.0002f };
-        target = decodeFloats(encodeFloats(source));
+        target = codec.decode(codec.encode(source));
 
         assertEquals(Arrays.toString(source), Arrays.toString(target));
+
+        source = new float[] { 0.9010f, 1.98f, 0.9999f, 0.0002f, 0.0f, 0.0f, 0.9010f, 1.98f, 0.9999f, 0.0002f, 0.0f };
+        target = codec.decode(codec.encode(source));
+        assertEquals(Arrays.toString(source), Arrays.toString(target));
+
+        float[] large = new float[100000];
+        Arrays.fill(large, 1.0f);
+
+        System.out.println(large.length);
+
+        byte[] compressed = codec.encode(large);
+
+        System.out.println("compressed: " + compressed.length);
+
+        assertEquals(Arrays.toString(large), Arrays.toString(codec.decode(compressed)));
 
     }
 
@@ -240,6 +262,45 @@ public class FloatEncodeTest {
             }
         }
         return res;
+    }
+
+    @Ignore
+    @Test
+    public void testFullRange() {
+        float[] arr = new float[1];
+        for (long l = Integer.MIN_VALUE; l < Integer.MAX_VALUE; l++) {
+
+            int source = (int) l;
+
+            arr[0] = Float.intBitsToFloat(source);
+
+            float[] arr2 = ProbabilityVectorCodec.bytesToFloatArray(ProbabilityVectorCodec.floatArrayToBytes(arr));
+
+            int target = Float.floatToRawIntBits(arr2[0]);
+
+            assertEquals(source, target);
+
+        }
+    }
+
+    @Test
+    public void testCompare() {
+
+        Map<Long, Integer> map = new HashMap<>();
+
+        map.put(7L, 1928);
+        map.put(9L, 6);
+        map.put(9222L, 2);
+        map.put(733L, 10000);
+
+        System.out.println(map.toString());
+
+        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(map.entrySet());
+        System.out.println(entries.toString());
+
+        Collections.sort(entries, (e1, e2) -> e1.getValue().compareTo(e2.getValue()));
+
+        System.out.println(entries.toString());
     }
 
 }

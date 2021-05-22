@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+
 /**
  * An {@link OrExpression} is the equivalent of a logical OR-combination of other {@link BbqExpression}s.<br>
  * So, if you think in terms of prefix-semantics <code>OR(A, B, C, ...)</code>, it is just a list of expressions <br>
@@ -68,7 +70,7 @@ public class OrExpression implements BbqExpression {
 
     @Override
     @SuppressWarnings({ "java:S3824" })
-    public double computeProbability(float[] probabilities, Map<Long, Double> resultCache) {
+    public double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
 
         // note: the warning above is suppressed because "computeIfAbsent" fails when called recursively
 

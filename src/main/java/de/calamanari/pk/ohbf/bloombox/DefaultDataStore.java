@@ -46,22 +46,22 @@ public class DefaultDataStore implements BloomBoxDataStore {
     /**
      * for serialization / de-serialization
      */
-    private static final int DEFAULT_IO_BUFFER_SIZE = 10_000_000;
+    protected static final int DEFAULT_IO_BUFFER_SIZE = 10_000_000;
 
     /**
      * all rows x filter vectors long array
      */
-    private final long[] vector;
+    protected final long[] vector;
 
     /**
      * capacity of the store
      */
-    private final long numberOfRows;
+    protected final long numberOfRows;
 
     /**
      * number of longs representing a vector (for navigation)
      */
-    private final int vectorSize;
+    protected final int vectorSize;
 
     /**
      * Part of the {@link BloomBoxDataStore} contract, a method to restore a previously serialized store from a stream.
@@ -96,22 +96,41 @@ public class DefaultDataStore implements BloomBoxDataStore {
      */
     private static void loadDataStoreIntoMemory(InputStream is, DefaultDataStore dataStore, DataStoreHeader header) {
 
+        try (BufferedInputStream bis = new BufferedInputStream(is, DEFAULT_IO_BUFFER_SIZE)) {
+            loadDataStoreIntoMemory(bis, dataStore, header);
+        }
+        catch (BloomBoxException ex) {
+            throw ex;
+        }
+        catch (IOException | RuntimeException ex) {
+            throw new BloomBoxException(String.format("Error restoring data store %s.", header), ex);
+        }
+
+    }
+
+    /**
+     * Reads the stores longs from the stream and fills the in-memory array
+     * 
+     * @param bis source stream
+     * @param dataStore store to be filled
+     * @param header stream header information
+     */
+    protected static void loadDataStoreIntoMemory(BufferedInputStream bis, DefaultDataStore dataStore, DataStoreHeader header) {
+
         try {
             LOGGER.debug("Loading data store {} into memory ...", header);
             byte[] buffer = new byte[8];
-            try (BufferedInputStream bis = new BufferedInputStream(is, DEFAULT_IO_BUFFER_SIZE)) {
-                int numberOfRows = (int) header.getNumberOfRows();
-                int vectorSize = header.getVectorSize();
-                long[] vector = dataStore.vector;
-                for (long rowIdx = 0; rowIdx < numberOfRows; rowIdx++) {
-                    for (int i = 0; i < vectorSize; i++) {
-                        int bytesFound = bis.read(buffer, 0, 8);
-                        if (bytesFound != 8) {
-                            throw new BloomBoxException(String.format("Error loading data store (row %d, index %d): 8 bytes expected, found %d - header: %s",
-                                    rowIdx, i, bytesFound, header));
-                        }
-                        vector[(int) ((rowIdx * vectorSize) + i)] = BloomBox.bytesToLong(buffer);
+            int numberOfRows = (int) header.getNumberOfRows();
+            int vectorSize = header.getVectorSize();
+            long[] vector = dataStore.vector;
+            for (long rowIdx = 0; rowIdx < numberOfRows; rowIdx++) {
+                for (int i = 0; i < vectorSize; i++) {
+                    int bytesFound = bis.read(buffer, 0, 8);
+                    if (bytesFound != 8) {
+                        throw new BloomBoxException(String.format("Error loading data store (row %d, index %d): 8 bytes expected, found %d - header: %s",
+                                rowIdx, i, bytesFound, header));
                     }
+                    vector[(int) ((rowIdx * vectorSize) + i)] = BloomBox.bytesToLong(buffer);
                 }
             }
             LOGGER.debug("Data store loaded.");
@@ -180,19 +199,29 @@ public class DefaultDataStore implements BloomBoxDataStore {
 
             int outputBufferSize = 10_000_000;
             try (BufferedOutputStream bos = new BufferedOutputStream(os, outputBufferSize)) {
-                byte[] buffer = new byte[8];
-                for (long rowIdx = 0; rowIdx < numberOfRows; rowIdx++) {
-                    for (int i = 0; i < vectorSize; i++) {
-                        BloomBox.longToBytes(vector[(int) ((rowIdx * vectorSize) + i)], buffer);
-                        bos.write(buffer);
-                    }
-                }
+                writeRawBBS(bos);
             }
         }
         catch (IOException | RuntimeException ex) {
             throw new BloomBoxException(String.format("Error writing in-memory data store to stream (%s).", header), ex);
         }
 
+    }
+
+    /**
+     * Writes the BBS-section (raw vectors) to the stream as bytes
+     * 
+     * @param bos output stream
+     * @throws IOException on error
+     */
+    protected void writeRawBBS(BufferedOutputStream bos) throws IOException {
+        byte[] buffer = new byte[8];
+        for (long rowIdx = 0; rowIdx < numberOfRows; rowIdx++) {
+            for (int i = 0; i < vectorSize; i++) {
+                BloomBox.longToBytes(vector[(int) ((rowIdx * vectorSize) + i)], buffer);
+                bos.write(buffer);
+            }
+        }
     }
 
     @Override

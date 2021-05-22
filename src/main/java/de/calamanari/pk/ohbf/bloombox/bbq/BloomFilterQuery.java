@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.ProbabilityIndexAware;
+import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
 import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
 
 /**
@@ -95,7 +96,8 @@ public class BloomFilterQuery implements ProbabilityIndexAware, Serializable {
      * @return probability of the match
      */
     @SuppressWarnings({ "java:S3824" })
-    public double execute(long[] source, int startPos, float[] probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache) {
+    public double execute(long[] source, int startPos, ProbabilityVectorSupplier probabilities, Map<Long, Boolean> resultCache,
+            Map<Long, Double> probabilityResultCache) {
         Long key = expression.getExpressionId();
         Double res = probabilityResultCache.get(key);
         if (res == null) {
