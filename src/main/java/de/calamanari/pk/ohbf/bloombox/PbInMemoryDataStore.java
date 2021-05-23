@@ -25,18 +25,12 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.calamanari.pk.ohbf.bloombox.bbq.ExpressionIdUtil;
 
 /**
  * This in-memory-store supports attached probabilities.
@@ -56,14 +50,9 @@ public class PbInMemoryDataStore extends DefaultDataStore {
     private final byte[][] compressedProbabilities;
 
     /**
-     * for rows fed without probabilties we assume all 1
+     * This is used to gracefully support {@link #feedRow(long[], long)}, which is logically a mistake.
      */
-    private float[] defaultProbabilities = null;
-
-    /**
-     * maps the column idenitifiers to the index
-     */
-    private Map<Long, Integer> probabilityIndexMap = new HashMap<>();
+    private final byte[] compressedMissingDPPs = new byte[] { 0, 0, 0, 0 };
 
     /**
      * cached total size in bytes (after feeding complete)
@@ -82,9 +71,8 @@ public class PbInMemoryDataStore extends DefaultDataStore {
     public static BloomBoxDataStore restore(InputStream is, DataStoreHeader header, Map<String, String> envSettings) {
 
         try {
-            PbDataStoreHeader castedHeader = (PbDataStoreHeader) header;
             PbInMemoryDataStore res = new PbInMemoryDataStore(header.getVectorSize(), (int) header.getNumberOfRows());
-            loadPbStoreIntoMemory(is, res, castedHeader);
+            loadPbStoreIntoMemory(is, res, header);
             return res;
         }
         catch (BloomBoxException ex) {
@@ -102,10 +90,9 @@ public class PbInMemoryDataStore extends DefaultDataStore {
      * @param dataStore store to be filled
      * @param header stream header information
      */
-    protected static void loadPbStoreIntoMemory(InputStream is, PbInMemoryDataStore dataStore, PbDataStoreHeader header) {
+    protected static void loadPbStoreIntoMemory(InputStream is, PbInMemoryDataStore dataStore, DataStoreHeader header) {
         try (BufferedInputStream bis = new BufferedInputStream(is, DEFAULT_IO_BUFFER_SIZE)) {
             DefaultDataStore.loadDataStoreIntoMemory(bis, dataStore, header);
-            loadProbabilityIndexMap(bis, dataStore, header);
             loadProbabilityVectors(bis, dataStore, header);
         }
         catch (BloomBoxException ex) {
@@ -118,43 +105,13 @@ public class PbInMemoryDataStore extends DefaultDataStore {
     }
 
     /**
-     * Restores the probability index map from a sequence of column-identifiers
-     * 
-     * @param bis source stream
-     * @param dataStore store to be filled
-     * @param header stream header information
-     */
-    protected static void loadProbabilityIndexMap(BufferedInputStream bis, PbInMemoryDataStore dataStore, PbDataStoreHeader header) {
-        try {
-            LOGGER.debug("Loading probability index map into memory ...");
-            byte[] buffer = new byte[8];
-            int numberOfColumns = header.getNumberOfColumns();
-            for (int i = 0; i < numberOfColumns; i++) {
-                int bytesFound = bis.read(buffer, 0, 8);
-                if (bytesFound != 8) {
-                    throw new BloomBoxException(
-                            String.format("Error loading column identifiers (entry %d): 8 bytes expected, found %d - header: %s", i, bytesFound, header));
-                }
-                dataStore.probabilityIndexMap.put(BloomBox.bytesToLong(buffer), i);
-            }
-            LOGGER.debug("Probability index map restored: {} columns.", dataStore.probabilityIndexMap.size());
-        }
-        catch (BloomBoxException ex) {
-            throw ex;
-        }
-        catch (IOException | RuntimeException ex) {
-            throw new BloomBoxException(String.format("Error restoring probability index map %s.", header), ex);
-        }
-    }
-
-    /**
      * Reads the stores longs from the stream and fills the in-memory array
      * 
      * @param bis source stream
      * @param dataStore store to be filled
      * @param header stream header information
      */
-    protected static void loadProbabilityVectors(BufferedInputStream bis, PbInMemoryDataStore dataStore, PbDataStoreHeader header) {
+    protected static void loadProbabilityVectors(BufferedInputStream bis, PbInMemoryDataStore dataStore, DataStoreHeader header) {
 
         try {
             LOGGER.debug("Loading probability vectors into memory ...");
@@ -167,14 +124,14 @@ public class PbInMemoryDataStore extends DefaultDataStore {
                             String.format("Error loading probability vectors (row %d): 4 bytes expected, found %d - header: %s", rowIdx, bytesFound, header));
                 }
                 int entryLength = ProbabilityVectorCodec.readInt(buffer, 4);
-                byte[] entryBuffer = new byte[entryLength + 4];
-                System.arraycopy(buffer, 0, entryBuffer, 0, 4);
-                bytesFound = bis.read(entryBuffer, 4, entryLength);
+                byte[] compressedDpp = new byte[entryLength + 4];
+                System.arraycopy(buffer, 0, compressedDpp, 0, 4);
+                bytesFound = bis.read(compressedDpp, 4, entryLength);
                 if (bytesFound != entryLength) {
                     throw new BloomBoxException(String.format("Error loading probability vectors (row %d): %d bytes expected, found %d - header: %s", rowIdx,
                             entryLength, bytesFound, header));
                 }
-                dataStore.compressedProbabilities[(int) rowIdx] = entryBuffer;
+                dataStore.compressedProbabilities[(int) rowIdx] = compressedDpp;
             }
             LOGGER.debug("Probability vectors loaded.");
         }
@@ -196,43 +153,20 @@ public class PbInMemoryDataStore extends DefaultDataStore {
         this.compressedProbabilities = new byte[numberOfRows][0];
     }
 
-    /**
-     * Defines the column index and builds an internal map
-     * 
-     * @param columnNames unique names of all columns in order
-     */
-    public void defineColumnIndex(List<String> columnNames) {
-        if (probabilityIndexMap.isEmpty()) {
-            int idx = 0;
-            for (String columnName : columnNames) {
-                if (probabilityIndexMap.putIfAbsent(ExpressionIdUtil.createExpressionId(columnName), idx) != null) {
-                    throw new BloomBoxException("Column names must be unique, offending entry: " + columnName);
-                }
-                idx++;
-            }
-            float[] defaultProbs = new float[probabilityIndexMap.size()];
-            Arrays.fill(defaultProbs, 1.0f);
-            this.defaultProbabilities = defaultProbs;
-        }
-        else {
-            throw new IllegalStateException("Re-defining the column names is not supported.");
-        }
-    }
-
     @Override
     public void dispatch(QueryDelegate queryDelegate) {
-        queryDelegate.prepareProbabilityIndex(probabilityIndexMap);
-        DefaultProbabilityVectorSupplier vectorSupplier = new DefaultProbabilityVectorSupplier();
+        DefaultDppFetcher dppFetcher = new DefaultDppFetcher();
         for (long rowIdx = 0; rowIdx < getNumberOfRows(); rowIdx++) {
-            vectorSupplier.initialize(this.compressedProbabilities[(int) rowIdx]);
-            queryDelegate.execute(vector, (int) (rowIdx * vectorSize), vectorSupplier);
+            dppFetcher.initialize(this.compressedProbabilities[(int) rowIdx]);
+            queryDelegate.execute(vector, (int) (rowIdx * vectorSize), dppFetcher);
         }
     }
 
     @Override
     public void feedRow(long[] rowVector, long rowIdx) {
         super.feedRow(rowVector, rowIdx);
-        this.compressedProbabilities[(int) rowIdx] = ProbabilityVectorCodec.getInstance().encode(defaultProbabilities);
+        LOGGER.warn("Feeding without probabilities will lead to zero counts, offending rowIdx={} (most likely a mistake)", rowIdx);
+        this.compressedProbabilities[(int) rowIdx] = compressedMissingDPPs;
     }
 
     /**
@@ -240,68 +174,30 @@ public class PbInMemoryDataStore extends DefaultDataStore {
      * 
      * @param rowVector long vector (bloom filter)
      * @param rowIdx number of the row
-     * @param probabilityMap maps column identifiers (see {@link ExpressionIdUtil#createExpressionId(String, long...)} ) to probabilities
+     * @param dppVector data point probability vector, encoded by {@link ProbabilityVectorCodec#encodeDataPointProbabilities(Map)}
      * @throws BloomBoxException if the map contains an unknown column or if a probability is not in range 0..1
      */
-    public void feedRow(long[] rowVector, long rowIdx, Map<Long, Float> probabilityMap) {
+    public void feedRow(long[] rowVector, long rowIdx, long[] dppVector) {
         super.feedRow(rowVector, rowIdx);
-
-        float[] vector = Arrays.copyOf(defaultProbabilities, defaultProbabilities.length);
-
-        for (Map.Entry<Long, Float> entry : probabilityMap.entrySet()) {
-            Integer idx = probabilityIndexMap.get(entry.getKey());
-            if (idx == null) {
-                throw new BloomBoxException(
-                        String.format("Unable to feed probability for unknown column: columnId=%d, probability=%s", entry.getKey(), entry.getValue()));
-            }
-            float value = entry.getValue();
-            if (value < 0 || value > 1.0) {
-                throw new BloomBoxException(
-                        String.format("Probability out of range: columnId=%d, probability=%s (expected 0.0 <= p <= 1.0)", entry.getKey(), entry.getValue()));
-            }
-            vector[idx] = value;
-        }
-        this.compressedProbabilities[(int) rowIdx] = ProbabilityVectorCodec.getInstance().encode(vector);
+        this.compressedProbabilities[(int) rowIdx] = ProbabilityVectorCodec.getInstance().encode(dppVector);
     }
 
     @Override
     public void serializeToStream(OutputStream os) throws IOException {
-        PbDataStoreHeader header = new PbDataStoreHeader(BloomBox.VERSION, super.getNumberOfRows(), probabilityIndexMap.size(), super.getVectorSize(),
-                this.getClass().getName());
+        DataStoreHeader header = new DataStoreHeader(BloomBox.VERSION, super.getNumberOfRows(), super.getVectorSize(), this.getClass().getName());
         try {
             HeaderUtil.writeDataStoreHeader(os, header);
 
             int outputBufferSize = 10_000_000;
             try (BufferedOutputStream bos = new BufferedOutputStream(os, outputBufferSize)) {
                 writeRawBBS(bos);
-                writeProbabilityIndexMap(bos);
-
+                writeProbabilityVectors(bos);
             }
         }
         catch (IOException | RuntimeException ex) {
             throw new BloomBoxException(String.format("Error writing in-memory data store to stream (%s).", header), ex);
         }
 
-    }
-
-    /**
-     * Stores the map as an ordered sequence of the column identifiers
-     * 
-     * @param bos destination
-     * @throws IOException on error
-     */
-    protected void writeProbabilityIndexMap(BufferedOutputStream bos) throws IOException {
-
-        LOGGER.debug("Storing probability index map ...");
-        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(probabilityIndexMap.entrySet());
-        // sort entries by column index, so we can later recreate the map easily
-        Collections.sort(entries, (e1, e2) -> e1.getValue().compareTo(e2.getValue()));
-        byte[] buffer = new byte[8];
-        for (Map.Entry<Long, Integer> entry : entries) {
-            BloomBox.longToBytes(entry.getKey(), buffer);
-            bos.write(buffer);
-        }
-        LOGGER.debug("Probability index map stored.");
     }
 
     /**
@@ -323,7 +219,6 @@ public class PbInMemoryDataStore extends DefaultDataStore {
      */
     private long computeOverallSize() {
         long res = super.getTotalSizeInBytes();
-        res = res + (probabilityIndexMap.size() * 8L);
         res = res + Arrays.stream(compressedProbabilities).map(arr -> arr.length).collect(Collectors.summingInt(Integer::intValue));
         return res;
     }
@@ -341,12 +236,6 @@ public class PbInMemoryDataStore extends DefaultDataStore {
         else {
             return computeOverallSize();
         }
-    }
-
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + " [numberOfRows=" + numberOfRows + ", numberOfColumns=" + probabilityIndexMap.size() + ", vectorSize="
-                + vectorSize + ", totalSizeInBytes=" + getTotalSizeInBytes() + "]";
     }
 
 }

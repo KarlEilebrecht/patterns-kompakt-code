@@ -23,8 +23,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.io.Serializable;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.ProbabilityIndexAware;
-import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
 
 /**
@@ -33,7 +32,7 @@ import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BloomFilterQuery implements ProbabilityIndexAware, Serializable {
+public class BloomFilterQuery implements Serializable {
 
     private static final long serialVersionUID = -2442237403084251215L;
 
@@ -60,12 +59,6 @@ public class BloomFilterQuery implements ProbabilityIndexAware, Serializable {
         this.expression = expression;
     }
 
-    @Override
-    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap) {
-        expression.collectUniqueDepthFirst().stream().filter(ProbabilityIndexAware.class::isInstance)
-                .forEach(e -> ((ProbabilityIndexAware) e).prepareProbabilityIndex(probabilityIndexMap));
-    }
-
     /**
      * Executes the query
      * 
@@ -90,20 +83,19 @@ public class BloomFilterQuery implements ProbabilityIndexAware, Serializable {
      * 
      * @param source bloom filter vector
      * @param startPos start position of the vector
-     * @param probabilities array with the probalities
+     * @param probabilities fetcher with the data point probabilities
      * @param resultCache binary result cache
      * @param probabilityResultCache cache for the already computed probabilities
      * @return probability of the match
      */
     @SuppressWarnings({ "java:S3824" })
-    public double execute(long[] source, int startPos, ProbabilityVectorSupplier probabilities, Map<Long, Boolean> resultCache,
-            Map<Long, Double> probabilityResultCache) {
+    public double execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache) {
         Long key = expression.getExpressionId();
         Double res = probabilityResultCache.get(key);
         if (res == null) {
             res = 0.0;
             if (this.execute(source, startPos, resultCache)) {
-                res = expression.computeProbability(probabilities, probabilityResultCache);
+                res = expression.computeMatchProbability(probabilities, probabilityResultCache);
                 probabilityResultCache.put(key, res);
             }
         }

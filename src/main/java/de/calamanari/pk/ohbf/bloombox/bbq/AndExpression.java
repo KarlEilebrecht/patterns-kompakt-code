@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 
 /**
  * An {@link AndExpression} is the equivalent of a logical AND-combination of other {@link BbqExpression}s.<br>
@@ -76,7 +76,7 @@ public class AndExpression implements BbqExpression {
 
     @Override
     @SuppressWarnings({ "java:S3824" })
-    public double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
+    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
 
         // note: the warning above is suppressed because "computeIfAbsent" fails when called recursively
 
@@ -87,10 +87,11 @@ public class AndExpression implements BbqExpression {
 
             double combinedProbability = -1;
             for (BbqExpression expression : expressions) {
-                double probability = expression.computeProbability(probabilities, resultCache);
+                double probability = expression.computeMatchProbability(probabilities, resultCache);
                 combinedProbability = combinedProbability < 0 ? probability : combinedProbability * probability;
             }
             res = combinedProbability < 0 ? 0.0 : combinedProbability;
+            resultCache.put(expressionId, res);
         }
         return res;
     }

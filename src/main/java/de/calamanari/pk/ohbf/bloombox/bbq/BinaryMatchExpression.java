@@ -23,8 +23,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.Arrays;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.ProbabilityIndexAware;
-import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 import de.calamanari.pk.util.SimpleFixedLengthBitVector;
 
 /**
@@ -33,7 +32,7 @@ import de.calamanari.pk.util.SimpleFixedLengthBitVector;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAware {
+public class BinaryMatchExpression implements BbqExpression {
 
     private static final long serialVersionUID = -2940750763497459402L;
 
@@ -58,9 +57,9 @@ public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAwa
     private final String argValue;
 
     /**
-     * index in the probability vector of a row
+     * The data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createDataPointId(String, String)}
      */
-    private int probabilityIndex = -1;
+    private final int dataPointId;
 
     /**
      * @param argName name of the "column"
@@ -72,6 +71,7 @@ public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAwa
         this.argValue = argValue;
         this.pattern = Arrays.copyOf(pattern, pattern.length);
         this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch", this.pattern);
+        this.dataPointId = ExpressionIdUtil.createDataPointId(argName, argValue);
     }
 
     /**
@@ -88,6 +88,13 @@ public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAwa
         return argValue;
     }
 
+    /**
+     * @return low precision data point id for key/value pair, see {@link ExpressionIdUtil#createDataPointId(String, String)}
+     */
+    public int getDataPointId() {
+        return dataPointId;
+    }
+
     @Override
     public boolean match(long[] source, int startPos, Map<Long, Boolean> resultCache) {
         return resultCache.computeIfAbsent(this.expressionId,
@@ -95,8 +102,8 @@ public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAwa
     }
 
     @Override
-    public double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
-        return probabilityIndex < 0 ? 1.0 : probabilities.getProbabilityVector()[probabilityIndex];
+    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
+        return probabilities.fetchDataPointProbability(dataPointId);
     }
 
     @Override
@@ -105,16 +112,8 @@ public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAwa
     }
 
     @Override
-    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap) {
-        long key = ExpressionIdUtil.createExpressionId(argName);
-        Integer index = probabilityIndexMap.get(key);
-        this.probabilityIndex = index != null ? index : -1;
-    }
-
-    @Override
     public String toString() {
-        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} "
-                + (probabilityIndex < 0 ? "" : "pi[" + probabilityIndex + "]") + " )";
+        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} [" + dataPointId + "] )";
     }
 
     @Override
@@ -127,13 +126,10 @@ public class BinaryMatchExpression implements BbqExpression, ProbabilityIndexAwa
         sb.append(argName);
         sb.append("==");
         sb.append(argValue);
-        sb.append("}");
-        if (probabilityIndex > 0) {
-            sb.append("[pi");
-            sb.append(probabilityIndex);
-            sb.append("]");
-        }
-        sb.append(" )");
+        sb.append("} ");
+        sb.append("[");
+        sb.append(dataPointId);
+        sb.append("] )");
         sb.append("\n");
     }
 

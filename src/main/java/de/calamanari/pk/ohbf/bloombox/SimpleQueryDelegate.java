@@ -85,11 +85,6 @@ public class SimpleQueryDelegate implements QueryDelegate {
     }
 
     @Override
-    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap) {
-        Arrays.stream(queries).forEach(query -> query.prepareProbabilityIndex(probabilityIndexMap));
-    }
-
-    @Override
     public void execute(long[] vector, int startPos) {
         resultCache.clear();
         for (int i = 0; i < queries.length; i++) {
@@ -109,7 +104,7 @@ public class SimpleQueryDelegate implements QueryDelegate {
     }
 
     @Override
-    public void execute(long[] vector, int startPos, ProbabilityVectorSupplier probabilities) {
+    public void execute(long[] vector, int startPos, DppFetcher probabilities) {
         resultCache.clear();
         probabilityResultCache.clear();
         ensurePbResultsInitialized();

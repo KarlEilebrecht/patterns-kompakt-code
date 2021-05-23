@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 
 /**
  * An {@link OrExpression} is the equivalent of a logical OR-combination of other {@link BbqExpression}s.<br>
@@ -70,7 +70,7 @@ public class OrExpression implements BbqExpression {
 
     @Override
     @SuppressWarnings({ "java:S3824" })
-    public double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
+    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
 
         // note: the warning above is suppressed because "computeIfAbsent" fails when called recursively
 
@@ -81,11 +81,12 @@ public class OrExpression implements BbqExpression {
 
             double combinedComplementProbability = -1;
             for (BbqExpression expression : expressions) {
-                double complementProbability = 1.0d - expression.computeProbability(probabilities, resultCache);
+                double complementProbability = 1.0d - expression.computeMatchProbability(probabilities, resultCache);
                 combinedComplementProbability = combinedComplementProbability < 0 ? complementProbability
                         : combinedComplementProbability * complementProbability;
             }
             res = combinedComplementProbability < 0 ? 1.0 : 1.0d - combinedComplementProbability;
+            resultCache.put(expressionId, res);
         }
         return res;
     }

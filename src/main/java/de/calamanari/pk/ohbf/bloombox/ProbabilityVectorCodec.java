@@ -21,12 +21,14 @@ package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 /**
- * The {@link ProbabilityVectorCodec} encodes and compresses a probability vector (float array) into a byte array.
+ * The {@link ProbabilityVectorCodec} encodes and compresses a data point probability vector (long array) into a byte array.
  * <p>
  * Instances are safe to be used by multiple threads concurrently.
  * 
@@ -84,58 +86,69 @@ public class ProbabilityVectorCodec implements Serializable {
     }
 
     /**
-     * Encodes the given float array into a byte array, so the source value can be restored by {@link #bytesToFloatArray(byte[])}
+     * Encodes the given long array into a byte array
      * 
-     * @param vector floats
-     * @return byte array
-     */
-    protected static byte[] floatArrayToBytes(float[] vector) {
-        byte[] rawBytes = new byte[vector.length * 4];
-        floatArrayToBytes(vector, 0, vector.length, rawBytes, 0);
-        return rawBytes;
-    }
-
-    /**
-     * Encodes the given float array into a byte array, so the source value can be restored by {@link #bytesToFloatArray(byte[])}
-     * 
-     * @param src float vector
+     * @param src long vector
      * @param inputStartIdx where to start reading
-     * @param srcLen number of floats to read from the input
-     * @param dest buffer, capacity (after start index) must be at least 4 x input length
+     * @param srcLen number of longs to read from the input
+     * @param dest buffer, capacity (after start index) must be at least 8 x input length
      * @param outputStartIdx where to start writing to output
      */
-    protected static void floatArrayToBytes(float[] src, int srcPos, int srcLen, byte[] dest, int destPos) {
+    protected static void longArrayToBytes(long[] src, int srcPos, int srcLen, byte[] dest, int destPos) {
         for (int vPos = 0; vPos < srcLen; vPos++) {
-            writeInt(Float.floatToRawIntBits(src[srcPos + vPos]), dest, destPos + (vPos * 4));
+            long value = src[srcPos + vPos];
+            int offset = destPos + (vPos * 8);
+            for (int i = 7; i >= 0; i--) {
+                dest[offset + i] = (byte) (value & 0xFF);
+                value >>= 8;
+            }
         }
     }
 
     /**
-     * Restores a float array previously encoded by {@link #floatArrayToBytes(float[])}
+     * Encodes the given long array into a byte array
      * 
-     * @param bytes encoded data
-     * @return float array
+     * @param src long values
+     * @return byte array size is 8 x size of src
      */
-    protected static float[] bytesToFloatArray(byte[] bytes) {
-        float[] vector = new float[bytes.length / 4];
-        bytesToFloatArray(bytes, 0, bytes.length, vector, 0);
-        return vector;
+    protected static byte[] longArrayToBytes(long[] src) {
+        byte[] res = new byte[src.length * 8];
+        longArrayToBytes(src, 0, src.length, res, 0);
+        return res;
     }
 
     /**
-     * Restores a float array previously encoded by {@link #floatArrayToBytes(float[])}
+     * Restores a long array from the byte array
      * 
      * @param src encoded data
      * @param srcPos where to start reading bytes
-     * @param srcLen number of bytes to read, must be a multiple of 4 (!)
-     * @param dest for writing the result, capacity after start must be at least inputLength/4
+     * @param srcLen number of bytes to read, must be a multiple of 8 (!)
+     * @param dest for writing the result, capacity after start must be at least inputLength/8
      * @param destPos where to start writing
      */
-    protected static void bytesToFloatArray(byte[] src, int srcPos, int srcLen, float[] dest, int destPos) {
-        int outputLength = srcLen / 4;
+    protected static void bytesToLongArray(byte[] src, int srcPos, int srcLen, long[] dest, int destPos) {
+        int outputLength = srcLen / 8;
         for (int vPos = 0; vPos < outputLength; vPos++) {
-            dest[destPos + vPos] = Float.intBitsToFloat(readInt(src, srcPos + (vPos * 4)));
+            int offset = srcPos + (vPos * 8);
+            long value = 0;
+            for (int i = 0; i < 8; i++) {
+                value <<= 8;
+                value |= (src[offset + i] & 0xFF);
+            }
+            dest[destPos + vPos] = value;
         }
+    }
+
+    /**
+     * Restores a long array from bytes
+     * 
+     * @param bytes encoded data
+     * @return long array (size / 8)
+     */
+    protected static long[] bytesToLongArray(byte[] bytes) {
+        long[] res = new long[bytes.length / 8];
+        bytesToLongArray(bytes, 0, bytes.length, res, 0);
+        return res;
     }
 
     /**
@@ -224,54 +237,6 @@ public class ProbabilityVectorCodec implements Serializable {
     }
 
     /**
-     * Encodes the given vector and writes the compressed bytes
-     * 
-     * @param vector input
-     * @param dest target (size should be (vector size * 4) + 4 to be safe)
-     * @param destPos where to start writing bytes
-     * @return number of bytes written
-     */
-    public int encode(float[] vector, byte[] dest, int destPos) {
-        byte[] encodedUncompressed = floatArrayToBytes(vector);
-        return compress(encodedUncompressed, 0, encodedUncompressed.length, dest, destPos);
-    }
-
-    /**
-     * Encodes the given vector
-     * 
-     * @param vector input
-     * @return a byte array, max length (vector size * 4) + 4 (depends on compression success)
-     */
-    public byte[] encode(float[] vector) {
-        byte[] buffer = new byte[(vector.length * 4) + 8];
-        int len = encode(vector, buffer, 0);
-        return Arrays.copyOf(buffer, len);
-    }
-
-    /**
-     * Decodes the vector previously encoded by {@link #encode(float[])}
-     * 
-     * @param src encoded bytes
-     * @param srcPos where to start reading
-     * @return decoded float vector
-     */
-    public float[] decode(byte[] src, int srcPos) {
-        byte[] encodedUncompressed = new byte[readOriginalLength(src, srcPos)];
-        uncompress(src, srcPos, encodedUncompressed, 0);
-        return bytesToFloatArray(encodedUncompressed);
-    }
-
-    /**
-     * Decodes the vector previously encoded by {@link #encode(float[])}
-     * 
-     * @param src encoded bytes
-     * @return decoded float vector
-     */
-    public float[] decode(byte[] src) {
-        return decode(src, 0);
-    }
-
-    /**
      * Determines the original byte array length from the compressed data
      * 
      * @param src compressed bytes
@@ -319,4 +284,112 @@ public class ProbabilityVectorCodec implements Serializable {
             value >>= 8;
         }
     }
+
+    /**
+     * We encode the data point id with its probability (subsequent bits), to that the id comes first and order will be preserved.
+     * 
+     * @param dataPointId key/value identifier
+     * @param probability float precision
+     * @return long
+     */
+    public long encodeDataPointProbability(int dataPointId, float probability) {
+        long res = dataPointId;
+        res = (res << 32L) + Float.floatToRawIntBits(probability);
+        return res;
+    }
+
+    /**
+     * Returns the encoded proability of this data point
+     * 
+     * @param dpp data point with probability
+     * @return probability
+     */
+    public float decodeDataPointProbability(long dpp) {
+        return Float.intBitsToFloat((int) ((dpp << 32L) >>> 32L));
+    }
+
+    /**
+     * Creates a (naturally) ordered vector of positive long values.
+     * <p>
+     * The dataPointId is encoded in the first 32 bits and can be easily determined (compared) by doing a right-shift by 32 bits. This way the order of the
+     * returned array of DPPs reflects the natural order of the underlying dataPointIds.
+     * 
+     * @param dpProbabilities maps dataPointId to probability
+     * @return sorted array of DPPs
+     */
+    public long[] encodeDataPointProbabilities(Map<Integer, Float> dpProbabilities) {
+        long[] res = new long[dpProbabilities.size()];
+        int idx = 0;
+        for (Map.Entry<Integer, Float> entry : dpProbabilities.entrySet()) {
+            res[idx] = encodeDataPointProbability(entry.getKey(), entry.getValue());
+            idx++;
+        }
+        Arrays.sort(res);
+        return res;
+    }
+
+    /**
+     * Decodes the given dpps array into a map
+     * 
+     * @param dpps data proint probabilities
+     * @return map dataPointId to probability
+     */
+    public Map<Integer, Float> decodeDataPointProbabilities(long[] dpps) {
+        Map<Integer, Float> res = new HashMap<>(dpps.length);
+        for (long dpp : dpps) {
+            int dataPointId = (int) (dpp >>> 32L);
+            float probability = decodeDataPointProbability(dpp);
+            res.put(dataPointId, probability);
+        }
+        return res;
+    }
+
+    /**
+     * Encodes the given data point probability vector and writes the compressed bytes
+     * 
+     * @param vector input
+     * @param dest target (size should be (vector size * 8) + 8 to be safe)
+     * @param destPos where to start writing bytes
+     * @return number of bytes written
+     */
+    public int encode(long[] vector, byte[] dest, int destPos) {
+        byte[] encodedUncompressed = longArrayToBytes(vector);
+        return compress(encodedUncompressed, 0, encodedUncompressed.length, dest, destPos);
+    }
+
+    /**
+     * Encodes the given data point probability vector
+     * 
+     * @param vector input
+     * @return a byte array, max length (vector size * 8) + 8 (depends on compression success)
+     */
+    public byte[] encode(long[] vector) {
+        byte[] buffer = new byte[(vector.length * 8) + 8];
+        int len = encode(vector, buffer, 0);
+        return Arrays.copyOf(buffer, len);
+    }
+
+    /**
+     * Decodes the data point probability vector
+     * 
+     * @param src encoded bytes
+     * @param srcPos where to start reading
+     * @return decoded long vector with DPPs
+     */
+    public long[] decode(byte[] src, int srcPos) {
+        byte[] encodedUncompressed = new byte[readOriginalLength(src, srcPos)];
+        uncompress(src, srcPos, encodedUncompressed, 0);
+        return bytesToLongArray(encodedUncompressed);
+    }
+
+    /**
+     * Decodes the data point probability vector
+     * 
+     * @param src encoded bytes
+     * @return decoded long vector with DPPs
+     */
+    public long[] decode(byte[] src) {
+        return decode(src, 0);
+    }
+
 }

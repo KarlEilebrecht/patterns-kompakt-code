@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.ProbabilityVectorSupplier;
+import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 
 /**
  * A {@link BbqExpression} is any technical representation of an expression of the BBQ-language.
@@ -52,12 +52,14 @@ public interface BbqExpression extends Serializable {
 
     /**
      * Computes the probability of a {@link #match(long[], int, Map)}
+     * <p>
+     * The default implementation returns 1.0.
      * 
-     * @param probabilities probability vector
+     * @param probabilities data point probability fetcher
      * @param resultCache caches the probability per expression
      * @return probability
      */
-    default double computeProbability(ProbabilityVectorSupplier probabilities, Map<Long, Double> resultCache) {
+    default double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
         return 1.0;
     }
 

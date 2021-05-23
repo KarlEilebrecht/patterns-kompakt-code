@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * ProbabilityVectorSupplier
+ * DppFetcher
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,27 +17,29 @@
  * limitations under the License.
  */
 //@formatter:on
+
 package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
 
+import de.calamanari.pk.ohbf.bloombox.bbq.BinaryMatchExpression;
+
 /**
- * The {@link ProbabilityVectorSupplier} allows delaying the computation of the probability vector for a single row, which might be time consuming.
+ * The {@link DppFetcher} (Data Point Probability Fetcher) allows determining the probability of a data point as late as possible.
  * <p>
  * <b>Note:<b> This is by intention not a lambda because lambdas are not serializable and cannot cache data.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface ProbabilityVectorSupplier extends Serializable {
+public interface DppFetcher extends Serializable {
 
     /**
-     * To be returned by dummy implementations of {@link #getProbabilityVector()}
+     * Returns the probability for the given data point.
+     * 
+     * @param dataPointId see {@link BinaryMatchExpression#getDataPointId()}
+     * @return probability or 0.0d if the given dataPointId has no probability attached, <b><code>0 &lt;= value &lt;= 1.0</code></b>
      */
-    public static final float[] NONE = new float[0];
-
-    default float[] getProbabilityVector() {
-        return NONE;
-    }
+    double fetchDataPointProbability(int dataPointId);
 
 }

@@ -59,6 +59,23 @@ public class ExpressionIdUtil {
         return ID_GENERATOR.createKey(inputs);
     }
 
+    /**
+     * Creates a 20-bit integer identifying the given key/value pair. It is low precision to reduce space consumption.
+     * <p>
+     * The idea is that the number of possible combinations is limited by the expected number of columns and the expected number of possible values.<br>
+     * Thus the collision risk is not so high.
+     * 
+     * @param argName column name
+     * @param argValue column value
+     * @return identifier
+     */
+    public static int createDataPointId(String argName, String argValue) {
+        long id = ID_GENERATOR.createKey(argName, argValue);
+        // make positive integer (20 bit) out of 64 bit long
+        id = (id << 32L) >>> 44L;
+        return (int) id;
+    }
+
     private ExpressionIdUtil() {
         // no instances
     }

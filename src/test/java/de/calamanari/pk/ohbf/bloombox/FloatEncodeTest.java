@@ -1,5 +1,6 @@
 package de.calamanari.pk.ohbf.bloombox;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -8,12 +9,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
+import java.util.UUID;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import org.junit.Ignore;
 import org.junit.Test;
+
+import de.calamanari.pk.muhai.MuhaiUtils;
+import de.calamanari.pk.ohbf.bloombox.bbq.ExpressionIdUtil;
 
 public class FloatEncodeTest {
 
@@ -30,44 +37,6 @@ public class FloatEncodeTest {
             System.out.println("!" + conv + " --> " + Double.longBitsToDouble(conv));
 
         }
-    }
-
-    @Test
-    public void testEncodeDecodeFloats() {
-
-        ProbabilityVectorCodec codec = ProbabilityVectorCodec.getInstance();
-
-        float[] source = new float[] {};
-
-        float[] target = codec.decode(codec.encode(source));
-
-        assertEquals(Arrays.toString(source), Arrays.toString(target));
-
-        source = new float[] { 0.0f };
-        target = codec.decode(codec.encode(source));
-
-        assertEquals(Arrays.toString(source), Arrays.toString(target));
-
-        source = new float[] { 0.9010f, 1.98f, 0.9999f, 0.0002f };
-        target = codec.decode(codec.encode(source));
-
-        assertEquals(Arrays.toString(source), Arrays.toString(target));
-
-        source = new float[] { 0.9010f, 1.98f, 0.9999f, 0.0002f, 0.0f, 0.0f, 0.9010f, 1.98f, 0.9999f, 0.0002f, 0.0f };
-        target = codec.decode(codec.encode(source));
-        assertEquals(Arrays.toString(source), Arrays.toString(target));
-
-        float[] large = new float[100000];
-        Arrays.fill(large, 1.0f);
-
-        System.out.println(large.length);
-
-        byte[] compressed = codec.encode(large);
-
-        System.out.println("compressed: " + compressed.length);
-
-        assertEquals(Arrays.toString(large), Arrays.toString(codec.decode(compressed)));
-
     }
 
     @Test
@@ -264,25 +233,6 @@ public class FloatEncodeTest {
         return res;
     }
 
-    @Ignore
-    @Test
-    public void testFullRange() {
-        float[] arr = new float[1];
-        for (long l = Integer.MIN_VALUE; l < Integer.MAX_VALUE; l++) {
-
-            int source = (int) l;
-
-            arr[0] = Float.intBitsToFloat(source);
-
-            float[] arr2 = ProbabilityVectorCodec.bytesToFloatArray(ProbabilityVectorCodec.floatArrayToBytes(arr));
-
-            int target = Float.floatToRawIntBits(arr2[0]);
-
-            assertEquals(source, target);
-
-        }
-    }
-
     @Test
     public void testCompare() {
 
@@ -301,6 +251,109 @@ public class FloatEncodeTest {
         Collections.sort(entries, (e1, e2) -> e1.getValue().compareTo(e2.getValue()));
 
         System.out.println(entries.toString());
+    }
+
+    @Test
+    public void testDataPointId() {
+
+        for (int i = 0; i < 100; i++) {
+            int dataPointId = ExpressionIdUtil.createDataPointId(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+
+            System.out.println("" + dataPointId + " ----> " + MuhaiUtils.toPaddedBinaryString(dataPointId));
+        }
+
+    }
+
+    @Test
+    public void testDataPointProbabilityMap() {
+
+        Map<Integer, Float> sourceMap = new TreeMap<>();
+
+        long[] dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
+
+        assertEquals(0, dpps.length);
+
+        Map<Integer, Float> targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
+
+        assertEquals(sourceMap.toString(), targetMap.toString());
+
+        sourceMap.put(8273, 1.0f);
+
+        dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
+
+        assertEquals(1, dpps.length);
+
+        targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
+
+        assertEquals(sourceMap.toString(), targetMap.toString());
+
+        sourceMap.put(23944, 1.0f);
+        sourceMap.put(1, 0.0005f);
+        sourceMap.put(2, 0.9999f);
+        sourceMap.put(3, 0.9999f);
+        sourceMap.put(4, 0.9999f);
+
+        dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
+
+        Arrays.stream(dpps).forEach(v -> System.out.println(MuhaiUtils.toPaddedBinaryString(v)));
+
+        assertEquals(6, dpps.length);
+
+        targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
+
+        assertEquals(sourceMap.toString(), targetMap.toString());
+
+    }
+
+    @Test
+    public void testLongVectorEncoding() {
+        Random rand = new Random(29477);
+
+        for (int i = 0; i < 100; i++) {
+
+            int count = rand.nextInt(10000) + 1;
+
+            long[] vector = new long[count];
+
+            for (int j = 0; j < count; j++) {
+                String argName = "col" + i;
+                String argValue = "val" + rand.nextInt(5);
+
+                float probability = 1.0f; // rand.nextFloat();
+
+                int dataPointId = ExpressionIdUtil.createDataPointId(argName, argValue);
+
+                vector[j] = ProbabilityVectorCodec.getInstance().encodeDataPointProbability(dataPointId, probability);
+
+                assertEquals(dataPointId, (int) (vector[j] >>> 32L));
+                assertEquals(probability, ProbabilityVectorCodec.getInstance().decodeDataPointProbability(vector[j]));
+
+            }
+
+            System.out.println("vector size: " + vector.length);
+
+            byte[] bytes = ProbabilityVectorCodec.getInstance().encode(vector);
+
+            System.out.println("encoded size: " + bytes.length);
+
+            long[] vector2 = ProbabilityVectorCodec.getInstance().decode(bytes);
+
+            System.out.println("decoded vector size: " + vector2.length);
+
+            assertArrayEquals(vector, vector2);
+
+        }
+
+        long[] empty = new long[0];
+
+        byte[] encoded = ProbabilityVectorCodec.getInstance().encode(empty);
+
+        System.out.println(Arrays.toString(encoded));
+
+        long[] empty2 = ProbabilityVectorCodec.getInstance().decode(encoded);
+
+        assertArrayEquals(empty, empty2);
+
     }
 
 }

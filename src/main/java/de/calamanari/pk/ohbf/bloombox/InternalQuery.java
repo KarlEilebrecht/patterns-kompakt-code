@@ -21,7 +21,6 @@
 package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
@@ -32,7 +31,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class InternalQuery implements ProbabilityIndexAware, Serializable {
+public class InternalQuery implements Serializable {
 
     private static final long serialVersionUID = -7248298268398187149L;
 
@@ -94,13 +93,6 @@ public class InternalQuery implements ProbabilityIndexAware, Serializable {
         return baseQuery;
     }
 
-    @Override
-    public void prepareProbabilityIndex(Map<Long, Integer> probabilityIndexMap) {
-        baseQuery.prepareProbabilityIndex(probabilityIndexMap);
-        Arrays.stream(subQueries).forEach(query -> query.prepareProbabilityIndex(probabilityIndexMap));
-
-    }
-
     /**
      * Applies this query to the given long array (a single record's vector from the store)
      * 
@@ -131,13 +123,13 @@ public class InternalQuery implements ProbabilityIndexAware, Serializable {
      * 
      * @param source long array
      * @param startPos start position of the vector in the source array
-     * @param probabilities vector with probabilities for computing match probability
+     * @param probabilities fetcher with probabilities for computing match probability
      * @param resultCache we avoid duplicate work by keeping results for already executed expressions
      * @param probabilityResultCache for caching already computed probabilities
      * @param result to be updated
      */
-    public void execute(long[] source, int startPos, ProbabilityVectorSupplier probabilities, Map<Long, Boolean> resultCache,
-            Map<Long, Double> probabilityResultCache, PbBloomBoxQueryResult result) {
+    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache,
+            PbBloomBoxQueryResult result) {
 
         int numberOfSubQueries = subQueries.length;
 
