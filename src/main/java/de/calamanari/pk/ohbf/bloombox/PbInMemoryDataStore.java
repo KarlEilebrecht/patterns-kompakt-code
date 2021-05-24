@@ -55,6 +55,11 @@ public class PbInMemoryDataStore extends DefaultDataStore {
     private final byte[] compressedMissingDPPs = new byte[] { 0, 0, 0, 0 };
 
     /**
+     * maps collected data point ids to short ids
+     */
+    private final DataPointDictionary dataPointDictionary = new DataPointDictionary();
+
+    /**
      * cached total size in bytes (after feeding complete)
      */
     private long totalSize = 0;
@@ -93,6 +98,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
     protected static void loadPbStoreIntoMemory(InputStream is, PbInMemoryDataStore dataStore, DataStoreHeader header) {
         try (BufferedInputStream bis = new BufferedInputStream(is, DEFAULT_IO_BUFFER_SIZE)) {
             DefaultDataStore.loadDataStoreIntoMemory(bis, dataStore, header);
+            loadDataPointDictionary(bis, dataStore, header);
             loadProbabilityVectors(bis, dataStore, header);
         }
         catch (BloomBoxException ex) {
@@ -105,7 +111,44 @@ public class PbInMemoryDataStore extends DefaultDataStore {
     }
 
     /**
-     * Reads the stores longs from the stream and fills the in-memory array
+     * Restores the data point dictionary
+     * 
+     * @param bis source stream
+     * @param dataStore store to be filled
+     * @param header stream header information
+     */
+    protected static void loadDataPointDictionary(BufferedInputStream bis, PbInMemoryDataStore dataStore, DataStoreHeader header) {
+
+        try {
+            LOGGER.debug("Loading data point dictionary into memory ...");
+            byte[] buffer = new byte[4];
+            int bytesFound = bis.read(buffer, 0, 4);
+            if (bytesFound != 4) {
+                throw new BloomBoxException(String.format("Error loading data point dictionary: 4 bytes expected, found %d - header: %s", bytesFound, header));
+            }
+            int numberOfEntries = ProbabilityVectorCodec.readInt(buffer, 4);
+
+            for (int i = 0; i < numberOfEntries; i++) {
+                bytesFound = bis.read(buffer, 0, 4);
+                if (bytesFound != 4) {
+                    throw new BloomBoxException(String.format("Error loading data point dictionary (entry %d / %d): 4 bytes expected, found %d - header: %s",
+                            (i + 1), numberOfEntries, bytesFound, header));
+                }
+                dataStore.dataPointDictionary.feed(ProbabilityVectorCodec.readInt(buffer, 4));
+            }
+            LOGGER.debug("Data point dictionary restored with {} entries.", numberOfEntries);
+        }
+        catch (BloomBoxException ex) {
+            throw ex;
+        }
+        catch (IOException | RuntimeException ex) {
+            throw new BloomBoxException(String.format("Error restoring probability vectors %s.", header), ex);
+        }
+
+    }
+
+    /**
+     * Reads the stored compressed probability vectors from the stream and fills the in-memory array
      * 
      * @param bis source stream
      * @param dataStore store to be filled
@@ -179,7 +222,26 @@ public class PbInMemoryDataStore extends DefaultDataStore {
      */
     public void feedRow(long[] rowVector, long rowIdx, long[] dppVector) {
         super.feedRow(rowVector, rowIdx);
+        collectAndMapDataPointIds(dppVector);
         this.compressedProbabilities[(int) rowIdx] = ProbabilityVectorCodec.getInstance().encode(dppVector);
+    }
+
+    /**
+     * Collects dataPointIds in the dictionary and replaces the ids in the vector with the mapped ones.
+     * <p>
+     * On average this leads to shorter ids and better vector compression ratio.
+     * 
+     * @param dppVector vector with data point probabilities (will be modified)
+     */
+    protected void collectAndMapDataPointIds(long[] dppVector) {
+        for (int i = 0; i < dppVector.length; i++) {
+            long dpp = dppVector[i];
+            int dataPointId = ProbabilityVectorCodec.decodeDataPointId(dpp);
+            int mappedDataPointId = dataPointDictionary.feed(dataPointId);
+            if (mappedDataPointId != dataPointId) {
+                dppVector[i] = ProbabilityVectorCodec.encodeDataPointProbability(mappedDataPointId, ProbabilityVectorCodec.decodeDataPointProbability(dpp));
+            }
+        }
     }
 
     @Override
@@ -191,6 +253,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
             int outputBufferSize = 10_000_000;
             try (BufferedOutputStream bos = new BufferedOutputStream(os, outputBufferSize)) {
                 writeRawBBS(bos);
+                writeDataPointDictionary(bos);
                 writeProbabilityVectors(bos);
             }
         }
@@ -198,6 +261,26 @@ public class PbInMemoryDataStore extends DefaultDataStore {
             throw new BloomBoxException(String.format("Error writing in-memory data store to stream (%s).", header), ex);
         }
 
+    }
+
+    /**
+     * This method appends the length of the dictionary and all dictionary entries to the stream
+     * 
+     * @param bos destination
+     * @throws IOException on error
+     */
+    protected void writeDataPointDictionary(BufferedOutputStream bos) throws IOException {
+        LOGGER.debug("Storing data point dictionary ...");
+        int[] dataPointIdsInLookupOrder = this.dataPointDictionary.toIntArray();
+        LOGGER.debug("Writing {} dataPointIds ...", dataPointIdsInLookupOrder.length);
+        byte[] buffer = new byte[4];
+        ProbabilityVectorCodec.writeInt(dataPointIdsInLookupOrder.length, buffer, 0);
+        bos.write(buffer);
+        for (int dataPointId : dataPointIdsInLookupOrder) {
+            ProbabilityVectorCodec.writeInt(dataPointId, buffer, 0);
+            bos.write(buffer);
+        }
+        LOGGER.debug("Data point dictionary stored.");
     }
 
     /**

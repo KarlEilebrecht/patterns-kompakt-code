@@ -23,16 +23,22 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.Arrays;
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.DataPointDictionary;
+import de.calamanari.pk.ohbf.bloombox.DataPointDictionaryAware;
 import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 import de.calamanari.pk.util.SimpleFixedLengthBitVector;
 
 /**
  * The {@link BinaryMatchExpression} is the only BBQ-expression that executes matches against a vector from the bloom box (all others are composites).
+ * <p>
+ * <b>Note:</b> Although expressions should be immutable I have made a compromise for performance reasons to allow changing the data point id (see
+ * {@link #getDataPointId()}, {@link #prepareDataPointIds(DataPointDictionary)}) at runtime. Avoiding this would have meant to replicate the whole expression
+ * tree (to preserve immutability), which I found too costly.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BinaryMatchExpression implements BbqExpression {
+public class BinaryMatchExpression implements BbqExpression, DataPointDictionaryAware {
 
     private static final long serialVersionUID = -2940750763497459402L;
 
@@ -57,9 +63,10 @@ public class BinaryMatchExpression implements BbqExpression {
     private final String argValue;
 
     /**
-     * The data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createDataPointId(String, String)}
+     * The data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createDataPointId(String, String)}<br>
+     * This is the only mutable id, because it might change in preparation to the execution, see {@link #prepareDataPointIds(DataPointDictionary)}
      */
-    private final int dataPointId;
+    private int dataPointId;
 
     /**
      * @param argName name of the "column"
@@ -114,6 +121,11 @@ public class BinaryMatchExpression implements BbqExpression {
     @Override
     public String toString() {
         return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} [" + dataPointId + "] )";
+    }
+
+    @Override
+    public void prepareDataPointIds(DataPointDictionary dictionary) {
+        this.dataPointId = dictionary.lookup(dataPointId);
     }
 
     @Override

@@ -163,6 +163,11 @@ public class SimpleQueryDelegate implements QueryDelegate {
     }
 
     @Override
+    public void prepareDataPointIds(DataPointDictionary dictionary) {
+        Arrays.stream(queries).forEach(q -> q.prepareDataPointIds(dictionary));
+    }
+
+    @Override
     public String toString() {
         if (pbResults.isEmpty()) {
             return this.getClass().getSimpleName() + " [resultCache=" + resultCache + ", queryInErrorFlags=" + Arrays.toString(queryInErrorFlags) + ", queries="

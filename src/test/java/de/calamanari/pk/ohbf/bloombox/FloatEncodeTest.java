@@ -267,17 +267,17 @@ public class FloatEncodeTest {
     @Test
     public void testDataPointProbabilityMap() {
 
-        Map<Integer, Float> sourceMap = new TreeMap<>();
+        Map<Integer, Double> sourceMap = new TreeMap<>();
 
         long[] dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
 
         assertEquals(0, dpps.length);
 
-        Map<Integer, Float> targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
+        Map<Integer, Double> targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
 
         assertEquals(sourceMap.toString(), targetMap.toString());
 
-        sourceMap.put(8273, 1.0f);
+        sourceMap.put(8273, 1.0d);
 
         dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
 
@@ -287,11 +287,11 @@ public class FloatEncodeTest {
 
         assertEquals(sourceMap.toString(), targetMap.toString());
 
-        sourceMap.put(23944, 1.0f);
-        sourceMap.put(1, 0.0005f);
-        sourceMap.put(2, 0.9999f);
-        sourceMap.put(3, 0.9999f);
-        sourceMap.put(4, 0.9999f);
+        sourceMap.put(23944, 1.0d);
+        sourceMap.put(1, 0.0005d);
+        sourceMap.put(2, 0.9999d);
+        sourceMap.put(3, 0.9999d);
+        sourceMap.put(4, 0.9999d);
 
         dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
 
@@ -309,24 +309,24 @@ public class FloatEncodeTest {
     public void testLongVectorEncoding() {
         Random rand = new Random(29477);
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
 
-            int count = rand.nextInt(10000) + 1;
+            int count = rand.nextInt(25000) + 1;
 
             long[] vector = new long[count];
 
             for (int j = 0; j < count; j++) {
                 String argName = "col" + i;
-                String argValue = "val" + rand.nextInt(5);
+                String argValue = "val" + rand.nextInt(2);
 
-                float probability = 1.0f; // rand.nextFloat();
+                float probability = 0.0f; // rand.nextFloat();
 
                 int dataPointId = ExpressionIdUtil.createDataPointId(argName, argValue);
 
-                vector[j] = ProbabilityVectorCodec.getInstance().encodeDataPointProbability(dataPointId, probability);
+                vector[j] = ProbabilityVectorCodec.encodeDataPointProbability(dataPointId, probability);
 
-                assertEquals(dataPointId, (int) (vector[j] >>> 32L));
-                assertEquals(probability, ProbabilityVectorCodec.getInstance().decodeDataPointProbability(vector[j]));
+                assertEquals(dataPointId, ProbabilityVectorCodec.decodeDataPointId(vector[j]));
+                assertEquals(probability, ProbabilityVectorCodec.decodeDataPointProbability(vector[j]), 0.00000001d);
 
             }
 
@@ -356,4 +356,63 @@ public class FloatEncodeTest {
 
     }
 
+    @Test
+    public void testReverseBits() {
+
+        for (long l = 0; l < 100; l++) {
+            int i = (int) l;
+
+            long val = i;
+            System.out.println(MuhaiUtils.toPaddedBinaryString(i));
+            val = Long.reverse(i) >>> 32L;
+            System.out.println(MuhaiUtils.toPaddedBinaryString(val));
+            System.out.println();
+
+        }
+
+        long l = Long.parseLong("11111111111111111111111111111111", 2);
+
+        System.out.println(MuhaiUtils.toPaddedBinaryString(l));
+
+    }
+
+    @Test
+    public void testEncodeDecode() {
+        ProbabilityVectorCodec codec = ProbabilityVectorCodec.getInstance();
+
+        long encoded = codec.encodeDataPointId(1);
+
+        System.out.println(MuhaiUtils.toPaddedBinaryString(encoded));
+
+        System.out.println(codec.decodeDataPointId(encoded));
+
+        // for (int i = 0; i < 1000; i++) {
+        // System.out.println(MuhaiUtils.toPaddedBinaryString(codec.encodeDataPointId(i)));
+        //
+        // }
+
+        // for (long l = Integer.MIN_VALUE; l <= Integer.MAX_VALUE; l++) {
+        // if (codec.decodeDataPointId(codec.encodeDataPointId((int) l)) != l) {
+        // throw new RuntimeException();
+        // }
+        // }
+
+        Random rand = new Random(7919);
+
+        for (int i = 0; i < ExpressionIdUtil.MIN_GENERATED_DATA_POINT_ID; i++) {
+            double probability = rand.nextDouble();
+
+            long dpp = codec.encodeDataPointProbability(i, probability);
+            System.out.println(MuhaiUtils.toPaddedBinaryString(dpp));
+
+            int dataPointId = codec.decodeDataPointId(dpp);
+            double probabilityAfter = codec.decodeDataPointProbability(dpp);
+
+            assertEquals(i, dataPointId);
+
+            assertEquals(probability, probabilityAfter, 0.00000001d);
+
+        }
+
+    }
 }

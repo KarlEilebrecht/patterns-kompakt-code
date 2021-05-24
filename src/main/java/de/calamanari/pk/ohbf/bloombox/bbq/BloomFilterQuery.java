@@ -23,6 +23,8 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.io.Serializable;
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.DataPointDictionary;
+import de.calamanari.pk.ohbf.bloombox.DataPointDictionaryAware;
 import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
 
@@ -32,7 +34,7 @@ import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BloomFilterQuery implements Serializable {
+public class BloomFilterQuery implements DataPointDictionaryAware, Serializable {
 
     private static final long serialVersionUID = -2442237403084251215L;
 
@@ -100,6 +102,12 @@ public class BloomFilterQuery implements Serializable {
             }
         }
         return res;
+    }
+
+    @Override
+    public void prepareDataPointIds(DataPointDictionary dictionary) {
+        expression.collectUniqueDepthFirst().stream().filter(DataPointDictionaryAware.class::isInstance).map(DataPointDictionaryAware.class::cast)
+                .forEach(dpa -> dpa.prepareDataPointIds(dictionary));
     }
 
     /**

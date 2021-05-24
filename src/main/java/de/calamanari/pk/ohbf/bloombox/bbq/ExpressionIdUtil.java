@@ -41,6 +41,11 @@ public class ExpressionIdUtil {
     private static final MuhaiGenerator ID_GENERATOR = new MuhaiGenerator(LongPrefix.STRAIGHT);
 
     /**
+     * The first 2^16 ids are reserved
+     */
+    public static final int MIN_GENERATED_DATA_POINT_ID = 65536;
+
+    /**
      * Creates a new unique id based on the given inputs
      * 
      * @param type identifies the type of expression to be keyed, to distinguish different expression with the same members
@@ -60,20 +65,20 @@ public class ExpressionIdUtil {
     }
 
     /**
-     * Creates a 20-bit integer identifying the given key/value pair. It is low precision to reduce space consumption.
+     * Creates a 21-bit integer (precision only 20 bits) identifying the given key/value pair. It is low precision to reduce space consumption.
      * <p>
      * The idea is that the number of possible combinations is limited by the expected number of columns and the expected number of possible values.<br>
      * Thus the collision risk is not so high.
      * 
      * @param argName column name
      * @param argValue column value
-     * @return identifier
+     * @return identifier not using the range <code>[ 0 .. ({@value #MIN_GENERATED_DATA_POINT_ID} - 1) ]</code>
      */
     public static int createDataPointId(String argName, String argValue) {
         long id = ID_GENERATOR.createKey(argName, argValue);
         // make positive integer (20 bit) out of 64 bit long
         id = (id << 32L) >>> 44L;
-        return (int) id;
+        return MIN_GENERATED_DATA_POINT_ID + ((int) id);
     }
 
     private ExpressionIdUtil() {

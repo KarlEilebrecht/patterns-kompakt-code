@@ -28,7 +28,9 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 /**
- * The {@link ProbabilityVectorCodec} encodes and compresses a data point probability vector (long array) into a byte array.
+ * The {@link ProbabilityVectorCodec} deals with data point probabilities that can be encoded in a long array and compressed.
+ * <p>
+ * Data point probabilities are values in range 0.0 .. 1.0 (incl.), encoded as fixed-point with 8 decimals precision.
  * <p>
  * Instances are safe to be used by multiple threads concurrently.
  * 
@@ -39,6 +41,21 @@ import java.util.zip.Inflater;
 public class ProbabilityVectorCodec implements Serializable {
 
     private static final long serialVersionUID = -8203709991440990978L;
+
+    /**
+     * Factor for fix-point encoding with 8 decimals
+     */
+    public static final double PRECISION_FACTOR = 100_000_000d;
+
+    /**
+     * Reverse factor for fix-point encoding with 8 decimals
+     */
+    public static final double REVERSE_PRECISION_FACTOR = 1.0d / PRECISION_FACTOR;
+
+    /**
+     * 32-bits (1) mask to the right for cutting the leading bit sequence (AND)
+     */
+    public static final long MASK_TRAILING_32 = Long.parseLong("11111111111111111111111111111111", 2);
 
     /**
      * SINGLETON
@@ -286,16 +303,41 @@ public class ProbabilityVectorCodec implements Serializable {
     }
 
     /**
-     * We encode the data point id with its probability (subsequent bits), to that the id comes first and order will be preserved.
+     * We encode the data point id with its probability (subsequent bits), to that the id comes first.
+     * <ul>
+     * <li>The probability gets <b>fixed-point encoded with 8 decimals precision</b> to reduce memory consumption.</li>
+     * <li>Probability values &lt;0 fall to 0, values &gt;1.0 fall to 1.0.</li>
+     * </ul>
      * 
      * @param dataPointId key/value identifier
-     * @param probability float precision
+     * @param probability value between 0.0 and 1.0 (incl.), 8 decimals precision
      * @return long
      */
-    public long encodeDataPointProbability(int dataPointId, float probability) {
-        long res = dataPointId;
-        res = (res << 32L) + Float.floatToRawIntBits(probability);
-        return res;
+    public static long encodeDataPointProbability(int dataPointId, double probability) {
+        if (probability < 0) {
+            probability = 0;
+        }
+        else if (probability > 1.0) {
+            probability = 1.0;
+        }
+        long fixedProb8decimals = (long) (probability * PRECISION_FACTOR);
+        return (((long) (dataPointId)) << 32L) | fixedProb8decimals;
+    }
+
+    /**
+     * @param dataPointId key/value identifier
+     * @return same bit sequence as if probability was zero (trailing bits 0)
+     */
+    public static long encodeDataPointId(int dataPointId) {
+        return (((long) (dataPointId)) << 32L);
+    }
+
+    /**
+     * @param dpp data point with probability
+     * @return dataPointId
+     */
+    public static int decodeDataPointId(long dpp) {
+        return (int) (dpp >>> 32L);
     }
 
     /**
@@ -304,8 +346,8 @@ public class ProbabilityVectorCodec implements Serializable {
      * @param dpp data point with probability
      * @return probability
      */
-    public float decodeDataPointProbability(long dpp) {
-        return Float.intBitsToFloat((int) ((dpp << 32L) >>> 32L));
+    public static double decodeDataPointProbability(long dpp) {
+        return (dpp & MASK_TRAILING_32) * REVERSE_PRECISION_FACTOR;
     }
 
     /**
@@ -317,10 +359,10 @@ public class ProbabilityVectorCodec implements Serializable {
      * @param dpProbabilities maps dataPointId to probability
      * @return sorted array of DPPs
      */
-    public long[] encodeDataPointProbabilities(Map<Integer, Float> dpProbabilities) {
+    public long[] encodeDataPointProbabilities(Map<Integer, Double> dpProbabilities) {
         long[] res = new long[dpProbabilities.size()];
         int idx = 0;
-        for (Map.Entry<Integer, Float> entry : dpProbabilities.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : dpProbabilities.entrySet()) {
             res[idx] = encodeDataPointProbability(entry.getKey(), entry.getValue());
             idx++;
         }
@@ -334,11 +376,11 @@ public class ProbabilityVectorCodec implements Serializable {
      * @param dpps data proint probabilities
      * @return map dataPointId to probability
      */
-    public Map<Integer, Float> decodeDataPointProbabilities(long[] dpps) {
-        Map<Integer, Float> res = new HashMap<>(dpps.length);
+    public Map<Integer, Double> decodeDataPointProbabilities(long[] dpps) {
+        Map<Integer, Double> res = new HashMap<>(dpps.length);
         for (long dpp : dpps) {
-            int dataPointId = (int) (dpp >>> 32L);
-            float probability = decodeDataPointProbability(dpp);
+            int dataPointId = decodeDataPointId(dpp);
+            double probability = decodeDataPointProbability(dpp);
             res.put(dataPointId, probability);
         }
         return res;

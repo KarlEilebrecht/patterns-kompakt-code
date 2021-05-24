@@ -21,6 +21,7 @@
 package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
@@ -31,7 +32,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class InternalQuery implements Serializable {
+public class InternalQuery implements DataPointDictionaryAware, Serializable {
 
     private static final long serialVersionUID = -7248298268398187149L;
 
@@ -146,6 +147,12 @@ public class InternalQuery implements Serializable {
             }
         }
 
+    }
+
+    @Override
+    public void prepareDataPointIds(DataPointDictionary dictionary) {
+        baseQuery.prepareDataPointIds(dictionary);
+        Arrays.stream(subQueries).forEach(q -> q.prepareDataPointIds(dictionary));
     }
 
     /**

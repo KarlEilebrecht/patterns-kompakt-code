@@ -44,10 +44,8 @@ public class DefaultDppFetcher implements DppFetcher {
 
         long[] dppVector = getDppVector();
 
-        // The data point probability vector is an array, effectively sorted
+        // The data point probability vector is an array, effectively ordered ascending
         // by data point id. Thus, we can perform a binary search to find the candidate
-
-        long searchDppId = dataPointId;
 
         int idxL = 0;
         int idxR = dppVector.length - 1;
@@ -57,23 +55,17 @@ public class DefaultDppFetcher implements DppFetcher {
 
             int idxM = (int) Math.floor((idxL + idxR) / 2.0d);
 
-            long candidateDppId = dppVector[idxM] >>> 32L;
+            int candidateDppId = ProbabilityVectorCodec.decodeDataPointId(dppVector[idxM]);
 
-            if (candidateDppId < searchDppId) {
+            if (candidateDppId < dataPointId) {
                 idxL = idxM + 1;
             }
-            else if (candidateDppId > searchDppId) {
+            else if (candidateDppId > dataPointId) {
                 idxR = idxM - 1;
             }
             else {
                 // strip data point id and return encoded float
-                res = Float.intBitsToFloat((int) ((dppVector[idxM] << 32L) >>> 32L));
-                if (res < 0) {
-                    res = 0.0d;
-                }
-                else if (res > 1.0) {
-                    res = 1.0d;
-                }
+                res = ProbabilityVectorCodec.decodeDataPointProbability(dppVector[idxM]);
                 break;
             }
         }
