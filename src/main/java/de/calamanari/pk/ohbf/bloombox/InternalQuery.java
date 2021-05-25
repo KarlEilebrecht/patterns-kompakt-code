@@ -142,7 +142,7 @@ public class InternalQuery implements DataPointDictionaryAware, Serializable {
 
                 double subMatchProbability = subQueries[i].execute(source, startPos, probabilities, resultCache, probabilityResultCache);
                 if (subMatchProbability > 0.0) {
-                    result.incrementSubQuerySum(i, subMatchProbability);
+                    result.incrementSubQuerySum(i, subMatchProbability * baseMatchProbability);
                 }
             }
         }

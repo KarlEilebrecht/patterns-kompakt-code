@@ -20,12 +20,17 @@
 package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link ProbabilityVectorCodec} deals with data point probabilities that can be encoded in a long array and compressed.
@@ -41,6 +46,8 @@ import java.util.zip.Inflater;
 public class ProbabilityVectorCodec implements Serializable {
 
     private static final long serialVersionUID = -8203709991440990978L;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProbabilityVectorCodec.class);
 
     /**
      * Factor for fix-point encoding with 8 decimals
@@ -359,7 +366,7 @@ public class ProbabilityVectorCodec implements Serializable {
      * @param dpProbabilities maps dataPointId to probability
      * @return sorted array of DPPs
      */
-    public long[] encodeDataPointProbabilities(Map<Integer, Double> dpProbabilities) {
+    public static long[] createDataPointProbabilityVector(Map<Integer, Double> dpProbabilities) {
         long[] res = new long[dpProbabilities.size()];
         int idx = 0;
         for (Map.Entry<Integer, Double> entry : dpProbabilities.entrySet()) {
@@ -371,12 +378,48 @@ public class ProbabilityVectorCodec implements Serializable {
     }
 
     /**
+     * Encodes the list of data points into the data point probability vector
+     * 
+     * @param dataPoints duplicate-free list of data points, NOT NULL
+     * @return sorted array of DPPs
+     * @throws BloomBoxException if the list contains the same dataPoint twice
+     */
+    public static long[] createDataPointProbabilityVector(List<DataPoint> dataPoints) {
+        long[] res = new long[dataPoints.size()];
+        List<DataPoint> idOrderedList = new ArrayList<>(dataPoints);
+        idOrderedList.sort(DataPoint.ID_ORDER_COMPARATOR);
+        DataPoint lastDataPoint = null;
+        int shadows = 0;
+        for (int i = 0; i < idOrderedList.size(); i++) {
+            DataPoint dataPoint = idOrderedList.get(i);
+            if (lastDataPoint != null && dataPoint.getDataPointId() == lastDataPoint.getDataPointId()) {
+                if (lastDataPoint.getProbability() != dataPoint.getProbability()) {
+                    LOGGER.warn(
+                            "Probability of {} shadows the probability of {}. " + "This can be caused by improper feeding or a hash-collision within a row. "
+                                    + "You may ignore this message if it only appears sporadically (minor impact on query results).",
+                            lastDataPoint, dataPoint);
+                }
+                shadows++;
+            }
+            else {
+                res[i] = encodeDataPointProbability(dataPoint.getDataPointId(), dataPoint.getProbability());
+                lastDataPoint = dataPoint;
+            }
+        }
+        if (shadows > 0) {
+            // the vector is shorter than expected because of shadows
+            res = Arrays.copyOf(res, res.length - shadows);
+        }
+        return res;
+    }
+
+    /**
      * Decodes the given dpps array into a map
      * 
      * @param dpps data proint probabilities
      * @return map dataPointId to probability
      */
-    public Map<Integer, Double> decodeDataPointProbabilities(long[] dpps) {
+    public static Map<Integer, Double> dataPointProbabilityVectorToMap(long[] dpps) {
         Map<Integer, Double> res = new HashMap<>(dpps.length);
         for (long dpp : dpps) {
             int dataPointId = decodeDataPointId(dpp);

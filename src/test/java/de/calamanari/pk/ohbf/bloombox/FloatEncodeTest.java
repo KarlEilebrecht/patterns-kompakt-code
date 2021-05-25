@@ -269,21 +269,21 @@ public class FloatEncodeTest {
 
         Map<Integer, Double> sourceMap = new TreeMap<>();
 
-        long[] dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
+        long[] dpps = ProbabilityVectorCodec.createDataPointProbabilityVector(sourceMap);
 
         assertEquals(0, dpps.length);
 
-        Map<Integer, Double> targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
+        Map<Integer, Double> targetMap = new TreeMap<>(ProbabilityVectorCodec.dataPointProbabilityVectorToMap(dpps));
 
         assertEquals(sourceMap.toString(), targetMap.toString());
 
         sourceMap.put(8273, 1.0d);
 
-        dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
+        dpps = ProbabilityVectorCodec.createDataPointProbabilityVector(sourceMap);
 
         assertEquals(1, dpps.length);
 
-        targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
+        targetMap = new TreeMap<>(ProbabilityVectorCodec.dataPointProbabilityVectorToMap(dpps));
 
         assertEquals(sourceMap.toString(), targetMap.toString());
 
@@ -293,13 +293,13 @@ public class FloatEncodeTest {
         sourceMap.put(3, 0.9999d);
         sourceMap.put(4, 0.9999d);
 
-        dpps = ProbabilityVectorCodec.getInstance().encodeDataPointProbabilities(sourceMap);
+        dpps = ProbabilityVectorCodec.createDataPointProbabilityVector(sourceMap);
 
         Arrays.stream(dpps).forEach(v -> System.out.println(MuhaiUtils.toPaddedBinaryString(v)));
 
         assertEquals(6, dpps.length);
 
-        targetMap = new TreeMap<>(ProbabilityVectorCodec.getInstance().decodeDataPointProbabilities(dpps));
+        targetMap = new TreeMap<>(ProbabilityVectorCodec.dataPointProbabilityVectorToMap(dpps));
 
         assertEquals(sourceMap.toString(), targetMap.toString());
 
@@ -402,11 +402,11 @@ public class FloatEncodeTest {
         for (int i = 0; i < ExpressionIdUtil.MIN_GENERATED_DATA_POINT_ID; i++) {
             double probability = rand.nextDouble();
 
-            long dpp = codec.encodeDataPointProbability(i, probability);
+            long dpp = ProbabilityVectorCodec.encodeDataPointProbability(i, probability);
             System.out.println(MuhaiUtils.toPaddedBinaryString(dpp));
 
-            int dataPointId = codec.decodeDataPointId(dpp);
-            double probabilityAfter = codec.decodeDataPointProbability(dpp);
+            int dataPointId = ProbabilityVectorCodec.decodeDataPointId(dpp);
+            double probabilityAfter = ProbabilityVectorCodec.decodeDataPointProbability(dpp);
 
             assertEquals(i, dataPointId);
 

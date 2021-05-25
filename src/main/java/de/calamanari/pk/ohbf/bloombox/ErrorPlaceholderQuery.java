@@ -63,4 +63,15 @@ public class ErrorPlaceholderQuery extends InternalQuery {
         result.setErrorMessage(errorMessage);
     }
 
+    @Override
+    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache,
+            PbBloomBoxQueryResult result) {
+        result.setErrorMessage(errorMessage);
+    }
+
+    @Override
+    public void prepareDataPointIds(DataPointDictionary dictionary) {
+        // no-op
+    }
+
 }

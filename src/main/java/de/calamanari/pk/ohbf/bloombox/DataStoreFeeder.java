@@ -46,32 +46,32 @@ public class DataStoreFeeder {
     /**
      * monitor for locking write access on the data store
      */
-    private final Object storeMonitor = new Object();
+    protected final Object storeMonitor = new Object();
 
     /**
      * the data store of the bloom box
      */
-    private final BloomBoxDataStore dataStore;
+    protected final BloomBoxDataStore dataStore;
 
     /**
      * bloom filter configuration for creating rows
      */
-    private final BloomFilterConfig config;
+    protected final BloomFilterConfig config;
 
     /**
      * Capacity of the store (fixed)
      */
-    private final long numberOfRows;
+    protected final long numberOfRows;
 
     /**
      * Thread-local with the bloom filter (in case of multi-threaded feeding)
      */
-    private final ThreadLocal<LwGenericOHBF> bloomFilterHolder;
+    protected final ThreadLocal<LwGenericOHBF> bloomFilterHolder;
 
     /**
      * position of the "cursor" in the store
      */
-    private long currentRowIndex = -1;
+    protected long currentRowIndex = -1;
 
     /**
      * @param config filter configuration
@@ -180,7 +180,7 @@ public class DataStoreFeeder {
      * 
      * @return true if next row is ready or false if the box is full or sealed
      */
-    private boolean moveToNextRow() {
+    protected boolean moveToNextRow() {
         boolean res = false;
         synchronized (storeMonitor) {
             if (currentRowIndex + 1 < numberOfRows) {

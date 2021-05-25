@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class PbInMemoryDataStore extends DefaultDataStore {
+public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore {
 
     private static final long serialVersionUID = -7795764836613656147L;
 
@@ -78,6 +78,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
         try {
             PbInMemoryDataStore res = new PbInMemoryDataStore(header.getVectorSize(), (int) header.getNumberOfRows());
             loadPbStoreIntoMemory(is, res, header);
+            res.totalSize = res.computeOverallSize();
             return res;
         }
         catch (BloomBoxException ex) {
@@ -126,7 +127,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
             if (bytesFound != 4) {
                 throw new BloomBoxException(String.format("Error loading data point dictionary: 4 bytes expected, found %d - header: %s", bytesFound, header));
             }
-            int numberOfEntries = ProbabilityVectorCodec.readInt(buffer, 4);
+            int numberOfEntries = ProbabilityVectorCodec.readInt(buffer, 0);
 
             for (int i = 0; i < numberOfEntries; i++) {
                 bytesFound = bis.read(buffer, 0, 4);
@@ -134,7 +135,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
                     throw new BloomBoxException(String.format("Error loading data point dictionary (entry %d / %d): 4 bytes expected, found %d - header: %s",
                             (i + 1), numberOfEntries, bytesFound, header));
                 }
-                dataStore.dataPointDictionary.feed(ProbabilityVectorCodec.readInt(buffer, 4));
+                dataStore.dataPointDictionary.feed(ProbabilityVectorCodec.readInt(buffer, 0));
             }
             LOGGER.debug("Data point dictionary restored with {} entries.", numberOfEntries);
         }
@@ -166,7 +167,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
                     throw new BloomBoxException(
                             String.format("Error loading probability vectors (row %d): 4 bytes expected, found %d - header: %s", rowIdx, bytesFound, header));
                 }
-                int entryLength = ProbabilityVectorCodec.readInt(buffer, 4);
+                int entryLength = ProbabilityVectorCodec.readInt(buffer, 0);
                 byte[] compressedDpp = new byte[entryLength + 4];
                 System.arraycopy(buffer, 0, compressedDpp, 0, 4);
                 bytesFound = bis.read(compressedDpp, 4, entryLength);
@@ -198,6 +199,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
 
     @Override
     public void dispatch(QueryDelegate queryDelegate) {
+        queryDelegate.prepareDataPointIds(dataPointDictionary);
         DefaultDppFetcher dppFetcher = new DefaultDppFetcher();
         for (long rowIdx = 0; rowIdx < getNumberOfRows(); rowIdx++) {
             dppFetcher.initialize(this.compressedProbabilities[(int) rowIdx]);
@@ -212,14 +214,7 @@ public class PbInMemoryDataStore extends DefaultDataStore {
         this.compressedProbabilities[(int) rowIdx] = compressedMissingDPPs;
     }
 
-    /**
-     * Feeds the row and sets the given probabilities, any column not mapped will get a default probability of 1.0.
-     * 
-     * @param rowVector long vector (bloom filter)
-     * @param rowIdx number of the row
-     * @param dppVector data point probability vector, encoded by {@link ProbabilityVectorCodec#encodeDataPointProbabilities(Map)}
-     * @throws BloomBoxException if the map contains an unknown column or if a probability is not in range 0..1
-     */
+    @Override
     public void feedRow(long[] rowVector, long rowIdx, long[] dppVector) {
         super.feedRow(rowVector, rowIdx);
         collectAndMapDataPointIds(dppVector);
@@ -242,6 +237,9 @@ public class PbInMemoryDataStore extends DefaultDataStore {
                 dppVector[i] = ProbabilityVectorCodec.encodeDataPointProbability(mappedDataPointId, ProbabilityVectorCodec.decodeDataPointProbability(dpp));
             }
         }
+        // by replacing the ids with the ones from the dictionary we have changed the order
+        // the vector MUST be sorted
+        Arrays.sort(dppVector);
     }
 
     @Override

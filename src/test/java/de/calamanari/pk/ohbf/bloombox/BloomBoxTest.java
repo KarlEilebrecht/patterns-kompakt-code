@@ -415,6 +415,58 @@ public class BloomBoxTest {
 
     }
 
+    // @Ignore("Short running creation of bird strikes bloom box with probabilities 1.0, only needed on demand")
+    @Test
+    public void testCreateBirdStrikesBloomBox_PB() throws Exception {
+        this.numberOfColumns = 17;
+        int numberOfRows = 99_404;
+        // @formatter:off
+        this.bloomBox = BloomBox.forNumberOfRows(numberOfRows)
+                                .withNumberOfColumns(this.numberOfColumns)
+                                .withFalsePositiveRateEpsilon(0.00001)
+                                .withDataStore( (vSize, numOfRows) -> new PbInMemoryDataStore(vSize, numOfRows.intValue()))
+                                .withFeeder((config, store) -> new PbDataStoreFeeder(config, store, false))
+                                .build();
+        // @formatter:on
+
+        PbDataStoreFeeder feeder = (PbDataStoreFeeder) bloomBox.getFeeder();
+
+        columnNames = null;
+        lineNumber = -1;
+
+        Random rand = new Random(823342);
+
+        // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
+        Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
+                .filter(Predicate.not(Map::isEmpty)).forEach(argMap -> feeder.addRow(createDataPointsWithRandomProbability(rand, argMap)));
+
+        assertEquals(numberOfRows, lineNumber);
+
+        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+
+        feeder.close();
+
+        File testBox = new File("/mytemp/birdstrikes_PB_r.bbx");
+
+        bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
+                + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php"
+                + "\nwith attached probabilities 1.0");
+
+        bloomBox.saveToFile(testBox);
+
+        assertEquals(numberOfRows, bloomBox.getDataStore().getNumberOfRows());
+        assertEquals(numberOfColumns, bloomBox.getConfig().getNumberOfInsertedElementsN());
+
+    }
+
+    private List<DataPoint> createDataPointsWithRandomProbability(Random rand, Map<String, String> argMap) {
+        List<DataPoint> res = new ArrayList<>(argMap.size());
+        for (Map.Entry<String, String> entry : argMap.entrySet()) {
+            res.add(new DataPoint(entry.getKey(), entry.getValue(), rand.nextDouble()));
+        }
+        return res;
+    }
+
     @Ignore("Long running creation of 2.9 GB box (enriched)")
     @Test
     public void testCreateEnrichedBirdStrikesBloomBox() throws Exception {
@@ -460,11 +512,11 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Use this method to start the demo UI application")
+    // @Ignore("Use this method to start the demo UI application")
     @Test
     public void testBloomBoxDemoUI() {
 
-        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes.bbx"), Collections.emptyMap());
+        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_PB_r.bbx"), Collections.emptyMap());
 
         BloomBoxQueryRunner runner = new BloomBoxQueryRunner(bloomBox);
 

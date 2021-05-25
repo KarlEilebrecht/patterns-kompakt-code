@@ -74,9 +74,10 @@ public class ExpressionIdUtil {
      * @param argValue column value
      * @return identifier not using the range <code>[ 0 .. ({@value #MIN_GENERATED_DATA_POINT_ID} - 1) ]</code>
      */
-    public static int createDataPointId(String argName, String argValue) {
-        long id = ID_GENERATOR.createKey(argName, argValue);
+    public static int createDataPointId(String argName, Object argValue) {
+        long id = ID_GENERATOR.createKey("dp", argName, argValue);
         // make positive integer (20 bit) out of 64 bit long
+        // the 21st bit is for the offset
         id = (id << 32L) >>> 44L;
         return MIN_GENERATED_DATA_POINT_ID + ((int) id);
     }

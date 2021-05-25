@@ -78,10 +78,17 @@ public class PbBloomBoxQueryResult implements Serializable {
      * 
      */
     void transferCounts() {
-        result.setBaseQueryCount((long) Math.ceil(baseQuerySum));
+        result.setBaseQueryCount(Math.round(baseQuerySum));
         for (int i = 0; i < subQuerySums.length; i++) {
-            result.getSubQueryCounts()[i] = (long) Math.ceil(subQuerySums[i]);
+            result.getSubQueryCounts()[i] = Math.round(subQuerySums[i]);
         }
+    }
+
+    /**
+     * @param message error to set at the result
+     */
+    void setErrorMessage(String message) {
+        result.setErrorMessage(message);
     }
 
     @Override
