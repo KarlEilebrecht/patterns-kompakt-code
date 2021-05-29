@@ -23,8 +23,10 @@ package de.calamanari.pk.ohbf.bloombox;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
+import de.calamanari.pk.ohbf.bloombox.bbq.QuantumOptimizer;
 
 /**
  * An {@link InternalQuery} represents a parsed and optimized query with sub queries ready to be executed on the store.
@@ -32,7 +34,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class InternalQuery implements DataPointDictionaryAware, Serializable {
+public class InternalQuery implements DataPointOccurrenceAware, Serializable {
 
     private static final long serialVersionUID = -7248298268398187149L;
 
@@ -55,6 +57,16 @@ public class InternalQuery implements DataPointDictionaryAware, Serializable {
      * labels of the sub-queries
      */
     protected final String[] subQueryLabels;
+
+    /**
+     * Optimization, created on demand to support probability queries
+     */
+    protected BloomFilterQuery[] cachedCombinedSubQueries = null;
+
+    /**
+     * Optimization, created on demand to support probability queries
+     */
+    protected BloomFilterQuery cachedOptimizedBaseQuery = null;
 
     /**
      * @param name the query's name
@@ -85,6 +97,29 @@ public class InternalQuery implements DataPointDictionaryAware, Serializable {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @param idx index of the sub 0 .. {@link #getNumberOfSubQueries()} -1
+     * @return fully qualified name of the sub query, which is name + dot + label
+     */
+    public String getSubQueryName(int idx) {
+        return this.name + "." + subQueryLabels[idx];
+    }
+
+    /**
+     * @param idx index of the sub 0 .. {@link #getNumberOfSubQueries()} -1
+     * @return just the label of the query
+     */
+    public String getSubQueryLabel(int idx) {
+        return subQueryLabels[idx];
+    }
+
+    /**
+     * @return number of sub queries
+     */
+    public int getNumberOfSubQueries() {
+        return this.subQueries.length;
     }
 
     /**
@@ -126,23 +161,22 @@ public class InternalQuery implements DataPointDictionaryAware, Serializable {
      * @param startPos start position of the vector in the source array
      * @param probabilities fetcher with probabilities for computing match probability
      * @param resultCache we avoid duplicate work by keeping results for already executed expressions
-     * @param probabilityResultCache for caching already computed probabilities
      * @param result to be updated
      */
-    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache,
-            PbBloomBoxQueryResult result) {
+    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, PbBloomBoxQueryResult result) {
 
-        int numberOfSubQueries = subQueries.length;
+        int numberOfSubQueries = cachedCombinedSubQueries.length;
 
-        double baseMatchProbability = baseQuery.execute(source, startPos, probabilities, resultCache, probabilityResultCache);
+        double baseMatchProbability = cachedOptimizedBaseQuery.execute(source, startPos, probabilities, resultCache);
 
         if (baseMatchProbability > 0.0) {
             result.incrementBaseQuerySum(baseMatchProbability);
+
             for (int i = 0; i < numberOfSubQueries; i++) {
 
-                double subMatchProbability = subQueries[i].execute(source, startPos, probabilities, resultCache, probabilityResultCache);
+                double subMatchProbability = cachedCombinedSubQueries[i].execute(source, startPos, probabilities, resultCache);
                 if (subMatchProbability > 0.0) {
-                    result.incrementSubQuerySum(i, subMatchProbability * baseMatchProbability);
+                    result.incrementSubQuerySum(i, subMatchProbability);
                 }
             }
         }
@@ -153,6 +187,41 @@ public class InternalQuery implements DataPointDictionaryAware, Serializable {
     public void prepareDataPointIds(DataPointDictionary dictionary) {
         baseQuery.prepareDataPointIds(dictionary);
         Arrays.stream(subQueries).forEach(q -> q.prepareDataPointIds(dictionary));
+    }
+
+    @Override
+    public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
+        ensureCachedQueriesReady();
+        registerDataPointOccurrencesIfRequired(this.name, cachedOptimizedBaseQuery, collector);
+        for (int i = 0; i < cachedCombinedSubQueries.length; i++) {
+            this.registerDataPointOccurrencesIfRequired(this.getSubQueryName(i), cachedCombinedSubQueries[i], collector);
+        }
+    }
+
+    /**
+     * Registers the points for the given query
+     * 
+     * @param queryName textual identifier
+     * @param query the currently processed bloom filter query
+     * @param collector data point collector
+     */
+    private void registerDataPointOccurrencesIfRequired(String queryName, BloomFilterQuery query, DataPointOccurrenceCollector collector) {
+        if (collector.startCollection(query, queryName)) {
+            query.registerDataPointOccurrences(collector);
+        }
+    }
+
+    /**
+     * ensures that the list of combined sub queries is ready to run
+     */
+    protected void ensureCachedQueriesReady() {
+        if (this.cachedOptimizedBaseQuery == null) {
+            QuantumOptimizer optimizer = new QuantumOptimizer();
+
+            this.cachedOptimizedBaseQuery = optimizer.optimize(baseQuery);
+            this.cachedCombinedSubQueries = Arrays.stream(this.subQueries).map(baseQuery::combinedWith).map(optimizer::optimize).collect(Collectors.toList())
+                    .toArray(new BloomFilterQuery[subQueries.length]);
+        }
     }
 
     /**

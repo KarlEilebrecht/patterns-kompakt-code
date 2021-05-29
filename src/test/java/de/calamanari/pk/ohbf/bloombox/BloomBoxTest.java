@@ -415,7 +415,7 @@ public class BloomBoxTest {
 
     }
 
-    // @Ignore("Short running creation of bird strikes bloom box with probabilities 1.0, only needed on demand")
+    @Ignore("Short running creation of bird strikes bloom box with probabilities 1.0, only needed on demand")
     @Test
     public void testCreateBirdStrikesBloomBox_PB() throws Exception {
         this.numberOfColumns = 17;
@@ -434,11 +434,11 @@ public class BloomBoxTest {
         columnNames = null;
         lineNumber = -1;
 
-        Random rand = new Random(823342);
+        rand = new Random(823342);
 
         // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
         Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
-                .filter(Predicate.not(Map::isEmpty)).forEach(argMap -> feeder.addRow(createDataPointsWithRandomProbability(rand, argMap)));
+                .filter(Predicate.not(Map::isEmpty)).forEach(argMap -> feeder.addRow(createDataPointsWithFixedProbability(0.9999d, argMap)));
 
         assertEquals(numberOfRows, lineNumber);
 
@@ -446,11 +446,11 @@ public class BloomBoxTest {
 
         feeder.close();
 
-        File testBox = new File("/mytemp/birdstrikes_PB_r.bbx");
+        File testBox = new File("/mytemp/birdstrikes_PB_r9999.bbx");
 
         bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
                 + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php"
-                + "\nwith attached probabilities 1.0");
+                + "\nwith attached probabilities 0.9999");
 
         bloomBox.saveToFile(testBox);
 
@@ -459,10 +459,18 @@ public class BloomBoxTest {
 
     }
 
-    private List<DataPoint> createDataPointsWithRandomProbability(Random rand, Map<String, String> argMap) {
+    private List<DataPoint> createDataPointsWithRandomProbability(Map<String, String> argMap) {
         List<DataPoint> res = new ArrayList<>(argMap.size());
         for (Map.Entry<String, String> entry : argMap.entrySet()) {
             res.add(new DataPoint(entry.getKey(), entry.getValue(), rand.nextDouble()));
+        }
+        return res;
+    }
+
+    private List<DataPoint> createDataPointsWithFixedProbability(double prob, Map<String, String> argMap) {
+        List<DataPoint> res = new ArrayList<>(argMap.size());
+        for (Map.Entry<String, String> entry : argMap.entrySet()) {
+            res.add(new DataPoint(entry.getKey(), entry.getValue(), prob));
         }
         return res;
     }
@@ -516,7 +524,7 @@ public class BloomBoxTest {
     @Test
     public void testBloomBoxDemoUI() {
 
-        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_PB_r.bbx"), Collections.emptyMap());
+        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_PB_r9999.bbx"), Collections.emptyMap());
 
         BloomBoxQueryRunner runner = new BloomBoxQueryRunner(bloomBox);
 

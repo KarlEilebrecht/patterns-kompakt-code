@@ -200,7 +200,8 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     @Override
     public void dispatch(QueryDelegate queryDelegate) {
         queryDelegate.prepareDataPointIds(dataPointDictionary);
-        DefaultDppFetcher dppFetcher = new DefaultDppFetcher();
+        DataPointProbabilityManager dppFetcher = new DataPointProbabilityManager();
+        queryDelegate.registerDataPointOccurrences(dppFetcher);
         for (long rowIdx = 0; rowIdx < getNumberOfRows(); rowIdx++) {
             dppFetcher.initialize(this.compressedProbabilities[(int) rowIdx]);
             queryDelegate.execute(vector, (int) (rowIdx * vectorSize), dppFetcher);

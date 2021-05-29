@@ -50,11 +50,6 @@ public class SimpleQueryDelegate implements QueryDelegate {
     private final Map<Long, Boolean> resultCache = new HashMap<>();
 
     /**
-     * temporary probability results while processing several expressions on a single record, the key is the expression-id, the value is the probability
-     */
-    private final Map<Long, Double> probabilityResultCache = new HashMap<>();
-
-    /**
      * a flag per query that tells whether it is broken, this way a we can avoid executing an erratic query multiple times
      */
     private final boolean[] queryInErrorFlags;
@@ -106,12 +101,11 @@ public class SimpleQueryDelegate implements QueryDelegate {
     @Override
     public void execute(long[] vector, int startPos, DppFetcher probabilities) {
         resultCache.clear();
-        probabilityResultCache.clear();
         ensurePbResultsInitialized();
         for (int i = 0; i < queries.length; i++) {
             try {
                 if (!queryInErrorFlags[i]) {
-                    queries[i].execute(vector, startPos, probabilities, resultCache, probabilityResultCache, pbResults.get(i));
+                    queries[i].execute(vector, startPos, probabilities, resultCache, pbResults.get(i));
                 }
             }
             catch (RuntimeException ex) {
@@ -168,14 +162,69 @@ public class SimpleQueryDelegate implements QueryDelegate {
     }
 
     @Override
+    public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
+        Arrays.stream(queries).forEach(q -> q.registerDataPointOccurrences(collector));
+        for (int i = 0; i < queries.length; i++) {
+            InternalQuery query = queries[i];
+            BloomBoxQueryResult result = results.get(i);
+            processMultiDpReferenceWarnings(query, collector, result);
+        }
+    }
+
+    /**
+     * Adds warnings to the corresponding query result if the collector shows multi data point references
+     * 
+     * @param query current query
+     * @param collector source of warnings based on data point usage
+     * @param result to be updated
+     */
+    protected void processMultiDpReferenceWarnings(InternalQuery query, DataPointOccurrenceCollector collector, BloomBoxQueryResult result) {
+        Map<String, Integer> maxOccurrenceMap = collector.getMaxOccurrenceMap();
+        Integer max = maxOccurrenceMap.get(query.getName());
+        if (max != null && max > 1) {
+            result.setWarningMessage(createMultiReferenceWarning(result.getWarningMessage(), query.getName(), max));
+        }
+        for (int i = 0; i < query.getNumberOfSubQueries(); i++) {
+            max = maxOccurrenceMap.get(query.getSubQueryName(i));
+            if (max != null && max > 1) {
+                result.setWarningMessage(createMultiReferenceWarning(result.getWarningMessage(), query.getSubQueryLabel(i), max));
+            }
+        }
+
+    }
+
+    /**
+     * Creates a single updated warning message
+     * 
+     * @param existingWarnings string from result, may be null
+     * @param queryName label of the query
+     * @param maxOccurrence value to decide if high risk or medium
+     * @return warning text
+     */
+    private String createMultiReferenceWarning(String existingWarnings, String queryName, int maxOccurrence) {
+        String warnings = existingWarnings == null ? "" : "\n";
+        if (maxOccurrence > 2) {
+            warnings = warnings + BbxMessage.WARN_MULTI_REFERENCE_HIGH.format(String.format(
+                    "For query '%s', the optimizer was unable to avoid data point multi-references. " + "The risk for result deviation is high (level %d)!",
+                    queryName, maxOccurrence));
+        }
+        else {
+            warnings = warnings + BbxMessage.WARN_MULTI_REFERENCE_MED.format(String.format(
+                    "For query '%s', the optimizer was unable to avoid data point multi-references. " + "The risk for result deviation is low to medium.",
+                    queryName));
+        }
+        return warnings;
+    }
+
+    @Override
     public String toString() {
         if (pbResults.isEmpty()) {
             return this.getClass().getSimpleName() + " [resultCache=" + resultCache + ", queryInErrorFlags=" + Arrays.toString(queryInErrorFlags) + ", queries="
                     + Arrays.toString(queries) + ", results=" + results + "]";
         }
         else {
-            return this.getClass().getSimpleName() + " [resultCache=" + resultCache + ", probabilityResultCache=" + probabilityResultCache
-                    + ", queryInErrorFlags=" + Arrays.toString(queryInErrorFlags) + ", queries=" + Arrays.toString(queries) + ", pbResults=" + pbResults + "]";
+            return this.getClass().getSimpleName() + " [resultCache=" + resultCache + ", queryInErrorFlags=" + Arrays.toString(queryInErrorFlags) + ", queries="
+                    + Arrays.toString(queries) + ", pbResults=" + pbResults + "]";
 
         }
     }

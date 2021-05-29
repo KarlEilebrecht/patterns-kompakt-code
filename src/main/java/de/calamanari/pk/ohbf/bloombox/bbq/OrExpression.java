@@ -69,26 +69,16 @@ public class OrExpression implements BbqExpression {
     }
 
     @Override
-    @SuppressWarnings({ "java:S3824" })
-    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
+    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
 
-        // note: the warning above is suppressed because "computeIfAbsent" fails when called recursively
+        // A OR B = NOT (NOT(A) AND NOT(B)) := 1.0 - ( (1.0 - P(A)) * (1.0 - P(B)))
 
-        Double res = resultCache.get(expressionId);
-        if (res == null) {
-
-            // A OR B = NOT (NOT(A) AND NOT(B)) := 1.0 - ( (1.0 - P(A)) * (1.0 - P(B)))
-
-            double combinedComplementProbability = -1;
-            for (BbqExpression expression : expressions) {
-                double complementProbability = 1.0d - expression.computeMatchProbability(probabilities, resultCache);
-                combinedComplementProbability = combinedComplementProbability < 0 ? complementProbability
-                        : combinedComplementProbability * complementProbability;
-            }
-            res = combinedComplementProbability < 0 ? 1.0 : 1.0d - combinedComplementProbability;
-            resultCache.put(expressionId, res);
+        double combinedComplementProbability = -1;
+        for (BbqExpression expression : expressions) {
+            double complementProbability = 1.0d - expression.computeMatchProbability(rootExpressionId, probabilities);
+            combinedComplementProbability = combinedComplementProbability < 0 ? complementProbability : combinedComplementProbability * complementProbability;
         }
-        return res;
+        return combinedComplementProbability < 0 ? 1.0 : 1.0d - combinedComplementProbability;
     }
 
     /**
@@ -171,6 +161,11 @@ public class OrExpression implements BbqExpression {
     @Override
     public List<BbqExpression> getChildExpressions() {
         return this.expressions.length > 0 ? new ArrayList<>(Arrays.asList(expressions)) : Collections.emptyList();
+    }
+
+    @Override
+    public int computeComplexity() {
+        return Arrays.stream(this.expressions).mapToInt(BbqExpression::computeComplexity).sum() + 2;
     }
 
 }

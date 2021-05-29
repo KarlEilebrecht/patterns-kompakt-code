@@ -21,6 +21,7 @@
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.DataPointDictionary;
@@ -109,13 +110,18 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
     }
 
     @Override
-    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
-        return probabilities.fetchDataPointProbability(dataPointId);
+    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
+        return probabilities.fetchDataPointProbability(rootExpressionId, this.dataPointId);
     }
 
     @Override
     public long getExpressionId() {
         return this.expressionId;
+    }
+
+    @Override
+    public void collectLiterals(List<BbqExpression> result) {
+        result.add(this);
     }
 
     @Override
@@ -145,4 +151,8 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
         sb.append("\n");
     }
 
+    @Override
+    public int computeComplexity() {
+        return 1;
+    }
 }

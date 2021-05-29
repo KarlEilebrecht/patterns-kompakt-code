@@ -37,9 +37,10 @@ public interface DppFetcher extends Serializable {
     /**
      * Returns the probability for the given data point.
      * 
+     * @param rootExpressionId id of the expression we are currently fetching data for
      * @param dataPointId see {@link BinaryMatchExpression#getDataPointId()}
      * @return probability or 0.0d if the given dataPointId has no probability attached, <b><code>0 &lt;= value &lt;= 1.0</code></b>
      */
-    double fetchDataPointProbability(int dataPointId);
+    double fetchDataPointProbability(long rootExpressionId, int dataPointId);
 
 }

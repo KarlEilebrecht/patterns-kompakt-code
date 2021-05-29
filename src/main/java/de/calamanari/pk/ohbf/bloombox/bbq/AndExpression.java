@@ -75,25 +75,16 @@ public class AndExpression implements BbqExpression {
     }
 
     @Override
-    @SuppressWarnings({ "java:S3824" })
-    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
+    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
 
-        // note: the warning above is suppressed because "computeIfAbsent" fails when called recursively
+        // AND: multiply probabilities
 
-        Double res = resultCache.get(expressionId);
-        if (res == null) {
-
-            // AND: multiply probabilities
-
-            double combinedProbability = -1;
-            for (BbqExpression expression : expressions) {
-                double probability = expression.computeMatchProbability(probabilities, resultCache);
-                combinedProbability = combinedProbability < 0 ? probability : combinedProbability * probability;
-            }
-            res = combinedProbability < 0 ? 0.0 : combinedProbability;
-            resultCache.put(expressionId, res);
+        double combinedProbability = -1;
+        for (BbqExpression expression : expressions) {
+            double probability = expression.computeMatchProbability(rootExpressionId, probabilities);
+            combinedProbability = combinedProbability < 0 ? probability : combinedProbability * probability;
         }
-        return res;
+        return combinedProbability < 0 ? 0.0 : combinedProbability;
     }
 
     /**
@@ -177,6 +168,11 @@ public class AndExpression implements BbqExpression {
     @Override
     public List<BbqExpression> getChildExpressions() {
         return this.expressions.length > 0 ? new ArrayList<>(Arrays.asList(expressions)) : Collections.emptyList();
+    }
+
+    @Override
+    public int computeComplexity() {
+        return Arrays.stream(this.expressions).mapToInt(BbqExpression::computeComplexity).sum() + 2;
     }
 
 }

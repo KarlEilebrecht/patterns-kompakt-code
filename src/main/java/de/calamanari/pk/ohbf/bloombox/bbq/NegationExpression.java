@@ -68,8 +68,8 @@ public class NegationExpression implements BbqExpression {
     }
 
     @Override
-    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
-        return 1.0d - delegateExpression.computeMatchProbability(probabilities, resultCache);
+    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
+        return 1.0d - delegateExpression.computeMatchProbability(rootExpressionId, probabilities);
     }
 
     @Override
@@ -127,6 +127,11 @@ public class NegationExpression implements BbqExpression {
     @Override
     public List<BbqExpression> getChildExpressions() {
         return new ArrayList<>(Arrays.asList(delegateExpression));
+    }
+
+    @Override
+    public int computeComplexity() {
+        return this.delegateExpression.computeComplexity() + 1;
     }
 
 }

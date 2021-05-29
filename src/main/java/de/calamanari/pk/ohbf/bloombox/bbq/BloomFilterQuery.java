@@ -21,10 +21,13 @@
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.DataPointDictionary;
 import de.calamanari.pk.ohbf.bloombox.DataPointDictionaryAware;
+import de.calamanari.pk.ohbf.bloombox.DataPointOccurrenceAware;
+import de.calamanari.pk.ohbf.bloombox.DataPointOccurrenceCollector;
 import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
 
@@ -34,7 +37,7 @@ import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BloomFilterQuery implements DataPointDictionaryAware, Serializable {
+public class BloomFilterQuery implements DataPointOccurrenceAware, Serializable {
 
     private static final long serialVersionUID = -2442237403084251215L;
 
@@ -87,19 +90,12 @@ public class BloomFilterQuery implements DataPointDictionaryAware, Serializable 
      * @param startPos start position of the vector
      * @param probabilities fetcher with the data point probabilities
      * @param resultCache binary result cache
-     * @param probabilityResultCache cache for the already computed probabilities
      * @return probability of the match
      */
-    @SuppressWarnings({ "java:S3824" })
-    public double execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, Map<Long, Double> probabilityResultCache) {
-        Long key = expression.getExpressionId();
-        Double res = probabilityResultCache.get(key);
-        if (res == null) {
-            res = 0.0;
-            if (this.execute(source, startPos, resultCache)) {
-                res = expression.computeMatchProbability(probabilities, probabilityResultCache);
-                probabilityResultCache.put(key, res);
-            }
+    public double execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache) {
+        double res = 0.0;
+        if (this.execute(source, startPos, resultCache)) {
+            res = expression.computeMatchProbability(expression.getExpressionId(), probabilities);
         }
         return res;
     }
@@ -108,6 +104,23 @@ public class BloomFilterQuery implements DataPointDictionaryAware, Serializable 
     public void prepareDataPointIds(DataPointDictionary dictionary) {
         expression.collectUniqueDepthFirst().stream().filter(DataPointDictionaryAware.class::isInstance).map(DataPointDictionaryAware.class::cast)
                 .forEach(dpa -> dpa.prepareDataPointIds(dictionary));
+    }
+
+    @Override
+    public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
+        expression.collectLiterals().stream().filter(BinaryMatchExpression.class::isInstance).map(BinaryMatchExpression.class::cast)
+                .forEach(e -> collector.addDataPointOccurrence(expression.getExpressionId(), e.getDataPointId()));
+    }
+
+    /**
+     * Creates a logical AND, does not change this query object
+     * 
+     * @param subQuery query to be joined
+     * @return and-query of this parent query and the given child
+     */
+    public BloomFilterQuery combinedWith(BloomFilterQuery subQuery) {
+        return new BloomFilterQuery("(" + sourceQuery + ") AND (" + subQuery.sourceQuery + ")",
+                new AndExpression(Arrays.asList(this.expression, subQuery.expression)));
     }
 
     /**
@@ -127,7 +140,7 @@ public class BloomFilterQuery implements DataPointDictionaryAware, Serializable 
     /**
      * unique id of the {@link #getExpression()}
      * 
-     * @return
+     * @return expression id
      */
     public long getId() {
         return this.expression.getExpressionId();

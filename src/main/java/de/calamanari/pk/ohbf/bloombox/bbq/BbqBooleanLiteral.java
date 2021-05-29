@@ -20,6 +20,7 @@
 
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
+import java.util.List;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.bloombox.DppFetcher;
@@ -75,7 +76,7 @@ public enum BbqBooleanLiteral implements BbqExpression {
     }
 
     @Override
-    public double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
+    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
         return booleanValue ? 1.0 : 0.0;
     }
 
@@ -90,11 +91,21 @@ public enum BbqBooleanLiteral implements BbqExpression {
     }
 
     @Override
+    public void collectLiterals(List<BbqExpression> result) {
+        result.add(this);
+    }
+
+    @Override
     public void appendAsTree(StringBuilder sb, int level, String prefix) {
         this.appendIndent(sb, level);
         sb.append(prefix);
         sb.append(this.toString());
         sb.append("\n");
+    }
+
+    @Override
+    public int computeComplexity() {
+        return 0;
     }
 
 }

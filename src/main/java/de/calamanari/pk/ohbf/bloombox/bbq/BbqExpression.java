@@ -55,11 +55,11 @@ public interface BbqExpression extends Serializable {
      * <p>
      * The default implementation returns 1.0.
      * 
+     * @param rootExpressionId identifier of the enclosing root expression this expression is a part of
      * @param probabilities data point probability fetcher
-     * @param resultCache caches the probability per expression
      * @return probability
      */
-    default double computeMatchProbability(DppFetcher probabilities, Map<Long, Double> resultCache) {
+    default double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
         return 1.0;
     }
 
@@ -128,9 +128,30 @@ public interface BbqExpression extends Serializable {
     }
 
     /**
+     * @return all atomic expressions as a list (may contain duplicates)
+     */
+    default List<BbqExpression> collectLiterals() {
+        List<BbqExpression> result = new ArrayList<>();
+        getChildExpressions().forEach(c -> c.collectLiterals(result));
+        return result;
+    }
+
+    /**
+     * @param result destination list adds all atomic expressions (may include duplicates) to the given list
+     */
+    default void collectLiterals(List<BbqExpression> result) {
+        getChildExpressions().forEach(c -> c.collectLiterals(result));
+    }
+
+    /**
      * @return list of all <i>direct</i> child expressions of <b>this</b> expression, by default an empty array, never null
      */
     default List<BbqExpression> getChildExpressions() {
         return Collections.emptyList();
     }
+
+    /**
+     * @return complexity of this expression taking into account all member expressions
+     */
+    int computeComplexity();
 }
