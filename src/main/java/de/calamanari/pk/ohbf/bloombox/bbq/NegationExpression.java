@@ -131,7 +131,8 @@ public class NegationExpression implements BbqExpression {
 
     @Override
     public int computeComplexity() {
-        return this.delegateExpression.computeComplexity() + 1;
+        return this.delegateExpression.computeComplexity()
+                * ((this.delegateExpression instanceof OrExpression || this.delegateExpression instanceof AndExpression) ? 2 : 1);
     }
 
 }

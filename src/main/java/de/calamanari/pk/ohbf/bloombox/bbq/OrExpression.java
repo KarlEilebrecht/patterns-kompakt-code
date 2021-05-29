@@ -165,7 +165,7 @@ public class OrExpression implements BbqExpression {
 
     @Override
     public int computeComplexity() {
-        return Arrays.stream(this.expressions).mapToInt(BbqExpression::computeComplexity).sum() + 2;
+        return Arrays.stream(this.expressions).mapToInt(BbqExpression::computeComplexity).sum() * expressions.length;
     }
 
 }
