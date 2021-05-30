@@ -293,13 +293,7 @@ public class QuantumOptimizer {
             boolean changed = premergeChildExpressionOverlaps(childExpressions);
             changed = mergeIntraChildExpressionOverlaps(childExpressions, expression.getClass()) || changed;
             if (changed) {
-                sortExpressionsByIdAndDedup(childExpressions);
-                if (childExpressions.size() == 1) {
-                    expression = childExpressions.get(0);
-                }
-                else {
-                    expression = combine(childExpressions, expression.getClass());
-                }
+                expression = combine(childExpressions, expression.getClass());
             }
         }
         return expression;
@@ -428,10 +422,22 @@ public class QuantumOptimizer {
         List<BbqExpression> additional1 = subtractExclusions(expression1.getChildExpressions(), overlap);
         List<BbqExpression> additional2 = subtractExclusions(expression2.getChildExpressions(), overlap);
         if (additional1.isEmpty()) {
-            res = expression2;
+            // expression2 is stricter than expression1
+            if (parentType == AndExpression.class) {
+                res = expression2;
+            }
+            else {
+                res = expression1;
+            }
         }
         else if (additional2.isEmpty()) {
-            res = expression1;
+            // expression1 is stricter than expression2
+            if (parentType == AndExpression.class) {
+                res = expression1;
+            }
+            else {
+                res = expression2;
+            }
         }
         else {
             if (parentType == AndExpression.class) {
@@ -540,13 +546,16 @@ public class QuantumOptimizer {
         for (BbqExpression childExpression : andOrOrExpression.getChildExpressions()) {
             if (childExpression.getExpressionId() == singleExpression.getExpressionId()) {
                 if (parentType == andOrOrExpression.getClass()) {
+                    // (A AND B) AND B <=> (A AND B) resp. (A OR B) OR B <=> (A OR B)
                     res = andOrOrExpression;
                 }
                 else if (parentType == AndExpression.class && andOrOrExpression.getClass() == OrExpression.class) {
+                    // (A OR B) AND B <=> B
                     res = singleExpression;
                 }
                 else if (parentType == OrExpression.class && andOrOrExpression.getClass() == AndExpression.class) {
-                    res = andOrOrExpression;
+                    // (A AND B) OR B <=> B
+                    res = singleExpression;
                 }
             }
         }
@@ -641,6 +650,12 @@ public class QuantumOptimizer {
         sortExpressionsByIdAndDedup(expressions);
         ExpressionAdvice advice = ExpressionAdvice.PROCEED;
         if (parentType == AndExpression.class || parentType == OrExpression.class) {
+            if (parentType == AndExpression.class) {
+                replaceInnerNeigbourReferencesWithBooleanLiterals(expressions);
+            }
+            else {
+                multiplyOnInnerAndsOfOr(expressions);
+            }
             for (int i = expressions.size() - 1; i > -1 && advice == ExpressionAdvice.PROCEED; i--) {
                 BbqExpression expression = expressions.get(i);
                 advice = checkBooleanLiteral(expression, parentType);
@@ -660,8 +675,219 @@ public class QuantumOptimizer {
                     expressions.add(BbqBooleanLiteral.TRUE);
                 }
             }
+            fixEmptyChildExpressionList(expressions, parentType);
         }
         return expressions;
+    }
+
+    /**
+     * Theoretically, it could happen that we removed ALL elements from an AND/OR child expression list.<br>
+     * Here we add a TRUE (for AND, always true) or FALSE literal for an OR (always false) to correct the list.
+     * 
+     * @param expressions child expressions, to be modified
+     * @param parentType decides whether it should be always true or always false
+     */
+    private void fixEmptyChildExpressionList(List<BbqExpression> expressions, Class<? extends BbqExpression> parentType) {
+        if (expressions.isEmpty()) {
+            if (parentType == AndExpression.class) {
+                expressions.add(BbqBooleanLiteral.TRUE);
+            }
+            else {
+                expressions.add(BbqBooleanLiteral.FALSE);
+            }
+        }
+    }
+
+    /**
+     * This step detects situations like this <code> ( NOT(A) AND B AND C) OR A )</code> and rephrases this as ((B OR A) AND (C OR A)), which usually increases
+     * the chance for further optimization.
+     * 
+     * @param expression candidate
+     * @return candidate or optimized replacement
+     */
+    private BbqExpression multiplyOnInnerAndsOfOr(BbqExpression expression) {
+        if (expression instanceof OrExpression) {
+            List<BbqExpression> childExpressions = sortExpressionsByIdAndDedup(new ArrayList<>(expression.getChildExpressions()));
+            if (multiplyOnInnerAndsOfOr(childExpressions)) {
+                expression = combine(childExpressions, AndExpression.class);
+            }
+        }
+        else if (expression instanceof AndExpression) {
+            List<BbqExpression> childExpressions = new ArrayList<>();
+            boolean changed = false;
+            for (BbqExpression childExpression : expression.getChildExpressions()) {
+                BbqExpression fixed = multiplyOnInnerAndsOfOr(childExpression);
+                changed = changed || (fixed.getExpressionId() != childExpression.getExpressionId());
+                childExpressions.add(fixed);
+            }
+            if (changed) {
+                expression = combine(childExpressions, AndExpression.class);
+            }
+        }
+        return expression;
+    }
+
+    /**
+     * Processes the members of a detected OR
+     * 
+     * @param orMemberExpressions child expressions of an OR, will be modified
+     * @return true if the list was modified
+     */
+    private boolean multiplyOnInnerAndsOfOr(List<BbqExpression> orMemberExpressions) {
+        boolean res = false;
+        for (int i = 0; i < orMemberExpressions.size(); i++) {
+            BbqExpression childExpression = orMemberExpressions.get(i);
+            for (int k = 0; k < orMemberExpressions.size(); k++) {
+                if (k != i) {
+                    BbqExpression candidate = orMemberExpressions.get(k);
+                    BbqExpression fixed = multiplyIfRequired(childExpression, candidate);
+                    if (fixed.getExpressionId() != childExpression.getExpressionId()) {
+                        orMemberExpressions.set(i, fixed);
+                        res = true;
+                    }
+                }
+            }
+        }
+        return res;
+
+    }
+
+    /**
+     * Processes a single candidate (AND) inside an OR, if it needs to be rephrased
+     * 
+     * @param expression candidate (AND)
+     * @param orConditionExpression outer condition
+     * @return candidate or optimized expression
+     */
+    private BbqExpression multiplyIfRequired(BbqExpression expression, BbqExpression orConditionExpression) {
+        if ((expression instanceof AndExpression) && expression.getChildExpressions().stream().anyMatch(e -> isContradiction(e, orConditionExpression))) {
+            List<BbqExpression> childExpressions = new ArrayList<>();
+            for (BbqExpression childExpression : expression.getChildExpressions()) {
+                if (!isContradiction(childExpression, orConditionExpression)) {
+                    List<BbqExpression> pair = new ArrayList<>(2);
+                    pair.add(childExpression);
+                    pair.add(orConditionExpression);
+                    childExpressions.add(combine(pair, OrExpression.class));
+                }
+            }
+            expression = combine(childExpressions, AndExpression.class);
+        }
+        expression = multiplyOnInnerAndsOfOr(expression);
+        return expression;
+    }
+
+    /**
+     * We assume that the given expressions are members of an enclosing AND expression.
+     * <p>
+     * The method picks each element and recursively tests any OTHER member if it is or contains the same expression or its negation.<br>
+     * If it is the same, we can replace it with TRUE, because due to the enclosing AND it is guaranteed to be fulfilled.<br>
+     * If the another direct or nested member of the same AND is the negation of the given expression, we can replace that occurrence with FALSE, because due to
+     * the enclosing condition it cannot be fulfilled.
+     * 
+     * @param andMemberExpressions list of child expressions without duplicates, may be modified
+     * @param true if the list was modified
+     */
+    private boolean replaceInnerNeigbourReferencesWithBooleanLiterals(List<BbqExpression> andMemberExpressions) {
+        boolean res = false;
+        for (int i = andMemberExpressions.size() - 1; i > -1; i--) {
+            BbqExpression childExpression = andMemberExpressions.get(i);
+            List<BbqExpression> trueFilterExpressions = new ArrayList<>(andMemberExpressions);
+            trueFilterExpressions.remove(i);
+            BbqExpression fixed = replaceInnerReferencesWithBooleanLiterals(childExpression, trueFilterExpressions);
+            if (fixed.getExpressionId() != childExpression.getExpressionId()) {
+                andMemberExpressions.set(i, fixed);
+                res = true;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * We assume that the enclosing expression is an AND and the given expression is a member of that list.
+     * <p>
+     * The method recursively tests any OTHER member if it is or contains the same expression or its negation.<br>
+     * If it is the same, we can replace it with TRUE, because due to the enclosing AND it is guaranteed to be fulfilled.<br>
+     * If another direct or nested member of the same AND is the negation of the given expression, we can replace that occurrence with FALSE, because due to the
+     * enclosing condition it cannot be fulfilled.
+     * 
+     * @param expression AND expression (others will be ignored)
+     * @return expression or a new expression with any subsequent appearance of other members of the same enclosing AND replaced with a boolean literal
+     */
+    private BbqExpression replaceInnerReferencesWithBooleanLiterals(BbqExpression expression) {
+        if (expression instanceof AndExpression) {
+            List<BbqExpression> childExpressions = sortExpressionsByIdAndDedup(new ArrayList<>(expression.getChildExpressions()));
+            if (replaceInnerNeigbourReferencesWithBooleanLiterals(childExpressions)) {
+                expression = combine(childExpressions, AndExpression.class);
+            }
+        }
+        else if (expression instanceof OrExpression) {
+            List<BbqExpression> childExpressions = new ArrayList<>();
+            boolean changed = false;
+            for (BbqExpression childExpression : expression.getChildExpressions()) {
+                BbqExpression fixed = replaceInnerReferencesWithBooleanLiterals(childExpression);
+                changed = changed || (fixed.getExpressionId() != childExpression.getExpressionId());
+                childExpressions.add(fixed);
+            }
+            if (changed) {
+                expression = combine(childExpressions, OrExpression.class);
+            }
+        }
+        return expression;
+    }
+
+    /**
+     * Processes a selected member of an AND against the other members.
+     * 
+     * @param expression member of the enclosing AND
+     * @param trueFilterExpressions expressions to be assumed TRUE, must not include the given expression
+     * @return expression or a new expression with any subsequence appearance of expressions in the list replaced with a boolean literal
+     */
+    private BbqExpression replaceInnerReferencesWithBooleanLiterals(BbqExpression expression, List<BbqExpression> trueFilterExpressions) {
+        for (BbqExpression trueFilterExpression : trueFilterExpressions) {
+
+            if (trueFilterExpression.getExpressionId() == expression.getExpressionId()) {
+                expression = BbqBooleanLiteral.TRUE;
+            }
+            else if (isContradiction(trueFilterExpression, expression)) {
+                expression = BbqBooleanLiteral.FALSE;
+            }
+            else if (isANDorOR(expression)) {
+                expression = replaceAndOrInnerReferencesWithBooleanLiterals(expression, trueFilterExpressions);
+            }
+        }
+        return expression;
+    }
+
+    /**
+     * Processes an AND/OR recursively
+     * 
+     * @param expression member of the enclosing AND, which is itself an AND or OR
+     * @param trueFilterExpressions expressions to be assumed TRUE, must not include the given expression
+     * @return expression or a new expression with any subsequence appearance of expressions in the list replaced with a boolean literal
+     */
+    private BbqExpression replaceAndOrInnerReferencesWithBooleanLiterals(BbqExpression expression, List<BbqExpression> trueFilterExpressions) {
+        List<BbqExpression> childExpressions = new ArrayList<>();
+        boolean changed = false;
+        for (BbqExpression childExpression : expression.getChildExpressions()) {
+            BbqExpression fixed = replaceInnerReferencesWithBooleanLiterals(childExpression, trueFilterExpressions);
+            changed = changed || (fixed.getExpressionId() != childExpression.getExpressionId());
+            childExpressions.add(fixed);
+        }
+        if (changed) {
+            expression = combine(childExpressions, expression.getClass());
+        }
+        expression = replaceInnerReferencesWithBooleanLiterals(expression);
+        return expression;
+    }
+
+    /**
+     * @param expression1 candidate
+     * @param expression2 candidate
+     * @return true if expression1 negates expression2
+     */
+    private boolean isContradiction(BbqExpression expression1, BbqExpression expression2) {
+        return (expression1 instanceof NegationExpression && ((NegationExpression) expression1).isNegationOf(expression2))
+                || (expression2 instanceof NegationExpression && ((NegationExpression) expression2).isNegationOf(expression1));
     }
 
     /**
@@ -675,8 +901,7 @@ public class QuantumOptimizer {
     private ExpressionAdvice checkContradiction(BbqExpression expression1, BbqExpression expression2, Class<? extends BbqExpression> parentType) {
         ExpressionAdvice res = ExpressionAdvice.PROCEED;
 
-        if ((expression1 instanceof NegationExpression && ((NegationExpression) expression1).isNegationOf(expression2))
-                || (expression2 instanceof NegationExpression && ((NegationExpression) expression2).isNegationOf(expression1))) {
+        if (isContradiction(expression1, expression2)) {
             if (parentType == AndExpression.class) {
                 res = ExpressionAdvice.ALWAYS_FALSE;
             }
@@ -716,7 +941,7 @@ public class QuantumOptimizer {
     }
 
     /**
-     * Processing advice when dealing with anomalities (always true/false) in AND or OR
+     * Processing advice when dealing with anomalies (always true/false) in AND or OR
      */
     private enum ExpressionAdvice {
         PROCEED, REMOVE, ALWAYS_TRUE, ALWAYS_FALSE;
