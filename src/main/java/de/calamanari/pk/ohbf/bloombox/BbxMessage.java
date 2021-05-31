@@ -169,19 +169,13 @@ public enum BbxMessage {
 
     /**
      * The query optimizer could not avoid referencing the same data point probability twice. <br>
-     * There is a chance that the result deviates from the expectation. Low to medium risk.
+     * There is a chance that the result deviates from the expectation.
      * <p>
      * This problem is related to the SQUAREROOT-estimation-hack we apply to compensate for conditional probabilities.<br>
-     * The more and the bigger multi-references are the less predictable will be the deviation. The user can try reducing the query complexity (e.g. less
-     * nesting).
+     * The more and the bigger multi-references are the less predictable will be the deviation. The user can try reducing the query complexity or issuing
+     * independent queries.
      */
-    WARN_MULTI_REFERENCE_MED("BBXW-5000"),
-
-    /**
-     * The query optimizer could not avoid referencing the same data point probability multiple times. There is a chance that the result deviates from the
-     * expectation. High risk. See also {@link #WARN_MULTI_REFERENCE_MED}.
-     */
-    WARN_MULTI_REFERENCE_HIGH("BBXW-5001")
+    WARN_MULTI_REFERENCE("BBXW-5000")
 
     ;
 

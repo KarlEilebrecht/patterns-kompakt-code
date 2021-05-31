@@ -203,16 +203,9 @@ public class SimpleQueryDelegate implements QueryDelegate {
      */
     private String createMultiReferenceWarning(String existingWarnings, String queryName, int maxOccurrence) {
         String warnings = existingWarnings == null ? "" : "\n";
-        if (maxOccurrence > 2) {
-            warnings = warnings + BbxMessage.WARN_MULTI_REFERENCE_HIGH.format(String.format(
-                    "For query '%s', the optimizer was unable to avoid data point multi-references. " + "The risk for result deviation is high (level %d)!",
-                    queryName, maxOccurrence));
-        }
-        else {
-            warnings = warnings + BbxMessage.WARN_MULTI_REFERENCE_MED.format(String.format(
-                    "For query '%s', the optimizer was unable to avoid data point multi-references. " + "The risk for result deviation is low to medium.",
-                    queryName));
-        }
+        warnings = warnings + BbxMessage.WARN_MULTI_REFERENCE.format(
+                String.format("For query '%s', the optimizer was unable to avoid data point multi-references. Results may be incorrect (risk level %d).",
+                        queryName, maxOccurrence));
         return warnings;
     }
 
