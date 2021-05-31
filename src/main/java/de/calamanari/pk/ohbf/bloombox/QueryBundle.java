@@ -23,6 +23,7 @@ package de.calamanari.pk.ohbf.bloombox;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,29 +82,8 @@ public class QueryBundle implements Serializable {
                 boolean subQueryFlag = line.substring(0, 1).isBlank();
                 boolean postQueryFlag = !subQueryFlag && line.contains("${");
                 line = line.trim();
-                int pos = line.indexOf(':');
-                String queryName = "";
-                String bbq = "";
-
-                if (pos <= 0 || pos > line.length() - 1) {
-                    throw new QueryPreparationException(
-                            BbxMessage.ERR_QUERY_SYNTAX_EASY_SCRIPT.format("Missing colon, expected <name>:<bbq-expression>, found " + currentLineParsed));
-                }
-
-                queryName = line.substring(0, pos).trim();
-                bbq = line.substring(pos + 1).trim();
-                if (postQueryFlag) {
-                    currentQuery = BloomBoxQuery.postQuery(queryName).query(bbq).build();
-                    bundle.getPostQueries().add(currentQuery);
-                }
-                else if (subQueryFlag) {
-                    if (currentQuery != null) {
-                        currentQuery.getSubQueryMap().put(queryName, bbq);
-                    }
-                }
-                else {
-                    currentQuery = BloomBoxQuery.basicQuery(queryName).query(bbq).build();
-                    bundle.getBaseQueries().add(currentQuery);
+                if (!parseOption(line, currentQuery)) {
+                    currentQuery = parseQuery(bundle, currentLineParsed, currentQuery, line, subQueryFlag, postQueryFlag);
                 }
             }
         }
@@ -115,6 +95,69 @@ public class QueryBundle implements Serializable {
         }
         return bundle;
 
+    }
+
+    /**
+     * Parses a query from EasyScript
+     * 
+     * @param bundle destination
+     * @param currentLineParsed raw line for debugging
+     * @param currentQuery open query (details/options may follow)
+     * @param line part to parse
+     * @param subQueryFlag this is supposed to be a sub query
+     * @param postQueryFlag this is supposed to be a post query
+     * @return currentQuery or new currentQuery
+     */
+    private static BloomBoxQuery parseQuery(QueryBundle bundle, String currentLineParsed, BloomBoxQuery currentQuery, String line, boolean subQueryFlag,
+            boolean postQueryFlag) {
+        int pos = line.indexOf(':');
+        String queryName = "";
+        String bbq = "";
+
+        if (pos <= 0 || pos > line.length() - 1) {
+            throw new QueryPreparationException(
+                    BbxMessage.ERR_QUERY_SYNTAX_EASY_SCRIPT.format("Missing colon, expected <name>:<bbq-expression>, found " + currentLineParsed));
+        }
+
+        queryName = line.substring(0, pos).trim();
+        bbq = line.substring(pos + 1).trim();
+        if (postQueryFlag) {
+            currentQuery = BloomBoxQuery.postQuery(queryName).query(bbq).build();
+            currentQuery.setOptions(new HashMap<>());
+            bundle.getPostQueries().add(currentQuery);
+        }
+        else if (subQueryFlag) {
+            if (currentQuery != null) {
+                currentQuery.getSubQueryMap().put(queryName, bbq);
+            }
+        }
+        else {
+            currentQuery = BloomBoxQuery.basicQuery(queryName).query(bbq).build();
+            currentQuery.setOptions(new HashMap<>());
+            bundle.getBaseQueries().add(currentQuery);
+        }
+        return currentQuery;
+    }
+
+    /**
+     * Handles option lines starting with a single minus
+     * 
+     * @param line candidate
+     * @param currentQuery the current query (null will be ignored)
+     * @return true if the line was an option
+     */
+    private static boolean parseOption(String line, BloomBoxQuery currentQuery) {
+        if (line.startsWith("-") && line.length() > 1 && currentQuery != null) {
+            int eqPos = line.indexOf("=");
+            if (eqPos < 0 || eqPos == line.length() - 1) {
+                currentQuery.getOptions().put(line.substring(1).trim(), "true");
+            }
+            else {
+                currentQuery.getOptions().put(line.substring(1, eqPos).trim(), line.substring(eqPos + 1).trim());
+            }
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -21,6 +21,8 @@
 package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -65,6 +67,21 @@ public class BloomBoxQueryResult implements Serializable {
      */
     private String warningMessage = null;
 
+    /**
+     * Optional, only available if the underlying bloom box used probability queries
+     */
+    private PbBloomBoxQueryResult probabilityResult = null;
+
+    /**
+     * Optional protocol data, see {@link #logProtocolMessage(String)}
+     */
+    private BbxProtocol protocol = null;
+
+    /**
+     * Unique execution-id, individual per query, set by the runner, 0 if unknown
+     */
+    private long executionId = 0;
+
     public BloomBoxQueryResult() {
         // empty instance
     }
@@ -72,13 +89,15 @@ public class BloomBoxQueryResult implements Serializable {
     /**
      * Creates an empty instance with the given meta data
      * 
+     * @param executionId context (usually the bundle execution)
      * @param name query name
      * @param subQueryLabels labels of the sub queries (also defining the number of sub queries)
      */
-    public BloomBoxQueryResult(String name, String... subQueryLabels) {
+    public BloomBoxQueryResult(long executionId, String name, String... subQueryLabels) {
         this.name = name;
         this.subQueryCounts = new long[subQueryLabels.length];
         this.subQueryLabels = subQueryLabels;
+        this.executionId = executionId;
     }
 
     /**
@@ -166,6 +185,27 @@ public class BloomBoxQueryResult implements Serializable {
     }
 
     /**
+     * @return mapping of sub query labels to sub query sums (if available)
+     */
+    public Map<String, Double> buildSubQuerySumMap() {
+        Map<String, Double> res = null;
+        if (probabilityResult == null) {
+            res = Collections.emptyMap();
+        }
+        else {
+            double[] subQuerySums = probabilityResult.getSubQuerySums();
+            res = new TreeMap<>();
+            if (subQuerySums != null) {
+                int len = Math.min((subQueryCounts == null ? 0 : subQueryCounts.length), subQuerySums.length);
+                for (int i = 0; i < len; i++) {
+                    res.put(subQueryLabels[i], subQuerySums[i]);
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
      * @return error message or null/empty, see also {@link BbxMessage}
      */
     public String getErrorMessage() {
@@ -200,16 +240,152 @@ public class BloomBoxQueryResult implements Serializable {
         this.warningMessage = warningMessage;
     }
 
+    /**
+     * @return probability data if the bloom box used probability queries, otherwise null
+     */
+    public PbBloomBoxQueryResult getProbabilityResult() {
+        return probabilityResult;
+    }
+
+    /**
+     * @param probabilityResult optional probability details
+     */
+    public void setProbabilityResult(PbBloomBoxQueryResult probabilityResult) {
+        this.probabilityResult = probabilityResult;
+    }
+
+    /**
+     * @return optional protocol or null
+     */
+    public BbxProtocol getProtocol() {
+        return protocol;
+    }
+
+    /**
+     * @param protocol sets the optional protocol
+     */
+    public void setProtocol(BbxProtocol protocol) {
+        this.protocol = protocol;
+    }
+
+    /**
+     * @param message some information to be added to the execution protocol
+     */
+    public void logProtocolMessage(String message) {
+        if (this.protocol == null) {
+            this.protocol = new BbxProtocol();
+        }
+        this.protocol.logEntry(executionId, message);
+    }
+
+    /**
+     * Adds the data from the other result to <b>this result</b> assuming it has the exact same structure.
+     * <p>
+     * This method is intended to quickly sum up partial results and does not perform any plausibility checks, and it does not merge different sets of queries.
+     * 
+     * @param otherResult will not be modified
+     */
+    public void addResultData(BloomBoxQueryResult otherResult) {
+        this.baseQueryCount = this.baseQueryCount + otherResult.baseQueryCount;
+        if (otherResult.subQueryCounts != null) {
+            addResultSubQueryCounts(otherResult);
+        }
+        if (otherResult.probabilityResult != null) {
+            addResultProbabilities(otherResult);
+        }
+        if (otherResult.protocol != null) {
+            if (this.protocol == null) {
+                this.protocol = new BbxProtocol();
+            }
+            this.protocol.addProtocol(otherResult.protocol);
+        }
+    }
+
+    /**
+     * copies the probabilities into <b>this</b>
+     * 
+     * @param otherResult must contain probabilities
+     */
+    private void addResultProbabilities(BloomBoxQueryResult otherResult) {
+        if (this.probabilityResult == null) {
+            this.probabilityResult = new PbBloomBoxQueryResult();
+        }
+        this.probabilityResult.setBaseQuerySum(this.probabilityResult.getBaseQuerySum() + otherResult.probabilityResult.getBaseQuerySum());
+        if (otherResult.probabilityResult.getSubQuerySums() != null) {
+            double[] otherSubQuerySums = otherResult.probabilityResult.getSubQuerySums();
+            if (this.probabilityResult.getSubQuerySums() != null) {
+                double[] subQuerySums = this.probabilityResult.getSubQuerySums();
+                for (int i = 0; i < subQuerySums.length; i++) {
+                    subQuerySums[i] = subQuerySums[i] + otherSubQuerySums[i];
+                }
+            }
+            else {
+                this.probabilityResult.setSubQuerySums(Arrays.copyOf(otherSubQuerySums, otherSubQuerySums.length));
+            }
+        }
+    }
+
+    /**
+     * copies counts into <b>this</b>
+     * 
+     * @param otherResult must contain sub query counts
+     */
+    private void addResultSubQueryCounts(BloomBoxQueryResult otherResult) {
+        if (this.subQueryCounts != null) {
+            for (int i = 0; i < subQueryCounts.length; i++) {
+                this.subQueryCounts[i] = this.subQueryCounts[i] + otherResult.subQueryCounts[i];
+            }
+        }
+        else {
+            this.subQueryCounts = Arrays.copyOf(otherResult.subQueryCounts, otherResult.subQueryCounts.length);
+        }
+    }
+
+    /**
+     * Ensures that the {@link #probabilityResult} is not null and initialized properly
+     */
+    void ensurePbResultsInitialized() {
+        if (this.probabilityResult == null) {
+            this.probabilityResult = new PbBloomBoxQueryResult();
+            this.probabilityResult.setSubQuerySums(new double[this.subQueryCounts == null ? 0 : this.subQueryCounts.length]);
+        }
+    }
+
+    /**
+     * @return unique execution id, positive, 0 if unknown
+     */
+    public long getExecutionId() {
+        return executionId;
+    }
+
+    /**
+     * @param executionId unique id of execution
+     */
+    public void setExecutionId(long executionId) {
+        this.executionId = executionId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.getClass().getSimpleName());
-        sb.append("(name=");
+        sb.append("(executionId=");
+        sb.append(Long.toHexString(executionId));
+        sb.append(", name=");
         sb.append(this.name);
         sb.append(", baseQueryCount=");
         sb.append(baseQueryCount);
         sb.append(", subQueryResults=");
         sb.append(buildSubQueryResultMap().toString());
+        if (this.probabilityResult != null) {
+            sb.append(", baseQuerySum=");
+            sb.append(probabilityResult.getBaseQuerySum());
+            sb.append(", subQuerySums=");
+            sb.append(buildSubQuerySumMap().toString());
+        }
+        if (this.protocol != null) {
+            sb.append(this.protocol.toString());
+        }
         sb.append(", errorMessage=");
         sb.append(errorMessage);
         sb.append(", warningMessage=");

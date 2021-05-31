@@ -19,7 +19,6 @@
 //@formatter:on
 package de.calamanari.pk.ohbf.bloombox;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -65,11 +64,6 @@ public class SimpleQueryDelegate implements QueryDelegate {
     private final List<BloomBoxQueryResult> results;
 
     /**
-     * Support for probability result summing
-     */
-    private final List<PbBloomBoxQueryResult> pbResults = new ArrayList<>();
-
-    /**
      * @param queries list of internal queries to be executed per record vector
      * @param results list of results (same orders as queries), results (counts) will be updated during execution
      */
@@ -77,6 +71,7 @@ public class SimpleQueryDelegate implements QueryDelegate {
         this.queries = queries;
         this.queryInErrorFlags = new boolean[queries.length];
         this.results = results;
+        logQueriesToProtocolIfRequired();
     }
 
     @Override
@@ -105,7 +100,7 @@ public class SimpleQueryDelegate implements QueryDelegate {
         for (int i = 0; i < queries.length; i++) {
             try {
                 if (!queryInErrorFlags[i]) {
-                    queries[i].execute(vector, startPos, probabilities, resultCache, pbResults.get(i));
+                    queries[i].execute(vector, startPos, probabilities, resultCache, results.get(i));
                 }
             }
             catch (RuntimeException ex) {
@@ -119,12 +114,10 @@ public class SimpleQueryDelegate implements QueryDelegate {
     }
 
     /**
-     * Creates the result wrappers for working with probabilities
+     * Ensures the optional probability results are initialized correctly
      */
     private void ensurePbResultsInitialized() {
-        if (pbResults.isEmpty() && !results.isEmpty()) {
-            results.stream().map(PbBloomBoxQueryResult::new).forEach(pbResults::add);
-        }
+        results.stream().forEach(BloomBoxQueryResult::ensurePbResultsInitialized);
     }
 
     /**
@@ -146,8 +139,39 @@ public class SimpleQueryDelegate implements QueryDelegate {
 
     @Override
     public void finish() {
-        if (!pbResults.isEmpty()) {
-            pbResults.forEach(PbBloomBoxQueryResult::transferCounts);
+        results.forEach(r -> r.getProbabilityResult().transferCounts(r));
+        for (int i = 0; i < queries.length; i++) {
+            logQueryResultToProtocolIfRequired(i);
+        }
+    }
+
+    /**
+     * Logs the query result for the given query index to the protocol if it is configured
+     * 
+     * @param i index of the query
+     */
+    private void logQueryResultToProtocolIfRequired(int i) {
+        InternalQuery query = queries[i];
+        if (query.isProtocolEnabled()) {
+            StringBuilder sb = new StringBuilder();
+            BloomBoxQueryResult result = results.get(i);
+            sb.setLength(0);
+            sb.append("RESULT: base query '" + query.getName() + "': " + result.getBaseQueryCount());
+            if (result.getProbabilityResult() != null) {
+                sb.append(" (" + result.getProbabilityResult().getBaseQuerySum() + ")");
+            }
+            result.logProtocolMessage(sb.toString());
+            long[] subQueryCounts = result.getSubQueryCounts();
+            if (subQueryCounts != null) {
+                for (int k = 0; k < subQueryCounts.length; k++) {
+                    sb.setLength(0);
+                    sb.append("RESULT: sub query '" + result.getSubQueryLabels()[k] + "': " + subQueryCounts[k]);
+                    if (result.getProbabilityResult() != null) {
+                        sb.append(" (" + result.getProbabilityResult().getSubQuerySums()[k] + ")");
+                    }
+                    result.logProtocolMessage(sb.toString());
+                }
+            }
         }
     }
 
@@ -167,6 +191,7 @@ public class SimpleQueryDelegate implements QueryDelegate {
         for (int i = 0; i < queries.length; i++) {
             InternalQuery query = queries[i];
             BloomBoxQueryResult result = results.get(i);
+            logQueryToProtocol(query, result);
             processMultiDpReferenceWarnings(query, collector, result);
         }
     }
@@ -183,14 +208,53 @@ public class SimpleQueryDelegate implements QueryDelegate {
         Integer max = maxOccurrenceMap.get(query.getName());
         if (max != null && max > 1) {
             result.setWarningMessage(createMultiReferenceWarning(result.getWarningMessage(), query.getName(), max));
+            if (query.isProtocolEnabled()) {
+                result.logProtocolMessage(String.format("Warning: data point multi-references (%d) detected in base query '%s'.", max, query.getName()));
+            }
         }
         for (int i = 0; i < query.getNumberOfSubQueries(); i++) {
             max = maxOccurrenceMap.get(query.getSubQueryName(i));
             if (max != null && max > 1) {
                 result.setWarningMessage(createMultiReferenceWarning(result.getWarningMessage(), query.getSubQueryLabel(i), max));
+                if (query.isProtocolEnabled()) {
+                    result.logProtocolMessage(
+                            String.format("Warning: data point multi-references (%d) detected in sub query '%s'.", max, query.getSubQueryLabel(i)));
+                }
+
             }
         }
 
+    }
+
+    /**
+     * Writes all queries to the corresponding result protocols
+     * 
+     */
+    private void logQueriesToProtocolIfRequired() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < queries.length; i++) {
+            InternalQuery query = queries[i];
+            if (query.isProtocolEnabled()) {
+                sb.setLength(0);
+                query.appendAsTree(sb);
+                results.get(i).logProtocolMessage(sb.toString());
+            }
+        }
+    }
+
+    /**
+     * Writes the given query to the corresponding result protocol
+     * 
+     * @param query to be logged
+     * @param result to add message
+     */
+    private void logQueryToProtocol(InternalQuery query, BloomBoxQueryResult result) {
+        if (query.isProtocolEnabled()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Query details (probability mode):\n");
+            query.appendAsTree(sb);
+            result.logProtocolMessage(sb.toString());
+        }
     }
 
     /**
@@ -211,15 +275,8 @@ public class SimpleQueryDelegate implements QueryDelegate {
 
     @Override
     public String toString() {
-        if (pbResults.isEmpty()) {
-            return this.getClass().getSimpleName() + " [resultCache=" + resultCache + ", queryInErrorFlags=" + Arrays.toString(queryInErrorFlags) + ", queries="
-                    + Arrays.toString(queries) + ", results=" + results + "]";
-        }
-        else {
-            return this.getClass().getSimpleName() + " [resultCache=" + resultCache + ", queryInErrorFlags=" + Arrays.toString(queryInErrorFlags) + ", queries="
-                    + Arrays.toString(queries) + ", pbResults=" + pbResults + "]";
-
-        }
+        return this.getClass().getSimpleName() + " [resultCache=" + resultCache + ", queryInErrorFlags=" + Arrays.toString(queryInErrorFlags) + ", queries="
+                + Arrays.toString(queries) + ", results=" + results + "]";
     }
 
 }

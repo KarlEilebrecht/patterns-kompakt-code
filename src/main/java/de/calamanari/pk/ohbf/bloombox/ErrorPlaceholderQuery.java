@@ -54,7 +54,7 @@ public class ErrorPlaceholderQuery extends InternalQuery {
      * @param errorMessage problem explanation
      */
     public ErrorPlaceholderQuery(String name, String errorMessage) {
-        super(name, null, Collections.emptyMap());
+        super(name, null, Collections.emptyMap(), null);
         this.errorMessage = errorMessage;
     }
 
@@ -64,7 +64,7 @@ public class ErrorPlaceholderQuery extends InternalQuery {
     }
 
     @Override
-    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, PbBloomBoxQueryResult result) {
+    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, BloomBoxQueryResult result) {
         result.setErrorMessage(errorMessage);
     }
 

@@ -24,8 +24,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * The {@link PbBloomBoxQueryResult} wraps a {@link BloomBoxQueryResult} to delay the effective counting, because probabilities need to be summed-up before we
- * can fill the total results properly.
+ * The {@link PbBloomBoxQueryResult} adds optional probability sums to a {@link BloomBoxQueryResult}.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
@@ -35,11 +34,6 @@ public class PbBloomBoxQueryResult implements Serializable {
     private static final long serialVersionUID = -7813607887943108607L;
 
     /**
-     * The wrapped result to be updated finally
-     */
-    private final BloomBoxQueryResult result;
-
-    /**
      * accumulated probabilies (this is the count)
      */
     private double baseQuerySum = 0.0;
@@ -47,11 +41,10 @@ public class PbBloomBoxQueryResult implements Serializable {
     /**
      * accumulated probabilities for the sub queries (aka the counts)
      */
-    private final double[] subQuerySums;
+    private double[] subQuerySums;
 
-    public PbBloomBoxQueryResult(BloomBoxQueryResult result) {
-        this.result = result;
-        this.subQuerySums = new double[result.getSubQueryCounts().length];
+    public PbBloomBoxQueryResult() {
+        // default constructor
     }
 
     /**
@@ -74,10 +67,11 @@ public class PbBloomBoxQueryResult implements Serializable {
     }
 
     /**
-     * writes the sums as counts into the wrapped result
+     * writes the sums as counts into the result
      * 
+     * @param result target
      */
-    void transferCounts() {
+    void transferCounts(BloomBoxQueryResult result) {
         result.setBaseQueryCount(Math.round(baseQuerySum));
         for (int i = 0; i < subQuerySums.length; i++) {
             result.getSubQueryCounts()[i] = Math.round(subQuerySums[i]);
@@ -85,10 +79,31 @@ public class PbBloomBoxQueryResult implements Serializable {
     }
 
     /**
-     * @param message error to set at the result
+     * @return number of matches of the main query
      */
-    void setErrorMessage(String message) {
-        result.setErrorMessage(message);
+    public double getBaseQuerySum() {
+        return baseQuerySum;
+    }
+
+    /**
+     * @param baseQuerySum number of matches of the main query
+     */
+    public void setBaseQuerySum(double baseQuerySum) {
+        this.baseQuerySum = baseQuerySum;
+    }
+
+    /**
+     * @return sub query count (number of matching records)
+     */
+    public double[] getSubQuerySums() {
+        return subQuerySums;
+    }
+
+    /**
+     * @param subQuerySums sub query count (number of matching records)
+     */
+    public void setSubQuerySums(double[] subQuerySums) {
+        this.subQuerySums = subQuerySums;
     }
 
     @Override
@@ -99,8 +114,6 @@ public class PbBloomBoxQueryResult implements Serializable {
         sb.append(baseQuerySum);
         sb.append(", subQuerySums=");
         sb.append(Arrays.toString(subQuerySums));
-        sb.append(", wrapping ");
-        sb.append(String.valueOf(result));
         sb.append(" ]");
         return sb.toString();
     }

@@ -20,6 +20,7 @@
 
 package de.calamanari.pk.ohbf.bloombox.demo;
 
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.PrintWriter;
@@ -30,6 +31,8 @@ import java.util.TimeZone;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,7 +41,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
 import de.calamanari.pk.ohbf.bloombox.BbxMessage;
+import de.calamanari.pk.ohbf.bloombox.BbxProtocol;
 import de.calamanari.pk.ohbf.bloombox.BloomBox;
+import de.calamanari.pk.ohbf.bloombox.BloomBoxQueryResult;
 import de.calamanari.pk.ohbf.bloombox.BloomBoxQueryRunner;
 import de.calamanari.pk.ohbf.bloombox.QueryBundle;
 import de.calamanari.pk.ohbf.bloombox.QueryBundleResult;
@@ -136,6 +141,13 @@ public class BloomBoxDemoController {
                 black: color=black
                 other: color NOT IN (red, blue, black)
 
+            # options may be specified as follows (will be applied to the last defined base or post query)
+            -someParam=someValue
+
+            # boolean flags may also specified without value (assume "true")
+            -protocol
+
+
             """;
 
     /**
@@ -173,7 +185,22 @@ public class BloomBoxDemoController {
      * Shows a popup with help information
      */
     private void showHelpPopup() {
-        JOptionPane.showMessageDialog(null, new JScrollPane(this.view.createHelpTextArea(HELP_TEXT)), "Help", JOptionPane.QUESTION_MESSAGE);
+        JScrollPane scrHelp = new JScrollPane(this.view.createHelpTextArea(HELP_TEXT));
+        scrHelp.setPreferredSize(new Dimension(800, 600));
+        JOptionPane.showMessageDialog(null, scrHelp, "Help", JOptionPane.QUESTION_MESSAGE);
+    }
+
+    /**
+     * Shows a popup with protocol information
+     */
+    private void showProtocolPopup(String text) {
+        JTextArea tarProtocol = this.view.createHelpTextArea(text);
+        tarProtocol.setLineWrap(false);
+        JScrollPane scrProtocol = new JScrollPane(tarProtocol);
+        scrProtocol.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrProtocol.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrProtocol.setPreferredSize(new Dimension(800, 600));
+        JOptionPane.showMessageDialog(this.view, scrProtocol, "Execution Protocol", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -242,6 +269,33 @@ public class BloomBoxDemoController {
             long time = System.currentTimeMillis();
             QueryBundleResult res = runner.execute(bundle);
             view.tarBloomBoxOutput.setText(res.toDebugString() + "\n\nDuration: " + (System.currentTimeMillis() - time) + " ms");
+            showProtocolIfRequired(res);
+        }
+    }
+
+    /**
+     * Appends potential protocol information from the result to the string builder
+     * 
+     * @param res candidate
+     * @param sb destination
+     */
+    private void appendToProtocol(BloomBoxQueryResult res, StringBuilder sb) {
+        BbxProtocol protocol = res.getProtocol();
+        if (protocol != null && protocol.getEntries() != null) {
+            protocol.getEntries().stream().forEach(e -> sb.append(e).append("\n"));
+        }
+    }
+
+    /**
+     * @param res bundle result which may contain a protocol
+     */
+    private void showProtocolIfRequired(QueryBundleResult res) {
+        StringBuilder sb = new StringBuilder();
+        res.getBaseQueryResults().forEach(r -> appendToProtocol(r, sb));
+        res.getPostQueryResults().forEach(r -> appendToProtocol(r, sb));
+        String msg = sb.toString();
+        if (msg.trim().length() > 0) {
+            showProtocolPopup(msg);
         }
     }
 

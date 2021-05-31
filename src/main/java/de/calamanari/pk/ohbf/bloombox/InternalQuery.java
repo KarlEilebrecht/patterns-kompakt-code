@@ -22,6 +22,8 @@ package de.calamanari.pk.ohbf.bloombox;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -59,6 +61,16 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
     protected final String[] subQueryLabels;
 
     /**
+     * query options
+     */
+    private final Map<String, String> queryOptions;
+
+    /**
+     * tells whether a protocol should be written
+     */
+    private final boolean protocolEnabled;
+
+    /**
      * Optimization, created on demand to support probability queries
      */
     protected BloomFilterQuery[] cachedCombinedSubQueries = null;
@@ -72,8 +84,9 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
      * @param name the query's name
      * @param baseQuery main query
      * @param subQueries optional sub-queries (label to query map), null will be gracefully handles like an empty map
+     * @param queryOptions optional map with options for this query, may be null
      */
-    public InternalQuery(String name, BloomFilterQuery baseQuery, Map<String, BloomFilterQuery> subQueries) {
+    public InternalQuery(String name, BloomFilterQuery baseQuery, Map<String, BloomFilterQuery> subQueries, Map<String, String> queryOptions) {
         this.name = name;
         this.baseQuery = baseQuery;
         if (subQueries != null) {
@@ -90,6 +103,8 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
             this.subQueries = new BloomFilterQuery[0];
             this.subQueryLabels = new String[0];
         }
+        this.queryOptions = queryOptions == null ? Collections.emptyMap() : Collections.unmodifiableMap(new HashMap<>(queryOptions));
+        this.protocolEnabled = BloomBoxOption.PROTOCOL.isEnabled(queryOptions);
     }
 
     /**
@@ -130,6 +145,20 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
     }
 
     /**
+     * @return true if a protocol should be written
+     */
+    public boolean isProtocolEnabled() {
+        return protocolEnabled;
+    }
+
+    /**
+     * @return query options, if any, NOT NULL
+     */
+    public Map<String, String> getQueryOptions() {
+        return queryOptions;
+    }
+
+    /**
      * Applies this query to the given long array (a single record's vector from the store)
      * 
      * @param source long array
@@ -163,20 +192,20 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
      * @param resultCache we avoid duplicate work by keeping results for already executed expressions
      * @param result to be updated
      */
-    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, PbBloomBoxQueryResult result) {
+    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, BloomBoxQueryResult result) {
 
         int numberOfSubQueries = cachedCombinedSubQueries.length;
 
         double baseMatchProbability = cachedOptimizedBaseQuery.execute(source, startPos, probabilities, resultCache);
 
         if (baseMatchProbability > 0.0) {
-            result.incrementBaseQuerySum(baseMatchProbability);
+            result.getProbabilityResult().incrementBaseQuerySum(baseMatchProbability);
 
             for (int i = 0; i < numberOfSubQueries; i++) {
 
                 double subMatchProbability = cachedCombinedSubQueries[i].execute(source, startPos, probabilities, resultCache);
                 if (subMatchProbability > 0.0) {
-                    result.incrementSubQuerySum(i, subMatchProbability);
+                    result.getProbabilityResult().incrementSubQuerySum(i, subMatchProbability);
                 }
             }
         }
@@ -239,6 +268,10 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
         else {
             baseQuery.appendAsTree(2, sb);
         }
+        if (cachedOptimizedBaseQuery != null) {
+            sb.append("\n    optimized: ");
+            cachedOptimizedBaseQuery.appendAsTree(2, sb);
+        }
         if (subQueries != null && subQueries.length > 0) {
             for (int i = 0; i < subQueries.length; i++) {
                 sb.append("\n        sub query '");
@@ -252,6 +285,14 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
                 }
             }
         }
+        if (cachedCombinedSubQueries != null) {
+            for (int i = 0; i < cachedCombinedSubQueries.length; i++) {
+                sb.append("\n        sub query (combined, optimized) '");
+                sb.append(String.valueOf(subQueryLabels[i]));
+                sb.append("': ");
+                cachedCombinedSubQueries[i].appendAsTree(3, sb);
+            }
+        }
     }
 
     @Override
@@ -263,6 +304,8 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
         sb.append(", ");
         sb.append("baseQuery=");
         sb.append(String.valueOf(baseQuery));
+        sb.append(", protocolEnabled=");
+        sb.append(this.protocolEnabled);
         sb.append(", ");
         if (subQueries == null) {
             sb.append("subQueries={}");

@@ -59,6 +59,11 @@ public class BloomBoxQuery implements Serializable {
     private QueryType type;
 
     /**
+     * Optional option map or null
+     */
+    private Map<String, String> options;
+
+    /**
      * sub query expressions in BBQ, which will be executed on top of the main query's outcome
      * <p>
      * The key of the map is the sub query label, e.g.
@@ -186,6 +191,20 @@ public class BloomBoxQuery implements Serializable {
     }
 
     /**
+     * @return map with options or null if no options available
+     */
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options map with settings for this query
+     */
+    public void setOptions(Map<String, String> options) {
+        this.options = options;
+    }
+
+    /**
      * To avoid dealing with nulls and strange inconsistencies deeply inside the engine this validation performs a series of checks and throws an exception in
      * case of violations.
      * 
@@ -225,7 +244,8 @@ public class BloomBoxQuery implements Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " [type=" + type + ", name=" + name + ", query=" + query + ", subQueryMap=" + subQueryMap + "]";
+        return this.getClass().getSimpleName() + " [type=" + type + ", name=" + name + ", query=" + query + ", subQueryMap=" + subQueryMap
+                + (options == null ? "" : ", options=" + options.toString()) + "]";
     }
 
     /**

@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.CharStream;
@@ -43,6 +44,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BbqLexer;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.QueryContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
+import de.calamanari.pk.ohbf.bloombox.bbq.ExpressionIdUtil;
 import de.calamanari.pk.ohbf.bloombox.bbq.IntermediateExpression;
 import de.calamanari.pk.ohbf.bloombox.bbq.IntermediateExpressionBuilder;
 import de.calamanari.pk.ohbf.bloombox.bbq.IntermediateExpressionOptimizer;
@@ -209,7 +211,8 @@ public class BloomBoxQueryRunner {
                     registerQueryByName(subQueryName, subQuery, nameReferenceMap);
                     subQueries.put(entry.getKey(), subQuery);
                 }
-                res[i] = new InternalQuery(query.getName(), baseQuery, subQueries);
+
+                res[i] = new InternalQuery(query.getName(), baseQuery, subQueries, query.getOptions());
                 warnings.add(warningBuilder.toString());
             }
             catch (IndexOutOfBoundsException ex) {
@@ -340,18 +343,19 @@ public class BloomBoxQueryRunner {
     /**
      * This method performs the bloom filter queries to prepare scaling. Therefore it determines some additional counts.
      * 
+     * @param executionId id of execution
      * @param baseExpressions all expressions to be counted
      * @param stats preparation count statistics
      * @return stats (pass-through)
      */
-    private PreparationQueryStats executePreparationQuery(List<? extends BbqExpression> baseExpressions, PreparationQueryStats stats) {
+    private PreparationQueryStats executePreparationQuery(long executionId, List<? extends BbqExpression> baseExpressions, PreparationQueryStats stats) {
         InternalQuery[] countQueries = new InternalQuery[baseExpressions.size()];
 
         for (int i = 0; i < baseExpressions.size(); i++) {
             BloomFilterQuery query = new BloomFilterQuery("", baseExpressions.get(i));
-            countQueries[i] = new InternalQuery(baseExpressions.get(i).toString(), query, null);
+            countQueries[i] = new InternalQuery(baseExpressions.get(i).toString(), query, null, null);
         }
-        List<BloomBoxQueryResult> countQueryResults = execute(countQueries);
+        List<BloomBoxQueryResult> countQueryResults = execute(executionId, countQueries);
 
         stats.setNumberOfRows(dataStore.getNumberOfRows());
         for (int i = 0; i < baseExpressions.size(); i++) {
@@ -376,11 +380,13 @@ public class BloomBoxQueryRunner {
     /**
      * Collects the required statistic counts to prepare upscaling
      * 
+     * @param executionId context id
      * @param allQueriesInBundle ist of all queries in the bundle
      * @param results list of query results, to be filled with raw counts
      * @return stats
      */
-    private PreparationQueryStats collectPreparationStats(InternalQuery[] allQueriesInBundle, List<BloomBoxQueryResult> results, UpScaler upScaler) {
+    private PreparationQueryStats collectPreparationStats(long executionId, InternalQuery[] allQueriesInBundle, List<BloomBoxQueryResult> results,
+            UpScaler upScaler) {
         PreparationQueryStats res = upScaler.createNewStatsInstance();
 
         Map<Long, BbqExpression> allExpressions = new HashMap<>();
@@ -420,7 +426,7 @@ public class BloomBoxQueryRunner {
             }
         }
         List<BbqExpression> allExpressionsList = new ArrayList<>(allExpressions.values());
-        return executePreparationQuery(allExpressionsList, res);
+        return executePreparationQuery(executionId, allExpressionsList, res);
     }
 
     /**
@@ -432,6 +438,7 @@ public class BloomBoxQueryRunner {
     public QueryBundleResult execute(QueryBundle queryBundle) {
         QueryBundleResult res = new QueryBundleResult();
         try {
+            long executionId = ExpressionIdUtil.createExpressionId(UUID.randomUUID().toString());
             queryBundle.validateShallow();
             Map<String, Long> nameReferenceMap = new HashMap<>();
 
@@ -442,7 +449,7 @@ public class BloomBoxQueryRunner {
             List<String> warnings = new ArrayList<>();
             InternalQuery[] allInternalQueries = prepareInternalQueries(allQueries, nameReferenceMap, warnings);
 
-            List<BloomBoxQueryResult> allResults = execute(queryBundle.getUpScalingConfig(), allInternalQueries);
+            List<BloomBoxQueryResult> allResults = execute(executionId, queryBundle.getUpScalingConfig(), allInternalQueries);
 
             for (int i = 0; i < queryBundle.getBaseQueries().size(); i++) {
                 BloomBoxQueryResult queryResult = allResults.get(i);
@@ -504,15 +511,16 @@ public class BloomBoxQueryRunner {
     /**
      * Executes a list of internal queries
      * 
+     * @param executionId context id of the execution, usually the bundle
      * @param queries internal queries
      * @return result list
      */
-    List<BloomBoxQueryResult> execute(InternalQuery... queries) {
+    List<BloomBoxQueryResult> execute(long executionId, InternalQuery... queries) {
 
         logExecutionPlan(queries);
         List<BloomBoxQueryResult> results = new ArrayList<>(queries.length);
 
-        Arrays.stream(queries).forEach(query -> results.add(new BloomBoxQueryResult(query.getName(), query.subQueryLabels)));
+        Arrays.stream(queries).forEach(query -> results.add(new BloomBoxQueryResult(executionId, query.getName(), query.subQueryLabels)));
 
         QueryDelegate queryDelegate = new SimpleQueryDelegate(queries, results);
 
@@ -580,6 +588,11 @@ public class BloomBoxQueryRunner {
                     sb.append(entry.getValue());
                     sb.append("\n");
                 }
+                if (result.getProtocol() != null) {
+                    sb.append("\n");
+                    sb.append(result.getProtocol().getEntries().stream().collect(Collectors.joining("\n")));
+                    sb.append("\n\n");
+                }
             }
             LOGGER.trace(sb.toString());
         }
@@ -636,15 +649,16 @@ public class BloomBoxQueryRunner {
     /**
      * Runs the queries and performs scaling if configured
      * 
+     * @param executionId identifies execution, usually the bundle execution
      * @param config upscaling config, null disables scaling
      * @param queries internal queries to be executed
      * @return result list
      */
-    List<BloomBoxQueryResult> execute(UpScalingConfig config, InternalQuery... queries) {
+    List<BloomBoxQueryResult> execute(long executionId, UpScalingConfig config, InternalQuery... queries) {
 
         List<BloomBoxQueryResult> res = null;
         if (config == null || config.getAttributeScalingFactors() == null || config.getAttributeScalingFactors().isEmpty()) {
-            res = execute(queries);
+            res = execute(executionId, queries);
             if (config != null) {
                 applyLinearScaleFactor(config.getBaseScalingFactor(), config.getTargetPopulationSize(), res);
                 updateOversizeWarnings(res, config.getTargetPopulationSize(), true);
@@ -654,7 +668,7 @@ public class BloomBoxQueryRunner {
             }
         }
         else {
-            res = executeWithUpScaling(config, queries);
+            res = executeWithUpScaling(executionId, config, queries);
             updateOversizeWarnings(res, config.getTargetPopulationSize(), true);
         }
         return res;
@@ -709,23 +723,24 @@ public class BloomBoxQueryRunner {
     /**
      * Runs the queries and performs scaling
      * 
+     * @param executionId identifies usually the bundle execution
      * @param config scaling config
      * @param queries internal queries to be executed
      * @return result list (after scaling)
      */
-    private List<BloomBoxQueryResult> executeWithUpScaling(UpScalingConfig config, InternalQuery... queries) {
+    private List<BloomBoxQueryResult> executeWithUpScaling(long executionId, UpScalingConfig config, InternalQuery... queries) {
         config.validateSettings(this.dataStore.getNumberOfRows());
 
         List<BloomBoxQueryResult> results = new ArrayList<>(queries.length);
 
-        Arrays.stream(queries).forEach(query -> results.add(new BloomBoxQueryResult(query.getName(), query.subQueryLabels)));
+        Arrays.stream(queries).forEach(query -> results.add(new BloomBoxQueryResult(executionId, query.getName(), query.subQueryLabels)));
 
         UpScaler upScaler = null;
         PreparationQueryStats stats = null;
 
         try {
             upScaler = upScalerFactory.createUpScaler(this, config);
-            stats = collectPreparationStats(queries, results, upScaler);
+            stats = collectPreparationStats(executionId, queries, results, upScaler);
             upScaler.handleQueryBundleResults(stats);
         }
         catch (RuntimeException ex) {
