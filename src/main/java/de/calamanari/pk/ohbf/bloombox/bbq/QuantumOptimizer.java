@@ -75,7 +75,7 @@ public class QuantumOptimizer {
     public BloomFilterQuery optimize(BloomFilterQuery query) {
 
         final BloomFilterQuery dbgQuery = query;
-        LOGGER.trace("Query to be optimized (complexity={}): \n{}", defer(() -> dbgQuery.getExpression().computeComplexity()),
+        LOGGER.debug("Query to be optimized (complexity={}): \n{}", defer(() -> dbgQuery.getExpression().computeComplexity()),
                 defer(() -> formatExpressionAsTree(dbgQuery.getExpression())));
 
         int iteration = 0;
@@ -89,12 +89,12 @@ public class QuantumOptimizer {
                 query = new BloomFilterQuery(query.getSourceQuery(), optimizedExpression);
             }
             iteration++;
-        } while (source.getId() != query.getId() && iteration < 5);
+        } while (source.getId() != query.getId() && iteration < 10);
 
-        // Above I reduce the number of runs to 5, just in case I overlooked any flickering ... ;)
+        // Above I limit the number of runs, just in case I overlooked any flickering ... ;)
 
         final BloomFilterQuery dbgQueryAfter = query;
-        LOGGER.trace("Optimized query (complexity={}): \n{}", defer(() -> dbgQueryAfter.getExpression().computeComplexity()),
+        LOGGER.debug("Optimized query (complexity={}): \n{}", defer(() -> dbgQueryAfter.getExpression().computeComplexity()),
                 defer(() -> formatExpressionAsTree(dbgQueryAfter.getExpression())));
         return query;
     }
@@ -648,7 +648,6 @@ public class QuantumOptimizer {
      */
     private List<BbqExpression> condenseExpressions(List<BbqExpression> expressions, Class<? extends BbqExpression> parentType) {
         sortExpressionsByIdAndDedup(expressions);
-        ExpressionAdvice advice = ExpressionAdvice.PROCEED;
         if (parentType == AndExpression.class || parentType == OrExpression.class) {
             if (parentType == AndExpression.class) {
                 replaceInnerNeigbourReferencesWithBooleanLiterals(expressions);
@@ -656,28 +655,39 @@ public class QuantumOptimizer {
             else {
                 multiplyOnInnerAndsOfOr(expressions);
             }
-            for (int i = expressions.size() - 1; i > -1 && advice == ExpressionAdvice.PROCEED; i--) {
-                BbqExpression expression = expressions.get(i);
-                advice = checkBooleanLiteral(expression, parentType);
-                for (int k = i - 1; k > -1 && advice == ExpressionAdvice.PROCEED; k--) {
-                    advice = checkContradiction(expression, expressions.get(k), parentType);
-                }
-                if (advice == ExpressionAdvice.REMOVE) {
-                    expressions.remove(i);
-                    advice = ExpressionAdvice.PROCEED;
-                }
-                else if (advice == ExpressionAdvice.ALWAYS_FALSE) {
-                    expressions.clear();
-                    expressions.add(BbqBooleanLiteral.FALSE);
-                }
-                else if (advice == ExpressionAdvice.ALWAYS_TRUE) {
-                    expressions.clear();
-                    expressions.add(BbqBooleanLiteral.TRUE);
-                }
-            }
+            condenseExpressionsDetailed(expressions, parentType);
             fixEmptyChildExpressionList(expressions, parentType);
         }
         return expressions;
+    }
+
+    /**
+     * Performs a cleanup on the expression list of an and or
+     * 
+     * @param expressions deduped and sorted, will be modified
+     * @param parentType AND or OR (influences strategy)
+     */
+    private void condenseExpressionsDetailed(List<BbqExpression> expressions, Class<? extends BbqExpression> parentType) {
+        ExpressionAdvice advice = ExpressionAdvice.PROCEED;
+        for (int i = expressions.size() - 1; i > -1 && advice == ExpressionAdvice.PROCEED; i--) {
+            BbqExpression expression = expressions.get(i);
+            advice = checkBooleanLiteral(expression, parentType);
+            for (int k = i - 1; k > -1 && advice == ExpressionAdvice.PROCEED; k--) {
+                advice = checkContradiction(expression, expressions.get(k), parentType);
+            }
+            if (advice == ExpressionAdvice.REMOVE) {
+                expressions.remove(i);
+                advice = ExpressionAdvice.PROCEED;
+            }
+            else if (advice == ExpressionAdvice.ALWAYS_FALSE) {
+                expressions.clear();
+                expressions.add(BbqBooleanLiteral.FALSE);
+            }
+            else if (advice == ExpressionAdvice.ALWAYS_TRUE) {
+                expressions.clear();
+                expressions.add(BbqBooleanLiteral.TRUE);
+            }
+        }
     }
 
     /**
