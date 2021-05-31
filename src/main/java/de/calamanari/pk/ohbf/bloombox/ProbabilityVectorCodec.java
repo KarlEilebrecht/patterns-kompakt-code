@@ -332,6 +332,24 @@ public class ProbabilityVectorCodec implements Serializable {
     }
 
     /**
+     * Determines if the given value is smaller than the smallest quantity than can be encoded
+     * 
+     * @param probability test value
+     * @return true if the value turns to 0 after decoding
+     */
+    public static boolean isEffectivelyZero(double probability) {
+        if (probability < 0) {
+            return true;
+        }
+        else if (probability >= 1) {
+            return false;
+        }
+        else {
+            return (((long) (probability * PRECISION_FACTOR)) * REVERSE_PRECISION_FACTOR) == 0.0;
+        }
+    }
+
+    /**
      * @param dataPointId key/value identifier
      * @return same bit sequence as if probability was zero (trailing bits 0)
      */

@@ -96,7 +96,9 @@ public class PbDataStoreFeeder extends DataStoreFeeder {
                 bloomFilter.clear();
                 for (int i = 0; i < dataPoints.size(); i++) {
                     DataPoint dataPoint = dataPoints.get(i);
-                    bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
+                    if (!ProbabilityVectorCodec.isEffectivelyZero(dataPoint.getProbability())) {
+                        bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
+                    }
                 }
                 ((PbDataStore) dataStore).feedRow(bloomFilter.getBitVectorAsLongArray(), currentRowIndex, dppVector);
                 return true;
