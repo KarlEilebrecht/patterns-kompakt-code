@@ -139,7 +139,11 @@ public class SimpleQueryDelegate implements QueryDelegate {
 
     @Override
     public void finish() {
-        results.forEach(r -> r.getProbabilityResult().transferCounts(r));
+        results.forEach(r -> {
+            if (r.getProbabilityResult() != null) {
+                r.getProbabilityResult().transferCounts(r);
+            }
+        });
         for (int i = 0; i < queries.length; i++) {
             logQueryResultToProtocolIfRequired(i);
         }
