@@ -420,7 +420,7 @@ public class ProbabilityVectorCodec implements Serializable {
                 shadows++;
             }
             else {
-                res[i] = encodeDataPointProbability(dataPoint.getDataPointId(), dataPoint.getProbability());
+                res[i - shadows] = encodeDataPointProbability(dataPoint.getDataPointId(), dataPoint.getProbability());
                 lastDataPoint = dataPoint;
             }
         }

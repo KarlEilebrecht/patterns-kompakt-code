@@ -65,21 +65,17 @@ public class ExpressionIdUtil {
     }
 
     /**
-     * Creates a 21-bit integer (precision only 20 bits) identifying the given key/value pair. It is low precision to reduce space consumption.
-     * <p>
-     * The idea is that the number of possible combinations is limited by the expected number of columns and the expected number of possible values.<br>
-     * Thus the collision risk is not so high.
+     * Creates a 31-bit positive integer identifying the given key/value pair.
      * 
      * @param argName column name
      * @param argValue column value
-     * @return identifier not using the range <code>[ 0 .. ({@value #MIN_GENERATED_DATA_POINT_ID} - 1) ]</code>
+     * @return identifier EXCLUDING the range <code>[ 0 .. ({@value #MIN_GENERATED_DATA_POINT_ID} - 1) ]</code>
      */
     public static int createDataPointId(String argName, Object argValue) {
         long id = ID_GENERATOR.createKey("dp", argName, argValue);
-        // make positive integer (20 bit) out of 64 bit long
-        // the 21st bit is for the offset
-        id = (id << 32L) >>> 44L;
-        return MIN_GENERATED_DATA_POINT_ID + ((int) id);
+        id = ((id << 33L) >>> 33L) + MIN_GENERATED_DATA_POINT_ID;
+        // now we have a random-like 31-bit positive integer greater than the minimum
+        return (int) id;
     }
 
     private ExpressionIdUtil() {
