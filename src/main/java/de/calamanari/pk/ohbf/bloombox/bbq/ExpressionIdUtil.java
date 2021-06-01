@@ -73,9 +73,14 @@ public class ExpressionIdUtil {
      */
     public static int createDataPointId(String argName, Object argValue) {
         long id = ID_GENERATOR.createKey("dp", argName, argValue);
-        id = ((id << 33L) >>> 33L) + MIN_GENERATED_DATA_POINT_ID;
+
+        int res = (int) (((id << 33L) >>> 33L) + MIN_GENERATED_DATA_POINT_ID);
+        if (res < 0) {
+            // overflow, move it into the valid range
+            res = ((res + Integer.MAX_VALUE) + 1) + MIN_GENERATED_DATA_POINT_ID;
+        }
         // now we have a random-like 31-bit positive integer greater than the minimum
-        return (int) id;
+        return res;
     }
 
     private ExpressionIdUtil() {
