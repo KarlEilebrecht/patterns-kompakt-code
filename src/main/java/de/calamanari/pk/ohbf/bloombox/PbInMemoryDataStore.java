@@ -301,7 +301,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
      */
     private long computeOverallSize() {
         long res = super.getTotalSizeInBytes();
-        res = res + Arrays.stream(compressedProbabilities).map(arr -> arr.length).collect(Collectors.summingInt(Integer::intValue));
+        res = res + Arrays.stream(compressedProbabilities).map(arr -> arr.length).collect(Collectors.summingLong(Integer::intValue));
         return res;
     }
 
