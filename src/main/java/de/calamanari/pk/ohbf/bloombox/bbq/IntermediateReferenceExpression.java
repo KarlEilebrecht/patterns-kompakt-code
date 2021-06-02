@@ -22,6 +22,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
 
@@ -101,5 +102,10 @@ public class IntermediateReferenceExpression implements IntermediateExpression {
         else {
             return String.format("ref('%s':%d)", name, expressionId);
         }
+    }
+
+    @Override
+    public void collectRequiredBaseAttributes(Set<String> attributeNames) {
+        // references are opaque and references must be collected otherwise
     }
 }

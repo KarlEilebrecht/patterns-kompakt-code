@@ -25,10 +25,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
-import de.calamanari.pk.ohbf.bloombox.bbq.QuantumOptimizer;
 
 /**
  * An {@link InternalQuery} represents a parsed and optimized query with sub queries ready to be executed on the store.
@@ -69,11 +67,6 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
      * tells whether a protocol should be written
      */
     private final boolean protocolEnabled;
-
-    /**
-     * Optimization, created on demand to support probability queries
-     */
-    protected BloomFilterQuery[] cachedCombinedSubQueries = null;
 
     /**
      * @param name the query's name
@@ -189,7 +182,7 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
      */
     public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, BloomBoxQueryResult result) {
 
-        int numberOfSubQueries = cachedCombinedSubQueries.length;
+        int numberOfSubQueries = subQueries.length;
 
         double baseMatchProbability = baseQuery.execute(source, startPos, probabilities, resultCache);
 
@@ -198,7 +191,7 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
 
             for (int i = 0; i < numberOfSubQueries; i++) {
 
-                double subMatchProbability = cachedCombinedSubQueries[i].execute(source, startPos, probabilities, resultCache);
+                double subMatchProbability = subQueries[i].execute(source, startPos, probabilities, resultCache);
                 if (subMatchProbability > 0.0) {
                     result.getProbabilityResult().incrementSubQuerySum(i, subMatchProbability);
                 }
@@ -215,10 +208,9 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
 
     @Override
     public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
-        ensureCachedQueriesReady();
         registerDataPointOccurrencesIfRequired(this.name, baseQuery, collector);
-        for (int i = 0; i < cachedCombinedSubQueries.length; i++) {
-            this.registerDataPointOccurrencesIfRequired(this.getSubQueryName(i), cachedCombinedSubQueries[i], collector);
+        for (int i = 0; i < subQueries.length; i++) {
+            this.registerDataPointOccurrencesIfRequired(this.getSubQueryName(i), subQueries[i], collector);
         }
     }
 
@@ -232,18 +224,6 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
     private void registerDataPointOccurrencesIfRequired(String queryName, BloomFilterQuery query, DataPointOccurrenceCollector collector) {
         if (collector.startCollection(query, queryName)) {
             query.registerDataPointOccurrences(collector);
-        }
-    }
-
-    /**
-     * ensures that the list of combined sub queries is ready to run
-     */
-    protected void ensureCachedQueriesReady() {
-        if (this.cachedCombinedSubQueries == null) {
-            QuantumOptimizer optimizer = new QuantumOptimizer();
-
-            this.cachedCombinedSubQueries = Arrays.stream(this.subQueries).map(baseQuery::combinedWith).map(optimizer::optimize).collect(Collectors.toList())
-                    .toArray(new BloomFilterQuery[subQueries.length]);
         }
     }
 
@@ -273,14 +253,6 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
                 else {
                     subQueries[i].appendAsTree(3, sb);
                 }
-            }
-        }
-        if (cachedCombinedSubQueries != null) {
-            for (int i = 0; i < cachedCombinedSubQueries.length; i++) {
-                sb.append("\n        sub query (combined, optimized) '");
-                sb.append(String.valueOf(subQueryLabels[i]));
-                sb.append("': ");
-                cachedCombinedSubQueries[i].appendAsTree(3, sb);
             }
         }
     }

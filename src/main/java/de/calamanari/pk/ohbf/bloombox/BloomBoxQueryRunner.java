@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -213,7 +215,7 @@ public class BloomBoxQueryRunner {
                     subQueries.put(entry.getKey(), subQuery);
                 }
 
-                res[i] = new InternalQuery(query.getName(), baseQuery, subQueries, query.getOptions());
+                res[i] = createInternalQuery(query.getName(), baseQuery, subQueries, query.getOptions());
                 warnings.add(warningBuilder.toString());
             }
             catch (IndexOutOfBoundsException ex) {
@@ -233,6 +235,27 @@ public class BloomBoxQueryRunner {
         }
         logPreparedInternalQueries(res, nameReferenceMap, warnings, "Prepared internal queries:");
         return res;
+    }
+
+    /**
+     * Creates an internal query after applying the QuantumOptimizer to reduce complexity.
+     * <p>
+     * <b>Note:</b> We cannot do this optimization earlier without breaking the reference query concept.
+     * 
+     * @param name query name
+     * @param baseQuery main query
+     * @param subQueries sub query
+     * @param options query settings
+     */
+    private InternalQuery createInternalQuery(String name, BloomFilterQuery baseQuery, Map<String, BloomFilterQuery> subQueries, Map<String, String> options) {
+        QuantumOptimizer quantumOptimizer = new QuantumOptimizer();
+        BloomFilterQuery optimizedBaseQuery = quantumOptimizer.optimize(baseQuery);
+        Map<String, BloomFilterQuery> optimizedCombinedSubQueries = new HashMap<>();
+        for (Map.Entry<String, BloomFilterQuery> entry : subQueries.entrySet()) {
+            BloomFilterQuery combinedFilterQuery = quantumOptimizer.optimize(optimizedBaseQuery.combinedWith(entry.getValue()));
+            optimizedCombinedSubQueries.put(entry.getKey(), combinedFilterQuery);
+        }
+        return new InternalQuery(name, optimizedBaseQuery, optimizedCombinedSubQueries, options);
     }
 
     /**
@@ -267,23 +290,11 @@ public class BloomBoxQueryRunner {
     private BloomFilterQuery createBasicQuery(LwGenericOHBF bloomFilter, String queryName, String queryString, IntermediateExpressionBuilder builder,
             IntermediateExpressionOptimizer optimizer, Map<Long, BbqExpression> expressionCache, StringBuilder warningBuilder) {
         LOGGER.trace("Parsing basic query '{}' from queryString= {} ...", queryName, queryString);
-        CharStream codePointCharStream = CharStreams.fromString(queryString + "\n");
-        BbqLexer lexer = new BbqLexer(codePointCharStream);
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(builder.getErrorListener());
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        BbqParser parser = new BbqParser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(builder.getErrorListener());
-        QueryContext queryContext = parser.query();
-        ParseTreeWalker walker = new ParseTreeWalker();
-        walker.walk(builder, queryContext);
+        parseBbqQuery(queryString, builder);
         IntermediateExpression expression = optimizer.process(builder.getResult());
         BbqExpression bbqe = expression.createBbqEquivalent(bloomFilter, expressionCache);
         validateQuery(queryName, warningBuilder, expression, bbqe);
-        BloomFilterQuery res = new BloomFilterQuery(queryString, bbqe);
-        QuantumOptimizer quantumOptimizer = new QuantumOptimizer();
-        return quantumOptimizer.optimize(res);
+        return new BloomFilterQuery(queryString, bbqe);
     }
 
     /**
@@ -315,9 +326,76 @@ public class BloomBoxQueryRunner {
         IntermediateExpression expression = optimizer.process(builder.getResult());
         BbqExpression bbqe = expression.createBbqEquivalent(bloomFilter, expressionCache);
         validateQuery(queryName, warningBuilder, expression, bbqe);
-        BloomFilterQuery res = new BloomFilterQuery(queryString, bbqe);
-        QuantumOptimizer quantumOptimizer = new QuantumOptimizer();
-        return quantumOptimizer.optimize(res);
+        return new BloomFilterQuery(queryString, bbqe);
+    }
+
+    /**
+     * Collects all referenced base attributes in the given set
+     * <p>
+     * <b>Note:</b> This method won't fail on invalid queries, it just does not count its required attributes.
+     * 
+     * @param queryName name of the query
+     * @param queryString base or sub query
+     * @param result target collection to be updated
+     */
+    private static void collectRequiredAttributes(String queryName, String queryString, Set<String> result) {
+        LOGGER.trace("Collecting referenced attributes in query '{}' from queryString= {} ...", queryName, queryString);
+        try {
+            IntermediateExpressionBuilder builder = new IntermediateExpressionBuilder();
+            parseBbqQuery(queryString, builder);
+            builder.getResult().collectRequiredBaseAttributes(result);
+        }
+        catch (RuntimeException ex) {
+            LOGGER.error("Could not collect required attributes of query '{}': queryString={}", queryName, queryString, ex);
+        }
+    }
+
+    /**
+     * Parses the raw query string
+     * 
+     * @param queryString raw bbq query string (base query or sub query, no post query)
+     * @param builder result collector
+     */
+    private static void parseBbqQuery(String queryString, IntermediateExpressionBuilder builder) {
+        CharStream codePointCharStream = CharStreams.fromString(queryString + "\n");
+        BbqLexer lexer = new BbqLexer(codePointCharStream);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(builder.getErrorListener());
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        BbqParser parser = new BbqParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(builder.getErrorListener());
+        QueryContext queryContext = parser.query();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(builder, queryContext);
+    }
+
+    /**
+     * Collects all referenced base attributes in the given query bundle
+     * <p>
+     * <b>Note:</b> This method won't fail on invalid queries, it just does not count its required attributes.
+     *
+     * @param bundle query bundle
+     * @return set with the names of all base attributes referenced in queries of the given bundle, in alphabetical order
+     */
+    public static Set<String> collectRequiredAttributes(QueryBundle bundle) {
+        Set<String> res = new TreeSet<>();
+        if (bundle.getBaseQueries() != null) {
+            for (BloomBoxQuery baseQuery : bundle.getBaseQueries()) {
+                collectRequiredAttributes(baseQuery.getName(), baseQuery.getQuery(), res);
+                if (baseQuery.getSubQueryMap() != null) {
+                    baseQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredAttributes(entry.getKey(), entry.getValue(), res));
+                }
+            }
+        }
+        if (bundle.getPostQueries() != null) {
+            for (BloomBoxQuery postQuery : bundle.getPostQueries()) {
+                if (postQuery.getSubQueryMap() != null) {
+                    postQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredAttributes(entry.getKey(), entry.getValue(), res));
+                }
+            }
+        }
+        return res;
     }
 
     /**

@@ -22,6 +22,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
 
@@ -92,4 +93,8 @@ public class IntermediateNotEquals implements IntermediateExpression {
                 .anyMatch(eq -> eq.argName.equals(this.argName) && eq.argValue.equals(this.argValue));
     }
 
+    @Override
+    public void collectRequiredBaseAttributes(Set<String> attributeNames) {
+        attributeNames.add(argName);
+    }
 }

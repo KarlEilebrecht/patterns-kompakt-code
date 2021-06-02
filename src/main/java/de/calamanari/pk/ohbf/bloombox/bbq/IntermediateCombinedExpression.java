@@ -23,6 +23,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
@@ -50,6 +51,11 @@ public abstract class IntermediateCombinedExpression implements IntermediateExpr
      */
     public List<IntermediateExpression> getSubExpressionList() {
         return subExpressionList;
+    }
+
+    @Override
+    public void collectRequiredBaseAttributes(Set<String> attributeNames) {
+        this.subExpressionList.forEach(e -> e.collectRequiredBaseAttributes(attributeNames));
     }
 
     /**

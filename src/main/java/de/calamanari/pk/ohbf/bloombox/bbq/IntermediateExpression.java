@@ -21,6 +21,7 @@
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.util.Map;
+import java.util.Set;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
 
@@ -142,4 +143,11 @@ public interface IntermediateExpression {
             sb.append("ALWAYS TRUE!");
         }
     }
+
+    /**
+     * Updates the given set with all referenced base attributes (recursively)
+     * 
+     * @param attributeNames to be updated
+     */
+    void collectRequiredBaseAttributes(Set<String> attributeNames);
 }

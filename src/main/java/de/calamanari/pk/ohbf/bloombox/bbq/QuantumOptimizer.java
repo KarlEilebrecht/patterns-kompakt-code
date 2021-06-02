@@ -72,8 +72,13 @@ public class QuantumOptimizer {
     public BloomFilterQuery optimize(BloomFilterQuery query) {
 
         final BloomFilterQuery dbgQuery = query;
-        LOGGER.trace("Query to be optimized (complexity={}): \n{}", defer(() -> dbgQuery.getExpression().computeComplexity()),
+        LOGGER.debug("Query to be optimized (complexity={}): \n{}", defer(() -> dbgQuery.getExpression().computeComplexity()),
                 defer(() -> formatExpressionAsTree(dbgQuery.getExpression())));
+
+        if (query.getExpression().getExpressionId() == 6960209573496392022L) {
+            LOGGER.info("HIER");
+
+        }
 
         int iteration = 0;
         BloomFilterQuery source = null;
@@ -91,7 +96,7 @@ public class QuantumOptimizer {
         // Above I limit the number of runs, just in case I overlooked any flickering ... ;)
 
         final BloomFilterQuery dbgQueryAfter = query;
-        LOGGER.trace("Optimized query (complexity={}): \n{}", defer(() -> dbgQueryAfter.getExpression().computeComplexity()),
+        LOGGER.debug("Optimized query (complexity={}): \n{}", defer(() -> dbgQueryAfter.getExpression().computeComplexity()),
                 defer(() -> formatExpressionAsTree(dbgQueryAfter.getExpression())));
         return query;
     }
