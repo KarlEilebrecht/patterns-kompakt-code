@@ -53,6 +53,11 @@ public class QueryBundle implements Serializable {
     private UpScalingConfig upScalingConfig = null;
 
     /**
+     * unique identifier of the execution, internal information, not to be specified by a client
+     */
+    private long executionId = 0;
+
+    /**
      * Creates a bundle from easy-script syntax (nice to edit and to discuss).
      * <p>
      * Specification:
@@ -200,6 +205,25 @@ public class QueryBundle implements Serializable {
      */
     public void setPostQueries(List<BloomBoxQuery> postQueries) {
         this.postQueries = postQueries;
+    }
+
+    /**
+     * The execution-id is a positive integer to be set when the query gets prepared for execution, <br>
+     * it should not be set by a client of the engine.
+     * 
+     * @return executionId or 0 if not yet set
+     */
+    public long getExecutionId() {
+        return executionId;
+    }
+
+    /**
+     * Internal operation, this id should not be set by a client. If a client wants to set it, the id must be <code>&gt; 0</code> and <b>globally unique</b>.
+     * 
+     * @param executionId identifier of the current query execution
+     */
+    public void setExecutionId(long executionId) {
+        this.executionId = executionId;
     }
 
     /**

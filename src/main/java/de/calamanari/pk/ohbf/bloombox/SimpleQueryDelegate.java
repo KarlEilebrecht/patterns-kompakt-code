@@ -238,7 +238,8 @@ public class SimpleQueryDelegate implements QueryDelegate {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < queries.length; i++) {
             InternalQuery query = queries[i];
-            if (query.isProtocolEnabled()) {
+            // reduce verbosity if there was no sub query to optimize anyway
+            if (query.isProtocolEnabled() && query.getNumberOfSubQueries() > 0) {
                 sb.setLength(0);
                 query.appendAsTree(sb);
                 results.get(i).logProtocolMessage(sb.toString());
@@ -255,7 +256,7 @@ public class SimpleQueryDelegate implements QueryDelegate {
     private void logQueryToProtocol(InternalQuery query, BloomBoxQueryResult result) {
         if (query.isProtocolEnabled()) {
             StringBuilder sb = new StringBuilder();
-            sb.append("Query details (probability mode):\n");
+            sb.append("Optimized query:\n");
             query.appendAsTree(sb);
             result.logProtocolMessage(sb.toString());
         }

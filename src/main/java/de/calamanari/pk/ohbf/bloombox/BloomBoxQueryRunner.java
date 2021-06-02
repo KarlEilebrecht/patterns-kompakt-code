@@ -51,6 +51,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.IntermediateExpressionOptimizer;
 import de.calamanari.pk.ohbf.bloombox.bbq.IntermediatePostExpressionBuilder;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqLexer;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser;
+import de.calamanari.pk.ohbf.bloombox.bbq.QuantumOptimizer;
 import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 
 /**
@@ -280,8 +281,9 @@ public class BloomBoxQueryRunner {
         IntermediateExpression expression = optimizer.process(builder.getResult());
         BbqExpression bbqe = expression.createBbqEquivalent(bloomFilter, expressionCache);
         validateQuery(queryName, warningBuilder, expression, bbqe);
-        LOGGER.trace("Parsed basic query '{}' from queryString= {} -> {}", queryName, queryString, bbqe);
-        return new BloomFilterQuery(queryString, bbqe);
+        BloomFilterQuery res = new BloomFilterQuery(queryString, bbqe);
+        QuantumOptimizer quantumOptimizer = new QuantumOptimizer();
+        return quantumOptimizer.optimize(res);
     }
 
     /**
@@ -313,8 +315,9 @@ public class BloomBoxQueryRunner {
         IntermediateExpression expression = optimizer.process(builder.getResult());
         BbqExpression bbqe = expression.createBbqEquivalent(bloomFilter, expressionCache);
         validateQuery(queryName, warningBuilder, expression, bbqe);
-        LOGGER.trace("Parsed post query '{}' from queryString= {} -> {}", queryName, queryString, bbqe);
-        return new BloomFilterQuery(queryString, bbqe);
+        BloomFilterQuery res = new BloomFilterQuery(queryString, bbqe);
+        QuantumOptimizer quantumOptimizer = new QuantumOptimizer();
+        return quantumOptimizer.optimize(res);
     }
 
     /**
@@ -438,7 +441,10 @@ public class BloomBoxQueryRunner {
     public QueryBundleResult execute(QueryBundle queryBundle) {
         QueryBundleResult res = new QueryBundleResult();
         try {
-            long executionId = ExpressionIdUtil.createExpressionId(UUID.randomUUID().toString());
+            long executionId = queryBundle.getExecutionId();
+            if (executionId <= 0) {
+                executionId = ExpressionIdUtil.createExpressionId(UUID.randomUUID().toString());
+            }
             queryBundle.validateShallow();
             Map<String, Long> nameReferenceMap = new HashMap<>();
 

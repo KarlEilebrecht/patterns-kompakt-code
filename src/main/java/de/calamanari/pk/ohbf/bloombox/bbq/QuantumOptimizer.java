@@ -35,14 +35,11 @@ import de.calamanari.pk.ohbf.bloombox.DataPointProbabilityManager;
 import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 
 /**
- * The {@link QuantumOptimizer} was introduced to better support probability-queries (quantity aggregation) which unfortunately suffer from nesting and multiple
- * refences to the same data point, see also comments in {@link DataPointProbabilityManager}.
+ * The {@link QuantumOptimizer} was introduced later to better support probability-queries (quantity aggregation) which unfortunately suffer from nesting and
+ * multiple refences to the same data point, see also comments in {@link DataPointProbabilityManager}.
  * <p>
  * This implementation spends considerably more effort than the standard optimizer {@link IntermediateExpressionOptimizer} to reduce the complexity of
  * expression that will be used to aggregate the probabilities.
- * <p>
- * I decided not to integrate this in the standard optimizer, as it takes time and at the end latest for combining sub queries with base queries this on-demand
- * step is necessary anyway (per sub query). Instead this optimizer runs only on demand.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *

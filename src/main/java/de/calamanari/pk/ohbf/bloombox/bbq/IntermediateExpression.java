@@ -41,6 +41,13 @@ public interface IntermediateExpression {
      */
     public IntermediateExpressionType getType();
 
+    /**
+     * Returns the corresponding expression for this query
+     * 
+     * @param bloomFilter for building the expression
+     * @param expressionCache expressions already built
+     * @return expression
+     */
     public BbqExpression createBbqEquivalent(LwGenericOHBF bloomFilter, Map<Long, BbqExpression> expressionCache);
 
     /**
