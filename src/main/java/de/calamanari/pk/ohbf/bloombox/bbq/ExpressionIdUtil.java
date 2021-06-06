@@ -65,6 +65,35 @@ public class ExpressionIdUtil {
     }
 
     /**
+     * Creates high-precision unique data point id (length/format follow the rules defined above for expression-ids).
+     * 
+     * @param argName column name, <b>case-sensitive</b>
+     * @param argValue column value, <b>case-sensitive</b>
+     * @return globally unique id for this key/value combination (aka data point)
+     */
+    public static long createDataPointId(String argName, Object argValue) {
+        return ID_GENERATOR.createKey("dp", argName, argValue);
+    }
+
+    /**
+     * Creates a 31-bit positive integer identifying the given key/value pair (local, low-precision data point id) from the high-precision globally unique data
+     * point id
+     * 
+     * @param dataPointId id created by {@link #createDataPointId(String, Object)}
+     * @return identifier EXCLUDING the range <code>[ 0 .. ({@value #MIN_GENERATED_DATA_POINT_ID} - 1) ]</code>
+     */
+    public static int createLpDataPointId(long dataPointId) {
+
+        int res = (int) (((dataPointId << 33L) >>> 33L) + MIN_GENERATED_DATA_POINT_ID);
+        if (res < 0) {
+            // overflow, move it into the valid range
+            res = ((res + Integer.MAX_VALUE) + 1) + MIN_GENERATED_DATA_POINT_ID;
+        }
+        // now we have a random-like 31-bit positive integer greater than the minimum
+        return res;
+    }
+
+    /**
      * Creates a 31-bit positive integer identifying the given key/value pair (local, low-precision data point id).
      * 
      * @param argName column name
@@ -72,15 +101,7 @@ public class ExpressionIdUtil {
      * @return identifier EXCLUDING the range <code>[ 0 .. ({@value #MIN_GENERATED_DATA_POINT_ID} - 1) ]</code>
      */
     public static int createLpDataPointId(String argName, Object argValue) {
-        long id = ID_GENERATOR.createKey("dp", argName, argValue);
-
-        int res = (int) (((id << 33L) >>> 33L) + MIN_GENERATED_DATA_POINT_ID);
-        if (res < 0) {
-            // overflow, move it into the valid range
-            res = ((res + Integer.MAX_VALUE) + 1) + MIN_GENERATED_DATA_POINT_ID;
-        }
-        // now we have a random-like 31-bit positive integer greater than the minimum
-        return res;
+        return createLpDataPointId(createDataPointId(argName, argValue));
     }
 
     private ExpressionIdUtil() {

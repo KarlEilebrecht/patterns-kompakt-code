@@ -49,6 +49,11 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
     private final long[] pattern;
 
     /**
+     * unique id of the data point (key/value combination)
+     */
+    private final long dataPointId;
+
+    /**
      * unique id of this expression
      */
     private final long expressionId;
@@ -78,8 +83,9 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
         this.argName = argName;
         this.argValue = argValue;
         this.pattern = Arrays.copyOf(pattern, pattern.length);
-        this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch", this.pattern);
-        this.lpDataPointId = ExpressionIdUtil.createLpDataPointId(argName, argValue);
+        this.dataPointId = ExpressionIdUtil.createDataPointId(argName, argValue);
+        this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch" + this.dataPointId, this.pattern);
+        this.lpDataPointId = ExpressionIdUtil.createLpDataPointId(this.dataPointId);
     }
 
     /**
@@ -97,7 +103,16 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
     }
 
     /**
-     * @return low precision data point id for key/value pair, see {@link ExpressionIdUtil#createLpDataPointId(String, String)}
+     * @return globally unique data point id for key/value pair, see {@link ExpressionIdUtil#createDataPointId(String, Object)}
+     */
+    public long getDataPointId() {
+        return dataPointId;
+    }
+
+    /**
+     * This id is for internal use and may change
+     * 
+     * @return low precision data point id for key/value pair, see {@link ExpressionIdUtil#createLpDataPointId(String, Object)}
      */
     public int getLpDataPointId() {
         return lpDataPointId;
@@ -114,6 +129,10 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
         return probabilities.fetchDataPointProbability(rootExpressionId, this.lpDataPointId);
     }
 
+    /**
+     * This id uniquely identifies the key/value pair with the given binary pattern, so the same key/value equals expression will have different ids on
+     * different stores but it will have the same {@link #getDataPointId()}.
+     */
     @Override
     public long getExpressionId() {
         return this.expressionId;
@@ -126,7 +145,8 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
 
     @Override
     public String toString() {
-        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} [" + lpDataPointId + "] )";
+        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} DP" + dataPointId + "["
+                + lpDataPointId + "] )";
     }
 
     @Override
@@ -145,9 +165,9 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
         sb.append("==");
         sb.append(argValue);
         sb.append("} ");
-        sb.append("[");
-        sb.append(lpDataPointId);
-        sb.append("] )");
+        sb.append("DP");
+        sb.append(dataPointId);
+        sb.append(" )");
         sb.append("\n");
     }
 
