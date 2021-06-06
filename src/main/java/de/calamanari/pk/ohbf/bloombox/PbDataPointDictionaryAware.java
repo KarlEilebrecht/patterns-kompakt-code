@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * DppFetcher
+ * PbDataPointDictionaryAware
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -20,27 +20,18 @@
 
 package de.calamanari.pk.ohbf.bloombox;
 
-import java.io.Serializable;
-
-import de.calamanari.pk.ohbf.bloombox.bbq.BinaryMatchExpression;
-
 /**
- * The {@link DppFetcher} (Data Point Probability Fetcher) allows determining the probability of a data point as late as possible.
- * <p>
- * <b>Note:<b> This is by intention not a lambda because lambdas are not serializable and cannot cache data.
+ * Elements implementing this interface are interested in the current data store's dictionary in preparation to execution.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface DppFetcher extends Serializable {
+public interface PbDataPointDictionaryAware {
 
     /**
-     * Returns the probability for the given data point.
+     * Allows the data store to prepare the elements with the dictionary of this store
      * 
-     * @param rootExpressionId id of the expression we are currently fetching data for
-     * @param lpDataPointId see {@link BinaryMatchExpression#getLpDataPointId()}
-     * @return probability or 0.0d if the given low-precision dataPointId has no probability attached, <b><code>0 &lt;= value &lt;= 1.0</code></b>
+     * @param dictionary data point dictionary with id-mapping (local, low-precision data point ids)
      */
-    double fetchDataPointProbability(long rootExpressionId, int lpDataPointId);
-
+    public void prepareLpDataPointIds(PbDataPointDictionary dictionary);
 }

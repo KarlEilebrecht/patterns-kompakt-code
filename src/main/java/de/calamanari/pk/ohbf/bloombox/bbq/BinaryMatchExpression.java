@@ -24,22 +24,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.DataPointDictionary;
-import de.calamanari.pk.ohbf.bloombox.DataPointDictionaryAware;
 import de.calamanari.pk.ohbf.bloombox.DppFetcher;
+import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionary;
+import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionaryAware;
 import de.calamanari.pk.util.SimpleFixedLengthBitVector;
 
 /**
  * The {@link BinaryMatchExpression} is the only BBQ-expression that executes matches against a vector from the bloom box (all others are composites).
  * <p>
  * <b>Note:</b> Although expressions should be immutable I have made a compromise for performance reasons to allow changing the data point id (see
- * {@link #getDataPointId()}, {@link #prepareDataPointIds(DataPointDictionary)}) at runtime. Avoiding this would have meant to replicate the whole expression
- * tree (to preserve immutability), which I found too costly.
+ * {@link #getLpDataPointId()}, {@link #prepareLpDataPointIds(PbDataPointDictionary)}) at runtime. Avoiding this would have meant to replicate the whole
+ * expression tree (to preserve immutability), which I found too costly.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BinaryMatchExpression implements BbqExpression, DataPointDictionaryAware {
+public class BinaryMatchExpression implements BbqExpression, PbDataPointDictionaryAware {
 
     private static final long serialVersionUID = -2940750763497459402L;
 
@@ -64,10 +64,10 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
     private final String argValue;
 
     /**
-     * The data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createDataPointId(String, String)}<br>
-     * This is the only mutable id, because it might change in preparation to the execution, see {@link #prepareDataPointIds(DataPointDictionary)}
+     * The local low-precision data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createLpDataPointId(String, String)}<br>
+     * This is the only mutable id, because it might change in preparation to the execution, see {@link #prepareLpDataPointIds(PbDataPointDictionary)}
      */
-    private int dataPointId;
+    private int lpDataPointId;
 
     /**
      * @param argName name of the "column"
@@ -79,7 +79,7 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
         this.argValue = argValue;
         this.pattern = Arrays.copyOf(pattern, pattern.length);
         this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch", this.pattern);
-        this.dataPointId = ExpressionIdUtil.createDataPointId(argName, argValue);
+        this.lpDataPointId = ExpressionIdUtil.createLpDataPointId(argName, argValue);
     }
 
     /**
@@ -97,10 +97,10 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
     }
 
     /**
-     * @return low precision data point id for key/value pair, see {@link ExpressionIdUtil#createDataPointId(String, String)}
+     * @return low precision data point id for key/value pair, see {@link ExpressionIdUtil#createLpDataPointId(String, String)}
      */
-    public int getDataPointId() {
-        return dataPointId;
+    public int getLpDataPointId() {
+        return lpDataPointId;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
 
     @Override
     public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
-        return probabilities.fetchDataPointProbability(rootExpressionId, this.dataPointId);
+        return probabilities.fetchDataPointProbability(rootExpressionId, this.lpDataPointId);
     }
 
     @Override
@@ -126,12 +126,12 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
 
     @Override
     public String toString() {
-        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} [" + dataPointId + "] )";
+        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} [" + lpDataPointId + "] )";
     }
 
     @Override
-    public void prepareDataPointIds(DataPointDictionary dictionary) {
-        this.dataPointId = dictionary.lookup(dataPointId);
+    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
+        this.lpDataPointId = dictionary.lookup(lpDataPointId);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class BinaryMatchExpression implements BbqExpression, DataPointDictionary
         sb.append(argValue);
         sb.append("} ");
         sb.append("[");
-        sb.append(dataPointId);
+        sb.append(lpDataPointId);
         sb.append("] )");
         sb.append("\n");
     }

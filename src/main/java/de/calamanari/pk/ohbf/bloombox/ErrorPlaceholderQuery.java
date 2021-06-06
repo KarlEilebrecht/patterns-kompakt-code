@@ -69,12 +69,12 @@ public class ErrorPlaceholderQuery extends InternalQuery {
     }
 
     @Override
-    public void prepareDataPointIds(DataPointDictionary dictionary) {
+    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
         // no-op
     }
 
     @Override
-    public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
+    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector) {
         // no-op
     }
 

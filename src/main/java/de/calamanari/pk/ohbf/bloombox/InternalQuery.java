@@ -34,7 +34,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class InternalQuery implements DataPointOccurrenceAware, Serializable {
+public class InternalQuery implements PbDataPointOccurrenceAware, Serializable {
 
     private static final long serialVersionUID = -7248298268398187149L;
 
@@ -201,13 +201,13 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
     }
 
     @Override
-    public void prepareDataPointIds(DataPointDictionary dictionary) {
-        baseQuery.prepareDataPointIds(dictionary);
-        Arrays.stream(subQueries).forEach(q -> q.prepareDataPointIds(dictionary));
+    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
+        baseQuery.prepareLpDataPointIds(dictionary);
+        Arrays.stream(subQueries).forEach(q -> q.prepareLpDataPointIds(dictionary));
     }
 
     @Override
-    public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
+    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector) {
         registerDataPointOccurrencesIfRequired(this.name, baseQuery, collector);
         for (int i = 0; i < subQueries.length; i++) {
             this.registerDataPointOccurrencesIfRequired(this.getSubQueryName(i), subQueries[i], collector);
@@ -221,7 +221,7 @@ public class InternalQuery implements DataPointOccurrenceAware, Serializable {
      * @param query the currently processed bloom filter query
      * @param collector data point collector
      */
-    private void registerDataPointOccurrencesIfRequired(String queryName, BloomFilterQuery query, DataPointOccurrenceCollector collector) {
+    private void registerDataPointOccurrencesIfRequired(String queryName, BloomFilterQuery query, PbDataPointOccurrenceCollector collector) {
         if (collector.startCollection(query, queryName)) {
             query.registerDataPointOccurrences(collector);
         }

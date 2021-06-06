@@ -185,12 +185,12 @@ public class SimpleQueryDelegate implements QueryDelegate {
     }
 
     @Override
-    public void prepareDataPointIds(DataPointDictionary dictionary) {
-        Arrays.stream(queries).forEach(q -> q.prepareDataPointIds(dictionary));
+    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
+        Arrays.stream(queries).forEach(q -> q.prepareLpDataPointIds(dictionary));
     }
 
     @Override
-    public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
+    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector) {
         Arrays.stream(queries).forEach(q -> q.registerDataPointOccurrences(collector));
         for (int i = 0; i < queries.length; i++) {
             InternalQuery query = queries[i];
@@ -207,7 +207,7 @@ public class SimpleQueryDelegate implements QueryDelegate {
      * @param collector source of warnings based on data point usage
      * @param result to be updated
      */
-    protected void processMultiDpReferenceWarnings(InternalQuery query, DataPointOccurrenceCollector collector, BloomBoxQueryResult result) {
+    protected void processMultiDpReferenceWarnings(InternalQuery query, PbDataPointOccurrenceCollector collector, BloomBoxQueryResult result) {
         Map<String, Integer> maxOccurrenceMap = collector.getMaxOccurrenceMap();
         Integer max = maxOccurrenceMap.get(query.getName());
         if (max != null && max > 1) {

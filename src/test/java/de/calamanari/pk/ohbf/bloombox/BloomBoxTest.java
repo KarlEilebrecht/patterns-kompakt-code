@@ -415,7 +415,7 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Short running creation of bird strikes bloom box with probabilities 1.0, only needed on demand")
+    @Ignore("Short running creation of bird strikes bloom box with probabilities, only needed on demand")
     @Test
     public void testCreateBirdStrikesBloomBox_PB() throws Exception {
         this.numberOfColumns = 17;
@@ -459,18 +459,18 @@ public class BloomBoxTest {
 
     }
 
-    private List<DataPoint> createDataPointsWithRandomProbability(Map<String, String> argMap) {
-        List<DataPoint> res = new ArrayList<>(argMap.size());
+    private List<PbDataPoint> createDataPointsWithRandomProbability(Map<String, String> argMap) {
+        List<PbDataPoint> res = new ArrayList<>(argMap.size());
         for (Map.Entry<String, String> entry : argMap.entrySet()) {
-            res.add(new DataPoint(entry.getKey(), entry.getValue(), rand.nextDouble()));
+            res.add(new PbDataPoint(entry.getKey(), entry.getValue(), rand.nextDouble()));
         }
         return res;
     }
 
-    private List<DataPoint> createDataPointsWithFixedProbability(double prob, Map<String, String> argMap) {
-        List<DataPoint> res = new ArrayList<>(argMap.size());
+    private List<PbDataPoint> createDataPointsWithFixedProbability(double prob, Map<String, String> argMap) {
+        List<PbDataPoint> res = new ArrayList<>(argMap.size());
         for (Map.Entry<String, String> entry : argMap.entrySet()) {
-            res.add(new DataPoint(entry.getKey(), entry.getValue(), prob));
+            res.add(new PbDataPoint(entry.getKey(), entry.getValue(), prob));
         }
         return res;
     }
@@ -520,11 +520,117 @@ public class BloomBoxTest {
 
     }
 
+    @Ignore("Very long running, more than 5GB result")
+    @Test
+    public void testCreateEnrichedBirdStrikesBloomBox_PB() throws Exception {
+        this.numberOfColumns = 10018;
+        int numberOfRows = 99_404;
+        // @formatter:off
+        this.bloomBox = BloomBox.forNumberOfRows(numberOfRows)
+                                .withNumberOfColumns(this.numberOfColumns)
+                                .withFalsePositiveRateEpsilon(0.00001)
+                                .withDataStore( (vSize, numOfRows) -> new PbInMemoryDataStore(vSize, numOfRows.intValue()))
+                                .withFeeder((config, store) -> new PbDataStoreFeeder(config, store, false))
+                                .build();
+        // @formatter:on
+
+        Random rand = new Random(numberOfRows);
+        DistributedRandomTable randomTable = new DistributedRandomTable(rand, numberOfRows, 10_000);
+        LOGGER.debug("Random table complete");
+
+        PbDataStoreFeeder feeder = (PbDataStoreFeeder) bloomBox.getFeeder();
+
+        columnNames = null;
+        lineNumber = -1;
+
+        rand = new Random(823342);
+
+        // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
+        Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
+                .filter(Predicate.not(Map::isEmpty)).map(m -> this.enrichMap(m, randomTable)).map(am -> {
+                    List<PbDataPoint> res = createDataPointsWithFixedProbability(1.0d, am);
+                    res.add(new PbDataPoint("r25", "1", 0.25));
+                    return res;
+                }).forEach(pointList -> feeder.addRow(pointList));
+
+        assertEquals(numberOfRows, lineNumber);
+
+        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+
+        feeder.close();
+
+        File testBox = new File("/mytemp/birdstrikes_10K_PB.bbx");
+
+        bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
+                + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php\n"
+                + "Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the\n"
+                + "value is set to 1, otherwise 0, using a random distribution across the rows. Probability 1.0.\n"
+                + "One more column r25=1 with probabilitiy 0.25");
+
+        bloomBox.saveToFile(testBox);
+
+        assertEquals(numberOfRows, bloomBox.getDataStore().getNumberOfRows());
+        assertEquals(numberOfColumns, bloomBox.getConfig().getNumberOfInsertedElementsN());
+
+    }
+
+    // @Ignore("Long running, 2.9 GB result")
+    @Test
+    public void testCreateEnrichedBirdStrikesBloomBox_PBT() throws Exception {
+        this.numberOfColumns = 10018;
+        int numberOfRows = 99_404;
+        // @formatter:off
+        this.bloomBox = BloomBox.forNumberOfRows(numberOfRows)
+                                .withNumberOfColumns(this.numberOfColumns)
+                                .withFalsePositiveRateEpsilon(0.00001)
+                                .withFeeder((config, store) -> new PbThresholdBinaryFeeder(config, store, false))
+                                .build();
+        // @formatter:on
+
+        Random rand = new Random(numberOfRows);
+        DistributedRandomTable randomTable = new DistributedRandomTable(rand, numberOfRows, 10_000);
+        LOGGER.debug("Random table complete");
+
+        PbThresholdBinaryFeeder feeder = (PbThresholdBinaryFeeder) bloomBox.getFeeder();
+        feeder.setRandom(rand);
+
+        columnNames = null;
+        lineNumber = -1;
+
+        // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
+        Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
+                .filter(Predicate.not(Map::isEmpty)).map(m -> this.enrichMap(m, randomTable)).map(am -> {
+                    List<PbDataPoint> res = createDataPointsWithFixedProbability(1.0d, am);
+                    res.add(new PbDataPoint("r25", "1", 0.25));
+                    return res;
+                }).forEach(pointList -> feeder.addRow(pointList));
+
+        assertEquals(numberOfRows, lineNumber);
+
+        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+
+        feeder.close();
+
+        File testBox = new File("/mytemp/birdstrikes_10K_PBT.bbx");
+
+        bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
+                + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php\n"
+                + "Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the\n"
+                + "value is set to 1, otherwise 0, using a random distribution across the rows. Probability 1.0.\n"
+                + "One more column r25=1 with probability 0.25. During feeding all probabilities turned into a 0/1 decision.");
+
+        bloomBox.saveToFile(testBox);
+
+        assertEquals(numberOfRows, bloomBox.getDataStore().getNumberOfRows());
+        assertEquals(numberOfColumns, bloomBox.getConfig().getNumberOfInsertedElementsN());
+
+    }
+
     // @Ignore("Use this method to start the demo UI application")
     @Test
     public void testBloomBoxDemoUI() {
 
-        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_PB_r9999.bbx"), Collections.emptyMap());
+        this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_10K_PBT.bbx"), Collections.emptyMap());
 
         BloomBoxQueryRunner runner = new BloomBoxQueryRunner(bloomBox);
 

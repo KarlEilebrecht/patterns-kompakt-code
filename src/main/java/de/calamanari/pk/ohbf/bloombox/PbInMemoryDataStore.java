@@ -57,7 +57,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     /**
      * maps collected data point ids to short ids
      */
-    private final DataPointDictionary dataPointDictionary = new DataPointDictionary();
+    private final PbDataPointDictionary dataPointDictionary = new PbDataPointDictionary();
 
     /**
      * cached total size in bytes (after feeding complete)
@@ -199,8 +199,8 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
 
     @Override
     public void dispatch(QueryDelegate queryDelegate) {
-        queryDelegate.prepareDataPointIds(dataPointDictionary);
-        DataPointProbabilityManager dppFetcher = new DataPointProbabilityManager();
+        queryDelegate.prepareLpDataPointIds(dataPointDictionary);
+        PbDataPointProbabilityManager dppFetcher = new PbDataPointProbabilityManager();
         queryDelegate.registerDataPointOccurrences(dppFetcher);
         for (long rowIdx = 0; rowIdx < getNumberOfRows(); rowIdx++) {
             dppFetcher.initialize(this.compressedProbabilities[(int) rowIdx]);
@@ -218,24 +218,24 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     @Override
     public void feedRow(long[] rowVector, long rowIdx, long[] dppVector) {
         super.feedRow(rowVector, rowIdx);
-        collectAndMapDataPointIds(dppVector);
+        collectAndMapLpDataPointIds(dppVector);
         this.compressedProbabilities[(int) rowIdx] = ProbabilityVectorCodec.getInstance().encode(dppVector);
     }
 
     /**
-     * Collects dataPointIds in the dictionary and replaces the ids in the vector with the mapped ones.
+     * Collects lpDataPointIds in the dictionary and replaces the ids in the vector with the mapped ones.
      * <p>
      * On average this leads to shorter ids and better vector compression ratio.
      * 
      * @param dppVector vector with data point probabilities (will be modified)
      */
-    protected void collectAndMapDataPointIds(long[] dppVector) {
+    protected void collectAndMapLpDataPointIds(long[] dppVector) {
         for (int i = 0; i < dppVector.length; i++) {
             long dpp = dppVector[i];
-            int dataPointId = ProbabilityVectorCodec.decodeDataPointId(dpp);
-            int mappedDataPointId = dataPointDictionary.feed(dataPointId);
-            if (mappedDataPointId != dataPointId) {
-                dppVector[i] = ProbabilityVectorCodec.encodeDataPointProbability(mappedDataPointId, ProbabilityVectorCodec.decodeDataPointProbability(dpp));
+            int lpDataPointId = ProbabilityVectorCodec.decodeLpDataPointId(dpp);
+            int mappedLpDataPointId = dataPointDictionary.feed(lpDataPointId);
+            if (mappedLpDataPointId != lpDataPointId) {
+                dppVector[i] = ProbabilityVectorCodec.encodeDataPointProbability(mappedLpDataPointId, ProbabilityVectorCodec.decodeDataPointProbability(dpp));
             }
         }
         // by replacing the ids with the ones from the dictionary we have changed the order
@@ -270,13 +270,13 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
      */
     protected void writeDataPointDictionary(BufferedOutputStream bos) throws IOException {
         LOGGER.debug("Storing data point dictionary ...");
-        int[] dataPointIdsInLookupOrder = this.dataPointDictionary.toIntArray();
-        LOGGER.debug("Writing {} dataPointIds ...", dataPointIdsInLookupOrder.length);
+        int[] lpDataPointIdsInLookupOrder = this.dataPointDictionary.toIntArray();
+        LOGGER.debug("Writing {} lpDataPointIds ...", lpDataPointIdsInLookupOrder.length);
         byte[] buffer = new byte[4];
-        ProbabilityVectorCodec.writeInt(dataPointIdsInLookupOrder.length, buffer, 0);
+        ProbabilityVectorCodec.writeInt(lpDataPointIdsInLookupOrder.length, buffer, 0);
         bos.write(buffer);
-        for (int dataPointId : dataPointIdsInLookupOrder) {
-            ProbabilityVectorCodec.writeInt(dataPointId, buffer, 0);
+        for (int lpDataPointId : lpDataPointIdsInLookupOrder) {
+            ProbabilityVectorCodec.writeInt(lpDataPointId, buffer, 0);
             bos.write(buffer);
         }
         LOGGER.debug("Data point dictionary stored.");

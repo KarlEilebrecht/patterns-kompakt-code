@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * DataPoint
+ * PbDataPoint
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -26,19 +26,21 @@ import java.util.Comparator;
 import de.calamanari.pk.ohbf.bloombox.bbq.ExpressionIdUtil;
 
 /**
- * A {@link DataPoint} is a feeding element that represents a key/value combination with attached probability.
+ * A {@link PbDataPoint} is a feeding element that represents a key/value combination with attached probability.
+ * <p>
+ * The
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class DataPoint implements Serializable {
+public class PbDataPoint implements Serializable {
 
     private static final long serialVersionUID = 2084751987865254150L;
 
     /**
      * Allows ordering of data points according to their id
      */
-    public static final Comparator<DataPoint> ID_ORDER_COMPARATOR = (DataPoint dp1, DataPoint dp2) -> dp1.dataPointId - dp2.dataPointId;
+    public static final Comparator<PbDataPoint> ID_ORDER_COMPARATOR = (PbDataPoint dp1, PbDataPoint dp2) -> dp1.lpDataPointId - dp2.lpDataPointId;
 
     /**
      * Field name
@@ -56,19 +58,19 @@ public class DataPoint implements Serializable {
     private final double probability;
 
     /**
-     * low precision data point id to identify a point in a row
+     * low precision data point id to identify a point in a row (low precision, see {@link ExpressionIdUtil#createLpDataPointId(String, Object)}
      */
-    private final int dataPointId;
+    private final int lpDataPointId;
 
     /**
      * @param columnId field name
      * @param columnValue field value
      * @param probability <code>0.0 &lt;= value &lt;= 1.0</code>
      */
-    public DataPoint(String columnId, String columnValue, double probability) {
+    public PbDataPoint(String columnId, String columnValue, double probability) {
         this.columnId = columnId;
         this.columnValue = columnValue;
-        this.dataPointId = ExpressionIdUtil.createDataPointId(columnId, columnValue);
+        this.lpDataPointId = ExpressionIdUtil.createLpDataPointId(columnId, columnValue);
         this.probability = probability;
     }
 
@@ -94,16 +96,16 @@ public class DataPoint implements Serializable {
     }
 
     /**
-     * @return low precision data point id to identify a point in a row, see {@link ExpressionIdUtil#createDataPointId(String, Object)}
+     * @return low precision data point id to identify a point in a row, see {@link ExpressionIdUtil#createLpDataPointId(String, Object)}
      */
-    public int getDataPointId() {
-        return dataPointId;
+    public int getLpDataPointId() {
+        return lpDataPointId;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " [dataPointId=" + dataPointId + ", columnId=" + columnId + ", columnValue=" + columnValue + ", probability="
-                + probability + "]";
+        return this.getClass().getSimpleName() + " [lpDataPointId=" + lpDataPointId + ", columnId=" + columnId + ", columnValue=" + columnValue
+                + ", probability=" + probability + "]";
     }
 
 }

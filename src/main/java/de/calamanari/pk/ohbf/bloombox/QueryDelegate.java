@@ -30,7 +30,7 @@ import java.util.List;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface QueryDelegate extends DataPointOccurrenceAware, Serializable {
+public interface QueryDelegate extends PbDataPointOccurrenceAware, Serializable {
 
     /**
      * @return a flag per query that tells whether it is broken, this way a we can avoid executing an erratic query multiple times

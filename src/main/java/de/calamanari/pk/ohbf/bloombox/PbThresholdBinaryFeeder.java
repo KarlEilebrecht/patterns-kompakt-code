@@ -30,7 +30,7 @@ import de.calamanari.pk.ohbf.LwGenericOHBF;
  * Specialized store for feeding a {@link DefaultDataStore} or {@link FileDataStore} (but NOT a {@link PbDataStore}!) with probabilities.
  * <p>
  * The probabilities will be eliminated by treating the input binary (to put vs. not to put the data point). Therefore we crate a random value
- * <b><code>R</code></b> in range <code>[0.0 .. 1.0]</code> and apply the data point's probability {@link DataPoint#getProbability()} as a threshold
+ * <b><code>R</code></b> in range <code>[0.0 .. 1.0]</code> and apply the data point's probability {@link PbDataPoint#getProbability()} as a threshold
  * <b><code>T</code></b>. If <b><code>R &lt;= T</code></b> we put the data point, otherwise not.
  * <p>
  * This technique is intended for cases where a {@link PbDataStore} with attached probabilities would be too big or too slow or (often a problem) the variables
@@ -68,13 +68,13 @@ public class PbThresholdBinaryFeeder extends DataStoreFeeder {
      * @param dataPoints key/value combination (unique within a row) with attached probability
      * @return true if the row was added, false if the store was already full
      */
-    public boolean addRow(List<DataPoint> dataPoints) {
+    public boolean addRow(List<PbDataPoint> dataPoints) {
 
         synchronized (storeMonitor) {
             if (moveToNextRow()) {
                 LwGenericOHBF bloomFilter = bloomFilterHolder.get();
                 bloomFilter.clear();
-                for (DataPoint dataPoint : dataPoints) {
+                for (PbDataPoint dataPoint : dataPoints) {
                     if (random.nextDouble() <= dataPoint.getProbability()) {
                         bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
                     }

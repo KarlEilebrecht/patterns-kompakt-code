@@ -257,9 +257,9 @@ public class FloatEncodeTest {
     public void testDataPointId() {
 
         for (int i = 0; i < 100; i++) {
-            int dataPointId = ExpressionIdUtil.createDataPointId(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+            int lpDataPointId = ExpressionIdUtil.createLpDataPointId(UUID.randomUUID().toString(), UUID.randomUUID().toString());
 
-            System.out.println("" + dataPointId + " ----> " + MuhaiUtils.toPaddedBinaryString(dataPointId));
+            System.out.println("" + lpDataPointId + " ----> " + MuhaiUtils.toPaddedBinaryString(lpDataPointId));
         }
 
     }
@@ -321,11 +321,11 @@ public class FloatEncodeTest {
 
                 float probability = 0.0f; // rand.nextFloat();
 
-                int dataPointId = ExpressionIdUtil.createDataPointId(argName, argValue);
+                int lpDataPointId = ExpressionIdUtil.createLpDataPointId(argName, argValue);
 
-                vector[j] = ProbabilityVectorCodec.encodeDataPointProbability(dataPointId, probability);
+                vector[j] = ProbabilityVectorCodec.encodeDataPointProbability(lpDataPointId, probability);
 
-                assertEquals(dataPointId, ProbabilityVectorCodec.decodeDataPointId(vector[j]));
+                assertEquals(lpDataPointId, ProbabilityVectorCodec.decodeLpDataPointId(vector[j]));
                 assertEquals(probability, ProbabilityVectorCodec.decodeDataPointProbability(vector[j]), 0.00000001d);
 
             }
@@ -380,11 +380,11 @@ public class FloatEncodeTest {
     public void testEncodeDecode() {
         ProbabilityVectorCodec codec = ProbabilityVectorCodec.getInstance();
 
-        long encoded = codec.encodeDataPointId(1);
+        long encoded = codec.encodeLpDataPointId(1);
 
         System.out.println(MuhaiUtils.toPaddedBinaryString(encoded));
 
-        System.out.println(codec.decodeDataPointId(encoded));
+        System.out.println(codec.decodeLpDataPointId(encoded));
 
         // for (int i = 0; i < 1000; i++) {
         // System.out.println(MuhaiUtils.toPaddedBinaryString(codec.encodeDataPointId(i)));
@@ -405,10 +405,10 @@ public class FloatEncodeTest {
             long dpp = ProbabilityVectorCodec.encodeDataPointProbability(i, probability);
             System.out.println(MuhaiUtils.toPaddedBinaryString(dpp));
 
-            int dataPointId = ProbabilityVectorCodec.decodeDataPointId(dpp);
+            int lpDataPointId = ProbabilityVectorCodec.decodeLpDataPointId(dpp);
             double probabilityAfter = ProbabilityVectorCodec.decodeDataPointProbability(dpp);
 
-            assertEquals(i, dataPointId);
+            assertEquals(i, lpDataPointId);
 
             assertEquals(probability, probabilityAfter, 0.00000001d);
 

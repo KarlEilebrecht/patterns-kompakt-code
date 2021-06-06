@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * DataPointOccurrenceCollector
+ * PbDataPointOccurrenceCollector
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -24,21 +24,21 @@ import java.util.Map;
 import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
 
 /**
- * A {@link DataPointOccurrenceCollector} is used while scanning a complex nested expression to collect usages of data points. This allows us to detect repeated
- * usage of the same data point probabilities, see also comments in {@link DataPointProbabilityManager}.
+ * A {@link PbDataPointOccurrenceCollector} is used while scanning a complex nested expression to collect usages of data points. This allows us to detect
+ * repeated usage of the same data point probabilities, see also comments in {@link PbDataPointProbabilityManager}.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface DataPointOccurrenceCollector {
+public interface PbDataPointOccurrenceCollector {
 
     /**
      * Registers a data point occurrence
      * 
      * @param expressionId the expression using this data point
-     * @param dataPointId key/value identifier
+     * @param lpDataPointId key/value identifier
      */
-    public void addDataPointOccurrence(long expressionId, int dataPointId);
+    public void addDataPointOccurrence(long expressionId, int lpDataPointId);
 
     /**
      * Registers the given query and returns whether datapoints should be collected to avoid collecting multiple times

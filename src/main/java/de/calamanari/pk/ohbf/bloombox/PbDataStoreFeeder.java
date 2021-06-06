@@ -56,28 +56,28 @@ public class PbDataStoreFeeder extends DataStoreFeeder {
 
     @Override
     public boolean addRow(Map<String, ?> columnMap) {
-        return this.addRow(columnMap.entrySet().stream().map(e -> new DataPoint(e.getKey(), convertValueToString(e.getKey(), e.getValue()), 1.0d))
+        return this.addRow(columnMap.entrySet().stream().map(e -> new PbDataPoint(e.getKey(), convertValueToString(e.getKey(), e.getValue()), 1.0d))
                 .collect(Collectors.toList()));
     }
 
     @Override
     public boolean addRow(String[] columnIds, Object[] columnValues) {
-        List<DataPoint> dataPoints = new ArrayList<>(columnIds.length);
+        List<PbDataPoint> dataPoints = new ArrayList<>(columnIds.length);
         for (int i = 0; i < columnIds.length; i++) {
             String columnName = columnIds[i];
             Object columnValue = columnValues[i];
-            dataPoints.add(new DataPoint(columnName, convertValueToString(columnName, columnValue), 1.0d));
+            dataPoints.add(new PbDataPoint(columnName, convertValueToString(columnName, columnValue), 1.0d));
         }
         return this.addRow(dataPoints);
     }
 
     @Override
     public boolean addRow(List<String> columnIds, List<?> columnValues) {
-        List<DataPoint> dataPoints = new ArrayList<>(columnIds.size());
+        List<PbDataPoint> dataPoints = new ArrayList<>(columnIds.size());
         for (int i = 0; i < columnIds.size(); i++) {
             String columnName = columnIds.get(i);
             Object columnValue = columnValues.get(i);
-            dataPoints.add(new DataPoint(columnName, convertValueToString(columnName, columnValue), 1.0d));
+            dataPoints.add(new PbDataPoint(columnName, convertValueToString(columnName, columnValue), 1.0d));
         }
         return this.addRow(dataPoints);
     }
@@ -88,14 +88,14 @@ public class PbDataStoreFeeder extends DataStoreFeeder {
      * @param dataPoints key/value combination (unique within a row) with attached probability
      * @return true if the row was added, false if the store was already full
      */
-    public boolean addRow(List<DataPoint> dataPoints) {
+    public boolean addRow(List<PbDataPoint> dataPoints) {
         long[] dppVector = ProbabilityVectorCodec.createDataPointProbabilityVector(dataPoints);
         synchronized (storeMonitor) {
             if (moveToNextRow()) {
                 LwGenericOHBF bloomFilter = bloomFilterHolder.get();
                 bloomFilter.clear();
                 for (int i = 0; i < dataPoints.size(); i++) {
-                    DataPoint dataPoint = dataPoints.get(i);
+                    PbDataPoint dataPoint = dataPoints.get(i);
                     if (!ProbabilityVectorCodec.isEffectivelyZero(dataPoint.getProbability())) {
                         bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
                     }

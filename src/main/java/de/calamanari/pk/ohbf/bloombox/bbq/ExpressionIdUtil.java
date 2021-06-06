@@ -65,13 +65,13 @@ public class ExpressionIdUtil {
     }
 
     /**
-     * Creates a 31-bit positive integer identifying the given key/value pair.
+     * Creates a 31-bit positive integer identifying the given key/value pair (local, low-precision data point id).
      * 
      * @param argName column name
      * @param argValue column value
      * @return identifier EXCLUDING the range <code>[ 0 .. ({@value #MIN_GENERATED_DATA_POINT_ID} - 1) ]</code>
      */
-    public static int createDataPointId(String argName, Object argValue) {
+    public static int createLpDataPointId(String argName, Object argValue) {
         long id = ID_GENERATOR.createKey("dp", argName, argValue);
 
         int res = (int) (((id << 33L) >>> 33L) + MIN_GENERATED_DATA_POINT_ID);

@@ -24,10 +24,10 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.DataPointDictionary;
-import de.calamanari.pk.ohbf.bloombox.DataPointDictionaryAware;
-import de.calamanari.pk.ohbf.bloombox.DataPointOccurrenceAware;
-import de.calamanari.pk.ohbf.bloombox.DataPointOccurrenceCollector;
+import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionary;
+import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionaryAware;
+import de.calamanari.pk.ohbf.bloombox.PbDataPointOccurrenceAware;
+import de.calamanari.pk.ohbf.bloombox.PbDataPointOccurrenceCollector;
 import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
 
@@ -37,7 +37,7 @@ import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BloomFilterQuery implements DataPointOccurrenceAware, Serializable {
+public class BloomFilterQuery implements PbDataPointOccurrenceAware, Serializable {
 
     private static final long serialVersionUID = -2442237403084251215L;
 
@@ -101,15 +101,15 @@ public class BloomFilterQuery implements DataPointOccurrenceAware, Serializable 
     }
 
     @Override
-    public void prepareDataPointIds(DataPointDictionary dictionary) {
-        expression.collectUniqueDepthFirst().stream().filter(DataPointDictionaryAware.class::isInstance).map(DataPointDictionaryAware.class::cast)
-                .forEach(dpa -> dpa.prepareDataPointIds(dictionary));
+    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
+        expression.collectUniqueDepthFirst().stream().filter(PbDataPointDictionaryAware.class::isInstance).map(PbDataPointDictionaryAware.class::cast)
+                .forEach(dpa -> dpa.prepareLpDataPointIds(dictionary));
     }
 
     @Override
-    public void registerDataPointOccurrences(DataPointOccurrenceCollector collector) {
+    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector) {
         expression.collectLiterals().stream().filter(BinaryMatchExpression.class::isInstance).map(BinaryMatchExpression.class::cast)
-                .forEach(e -> collector.addDataPointOccurrence(expression.getExpressionId(), e.getDataPointId()));
+                .forEach(e -> collector.addDataPointOccurrence(expression.getExpressionId(), e.getLpDataPointId()));
     }
 
     /**

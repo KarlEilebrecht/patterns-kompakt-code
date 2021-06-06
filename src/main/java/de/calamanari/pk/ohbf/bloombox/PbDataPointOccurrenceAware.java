@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * DataPointDictionaryAware
+ * PbDataPointOccurrenceAware
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -21,17 +21,17 @@
 package de.calamanari.pk.ohbf.bloombox;
 
 /**
- * Elements implementing this interface are interested in the current data store's dictionary in preparation to execution.
+ * Elements implementing this interface are data point dictionary aware and they know about data point occurrences, they can report for collection.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface DataPointDictionaryAware {
+public interface PbDataPointOccurrenceAware extends PbDataPointDictionaryAware {
 
     /**
-     * Allows the data store to prepare the elements with the dictionary of this store
+     * Called to tell the element to inform the collector about data point usage.
      * 
-     * @param dictionary data point dictionary with id-mapping
+     * @param collector destination for collecting data point usage
      */
-    public void prepareDataPointIds(DataPointDictionary dictionary);
+    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector);
 }

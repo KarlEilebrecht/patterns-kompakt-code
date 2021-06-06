@@ -316,11 +316,11 @@ public class ProbabilityVectorCodec implements Serializable {
      * <li>Probability values &lt;0 fall to 0, values &gt;1.0 fall to 1.0.</li>
      * </ul>
      * 
-     * @param dataPointId key/value identifier
+     * @param lpDataPointId key/value identifier (local, low precision data point id)
      * @param probability value between 0.0 and 1.0 (incl.), 8 decimals precision
      * @return long
      */
-    public static long encodeDataPointProbability(int dataPointId, double probability) {
+    public static long encodeDataPointProbability(int lpDataPointId, double probability) {
         if (probability < 0) {
             probability = 0;
         }
@@ -328,7 +328,7 @@ public class ProbabilityVectorCodec implements Serializable {
             probability = 1.0;
         }
         long fixedProb8decimals = (long) (probability * PRECISION_FACTOR);
-        return (((long) (dataPointId)) << 32L) | fixedProb8decimals;
+        return (((long) (lpDataPointId)) << 32L) | fixedProb8decimals;
     }
 
     /**
@@ -350,18 +350,18 @@ public class ProbabilityVectorCodec implements Serializable {
     }
 
     /**
-     * @param dataPointId key/value identifier
+     * @param lpDataPointId key/value identifier (local, low precision data point id)
      * @return same bit sequence as if probability was zero (trailing bits 0)
      */
-    public static long encodeDataPointId(int dataPointId) {
-        return (((long) (dataPointId)) << 32L);
+    public static long encodeLpDataPointId(int lpDataPointId) {
+        return (((long) (lpDataPointId)) << 32L);
     }
 
     /**
      * @param dpp data point with probability
-     * @return dataPointId
+     * @return lpDataPointId (local, low precision data point id)
      */
-    public static int decodeDataPointId(long dpp) {
+    public static int decodeLpDataPointId(long dpp) {
         return (int) (dpp >>> 32L);
     }
 
@@ -378,10 +378,10 @@ public class ProbabilityVectorCodec implements Serializable {
     /**
      * Creates a (naturally) ordered vector of positive long values.
      * <p>
-     * The dataPointId is encoded in the first 32 bits and can be easily determined (compared) by doing a right-shift by 32 bits. This way the order of the
-     * returned array of DPPs reflects the natural order of the underlying dataPointIds.
+     * The lpDataPointId is encoded in the first 32 bits and can be easily determined (compared) by doing a right-shift by 32 bits. This way the order of the
+     * returned array of DPPs reflects the natural order of the underlying lpDataPointIds.
      * 
-     * @param dpProbabilities maps dataPointId to probability
+     * @param dpProbabilities maps lpDataPointId to probability
      * @return sorted array of DPPs
      */
     public static long[] createDataPointProbabilityVector(Map<Integer, Double> dpProbabilities) {
@@ -402,15 +402,15 @@ public class ProbabilityVectorCodec implements Serializable {
      * @return sorted array of DPPs
      * @throws BloomBoxException if the list contains the same dataPoint twice
      */
-    public static long[] createDataPointProbabilityVector(List<DataPoint> dataPoints) {
+    public static long[] createDataPointProbabilityVector(List<PbDataPoint> dataPoints) {
         long[] res = new long[dataPoints.size()];
-        List<DataPoint> idOrderedList = new ArrayList<>(dataPoints);
-        idOrderedList.sort(DataPoint.ID_ORDER_COMPARATOR);
-        DataPoint lastDataPoint = null;
+        List<PbDataPoint> idOrderedList = new ArrayList<>(dataPoints);
+        idOrderedList.sort(PbDataPoint.ID_ORDER_COMPARATOR);
+        PbDataPoint lastDataPoint = null;
         int shadows = 0;
         for (int i = 0; i < idOrderedList.size(); i++) {
-            DataPoint dataPoint = idOrderedList.get(i);
-            if (lastDataPoint != null && dataPoint.getDataPointId() == lastDataPoint.getDataPointId()) {
+            PbDataPoint dataPoint = idOrderedList.get(i);
+            if (lastDataPoint != null && dataPoint.getLpDataPointId() == lastDataPoint.getLpDataPointId()) {
                 if (lastDataPoint.getProbability() != dataPoint.getProbability()) {
                     LOGGER.warn(
                             "Probability of {} shadows the probability of {}. " + "This can be caused by improper feeding or a hash-collision within a row. "
@@ -420,7 +420,7 @@ public class ProbabilityVectorCodec implements Serializable {
                 shadows++;
             }
             else {
-                res[i - shadows] = encodeDataPointProbability(dataPoint.getDataPointId(), dataPoint.getProbability());
+                res[i - shadows] = encodeDataPointProbability(dataPoint.getLpDataPointId(), dataPoint.getProbability());
                 lastDataPoint = dataPoint;
             }
         }
@@ -435,14 +435,14 @@ public class ProbabilityVectorCodec implements Serializable {
      * Decodes the given dpps array into a map
      * 
      * @param dpps data proint probabilities
-     * @return map dataPointId to probability
+     * @return map lpDataPointId to probability
      */
     public static Map<Integer, Double> dataPointProbabilityVectorToMap(long[] dpps) {
         Map<Integer, Double> res = new HashMap<>(dpps.length);
         for (long dpp : dpps) {
-            int dataPointId = decodeDataPointId(dpp);
+            int lpDataPointId = decodeLpDataPointId(dpp);
             double probability = decodeDataPointProbability(dpp);
-            res.put(dataPointId, probability);
+            res.put(lpDataPointId, probability);
         }
         return res;
     }

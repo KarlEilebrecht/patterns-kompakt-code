@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * DataPointProbabilityManager
+ * PbDataPointProbabilityManager
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -27,7 +27,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
 import de.calamanari.pk.ohbf.bloombox.bbq.QuantumOptimizer;
 
 /**
- * The {@link DataPointProbabilityManager} is a {@link DataPointOccurrenceCollector} to scan queries once for data point usages.<br>
+ * The {@link PbDataPointProbabilityManager} is a {@link PbDataPointOccurrenceCollector} to scan queries once for data point usages.<br>
  * Its second role is the {@link DppFetcher} which allows fetching the stored probabilities at query execution time.<br>
  * This implementation gets prepared with an encoded (compressed) probability vector, which only gets inflated if needed (delayed operation).
  * <p>
@@ -50,7 +50,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.QuantumOptimizer;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class DataPointProbabilityManager implements DppFetcher, DataPointOccurrenceCollector {
+public class PbDataPointProbabilityManager implements DppFetcher, PbDataPointOccurrenceCollector {
 
     private static final long serialVersionUID = -6666709991440990978L;
 
@@ -85,7 +85,7 @@ public class DataPointProbabilityManager implements DppFetcher, DataPointOccurre
     private long currentQueryId = -1;
 
     @Override
-    public double fetchDataPointProbability(long rootExpressionId, int dataPointId) {
+    public double fetchDataPointProbability(long rootExpressionId, int lpDataPointId) {
 
         long[] dppVector = getDppVector();
 
@@ -100,12 +100,12 @@ public class DataPointProbabilityManager implements DppFetcher, DataPointOccurre
 
             int idxM = (int) Math.floor((idxL + idxR) / 2.0d);
 
-            int candidateDppId = ProbabilityVectorCodec.decodeDataPointId(dppVector[idxM]);
+            int candidateDppId = ProbabilityVectorCodec.decodeLpDataPointId(dppVector[idxM]);
 
-            if (candidateDppId < dataPointId) {
+            if (candidateDppId < lpDataPointId) {
                 idxL = idxM + 1;
             }
-            else if (candidateDppId > dataPointId) {
+            else if (candidateDppId > lpDataPointId) {
                 idxR = idxM - 1;
             }
             else {
@@ -116,7 +116,7 @@ public class DataPointProbabilityManager implements DppFetcher, DataPointOccurre
         }
 
         if (res > 0.0) {
-            Integer numberOfOccurrences = multiOccurrenceMap.get(createMultiOccurrenceKey(rootExpressionId, dataPointId));
+            Integer numberOfOccurrences = multiOccurrenceMap.get(createMultiOccurrenceKey(rootExpressionId, lpDataPointId));
             if (numberOfOccurrences != null && numberOfOccurrences > 1) {
                 // SQUAREROOT hack to mitigate the error because we do not know the correct value
                 double correction = Math.sqrt(res);
@@ -152,17 +152,17 @@ public class DataPointProbabilityManager implements DppFetcher, DataPointOccurre
      * Creates a key for the multi-occurrence map that identifies reuse of the same data point within an expression
      * 
      * @param rootExpressionId the expression using this data point
-     * @param dataPointId key/value identifier
+     * @param lpDataPointId key/value identifier
      * @return key for the multi-occurrence map
      */
-    private static final long createMultiOccurrenceKey(long rootExpressionId, int dataPointId) {
-        return (rootExpressionId << 32L) | dataPointId;
+    private static final long createMultiOccurrenceKey(long rootExpressionId, int lpDataPointId) {
+        return (rootExpressionId << 32L) | lpDataPointId;
     }
 
     @Override
-    public void addDataPointOccurrence(long expressionId, int dataPointId) {
+    public void addDataPointOccurrence(long expressionId, int lpDataPointId) {
         if (currentQueryId > -1) {
-            long key = createMultiOccurrenceKey(expressionId, dataPointId);
+            long key = createMultiOccurrenceKey(expressionId, lpDataPointId);
             Integer numberOfOccurrences = this.multiOccurrenceMap.get(key);
             numberOfOccurrences = numberOfOccurrences == null ? 1 : numberOfOccurrences + 1;
             if (numberOfOccurrences > 1) {
