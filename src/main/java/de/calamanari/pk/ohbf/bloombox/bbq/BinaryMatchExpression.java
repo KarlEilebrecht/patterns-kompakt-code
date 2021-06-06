@@ -81,21 +81,21 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
      * @return name of the "column"
      */
     public String getArgName() {
-        return this.dataPoint.getColumnId();
+        return dataPoint.getColumnId();
     }
 
     /**
      * @return column value to match
      */
     public String getArgValue() {
-        return this.getDataPoint().getColumnValue();
+        return dataPoint.getColumnValue();
     }
 
     /**
      * @return the data point (key/value) this match expression identifies
      */
     public DataPoint getDataPoint() {
-        return this.getDataPoint();
+        return dataPoint;
     }
 
     /**
