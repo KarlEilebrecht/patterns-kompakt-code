@@ -100,7 +100,7 @@ public class PbDataPointProbabilityManager implements DppFetcher, PbDataPointOcc
 
             int idxM = (int) Math.floor((idxL + idxR) / 2.0d);
 
-            int candidateDppId = ProbabilityVectorCodec.decodeLpDataPointId(dppVector[idxM]);
+            int candidateDppId = PbVectorCodec.decodeLpDataPointId(dppVector[idxM]);
 
             if (candidateDppId < lpDataPointId) {
                 idxL = idxM + 1;
@@ -110,7 +110,7 @@ public class PbDataPointProbabilityManager implements DppFetcher, PbDataPointOcc
             }
             else {
                 // strip data point id and return encoded float
-                res = ProbabilityVectorCodec.decodeDataPointProbability(dppVector[idxM]);
+                res = PbVectorCodec.decodeDataPointProbability(dppVector[idxM]);
                 break;
             }
         }
@@ -142,7 +142,7 @@ public class PbDataPointProbabilityManager implements DppFetcher, PbDataPointOcc
      */
     protected long[] getDppVector() {
         if (cachedDppVector == null) {
-            cachedDppVector = ProbabilityVectorCodec.getInstance().decode(compressedDPPs);
+            cachedDppVector = PbVectorCodec.getInstance().decode(compressedDPPs);
             compressedDPPs = null;
         }
         return cachedDppVector;

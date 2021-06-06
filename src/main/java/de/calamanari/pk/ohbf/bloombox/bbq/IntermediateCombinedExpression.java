@@ -23,10 +23,10 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
+import de.calamanari.pk.ohbf.bloombox.DataPoint;
 
 /**
  * Base class for expressions composed of other expressions to consolidate most of the logic.
@@ -54,8 +54,8 @@ public abstract class IntermediateCombinedExpression implements IntermediateExpr
     }
 
     @Override
-    public void collectRequiredBaseAttributes(Set<String> attributeNames) {
-        this.subExpressionList.forEach(e -> e.collectRequiredBaseAttributes(attributeNames));
+    public void collectRequiredDataPoints(Map<Long, DataPoint> dataPoints) {
+        this.subExpressionList.forEach(e -> e.collectRequiredDataPoints(dataPoints));
     }
 
     /**

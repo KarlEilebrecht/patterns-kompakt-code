@@ -22,9 +22,9 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
+import de.calamanari.pk.ohbf.bloombox.DataPoint;
 
 /**
  * An {@link IntermediateNotEquals} is the equivalent of the not-equals operator in BBQ language with field name and field value, e.g. <code>color!=blue</code>
@@ -94,7 +94,9 @@ public class IntermediateNotEquals implements IntermediateExpression {
     }
 
     @Override
-    public void collectRequiredBaseAttributes(Set<String> attributeNames) {
-        attributeNames.add(argName);
+    public void collectRequiredDataPoints(Map<Long, DataPoint> dataPoints) {
+        DataPoint dataPoint = new DataPoint(argName, argValue);
+        dataPoints.putIfAbsent(dataPoint.getDataPointId(), dataPoint);
     }
+
 }

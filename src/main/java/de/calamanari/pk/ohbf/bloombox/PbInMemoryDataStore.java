@@ -127,7 +127,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
             if (bytesFound != 4) {
                 throw new BloomBoxException(String.format("Error loading data point dictionary: 4 bytes expected, found %d - header: %s", bytesFound, header));
             }
-            int numberOfEntries = ProbabilityVectorCodec.readInt(buffer, 0);
+            int numberOfEntries = PbVectorCodec.readInt(buffer, 0);
 
             for (int i = 0; i < numberOfEntries; i++) {
                 bytesFound = bis.read(buffer, 0, 4);
@@ -135,7 +135,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
                     throw new BloomBoxException(String.format("Error loading data point dictionary (entry %d / %d): 4 bytes expected, found %d - header: %s",
                             (i + 1), numberOfEntries, bytesFound, header));
                 }
-                dataStore.dataPointDictionary.feed(ProbabilityVectorCodec.readInt(buffer, 0));
+                dataStore.dataPointDictionary.feed(PbVectorCodec.readInt(buffer, 0));
             }
             LOGGER.debug("Data point dictionary restored with {} entries.", numberOfEntries);
         }
@@ -167,7 +167,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
                     throw new BloomBoxException(
                             String.format("Error loading probability vectors (row %d): 4 bytes expected, found %d - header: %s", rowIdx, bytesFound, header));
                 }
-                int entryLength = ProbabilityVectorCodec.readInt(buffer, 0);
+                int entryLength = PbVectorCodec.readInt(buffer, 0);
                 byte[] compressedDpp = new byte[entryLength + 4];
                 System.arraycopy(buffer, 0, compressedDpp, 0, 4);
                 bytesFound = bis.read(compressedDpp, 4, entryLength);
@@ -219,7 +219,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     public void feedRow(long[] rowVector, long rowIdx, long[] dppVector) {
         super.feedRow(rowVector, rowIdx);
         collectAndMapLpDataPointIds(dppVector);
-        this.compressedProbabilities[(int) rowIdx] = ProbabilityVectorCodec.getInstance().encode(dppVector);
+        this.compressedProbabilities[(int) rowIdx] = PbVectorCodec.getInstance().encode(dppVector);
     }
 
     /**
@@ -232,10 +232,10 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     protected void collectAndMapLpDataPointIds(long[] dppVector) {
         for (int i = 0; i < dppVector.length; i++) {
             long dpp = dppVector[i];
-            int lpDataPointId = ProbabilityVectorCodec.decodeLpDataPointId(dpp);
+            int lpDataPointId = PbVectorCodec.decodeLpDataPointId(dpp);
             int mappedLpDataPointId = dataPointDictionary.feed(lpDataPointId);
             if (mappedLpDataPointId != lpDataPointId) {
-                dppVector[i] = ProbabilityVectorCodec.encodeDataPointProbability(mappedLpDataPointId, ProbabilityVectorCodec.decodeDataPointProbability(dpp));
+                dppVector[i] = PbVectorCodec.encodeDataPointProbability(mappedLpDataPointId, PbVectorCodec.decodeDataPointProbability(dpp));
             }
         }
         // by replacing the ids with the ones from the dictionary we have changed the order
@@ -273,10 +273,10 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
         int[] lpDataPointIdsInLookupOrder = this.dataPointDictionary.toIntArray();
         LOGGER.debug("Writing {} lpDataPointIds ...", lpDataPointIdsInLookupOrder.length);
         byte[] buffer = new byte[4];
-        ProbabilityVectorCodec.writeInt(lpDataPointIdsInLookupOrder.length, buffer, 0);
+        PbVectorCodec.writeInt(lpDataPointIdsInLookupOrder.length, buffer, 0);
         bos.write(buffer);
         for (int lpDataPointId : lpDataPointIdsInLookupOrder) {
-            ProbabilityVectorCodec.writeInt(lpDataPointId, buffer, 0);
+            PbVectorCodec.writeInt(lpDataPointId, buffer, 0);
             bos.write(buffer);
         }
         LOGGER.debug("Data point dictionary stored.");

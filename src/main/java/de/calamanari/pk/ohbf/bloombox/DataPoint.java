@@ -27,8 +27,11 @@ import de.calamanari.pk.ohbf.bloombox.bbq.ExpressionIdUtil;
 
 /**
  * A {@link DataPoint} globally unique identifies a key/value combination like <code>color=blue</code>, see also
- * {@link ExpressionIdUtil#createDataPointId(String, Object)}. In the context of a row the absence or presence of a data point marks the binary yes/no decision
- * whether an attribute/value combination exists in that row or now. In the above example: <code>color=blue</code>.<br>
+ * {@link ExpressionIdUtil#createDataPointId(String, Object)}. By collecting all data points referenced in a query you can find out what source data needs to be
+ * included for feeding the underlying BloomBox.
+ * <p>
+ * In the context of a row the absence or presence of a data point marks the binary yes/no decision whether an attribute/value combination exists in that row or
+ * not. In the above example: <code>color=blue</code>.<br>
  * In a scenario with multi-value-support for a given attribute like <code>favoriteColor</code> both data points <code>favoriteColor=blue</code> and
  * <code>favoriteColor=red</code> could be present in the same row.
  * <p>

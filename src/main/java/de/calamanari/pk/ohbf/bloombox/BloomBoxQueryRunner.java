@@ -25,8 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -338,15 +337,15 @@ public class BloomBoxQueryRunner {
      * @param queryString base or sub query
      * @param result target collection to be updated
      */
-    private static void collectRequiredAttributes(String queryName, String queryString, Set<String> result) {
-        LOGGER.trace("Collecting referenced attributes in query '{}' from queryString= {} ...", queryName, queryString);
+    private static void collectRequiredDataPoints(String queryName, String queryString, Map<Long, DataPoint> dataPoints) {
+        LOGGER.trace("Collecting referenced data points in query '{}' from queryString= {} ...", queryName, queryString);
         try {
             IntermediateExpressionBuilder builder = new IntermediateExpressionBuilder();
             parseBbqQuery(queryString, builder);
-            builder.getResult().collectRequiredBaseAttributes(result);
+            builder.getResult().collectRequiredDataPoints(dataPoints);
         }
         catch (RuntimeException ex) {
-            LOGGER.error("Could not collect required attributes of query '{}': queryString={}", queryName, queryString, ex);
+            LOGGER.error("Could not collect required data points of query '{}': queryString={}", queryName, queryString, ex);
         }
     }
 
@@ -371,27 +370,27 @@ public class BloomBoxQueryRunner {
     }
 
     /**
-     * Collects all referenced base attributes in the given query bundle
+     * Collects all referenced data points (key/value combinations) in the given query bundle
      * <p>
      * <b>Note:</b> This method won't fail on invalid queries, it just does not count its required attributes.
      *
      * @param bundle query bundle
-     * @return set with the names of all base attributes referenced in queries of the given bundle, in alphabetical order
+     * @return map (key=data point id) with all data points referenced by the given query bundle, the map is ordered by key
      */
-    public static Set<String> collectRequiredAttributes(QueryBundle bundle) {
-        Set<String> res = new TreeSet<>();
+    public static Map<Long, DataPoint> collectRequiredDataPoints(QueryBundle bundle) {
+        Map<Long, DataPoint> res = new TreeMap<>();
         if (bundle.getBaseQueries() != null) {
             for (BloomBoxQuery baseQuery : bundle.getBaseQueries()) {
-                collectRequiredAttributes(baseQuery.getName(), baseQuery.getQuery(), res);
+                collectRequiredDataPoints(baseQuery.getName(), baseQuery.getQuery(), res);
                 if (baseQuery.getSubQueryMap() != null) {
-                    baseQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredAttributes(entry.getKey(), entry.getValue(), res));
+                    baseQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredDataPoints(entry.getKey(), entry.getValue(), res));
                 }
             }
         }
         if (bundle.getPostQueries() != null) {
             for (BloomBoxQuery postQuery : bundle.getPostQueries()) {
                 if (postQuery.getSubQueryMap() != null) {
-                    postQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredAttributes(entry.getKey(), entry.getValue(), res));
+                    postQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredDataPoints(entry.getKey(), entry.getValue(), res));
                 }
             }
         }

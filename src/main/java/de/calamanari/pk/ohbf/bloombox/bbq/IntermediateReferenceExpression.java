@@ -22,9 +22,9 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
+import de.calamanari.pk.ohbf.bloombox.DataPoint;
 
 /**
  * An {@link IntermediateReferenceExpression} is an alias to an existing base or a previous post expression.
@@ -105,7 +105,7 @@ public class IntermediateReferenceExpression implements IntermediateExpression {
     }
 
     @Override
-    public void collectRequiredBaseAttributes(Set<String> attributeNames) {
+    public void collectRequiredDataPoints(Map<Long, DataPoint> dataPoints) {
         // references are opaque and references must be collected otherwise
     }
 }

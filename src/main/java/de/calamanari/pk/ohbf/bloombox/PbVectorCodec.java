@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * ProbabilityVectorCodec
+ * PbVectorCodec
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link ProbabilityVectorCodec} deals with data point probabilities that can be encoded in a long array and compressed.
+ * The {@link PbVectorCodec} deals with data point probabilities that can be encoded in a long array and compressed.
  * <p>
  * Data point probabilities are values in range 0.0 .. 1.0 (incl.), encoded as fixed-point with 8 decimals precision.
  * <p>
@@ -43,11 +43,11 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class ProbabilityVectorCodec implements Serializable {
+public class PbVectorCodec implements Serializable {
 
     private static final long serialVersionUID = -8203709991440990978L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProbabilityVectorCodec.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PbVectorCodec.class);
 
     /**
      * Factor for fix-point encoding with 8 decimals
@@ -67,7 +67,7 @@ public class ProbabilityVectorCodec implements Serializable {
     /**
      * SINGLETON
      */
-    private static final ProbabilityVectorCodec DEFAULT_CODEC = new ProbabilityVectorCodec();
+    private static final PbVectorCodec DEFAULT_CODEC = new PbVectorCodec();
 
     /**
      * deflater for compression
@@ -79,14 +79,14 @@ public class ProbabilityVectorCodec implements Serializable {
      */
     protected final transient ThreadLocal<Inflater> inflaterHolder = ThreadLocal.withInitial(() -> new Inflater(true));
 
-    protected ProbabilityVectorCodec() {
+    protected PbVectorCodec() {
         // nothing to do here
     }
 
     /**
      * @return SINGLETON instance
      */
-    public static ProbabilityVectorCodec getInstance() {
+    public static PbVectorCodec getInstance() {
         return DEFAULT_CODEC;
     }
 

@@ -89,14 +89,14 @@ public class PbDataStoreFeeder extends DataStoreFeeder {
      * @return true if the row was added, false if the store was already full
      */
     public boolean addRow(List<PbDataPoint> dataPoints) {
-        long[] dppVector = ProbabilityVectorCodec.createDataPointProbabilityVector(dataPoints);
+        long[] dppVector = PbVectorCodec.createDataPointProbabilityVector(dataPoints);
         synchronized (storeMonitor) {
             if (moveToNextRow()) {
                 LwGenericOHBF bloomFilter = bloomFilterHolder.get();
                 bloomFilter.clear();
                 for (int i = 0; i < dataPoints.size(); i++) {
                     PbDataPoint dataPoint = dataPoints.get(i);
-                    if (!ProbabilityVectorCodec.isEffectivelyZero(dataPoint.getProbability())) {
+                    if (!PbVectorCodec.isEffectivelyZero(dataPoint.getProbability())) {
                         bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
                     }
                 }

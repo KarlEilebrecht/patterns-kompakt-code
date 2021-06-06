@@ -44,7 +44,7 @@ This idea is kind of ambitious because for many rows with many columns it needs 
 
 To save space, I reduced the precision from floating point to fixed-point precision with 8 decimals, and I compress the probability vector.
 
-Counting works different than for a normal BloomBox. The probabilities get computed to be summed-up. Interestingly, the precision profits from the FBO because due to the lookup per data point (see [DataPointProbabilityManager](DataPointProbabilityManager.java) false-positives get practically eliminated.
+Counting works different than for a normal BloomBox. The probabilities get computed to be summed-up. Interestingly, the precision profits from the FBO because due to the lookup per data point (see [PbDataPointProbabilityManager](PbDataPointProbabilityManager.java) false-positives get practically eliminated.
 
 Besides the still very high memory consumption there is another caveat related to this concept: data point multi-references. If a query references the same data point (and thus its probability value) twice or more often, the easy way of computation becomes wrong.
 
