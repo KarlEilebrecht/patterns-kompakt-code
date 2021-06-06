@@ -405,7 +405,7 @@ public class ProbabilityVectorCodec implements Serializable {
     public static long[] createDataPointProbabilityVector(List<PbDataPoint> dataPoints) {
         long[] res = new long[dataPoints.size()];
         List<PbDataPoint> idOrderedList = new ArrayList<>(dataPoints);
-        idOrderedList.sort(PbDataPoint.ID_ORDER_COMPARATOR);
+        idOrderedList.sort(PbDataPoint.LPID_ORDER_COMPARATOR);
         PbDataPoint lastDataPoint = null;
         int shadows = 0;
         for (int i = 0; i < idOrderedList.size(); i++) {

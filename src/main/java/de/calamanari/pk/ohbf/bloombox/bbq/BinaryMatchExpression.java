@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import de.calamanari.pk.ohbf.bloombox.DataPoint;
 import de.calamanari.pk.ohbf.bloombox.DppFetcher;
 import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionary;
 import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionaryAware;
@@ -49,24 +50,14 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
     private final long[] pattern;
 
     /**
-     * unique id of the data point (key/value combination)
+     * unique data point (key/value combination)
      */
-    private final long dataPointId;
+    private final DataPoint dataPoint;
 
     /**
      * unique id of this expression
      */
     private final long expressionId;
-
-    /**
-     * name of the "column"
-     */
-    private final String argName;
-
-    /**
-     * column value to match
-     */
-    private final String argValue;
 
     /**
      * The local low-precision data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createLpDataPointId(String, String)}<br>
@@ -80,33 +71,31 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
      * @param pattern bloom filter vector to match against the box
      */
     public BinaryMatchExpression(String argName, String argValue, long[] pattern) {
-        this.argName = argName;
-        this.argValue = argValue;
+        this.dataPoint = new DataPoint(argName, argValue);
         this.pattern = Arrays.copyOf(pattern, pattern.length);
-        this.dataPointId = ExpressionIdUtil.createDataPointId(argName, argValue);
-        this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch" + this.dataPointId, this.pattern);
-        this.lpDataPointId = ExpressionIdUtil.createLpDataPointId(this.dataPointId);
+        this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch" + this.getDataPoint().getDataPointId(), this.pattern);
+        this.lpDataPointId = ExpressionIdUtil.createLpDataPointId(this.dataPoint.getDataPointId());
     }
 
     /**
      * @return name of the "column"
      */
     public String getArgName() {
-        return argName;
+        return this.dataPoint.getColumnId();
     }
 
     /**
      * @return column value to match
      */
     public String getArgValue() {
-        return argValue;
+        return this.getDataPoint().getColumnValue();
     }
 
     /**
-     * @return globally unique data point id for key/value pair, see {@link ExpressionIdUtil#createDataPointId(String, Object)}
+     * @return the data point (key/value) this match expression identifies
      */
-    public long getDataPointId() {
-        return dataPointId;
+    public DataPoint getDataPoint() {
+        return this.getDataPoint();
     }
 
     /**
@@ -145,8 +134,8 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
 
     @Override
     public String toString() {
-        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + argName + "==" + argValue + "} DP" + dataPointId + "["
-                + lpDataPointId + "] )";
+        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + dataPoint.getColumnId() + "==" + dataPoint.getColumnValue()
+                + "} DP" + dataPoint.getDataPointId() + "[" + lpDataPointId + "] )";
     }
 
     @Override
@@ -161,12 +150,12 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
         sb.append("MATCH ( ");
         sb.append(expressionId);
         sb.append(" -> {");
-        sb.append(argName);
+        sb.append(dataPoint.getColumnId());
         sb.append("==");
-        sb.append(argValue);
+        sb.append(dataPoint.getColumnValue());
         sb.append("} ");
         sb.append("DP");
-        sb.append(dataPointId);
+        sb.append(dataPoint.getDataPointId());
         sb.append(" )");
         sb.append("\n");
     }
