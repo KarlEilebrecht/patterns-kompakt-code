@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.ohbf.BloomFilterConfig;
-import de.calamanari.pk.ohbf.LwGenericOHBF;
 
 /**
  * Specialized store feeder for a {@link PbDataStore} with attached probabilities.
@@ -90,22 +89,19 @@ public class PbDataStoreFeeder extends DataStoreFeeder {
      */
     public boolean addRow(List<PbDataPoint> dataPoints) {
         long[] dppVector = PbVectorCodec.createDataPointProbabilityVector(dataPoints);
-        synchronized (storeMonitor) {
-            if (moveToNextRow()) {
-                LwGenericOHBF bloomFilter = bloomFilterHolder.get();
-                bloomFilter.clear();
-                for (int i = 0; i < dataPoints.size(); i++) {
-                    PbDataPoint dataPoint = dataPoints.get(i);
-                    if (!PbVectorCodec.isEffectivelyZero(dataPoint.getProbability())) {
-                        bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
-                    }
+        if (moveToNextRow()) {
+            bloomFilter.clear();
+            for (int i = 0; i < dataPoints.size(); i++) {
+                PbDataPoint dataPoint = dataPoints.get(i);
+                if (!PbVectorCodec.isEffectivelyZero(dataPoint.getProbability())) {
+                    bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
                 }
-                ((PbDataStore) dataStore).feedRow(bloomFilter.getBitVectorAsLongArray(), currentRowIndex, dppVector);
-                return true;
             }
-            else {
-                return false;
-            }
+            ((PbDataStore) dataStore).feedRow(bloomFilter.getBitVectorAsLongArray(), currentRowIndex, dppVector);
+            return true;
+        }
+        else {
+            return false;
         }
     }
 

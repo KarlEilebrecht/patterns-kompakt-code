@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Random;
 
 import de.calamanari.pk.ohbf.BloomFilterConfig;
-import de.calamanari.pk.ohbf.LwGenericOHBF;
 
 /**
  * Specialized store for feeding a {@link DefaultDataStore} or {@link FileDataStore} (but NOT a {@link PbDataStore}!) with probabilities.
@@ -70,21 +69,18 @@ public class PbThresholdBinaryFeeder extends DataStoreFeeder {
      */
     public boolean addRow(List<PbDataPoint> dataPoints) {
 
-        synchronized (storeMonitor) {
-            if (moveToNextRow()) {
-                LwGenericOHBF bloomFilter = bloomFilterHolder.get();
-                bloomFilter.clear();
-                for (PbDataPoint dataPoint : dataPoints) {
-                    if (random.nextDouble() <= dataPoint.getProbability()) {
-                        bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
-                    }
+        if (moveToNextRow()) {
+            bloomFilter.clear();
+            for (PbDataPoint dataPoint : dataPoints) {
+                if (random.nextDouble() <= dataPoint.getProbability()) {
+                    bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
                 }
-                dataStore.feedRow(bloomFilter.getBitVectorAsLongArray(), currentRowIndex);
-                return true;
             }
-            else {
-                return false;
-            }
+            dataStore.feedRow(bloomFilter.getBitVectorAsLongArray(), currentRowIndex);
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
