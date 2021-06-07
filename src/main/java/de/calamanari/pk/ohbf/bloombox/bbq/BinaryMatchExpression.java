@@ -63,7 +63,7 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
      * The local low-precision data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createLpDataPointId(String, String)}<br>
      * This is the only mutable id, because it might change in preparation to the execution, see {@link #prepareLpDataPointIds(PbDataPointDictionary)}
      */
-    private int lpDataPointId;
+    private int lpDataPointId = -1;
 
     /**
      * @param argName name of the "column"
@@ -74,7 +74,6 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
         this.dataPoint = new DataPoint(argName, argValue);
         this.pattern = Arrays.copyOf(pattern, pattern.length);
         this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch" + this.getDataPoint().getDataPointId(), this.pattern);
-        this.lpDataPointId = ExpressionIdUtil.createLpDataPointId(this.dataPoint.getDataPointId());
     }
 
     /**
@@ -104,6 +103,9 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
      * @return low precision data point id for key/value pair, see {@link ExpressionIdUtil#createLpDataPointId(String, Object)}
      */
     public int getLpDataPointId() {
+        if (lpDataPointId < 0) {
+            lpDataPointId = ExpressionIdUtil.createLpDataPointId(this.dataPoint.getDataPointId());
+        }
         return lpDataPointId;
     }
 
@@ -135,7 +137,7 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
     @Override
     public String toString() {
         return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + dataPoint.getColumnId() + "==" + dataPoint.getColumnValue()
-                + "} DP" + dataPoint.getDataPointId() + "[" + lpDataPointId + "] )";
+                + "} DP" + dataPoint.getDataPointId() + (lpDataPointId < 0 ? " )" : "[" + lpDataPointId + "] )");
     }
 
     @Override
@@ -156,6 +158,11 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
         sb.append("} ");
         sb.append("DP");
         sb.append(dataPoint.getDataPointId());
+        if (lpDataPointId >= 0) {
+            sb.append("[");
+            sb.append(lpDataPointId);
+            sb.append("]");
+        }
         sb.append(" )");
         sb.append("\n");
     }
