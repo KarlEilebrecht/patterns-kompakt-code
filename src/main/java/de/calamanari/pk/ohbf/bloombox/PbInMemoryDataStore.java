@@ -320,4 +320,14 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
         }
     }
 
+    @Override
+    public void mergeRow(long[] rowVector, long rowIdx) {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + " does not support row merging.");
+    }
+
+    @Override
+    public boolean isRowMergeCapable() {
+        return false;
+    }
+
 }

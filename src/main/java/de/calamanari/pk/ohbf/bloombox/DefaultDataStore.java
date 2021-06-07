@@ -172,6 +172,19 @@ public class DefaultDataStore implements BloomBoxDataStore {
     }
 
     @Override
+    public void mergeRow(long[] rowVector, long rowIdx) {
+        int offset = (int) (rowIdx * vectorSize);
+        for (int i = 0; i < vectorSize; i++) {
+            vector[offset + i] = vector[offset + i] | rowVector[i];
+        }
+    }
+
+    @Override
+    public boolean isRowMergeCapable() {
+        return true;
+    }
+
+    @Override
     public int getVectorSize() {
         return vectorSize;
     }

@@ -89,6 +89,24 @@ public interface BloomBoxDataStore extends Serializable {
     public void feedRow(long[] rowVector, long rowIdx);
 
     /**
+     * This method assumes that the give row exists in the box and merges (logical OR) the given filter vector into the existing row vector in the box.
+     * 
+     * @param rowVector bloom filter vector to be merged
+     * @param rowIdx index of the row to be merged, stores without random access support may require strict upcounting
+     * @throws UnsupportedOperationException (default behavior) if this data store cannot merge rows (see {@link #isRowMergeCapable()}).
+     */
+    default void mergeRow(long[] rowVector, long rowIdx) {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + " does not support row merging.");
+    }
+
+    /**
+     * @return true if the method {@link #mergeRow(long[], long)} is implemented, false by default
+     */
+    default boolean isRowMergeCapable() {
+        return false;
+    }
+
+    /**
      * Writes the store to the given stream, individual implementations may decide only to store the header with metadata.
      * <p>
      * The method first writes a {@link DataStoreHeader} (or subclass), see {@link HeaderUtil#writeDataStoreHeader(OutputStream, DataStoreHeader)} followed by a
