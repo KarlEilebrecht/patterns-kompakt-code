@@ -142,7 +142,7 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
 
     @Override
     public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
-        this.lpDataPointId = dictionary.lookup(lpDataPointId);
+        this.lpDataPointId = dictionary.lookup(this.getLpDataPointId());
     }
 
     @Override

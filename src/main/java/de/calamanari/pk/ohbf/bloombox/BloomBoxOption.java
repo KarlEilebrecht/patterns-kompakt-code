@@ -32,7 +32,12 @@ public enum BloomBoxOption {
     /**
      * boolean option, if set to true protocol should be written
      */
-    PROTOCOL("protocol");
+    PROTOCOL("protocol"),
+
+    /**
+     * boolean option, if true and supported by the underlying data store query will be executed with multiple threads
+     */
+    PARALLEL_QUERY("parallel");
 
     /**
      * name in map for this option

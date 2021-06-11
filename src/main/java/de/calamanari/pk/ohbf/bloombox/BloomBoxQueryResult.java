@@ -299,6 +299,12 @@ public class BloomBoxQueryResult implements Serializable {
             }
             this.protocol.addProtocol(otherResult.protocol);
         }
+        if (otherResult.errorMessage != null && this.errorMessage == null) {
+            this.errorMessage = otherResult.errorMessage;
+        }
+        if (otherResult.warningMessage != null && this.warningMessage == null) {
+            this.warningMessage = otherResult.warningMessage;
+        }
     }
 
     /**
@@ -394,4 +400,16 @@ public class BloomBoxQueryResult implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * @return empty duplicate of this result, structurally equivalent but independent counts, messages and protocol
+     */
+    public BloomBoxQueryResult createSpawn() {
+        BloomBoxQueryResult res = new BloomBoxQueryResult();
+        res.name = this.name;
+        res.subQueryCounts = this.subQueryCounts == null ? null : new long[this.subQueryCounts.length];
+        res.subQueryLabels = this.subQueryLabels;
+        res.probabilityResult = this.probabilityResult == null ? null : this.probabilityResult.createSpawn();
+        res.executionId = this.executionId;
+        return res;
+    }
 }

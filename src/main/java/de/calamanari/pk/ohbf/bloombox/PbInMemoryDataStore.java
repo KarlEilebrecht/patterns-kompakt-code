@@ -198,13 +198,18 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     }
 
     @Override
-    public void dispatch(QueryDelegate queryDelegate) {
+    public <Q extends QueryDelegate<Q>> void dispatch(Q queryDelegate) {
         queryDelegate.prepareLpDataPointIds(dataPointDictionary);
+        super.dispatch(queryDelegate);
+    }
+
+    @Override
+    protected <Q extends QueryDelegate<Q>> void dispatchPartition(Q queryDelegate, int startRowIdx, int endRowIdx) {
         PbDataPointProbabilityManager dppFetcher = new PbDataPointProbabilityManager();
         queryDelegate.registerDataPointOccurrences(dppFetcher);
-        for (long rowIdx = 0; rowIdx < getNumberOfRows(); rowIdx++) {
-            dppFetcher.initialize(this.compressedProbabilities[(int) rowIdx]);
-            queryDelegate.execute(vector, (int) (rowIdx * vectorSize), dppFetcher);
+        for (int rowIdx = startRowIdx; rowIdx < endRowIdx; rowIdx++) {
+            dppFetcher.initialize(this.compressedProbabilities[rowIdx]);
+            queryDelegate.execute(vector, rowIdx * vectorSize, dppFetcher);
         }
     }
 

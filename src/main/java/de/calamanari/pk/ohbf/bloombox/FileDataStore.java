@@ -300,7 +300,7 @@ public class FileDataStore implements BloomBoxDataStore {
     }
 
     @Override
-    public void dispatch(QueryDelegate queryDelegate) {
+    public <Q extends QueryDelegate<Q>> void dispatch(Q queryDelegate) {
         long[] vector = new long[vectorSize];
         byte[] buffer = new byte[8];
         try (FileInputStream fis = new FileInputStream(file); BufferedInputStream bis = new BufferedInputStream(fis, bufferSize)) {

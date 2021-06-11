@@ -77,8 +77,9 @@ public interface BloomBoxDataStore extends Serializable {
      * Passes a query to the store expecting the query to be executed on each record's vector in the store
      * 
      * @param queryDelegate query to be matched against each record in the store
+     * @param <Q> the delegate type
      */
-    public void dispatch(QueryDelegate queryDelegate);
+    public <Q extends QueryDelegate<Q>> void dispatch(Q queryDelegate);
 
     /**
      * Feeds a single row (bloom filter vector per record) into the the store

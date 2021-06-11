@@ -28,9 +28,9 @@ import java.util.List;
  * state.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
- *
+ * @param <Q> the delegate type for spawning
  */
-public interface QueryDelegate extends PbDataPointOccurrenceAware, Serializable {
+public interface QueryDelegate<Q extends QueryDelegate<Q>> extends PbDataPointOccurrenceAware, Serializable {
 
     /**
      * @return a flag per query that tells whether it is broken, this way a we can avoid executing an erratic query multiple times
@@ -77,4 +77,18 @@ public interface QueryDelegate extends PbDataPointOccurrenceAware, Serializable 
         this.execute(vector, startPos);
     }
 
+    /**
+     * Spawns an independent query delegate to process partitions independently. Results from spawned instances will be finally merged into the mother instance
+     * using {@link #addSpawnResults(QueryDelegate)}.
+     * 
+     * @return copy of this delegate with empty and independent results
+     */
+    public Q createSpawn();
+
+    /**
+     * Adds the results from the given spawn to this (mother) instance.
+     * 
+     * @param spawn source of partial results
+     */
+    public void addSpawnResults(Q spawn);
 }

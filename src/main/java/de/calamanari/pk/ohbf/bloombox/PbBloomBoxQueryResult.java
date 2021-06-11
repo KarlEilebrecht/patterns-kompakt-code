@@ -117,4 +117,13 @@ public class PbBloomBoxQueryResult implements Serializable {
         sb.append(" ]");
         return sb.toString();
     }
+
+    /**
+     * @return empty duplicate of this result, structurally equivalent but independent
+     */
+    public PbBloomBoxQueryResult createSpawn() {
+        PbBloomBoxQueryResult res = new PbBloomBoxQueryResult();
+        res.subQuerySums = this.subQuerySums == null ? null : new double[this.subQuerySums.length];
+        return res;
+    }
 }

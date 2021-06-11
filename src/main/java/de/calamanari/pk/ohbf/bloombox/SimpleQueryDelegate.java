@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class SimpleQueryDelegate implements QueryDelegate {
+public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
 
     private static final long serialVersionUID = -5389698263683134435L;
 
@@ -63,15 +64,40 @@ public class SimpleQueryDelegate implements QueryDelegate {
      */
     private final List<BloomBoxQueryResult> results;
 
+    @Override
+    public SimpleQueryDelegate createSpawn() {
+        return new SimpleQueryDelegate(queries, this.results.stream().map(BloomBoxQueryResult::createSpawn).collect(Collectors.toList()), true);
+    }
+
+    @Override
+    public void addSpawnResults(SimpleQueryDelegate spawn) {
+        List<BloomBoxQueryResult> spawnResults = spawn.getResults();
+        for (int i = 0; i < results.size(); i++) {
+            BloomBoxQueryResult result = results.get(i);
+            result.addResultData(spawnResults.get(i));
+        }
+    }
+
+    /**
+     * @param queries list of internal queries to be executed per record vector
+     * @param results list of results (same orders as queries), results (counts) will be updated during execution
+     * @param quiet if true, no logging (copy constructor
+     */
+    protected SimpleQueryDelegate(InternalQuery[] queries, List<BloomBoxQueryResult> results, boolean quiet) {
+        this.queries = queries;
+        this.queryInErrorFlags = new boolean[queries.length];
+        this.results = results;
+        if (!quiet) {
+            logQueriesToProtocolIfRequired();
+        }
+    }
+
     /**
      * @param queries list of internal queries to be executed per record vector
      * @param results list of results (same orders as queries), results (counts) will be updated during execution
      */
     public SimpleQueryDelegate(InternalQuery[] queries, List<BloomBoxQueryResult> results) {
-        this.queries = queries;
-        this.queryInErrorFlags = new boolean[queries.length];
-        this.results = results;
-        logQueriesToProtocolIfRequired();
+        this(queries, results, false);
     }
 
     @Override
