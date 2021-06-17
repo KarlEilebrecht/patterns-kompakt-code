@@ -30,7 +30,7 @@ import java.util.List;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * @param <Q> the delegate type for spawning
  */
-public interface QueryDelegate<Q extends QueryDelegate<Q>> extends PbDataPointOccurrenceAware, Serializable {
+public interface QueryDelegate<Q extends QueryDelegate<Q>> extends PbDpavOccurrenceAware, Serializable {
 
     /**
      * @return a flag per query that tells whether it is broken, this way a we can avoid executing an erratic query multiple times
@@ -73,7 +73,7 @@ public interface QueryDelegate<Q extends QueryDelegate<Q>> extends PbDataPointOc
      * @param startPos position where to start
      * @param probabilities fetcher for the probabilities to compute the match probability
      */
-    default void execute(long[] vector, int startPos, DppFetcher probabilities) {
+    default void execute(long[] vector, int startPos, DpavProbabilityFetcher probabilities) {
         this.execute(vector, startPos);
     }
 

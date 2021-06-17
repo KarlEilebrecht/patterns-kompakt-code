@@ -24,11 +24,11 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionary;
-import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionaryAware;
-import de.calamanari.pk.ohbf.bloombox.PbDataPointOccurrenceAware;
-import de.calamanari.pk.ohbf.bloombox.PbDataPointOccurrenceCollector;
-import de.calamanari.pk.ohbf.bloombox.DppFetcher;
+import de.calamanari.pk.ohbf.bloombox.DpavProbabilityFetcher;
+import de.calamanari.pk.ohbf.bloombox.PbDpavOccurrenceCollector;
+import de.calamanari.pk.ohbf.bloombox.PbDpavDictionary;
+import de.calamanari.pk.ohbf.bloombox.PbDpavDictionaryAware;
+import de.calamanari.pk.ohbf.bloombox.PbDpavOccurrenceAware;
 import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
 
 /**
@@ -37,7 +37,7 @@ import de.calamanari.pk.ohbf.bloombox.QueryPreparationException;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BloomFilterQuery implements PbDataPointOccurrenceAware, Serializable {
+public class BloomFilterQuery implements PbDpavOccurrenceAware, Serializable {
 
     private static final long serialVersionUID = -2442237403084251215L;
 
@@ -88,11 +88,11 @@ public class BloomFilterQuery implements PbDataPointOccurrenceAware, Serializabl
      * 
      * @param source bloom filter vector
      * @param startPos start position of the vector
-     * @param probabilities fetcher with the data point probabilities
+     * @param probabilities fetcher with the DPAV probabilities
      * @param resultCache binary result cache
      * @return probability of the match
      */
-    public double execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache) {
+    public double execute(long[] source, int startPos, DpavProbabilityFetcher probabilities, Map<Long, Boolean> resultCache) {
         double res = 0.0;
         if (this.execute(source, startPos, resultCache)) {
             res = expression.computeMatchProbability(expression.getExpressionId(), probabilities);
@@ -101,15 +101,15 @@ public class BloomFilterQuery implements PbDataPointOccurrenceAware, Serializabl
     }
 
     @Override
-    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
-        expression.collectUniqueDepthFirst().stream().filter(PbDataPointDictionaryAware.class::isInstance).map(PbDataPointDictionaryAware.class::cast)
-                .forEach(dpa -> dpa.prepareLpDataPointIds(dictionary));
+    public void prepareLpDpavs(PbDpavDictionary dictionary) {
+        expression.collectUniqueDepthFirst().stream().filter(PbDpavDictionaryAware.class::isInstance).map(PbDpavDictionaryAware.class::cast)
+                .forEach(dpa -> dpa.prepareLpDpavs(dictionary));
     }
 
     @Override
-    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector) {
+    public void registerDpavOccurrences(PbDpavOccurrenceCollector collector) {
         expression.collectLiterals().stream().filter(BinaryMatchExpression.class::isInstance).map(BinaryMatchExpression.class::cast)
-                .forEach(e -> collector.addDataPointOccurrence(expression.getExpressionId(), e.getLpDataPointId()));
+                .forEach(e -> collector.addDpavOccurrence(expression.getExpressionId(), e.getLpDpavId()));
     }
 
     /**

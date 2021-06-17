@@ -120,7 +120,7 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
     }
 
     @Override
-    public void execute(long[] vector, int startPos, DppFetcher probabilities) {
+    public void execute(long[] vector, int startPos, DpavProbabilityFetcher probabilities) {
         resultCache.clear();
         ensurePbResultsInitialized();
         for (int i = 0; i < queries.length; i++) {
@@ -211,13 +211,13 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
     }
 
     @Override
-    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
-        Arrays.stream(queries).forEach(q -> q.prepareLpDataPointIds(dictionary));
+    public void prepareLpDpavs(PbDpavDictionary dictionary) {
+        Arrays.stream(queries).forEach(q -> q.prepareLpDpavs(dictionary));
     }
 
     @Override
-    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector) {
-        Arrays.stream(queries).forEach(q -> q.registerDataPointOccurrences(collector));
+    public void registerDpavOccurrences(PbDpavOccurrenceCollector collector) {
+        Arrays.stream(queries).forEach(q -> q.registerDpavOccurrences(collector));
         for (int i = 0; i < queries.length; i++) {
             InternalQuery query = queries[i];
             BloomBoxQueryResult result = results.get(i);
@@ -227,19 +227,20 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
     }
 
     /**
-     * Adds warnings to the corresponding query result if the collector shows multi data point references
+     * Adds warnings to the corresponding query result if the collector shows multi DPAV-references
      * 
      * @param query current query
-     * @param collector source of warnings based on data point usage
+     * @param collector source of warnings based on DPAV-usage
      * @param result to be updated
      */
-    protected void processMultiDpReferenceWarnings(InternalQuery query, PbDataPointOccurrenceCollector collector, BloomBoxQueryResult result) {
+    protected void processMultiDpReferenceWarnings(InternalQuery query, PbDpavOccurrenceCollector collector, BloomBoxQueryResult result) {
         Map<String, Integer> maxOccurrenceMap = collector.getMaxOccurrenceMap();
         Integer max = maxOccurrenceMap.get(query.getName());
         if (max != null && max > 1) {
             result.setWarningMessage(createMultiReferenceWarning(result.getWarningMessage(), query.getName(), max));
             if (query.isProtocolEnabled()) {
-                result.logProtocolMessage(String.format("Warning: data point multi-references (%d) detected in base query '%s'.", max, query.getName()));
+                result.logProtocolMessage(
+                        String.format("Warning: data point attribute value multi-references (%d) detected in base query '%s'.", max, query.getName()));
             }
         }
         for (int i = 0; i < query.getNumberOfSubQueries(); i++) {
@@ -248,7 +249,7 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
                 result.setWarningMessage(createMultiReferenceWarning(result.getWarningMessage(), query.getSubQueryLabel(i), max));
                 if (query.isProtocolEnabled()) {
                     result.logProtocolMessage(
-                            String.format("Warning: data point multi-references (%d) detected in sub query '%s'.", max, query.getSubQueryLabel(i)));
+                            String.format("Warning: data point attribute multi-references (%d) detected in sub query '%s'.", max, query.getSubQueryLabel(i)));
                 }
 
             }
@@ -265,7 +266,7 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
         for (int i = 0; i < queries.length; i++) {
             InternalQuery query = queries[i];
             // reduce verbosity if there was no sub query to optimize anyway
-            if (query.isProtocolEnabled() && query.getNumberOfSubQueries() > 0) {
+            if (query.isProtocolEnabled()) {
                 sb.setLength(0);
                 query.appendAsTree(sb);
                 results.get(i).logProtocolMessage(sb.toString());
@@ -298,9 +299,9 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
      */
     private String createMultiReferenceWarning(String existingWarnings, String queryName, int maxOccurrence) {
         String warnings = existingWarnings == null ? "" : "\n";
-        warnings = warnings + BbxMessage.WARN_MULTI_REFERENCE.format(
-                String.format("For query '%s', the optimizer was unable to avoid data point multi-references. Results may be incorrect (risk level %d).",
-                        queryName, maxOccurrence));
+        warnings = warnings + BbxMessage.WARN_MULTI_REFERENCE.format(String.format(
+                "For query '%s', the optimizer was unable to avoid data point attribute value multi-references. Results may be incorrect (risk level %d).",
+                queryName, maxOccurrence));
         return warnings;
     }
 

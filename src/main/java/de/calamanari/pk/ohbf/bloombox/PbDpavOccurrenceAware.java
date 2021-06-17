@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * PbDataPointOccurrenceAware
+ * PbDpavOccurrenceAware
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -21,17 +21,17 @@
 package de.calamanari.pk.ohbf.bloombox;
 
 /**
- * Elements implementing this interface are data point dictionary aware and they know about data point occurrences, they can report for collection.
+ * Elements implementing this interface are DPAV-dictionary aware and they know about DPAV-occurrences, they can report for collection.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface PbDataPointOccurrenceAware extends PbDataPointDictionaryAware {
+public interface PbDpavOccurrenceAware extends PbDpavDictionaryAware {
 
     /**
-     * Called to tell the element to inform the collector about data point usage.
+     * Called to tell the element to inform the collector about DPAV-usage.
      * 
-     * @param collector destination for collecting data point usage
+     * @param collector destination for collecting DPAV usage
      */
-    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector);
+    public void registerDpavOccurrences(PbDpavOccurrenceCollector collector);
 }

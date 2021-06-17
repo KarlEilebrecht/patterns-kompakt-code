@@ -168,7 +168,7 @@ public enum BbxMessage {
     WARN_ALWAYS_MAX_SCALED("BBXW-1005"),
 
     /**
-     * The query optimizer could not avoid referencing the same data point probability twice. <br>
+     * The query optimizer could not avoid referencing the same data point attribute value probability twice. <br>
      * There is a chance that the result deviates from the expectation.
      * <p>
      * This problem is related to the SQUAREROOT-estimation-hack we apply to compensate for conditional probabilities.<br>

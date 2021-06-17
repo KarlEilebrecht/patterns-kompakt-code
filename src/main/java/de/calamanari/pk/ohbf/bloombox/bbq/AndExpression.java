@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.DppFetcher;
+import de.calamanari.pk.ohbf.bloombox.DpavProbabilityFetcher;
 
 /**
  * An {@link AndExpression} is the equivalent of a logical AND-combination of other {@link BbqExpression}s.<br>
@@ -75,7 +75,7 @@ public class AndExpression implements BbqExpression {
     }
 
     @Override
-    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
+    public double computeMatchProbability(long rootExpressionId, DpavProbabilityFetcher probabilities) {
 
         // AND: multiply probabilities
 

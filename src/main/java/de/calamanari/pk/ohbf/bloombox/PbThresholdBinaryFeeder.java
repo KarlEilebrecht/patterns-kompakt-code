@@ -28,9 +28,9 @@ import de.calamanari.pk.ohbf.BloomFilterConfig;
 /**
  * Specialized store for feeding a {@link DefaultDataStore} or {@link FileDataStore} (but NOT a {@link PbDataStore}!) with probabilities.
  * <p>
- * The probabilities will be eliminated by treating the input binary (to put vs. not to put the data point). Therefore we crate a random value
- * <b><code>R</code></b> in range <code>[0.0 .. 1.0]</code> and apply the data point's probability {@link PbDataPoint#getProbability()} as a threshold
- * <b><code>T</code></b>. If <b><code>R &lt;= T</code></b> we put the data point, otherwise not.
+ * The probabilities will be eliminated by treating the input binary (to put vs. not to put the DPAV). Therefore we crate a random value <b><code>R</code></b>
+ * in range <code>[0.0 .. 1.0]</code> and apply the DPAV's probability {@link PbDpav#getProbability()} as a threshold <b><code>T</code></b>. If
+ * <b><code>R &lt;= T</code></b> we put the DPAV, otherwise not.
  * <p>
  * This technique is intended for cases where a {@link PbDataStore} with attached probabilities would be too big or too slow or (often a problem) the variables
  * have natural dependencies that negatively impact the probability based computation.
@@ -62,18 +62,18 @@ public class PbThresholdBinaryFeeder extends DataStoreFeeder {
     }
 
     /**
-     * Adds the given list of data points as a row to the store including the probabilities
+     * Adds the given list of DPAVs as a row to the store including the probabilities
      * 
-     * @param dataPoints key/value combination (unique within a row) with attached probability
+     * @param pbDpavs key/value combination (unique within a row) with attached probability
      * @return true if the row was added, false if the store was already full
      */
-    public boolean addRow(List<PbDataPoint> dataPoints) {
+    public boolean addRow(List<PbDpav> pbDpavs) {
 
         if (moveToNextRow()) {
             bloomFilter.clear();
-            for (PbDataPoint dataPoint : dataPoints) {
-                if (random.nextDouble() <= dataPoint.getProbability()) {
-                    bloomFilter.put(dataPoint.getColumnId(), dataPoint.getColumnValue());
+            for (PbDpav dpav : pbDpavs) {
+                if (random.nextDouble() <= dpav.getProbability()) {
+                    bloomFilter.put(dpav.getColumnId(), dpav.getColumnValue());
                 }
             }
             dataStore.feedRow(bloomFilter.getBitVectorAsLongArray(), currentRowIndex);

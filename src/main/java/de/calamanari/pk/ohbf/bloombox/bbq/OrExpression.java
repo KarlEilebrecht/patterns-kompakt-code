@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.DppFetcher;
+import de.calamanari.pk.ohbf.bloombox.DpavProbabilityFetcher;
 
 /**
  * An {@link OrExpression} is the equivalent of a logical OR-combination of other {@link BbqExpression}s.<br>
@@ -69,7 +69,7 @@ public class OrExpression implements BbqExpression {
     }
 
     @Override
-    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
+    public double computeMatchProbability(long rootExpressionId, DpavProbabilityFetcher probabilities) {
 
         // A OR B = NOT (NOT(A) AND NOT(B)) := 1.0 - ( (1.0 - P(A)) * (1.0 - P(B)))
 

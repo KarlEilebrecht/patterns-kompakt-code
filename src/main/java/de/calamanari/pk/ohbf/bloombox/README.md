@@ -38,15 +38,15 @@ Still experimental is the support for upscaling. This is a useful feature if you
 
 ### The Finite Probability Overdrive (FBO)
 
-Upscaling can get quite complicated, and I was thinking about alternative ways to deal with the principle challenge that data points (e.g. `color=blue`) may have assigned probabilities.
+Upscaling can get quite complicated, and I was thinking about alternative ways to deal with the principle challenge that DPAVs (**d**ata **p**oint **a**ttribute **v**alue, e.g. `color=blue`) may have assigned probabilities.
 
 This idea is kind of ambitious because for many rows with many columns it needs an enormous amount of space to store a probability in range `[0.0 .. 1.0]` as a double (64 bits) or even as a float value (32 bits). However, I decided to implement the [PbInMemoryDataStore](PbInMemoryDataStore.java) that does exactly this in addition to the bloom filter vector. In conjunction with the [PbDataStoreFeeder](PbDataStoreFeeder.java) you can feed a BloomBox with probabilities and use the same query syntax as for a regular BloomBox.
 
 To save space, I reduced the precision from floating point to fixed-point precision with 8 decimals, and I compress the probability vector.
 
-Counting works different than for a normal BloomBox. The probabilities get computed to be summed-up. Interestingly, the precision profits from the FBO because due to the lookup per data point (see [PbDataPointProbabilityManager](PbDataPointProbabilityManager.java) false-positives get practically eliminated.
+Counting works different than for a normal BloomBox. The probabilities get computed to be summed-up. Interestingly, the precision profits from the FBO because due to the lookup per DPAV (see [PbDpavProbabilityManager](PbDpavProbabilityManager.java) false-positives get practically eliminated.
 
-Besides the still very high memory consumption there is another caveat related to this concept: data point multi-references. If a query references the same data point (and thus its probability value) twice or more often, the easy way of computation becomes wrong.
+Besides the still very high memory consumption there is another caveat related to this concept: DPAV multi-references. If a query references the same DPAV (and thus its probability value) twice or more often, the easy way of computation becomes wrong.
 
 The computation is entirely based on two simple rules, which can be applied recursively:
 `P(A AND B) := P(A) * P(B)` 
@@ -56,7 +56,7 @@ So, for `color=blue~0.75 AND motor=big~0.5`, we get a total probability of `0.75
 
 You can sum-up these probabilities taken from all rows of your sample, turn the sum into an integer, and you get a precise prediction of the count.
 
-Unfortunately, this does not hold true, if the same data point occurs multiple times.
+Unfortunately, this does not hold true, if the same DPAV occurs multiple times.
 
 Here are a few examples:
 
@@ -65,7 +65,7 @@ Here are a few examples:
 `(3) P( (A AND B) OR (NOT(A) AND B) ) != 1 - ((1-(P(A) * P(B))) * (1-((1-P(A)) * P(B))))` :x:
 `(4) P( (A AND B) OR (NOT(A) AND C) ) != 1 - ((1-(P(A) * P(B))) * (1-((1-P(A)) * P(C))))` :x:
 
-Many of these issues (like (1), (2) and (3)) you can avoid with predicate logic optimization, so that each data point only appears once:
+Many of these issues (like (1), (2) and (3)) you can avoid with predicate logic optimization, so that each DPAV only appears once:
 
 `(1) P(A AND A) = P(A)` :white_check_mark:
 `(2) P( (A AND B) OR (A AND C) ) = P( A AND (B OR C) ) = P(A) * (1-((1-P(B)) * (1-P(C))))` :white_check_mark:
@@ -77,9 +77,9 @@ But in cases like (4) you are lost. The computed probability for the entire expr
 
 You could now do fancy things like estimating (and correcting such effects) leveraging a [covariance matrix](https://en.wikipedia.org/wiki/Covariance_matrix), but this is complex and insanely computation/memory intensive.
 
-Instead of trying to solve this issue, I decided to optimize each expression as far as possible (see [QuantumOptimizer](./bbq/QuantumOptimizer.java)) and detect cases where this does not help. Then I raise a warning. Additionally, to reduce the impact, I replace the probability of a data point being referenced multiple times by its square-root. Often, this considerably reduces the error (deviation from the correct value).
+Instead of trying to solve this issue, I decided to optimize each expression as far as possible (see [QuantumOptimizer](./bbq/QuantumOptimizer.java)) and detect cases where this does not help. Then I raise a warning. Additionally, to reduce the impact, I replace the probability of a DPAV being referenced multiple times by its square-root. Often, this considerably reduces the error (deviation from the correct value).
 
-**Conclusion:** The [PbInMemoryDataStore](PbInMemoryDataStore.java) is a way to deal with data points with attached probabilities. It can deliver insights with less effort and much quicker than a solution backed by a database.
+**Conclusion:** The [PbInMemoryDataStore](PbInMemoryDataStore.java) is a way to deal with DPAVs with attached probabilities. It can deliver insights with less effort and much quicker than a solution backed by a database.
 
 ### Random Thresholding as an alternative to FBO
 
@@ -95,7 +95,7 @@ Therefore, the [PbThresholdBinaryFeeder](PbThresholdBinaryFeeder.java) feeds a r
 
 *Huh?*
 
-To put it simple: We throw dices. For every incoming data point with attached probability `P`, the feeder creates a random number `R` in range `[0.0 .. 1.0]` and uses `P` as a threshold to decide (`R <= P`) whether or not to put this data point into the row's bloom filter. 
+To put it simple: We throw dices. For every incoming DPAV with attached probability `P`, the feeder creates a random number `R` in range `[0.0 .. 1.0]` and uses `P` as a threshold to decide (`R <= P`) whether or not to put this DPAV into the row's bloom filter. 
 
 The resulting BloomBox is fast and light-weight, and most important: It will provide the user with acceptable results *on average* instead of returning super-precise results in some cases while occasionally being completely wrong.
 

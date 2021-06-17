@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
-import de.calamanari.pk.ohbf.bloombox.DataPoint;
+import de.calamanari.pk.ohbf.bloombox.Dpav;
 
 /**
  * An {@link IntermediateReferenceExpression} is an alias to an existing base or a previous post expression.
@@ -105,7 +105,7 @@ public class IntermediateReferenceExpression implements IntermediateExpression {
     }
 
     @Override
-    public void collectRequiredDataPoints(Map<Long, DataPoint> dataPoints) {
+    public void collectRequiredDpavs(Map<Long, Dpav> dpavs) {
         // references are opaque and references must be collected otherwise
     }
 }

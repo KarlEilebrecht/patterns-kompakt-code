@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * DppFetcher
+ * DpavProbabilityFetcher
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -25,22 +25,22 @@ import java.io.Serializable;
 import de.calamanari.pk.ohbf.bloombox.bbq.BinaryMatchExpression;
 
 /**
- * The {@link DppFetcher} (Data Point Probability Fetcher) allows determining the probability of a data point as late as possible.
+ * The {@link DpavProbabilityFetcher} (Data Point Attribute Value Probability Fetcher) allows determining the probability of a DPAV as late as possible.
  * <p>
  * <b>Note:<b> This is by intention not a lambda because lambdas are not serializable and cannot cache data.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface DppFetcher extends Serializable {
+public interface DpavProbabilityFetcher extends Serializable {
 
     /**
-     * Returns the probability for the given data point.
+     * Returns the probability for the given DPAV.
      * 
      * @param rootExpressionId id of the expression we are currently fetching data for
-     * @param lpDataPointId see {@link BinaryMatchExpression#getLpDataPointId()}
-     * @return probability or 0.0d if the given low-precision dataPointId has no probability attached, <b><code>0 &lt;= value &lt;= 1.0</code></b>
+     * @param lpDpavId see {@link BinaryMatchExpression#getLpDpavId()}
+     * @return probability or 0.0d if the given low-precision DPAV-id has no probability attached, <b><code>0 &lt;= value &lt;= 1.0</code></b>
      */
-    double fetchDataPointProbability(long rootExpressionId, int lpDataPointId);
+    double fetchDpavProbability(long rootExpressionId, int lpDpavId);
 
 }

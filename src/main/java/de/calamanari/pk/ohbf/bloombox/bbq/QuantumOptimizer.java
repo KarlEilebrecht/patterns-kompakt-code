@@ -31,12 +31,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.calamanari.pk.ohbf.bloombox.PbDataPointProbabilityManager;
+import de.calamanari.pk.ohbf.bloombox.PbDpavProbabilityManager;
 import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 
 /**
  * The {@link QuantumOptimizer} was introduced later to better support probability-queries (quantity aggregation) which unfortunately suffer from nesting and
- * multiple refences to the same data point, see also comments in {@link PbDataPointProbabilityManager}.
+ * multiple refences to the same DPAV, see also comments in {@link PbDpavProbabilityManager}.
  * <p>
  * This implementation spends considerably more effort than the standard optimizer {@link IntermediateExpressionOptimizer} to reduce the complexity of
  * expression that will be used to aggregate the probabilities.

@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * PbDataPointDictionaryAware
+ * PbDpavDictionaryAware
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -26,12 +26,12 @@ package de.calamanari.pk.ohbf.bloombox;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public interface PbDataPointDictionaryAware {
+public interface PbDpavDictionaryAware {
 
     /**
      * Allows the data store to prepare the elements with the dictionary of this store
      * 
-     * @param dictionary data point dictionary with id-mapping (local, low-precision data point ids)
+     * @param dictionary DPAV-dictionary with id-mapping (local, low-precision DPAV-ids)
      */
-    public void prepareLpDataPointIds(PbDataPointDictionary dictionary);
+    public void prepareLpDpavs(PbDpavDictionary dictionary);
 }

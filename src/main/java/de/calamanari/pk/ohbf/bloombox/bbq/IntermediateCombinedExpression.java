@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
-import de.calamanari.pk.ohbf.bloombox.DataPoint;
+import de.calamanari.pk.ohbf.bloombox.Dpav;
 
 /**
  * Base class for expressions composed of other expressions to consolidate most of the logic.
@@ -54,8 +54,8 @@ public abstract class IntermediateCombinedExpression implements IntermediateExpr
     }
 
     @Override
-    public void collectRequiredDataPoints(Map<Long, DataPoint> dataPoints) {
-        this.subExpressionList.forEach(e -> e.collectRequiredDataPoints(dataPoints));
+    public void collectRequiredDpavs(Map<Long, Dpav> dpavs) {
+        this.subExpressionList.forEach(e -> e.collectRequiredDpavs(dpavs));
     }
 
     /**

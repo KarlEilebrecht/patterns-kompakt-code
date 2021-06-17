@@ -24,23 +24,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.DataPoint;
-import de.calamanari.pk.ohbf.bloombox.DppFetcher;
-import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionary;
-import de.calamanari.pk.ohbf.bloombox.PbDataPointDictionaryAware;
+import de.calamanari.pk.ohbf.bloombox.Dpav;
+import de.calamanari.pk.ohbf.bloombox.DpavProbabilityFetcher;
+import de.calamanari.pk.ohbf.bloombox.PbDpavDictionary;
+import de.calamanari.pk.ohbf.bloombox.PbDpavDictionaryAware;
 import de.calamanari.pk.util.SimpleFixedLengthBitVector;
 
 /**
  * The {@link BinaryMatchExpression} is the only BBQ-expression that executes matches against a vector from the bloom box (all others are composites).
  * <p>
- * <b>Note:</b> Although expressions should be immutable I have made a compromise for performance reasons to allow changing the data point id (see
- * {@link #getLpDataPointId()}, {@link #prepareLpDataPointIds(PbDataPointDictionary)}) at runtime. Avoiding this would have meant to replicate the whole
- * expression tree (to preserve immutability), which I found too costly.
+ * <b>Note:</b> Although expressions should be immutable I have made a compromise for performance reasons to allow changing the DPAV-id (see
+ * {@link #getLpDpavId()}, {@link #prepareLpDpavs(PbDpavDictionary)}) at runtime. Avoiding this would have meant to replicate the whole expression tree (to
+ * preserve immutability), which I found too costly.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class BinaryMatchExpression implements BbqExpression, PbDataPointDictionaryAware {
+public class BinaryMatchExpression implements BbqExpression, PbDpavDictionaryAware {
 
     private static final long serialVersionUID = -2940750763497459402L;
 
@@ -50,20 +50,20 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
     private final long[] pattern;
 
     /**
-     * unique data point (key/value combination)
+     * unique DPAV (key/value combination)
      */
-    private final DataPoint dataPoint;
+    private final Dpav dpav;
 
     /**
-     * unique id of this expression
+     * unique id of this expression, including the pattern
      */
     private final long expressionId;
 
     /**
-     * The local low-precision data point id identifies the key/Value combination, see {@link ExpressionIdUtil#createLpDataPointId(String, String)}<br>
-     * This is the only mutable id, because it might change in preparation to the execution, see {@link #prepareLpDataPointIds(PbDataPointDictionary)}
+     * The local low-precision DPAV-id identifies the key/Value combination, see {@link ExpressionIdUtil#createLpDpavId(String, String)}<br>
+     * This is the only mutable id, because it might change in preparation to the execution, see {@link #prepareLpDpavs(PbDpavDictionary)}
      */
-    private int lpDataPointId = -1;
+    private int lpDpavId = -1;
 
     /**
      * @param argName name of the "column"
@@ -71,42 +71,42 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
      * @param pattern bloom filter vector to match against the box
      */
     public BinaryMatchExpression(String argName, String argValue, long[] pattern) {
-        this.dataPoint = new DataPoint(argName, argValue);
+        this.dpav = new Dpav(argName, argValue);
         this.pattern = Arrays.copyOf(pattern, pattern.length);
-        this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch" + this.getDataPoint().getDataPointId(), this.pattern);
+        this.expressionId = ExpressionIdUtil.createExpressionId("BinaryMatch" + this.getDpav().getDpavId(), this.pattern);
     }
 
     /**
      * @return name of the "column"
      */
     public String getArgName() {
-        return dataPoint.getColumnId();
+        return dpav.getColumnId();
     }
 
     /**
      * @return column value to match
      */
     public String getArgValue() {
-        return dataPoint.getColumnValue();
+        return dpav.getColumnValue();
     }
 
     /**
-     * @return the data point (key/value) this match expression identifies
+     * @return the DPAV (key/value) this match expression identifies
      */
-    public DataPoint getDataPoint() {
-        return dataPoint;
+    public Dpav getDpav() {
+        return dpav;
     }
 
     /**
      * This id is for internal use and may change
      * 
-     * @return low precision data point id for key/value pair, see {@link ExpressionIdUtil#createLpDataPointId(String, Object)}
+     * @return low precision DPAV-id for key/value pair, see {@link ExpressionIdUtil#createLpDpavId(String, Object)}
      */
-    public int getLpDataPointId() {
-        if (lpDataPointId < 0) {
-            lpDataPointId = ExpressionIdUtil.createLpDataPointId(this.dataPoint.getDataPointId());
+    public int getLpDpavId() {
+        if (lpDpavId < 0) {
+            lpDpavId = ExpressionIdUtil.createLpDpavId(this.dpav.getDpavId());
         }
-        return lpDataPointId;
+        return lpDpavId;
     }
 
     @Override
@@ -116,13 +116,13 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
     }
 
     @Override
-    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
-        return probabilities.fetchDataPointProbability(rootExpressionId, this.lpDataPointId);
+    public double computeMatchProbability(long rootExpressionId, DpavProbabilityFetcher probabilities) {
+        return probabilities.fetchDpavProbability(rootExpressionId, this.lpDpavId);
     }
 
     /**
      * This id uniquely identifies the key/value pair with the given binary pattern, so the same key/value equals expression will have different ids on
-     * different stores but it will have the same {@link #getDataPointId()}.
+     * different stores but it will have the same {@link #getDpavId()}.
      */
     @Override
     public long getExpressionId() {
@@ -136,13 +136,13 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
 
     @Override
     public String toString() {
-        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + dataPoint.getColumnId() + "==" + dataPoint.getColumnValue()
-                + "} DP" + dataPoint.getDataPointId() + (lpDataPointId < 0 ? " )" : "[" + lpDataPointId + "] )");
+        return BinaryMatchExpression.class.getSimpleName() + "( " + this.expressionId + " -> {" + dpav.getColumnId() + "==" + dpav.getColumnValue() + "} DP"
+                + dpav.getDpavId() + (lpDpavId < 0 ? " )" : "[" + lpDpavId + "] )");
     }
 
     @Override
-    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
-        this.lpDataPointId = dictionary.lookup(this.getLpDataPointId());
+    public void prepareLpDpavs(PbDpavDictionary dictionary) {
+        this.lpDpavId = dictionary.lookup(this.getLpDpavId());
     }
 
     @Override
@@ -152,15 +152,15 @@ public class BinaryMatchExpression implements BbqExpression, PbDataPointDictiona
         sb.append("MATCH ( ");
         sb.append(expressionId);
         sb.append(" -> {");
-        sb.append(dataPoint.getColumnId());
+        sb.append(dpav.getColumnId());
         sb.append("==");
-        sb.append(dataPoint.getColumnValue());
+        sb.append(dpav.getColumnValue());
         sb.append("} ");
         sb.append("DP");
-        sb.append(dataPoint.getDataPointId());
-        if (lpDataPointId >= 0) {
+        sb.append(dpav.getDpavId());
+        if (lpDpavId >= 0) {
             sb.append("[");
-            sb.append(lpDataPointId);
+            sb.append(lpDpavId);
             sb.append("]");
         }
         sb.append(" )");

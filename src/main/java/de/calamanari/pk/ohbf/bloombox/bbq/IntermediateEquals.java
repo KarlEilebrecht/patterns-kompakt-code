@@ -23,7 +23,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
-import de.calamanari.pk.ohbf.bloombox.DataPoint;
+import de.calamanari.pk.ohbf.bloombox.Dpav;
 
 /**
  * An {@link IntermediateEquals} is the equivalent of the equals operator in BBQ language with field name and field value, e.g. <code>color=blue</code> after
@@ -80,9 +80,9 @@ public class IntermediateEquals implements IntermediateExpression {
     }
 
     @Override
-    public void collectRequiredDataPoints(Map<Long, DataPoint> dataPoints) {
-        DataPoint dataPoint = new DataPoint(argName, argValue);
-        dataPoints.putIfAbsent(dataPoint.getDataPointId(), dataPoint);
+    public void collectRequiredDpavs(Map<Long, Dpav> dpavs) {
+        Dpav dpav = new Dpav(argName, argValue);
+        dpavs.putIfAbsent(dpav.getDpavId(), dpav);
     }
 
 }

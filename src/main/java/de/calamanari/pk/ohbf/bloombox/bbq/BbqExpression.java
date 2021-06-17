@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.DppFetcher;
+import de.calamanari.pk.ohbf.bloombox.DpavProbabilityFetcher;
 
 /**
  * A {@link BbqExpression} is any technical representation of an expression of the BBQ-language.
@@ -56,10 +56,10 @@ public interface BbqExpression extends Serializable {
      * The default implementation returns 1.0.
      * 
      * @param rootExpressionId identifier of the enclosing root expression this expression is a part of
-     * @param probabilities data point probability fetcher
+     * @param probabilities DPAV probability fetcher
      * @return probability
      */
-    default double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
+    default double computeMatchProbability(long rootExpressionId, DpavProbabilityFetcher probabilities) {
         return 1.0;
     }
 

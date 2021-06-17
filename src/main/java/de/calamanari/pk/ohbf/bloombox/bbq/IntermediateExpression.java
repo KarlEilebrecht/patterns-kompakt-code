@@ -23,7 +23,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.Map;
 
 import de.calamanari.pk.ohbf.LwGenericOHBF;
-import de.calamanari.pk.ohbf.bloombox.DataPoint;
+import de.calamanari.pk.ohbf.bloombox.Dpav;
 
 /**
  * On the way from a textual query in BBQ-language to an unmodifiable composition of technical {@link BbqExpression}s the {@link IntermediateExpression} is a
@@ -145,9 +145,9 @@ public interface IntermediateExpression {
     }
 
     /**
-     * Updates the given map with all referenced data points (recursively)
+     * Updates the given map with all referenced DPAVs (recursively)
      * 
-     * @param dataPoints to be updated
+     * @param dpavs to be updated
      */
-    void collectRequiredDataPoints(Map<Long, DataPoint> dataPoints);
+    void collectRequiredDpavs(Map<Long, Dpav> dpavs);
 }

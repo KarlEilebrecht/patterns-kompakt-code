@@ -34,7 +34,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BloomFilterQuery;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class InternalQuery implements PbDataPointOccurrenceAware, Serializable {
+public class InternalQuery implements PbDpavOccurrenceAware, Serializable {
 
     private static final long serialVersionUID = -7248298268398187149L;
 
@@ -180,7 +180,7 @@ public class InternalQuery implements PbDataPointOccurrenceAware, Serializable {
      * @param resultCache we avoid duplicate work by keeping results for already executed expressions
      * @param result to be updated
      */
-    public void execute(long[] source, int startPos, DppFetcher probabilities, Map<Long, Boolean> resultCache, BloomBoxQueryResult result) {
+    public void execute(long[] source, int startPos, DpavProbabilityFetcher probabilities, Map<Long, Boolean> resultCache, BloomBoxQueryResult result) {
 
         int numberOfSubQueries = subQueries.length;
 
@@ -201,29 +201,29 @@ public class InternalQuery implements PbDataPointOccurrenceAware, Serializable {
     }
 
     @Override
-    public void prepareLpDataPointIds(PbDataPointDictionary dictionary) {
-        baseQuery.prepareLpDataPointIds(dictionary);
-        Arrays.stream(subQueries).forEach(q -> q.prepareLpDataPointIds(dictionary));
+    public void prepareLpDpavs(PbDpavDictionary dictionary) {
+        baseQuery.prepareLpDpavs(dictionary);
+        Arrays.stream(subQueries).forEach(q -> q.prepareLpDpavs(dictionary));
     }
 
     @Override
-    public void registerDataPointOccurrences(PbDataPointOccurrenceCollector collector) {
-        registerDataPointOccurrencesIfRequired(this.name, baseQuery, collector);
+    public void registerDpavOccurrences(PbDpavOccurrenceCollector collector) {
+        registerDpavOccurrencesIfRequired(this.name, baseQuery, collector);
         for (int i = 0; i < subQueries.length; i++) {
-            this.registerDataPointOccurrencesIfRequired(this.getSubQueryName(i), subQueries[i], collector);
+            this.registerDpavOccurrencesIfRequired(this.getSubQueryName(i), subQueries[i], collector);
         }
     }
 
     /**
-     * Registers the points for the given query
+     * Registers the DPAVs for the given query
      * 
      * @param queryName textual identifier
      * @param query the currently processed bloom filter query
-     * @param collector data point collector
+     * @param collector DPAV occurrence collector
      */
-    private void registerDataPointOccurrencesIfRequired(String queryName, BloomFilterQuery query, PbDataPointOccurrenceCollector collector) {
+    private void registerDpavOccurrencesIfRequired(String queryName, BloomFilterQuery query, PbDpavOccurrenceCollector collector) {
         if (collector.startCollection(query, queryName)) {
-            query.registerDataPointOccurrences(collector);
+            query.registerDpavOccurrences(collector);
         }
     }
 

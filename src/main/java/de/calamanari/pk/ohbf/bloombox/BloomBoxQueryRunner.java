@@ -337,15 +337,15 @@ public class BloomBoxQueryRunner {
      * @param queryString base or sub query
      * @param result target collection to be updated
      */
-    private static void collectRequiredDataPoints(String queryName, String queryString, Map<Long, DataPoint> dataPoints) {
-        LOGGER.trace("Collecting referenced data points in query '{}' from queryString= {} ...", queryName, queryString);
+    private static void collectRequiredDpavs(String queryName, String queryString, Map<Long, Dpav> dpavs) {
+        LOGGER.trace("Collecting referenced data point attribute values (DPAVs) in query '{}' from queryString= {} ...", queryName, queryString);
         try {
             IntermediateExpressionBuilder builder = new IntermediateExpressionBuilder();
             parseBbqQuery(queryString, builder);
-            builder.getResult().collectRequiredDataPoints(dataPoints);
+            builder.getResult().collectRequiredDpavs(dpavs);
         }
         catch (RuntimeException ex) {
-            LOGGER.error("Could not collect required data points of query '{}': queryString={}", queryName, queryString, ex);
+            LOGGER.error("Could not collect required DPAVs of query '{}': queryString={}", queryName, queryString, ex);
         }
     }
 
@@ -370,27 +370,27 @@ public class BloomBoxQueryRunner {
     }
 
     /**
-     * Collects all referenced data points (key/value combinations) in the given query bundle
+     * Collects all referenced DPAVs (key/value combinations) in the given query bundle
      * <p>
      * <b>Note:</b> This method won't fail on invalid queries, it just does not count its required attributes.
      *
      * @param bundle query bundle
-     * @return map (key=data point id) with all data points referenced by the given query bundle, the map is ordered by key
+     * @return map (key=dpavId) with all DPAVs referenced by the given query bundle, the map is ordered by key
      */
-    public static Map<Long, DataPoint> collectRequiredDataPoints(QueryBundle bundle) {
-        Map<Long, DataPoint> res = new TreeMap<>();
+    public static Map<Long, Dpav> collectRequiredDpavs(QueryBundle bundle) {
+        Map<Long, Dpav> res = new TreeMap<>();
         if (bundle.getBaseQueries() != null) {
             for (BloomBoxQuery baseQuery : bundle.getBaseQueries()) {
-                collectRequiredDataPoints(baseQuery.getName(), baseQuery.getQuery(), res);
+                collectRequiredDpavs(baseQuery.getName(), baseQuery.getQuery(), res);
                 if (baseQuery.getSubQueryMap() != null) {
-                    baseQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredDataPoints(entry.getKey(), entry.getValue(), res));
+                    baseQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredDpavs(entry.getKey(), entry.getValue(), res));
                 }
             }
         }
         if (bundle.getPostQueries() != null) {
             for (BloomBoxQuery postQuery : bundle.getPostQueries()) {
                 if (postQuery.getSubQueryMap() != null) {
-                    postQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredDataPoints(entry.getKey(), entry.getValue(), res));
+                    postQuery.getSubQueryMap().entrySet().stream().forEach(entry -> collectRequiredDpavs(entry.getKey(), entry.getValue(), res));
                 }
             }
         }

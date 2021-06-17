@@ -257,7 +257,7 @@ public class FloatEncodeTest {
     public void testDataPointId() {
 
         for (int i = 0; i < 100; i++) {
-            int lpDataPointId = ExpressionIdUtil.createLpDataPointId(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+            int lpDataPointId = ExpressionIdUtil.createLpDpavId(UUID.randomUUID().toString(), UUID.randomUUID().toString());
 
             System.out.println("" + lpDataPointId + " ----> " + MuhaiUtils.toPaddedBinaryString(lpDataPointId));
         }
@@ -321,12 +321,12 @@ public class FloatEncodeTest {
 
                 float probability = 0.0f; // rand.nextFloat();
 
-                int lpDataPointId = ExpressionIdUtil.createLpDataPointId(argName, argValue);
+                int lpDataPointId = ExpressionIdUtil.createLpDpavId(argName, argValue);
 
-                vector[j] = PbVectorCodec.encodeDataPointProbability(lpDataPointId, probability);
+                vector[j] = PbVectorCodec.encodeDpavProbability(lpDataPointId, probability);
 
-                assertEquals(lpDataPointId, PbVectorCodec.decodeLpDataPointId(vector[j]));
-                assertEquals(probability, PbVectorCodec.decodeDataPointProbability(vector[j]), 0.00000001d);
+                assertEquals(lpDataPointId, PbVectorCodec.decodeLpDpavId(vector[j]));
+                assertEquals(probability, PbVectorCodec.decodeDpavProbability(vector[j]), 0.00000001d);
 
             }
 
@@ -384,7 +384,7 @@ public class FloatEncodeTest {
 
         System.out.println(MuhaiUtils.toPaddedBinaryString(encoded));
 
-        System.out.println(codec.decodeLpDataPointId(encoded));
+        System.out.println(codec.decodeLpDpavId(encoded));
 
         // for (int i = 0; i < 1000; i++) {
         // System.out.println(MuhaiUtils.toPaddedBinaryString(codec.encodeDataPointId(i)));
@@ -399,14 +399,14 @@ public class FloatEncodeTest {
 
         Random rand = new Random(7919);
 
-        for (int i = 0; i < ExpressionIdUtil.MIN_GENERATED_DATA_POINT_ID; i++) {
+        for (int i = 0; i < ExpressionIdUtil.MIN_GENERATED_LP_DPAV_ID; i++) {
             double probability = rand.nextDouble();
 
-            long dpp = PbVectorCodec.encodeDataPointProbability(i, probability);
+            long dpp = PbVectorCodec.encodeDpavProbability(i, probability);
             System.out.println(MuhaiUtils.toPaddedBinaryString(dpp));
 
-            int lpDataPointId = PbVectorCodec.decodeLpDataPointId(dpp);
-            double probabilityAfter = PbVectorCodec.decodeDataPointProbability(dpp);
+            int lpDataPointId = PbVectorCodec.decodeLpDpavId(dpp);
+            double probabilityAfter = PbVectorCodec.decodeDpavProbability(dpp);
 
             assertEquals(i, lpDataPointId);
 

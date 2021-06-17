@@ -23,7 +23,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 import java.util.List;
 import java.util.Map;
 
-import de.calamanari.pk.ohbf.bloombox.DppFetcher;
+import de.calamanari.pk.ohbf.bloombox.DpavProbabilityFetcher;
 
 /**
  * Although the BBQ-language does not allow specifying anything like TRUE or FALSE, during the optimization process it can still happen that a condition gets
@@ -76,7 +76,7 @@ public enum BbqBooleanLiteral implements BbqExpression {
     }
 
     @Override
-    public double computeMatchProbability(long rootExpressionId, DppFetcher probabilities) {
+    public double computeMatchProbability(long rootExpressionId, DpavProbabilityFetcher probabilities) {
         return booleanValue ? 1.0 : 0.0;
     }
 

@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.calamanari.pk.ohbf.bloombox.bbq.ExpressionIdUtil;
+
 /**
  * This in-memory-store supports attached probabilities.
  * 
@@ -55,9 +57,9 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     private final byte[] compressedMissingDPPs = new byte[] { 0, 0, 0, 0 };
 
     /**
-     * maps collected data point ids to short ids
+     * maps collected data point ids to shorter index-ids in range 0 .. {@link ExpressionIdUtil#MIN_GENERATED_LP_DPAV_ID}
      */
-    private final PbDataPointDictionary dataPointDictionary = new PbDataPointDictionary();
+    private final PbDpavDictionary dpavDictionary = new PbDpavDictionary();
 
     /**
      * cached total size in bytes (after feeding complete)
@@ -99,7 +101,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     protected static void loadPbStoreIntoMemory(InputStream is, PbInMemoryDataStore dataStore, DataStoreHeader header) {
         try (BufferedInputStream bis = new BufferedInputStream(is, DEFAULT_IO_BUFFER_SIZE)) {
             DefaultDataStore.loadDataStoreIntoMemory(bis, dataStore, header);
-            loadDataPointDictionary(bis, dataStore, header);
+            loadDpavDictionary(bis, dataStore, header);
             loadProbabilityVectors(bis, dataStore, header);
         }
         catch (BloomBoxException ex) {
@@ -112,32 +114,32 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     }
 
     /**
-     * Restores the data point dictionary
+     * Restores the DPAV dictionary
      * 
      * @param bis source stream
      * @param dataStore store to be filled
      * @param header stream header information
      */
-    protected static void loadDataPointDictionary(BufferedInputStream bis, PbInMemoryDataStore dataStore, DataStoreHeader header) {
+    protected static void loadDpavDictionary(BufferedInputStream bis, PbInMemoryDataStore dataStore, DataStoreHeader header) {
 
         try {
-            LOGGER.debug("Loading data point dictionary into memory ...");
+            LOGGER.debug("Loading DPAV dictionary into memory ...");
             byte[] buffer = new byte[4];
             int bytesFound = bis.read(buffer, 0, 4);
             if (bytesFound != 4) {
-                throw new BloomBoxException(String.format("Error loading data point dictionary: 4 bytes expected, found %d - header: %s", bytesFound, header));
+                throw new BloomBoxException(String.format("Error loading DPAV dictionary: 4 bytes expected, found %d - header: %s", bytesFound, header));
             }
             int numberOfEntries = PbVectorCodec.readInt(buffer, 0);
 
             for (int i = 0; i < numberOfEntries; i++) {
                 bytesFound = bis.read(buffer, 0, 4);
                 if (bytesFound != 4) {
-                    throw new BloomBoxException(String.format("Error loading data point dictionary (entry %d / %d): 4 bytes expected, found %d - header: %s",
-                            (i + 1), numberOfEntries, bytesFound, header));
+                    throw new BloomBoxException(String.format("Error loading DPAV dictionary (entry %d / %d): 4 bytes expected, found %d - header: %s", (i + 1),
+                            numberOfEntries, bytesFound, header));
                 }
-                dataStore.dataPointDictionary.feed(PbVectorCodec.readInt(buffer, 0));
+                dataStore.dpavDictionary.feed(PbVectorCodec.readInt(buffer, 0));
             }
-            LOGGER.debug("Data point dictionary restored with {} entries.", numberOfEntries);
+            LOGGER.debug("DPAV dictionary restored with {} entries.", numberOfEntries);
         }
         catch (BloomBoxException ex) {
             throw ex;
@@ -199,14 +201,14 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
 
     @Override
     public <Q extends QueryDelegate<Q>> void dispatch(Q queryDelegate) {
-        queryDelegate.prepareLpDataPointIds(dataPointDictionary);
+        queryDelegate.prepareLpDpavs(dpavDictionary);
         super.dispatch(queryDelegate);
     }
 
     @Override
     protected <Q extends QueryDelegate<Q>> void dispatchPartition(Q queryDelegate, int startRowIdx, int endRowIdx) {
-        PbDataPointProbabilityManager dppFetcher = new PbDataPointProbabilityManager();
-        queryDelegate.registerDataPointOccurrences(dppFetcher);
+        PbDpavProbabilityManager dppFetcher = new PbDpavProbabilityManager();
+        queryDelegate.registerDpavOccurrences(dppFetcher);
         for (int rowIdx = startRowIdx; rowIdx < endRowIdx; rowIdx++) {
             dppFetcher.initialize(this.compressedProbabilities[rowIdx]);
             queryDelegate.execute(vector, rowIdx * vectorSize, dppFetcher);
@@ -223,24 +225,24 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
     @Override
     public void feedRow(long[] rowVector, long rowIdx, long[] dppVector) {
         super.feedRow(rowVector, rowIdx);
-        collectAndMapLpDataPointIds(dppVector);
+        collectAndMapLpDpavIds(dppVector);
         this.compressedProbabilities[(int) rowIdx] = PbVectorCodec.getInstance().encode(dppVector);
     }
 
     /**
-     * Collects lpDataPointIds in the dictionary and replaces the ids in the vector with the mapped ones.
+     * Collects lpDpavIds in the dictionary and replaces the ids in the vector with the mapped ones.
      * <p>
      * On average this leads to shorter ids and better vector compression ratio.
      * 
-     * @param dppVector vector with data point probabilities (will be modified)
+     * @param dppVector vector with DPAV probabilities (will be modified)
      */
-    protected void collectAndMapLpDataPointIds(long[] dppVector) {
+    protected void collectAndMapLpDpavIds(long[] dppVector) {
         for (int i = 0; i < dppVector.length; i++) {
             long dpp = dppVector[i];
-            int lpDataPointId = PbVectorCodec.decodeLpDataPointId(dpp);
-            int mappedLpDataPointId = dataPointDictionary.feed(lpDataPointId);
-            if (mappedLpDataPointId != lpDataPointId) {
-                dppVector[i] = PbVectorCodec.encodeDataPointProbability(mappedLpDataPointId, PbVectorCodec.decodeDataPointProbability(dpp));
+            int lpDpavId = PbVectorCodec.decodeLpDpavId(dpp);
+            int mappedLpDpavId = dpavDictionary.feed(lpDpavId);
+            if (mappedLpDpavId != lpDpavId) {
+                dppVector[i] = PbVectorCodec.encodeDpavProbability(mappedLpDpavId, PbVectorCodec.decodeDpavProbability(dpp));
             }
         }
         // by replacing the ids with the ones from the dictionary we have changed the order
@@ -257,7 +259,7 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
             int outputBufferSize = 10_000_000;
             try (BufferedOutputStream bos = new BufferedOutputStream(os, outputBufferSize)) {
                 writeRawBBS(bos);
-                writeDataPointDictionary(bos);
+                writeDpavDictionary(bos);
                 writeProbabilityVectors(bos);
             }
         }
@@ -273,18 +275,18 @@ public class PbInMemoryDataStore extends DefaultDataStore implements PbDataStore
      * @param bos destination
      * @throws IOException on error
      */
-    protected void writeDataPointDictionary(BufferedOutputStream bos) throws IOException {
-        LOGGER.debug("Storing data point dictionary ...");
-        int[] lpDataPointIdsInLookupOrder = this.dataPointDictionary.toIntArray();
-        LOGGER.debug("Writing {} lpDataPointIds ...", lpDataPointIdsInLookupOrder.length);
+    protected void writeDpavDictionary(BufferedOutputStream bos) throws IOException {
+        LOGGER.debug("Storing DPAV dictionary ...");
+        int[] lpDpavIdsInLookupOrder = this.dpavDictionary.toIntArray();
+        LOGGER.debug("Writing {} lpDpavIds ...", lpDpavIdsInLookupOrder.length);
         byte[] buffer = new byte[4];
-        PbVectorCodec.writeInt(lpDataPointIdsInLookupOrder.length, buffer, 0);
+        PbVectorCodec.writeInt(lpDpavIdsInLookupOrder.length, buffer, 0);
         bos.write(buffer);
-        for (int lpDataPointId : lpDataPointIdsInLookupOrder) {
-            PbVectorCodec.writeInt(lpDataPointId, buffer, 0);
+        for (int lpDpavId : lpDpavIdsInLookupOrder) {
+            PbVectorCodec.writeInt(lpDpavId, buffer, 0);
             bos.write(buffer);
         }
-        LOGGER.debug("Data point dictionary stored.");
+        LOGGER.debug("DPAV dictionary stored.");
     }
 
     /**
