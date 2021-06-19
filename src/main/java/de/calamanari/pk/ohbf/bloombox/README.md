@@ -60,15 +60,15 @@ Unfortunately, this does not hold true, if the same DPAV occurs multiple times.
 
 Here are a few examples:
 
-`(1) P(A AND A) != P(A) * P(A)` :x:
-`(2) P( (A AND B) OR (A AND C) ) != 1 - ((1-(P(A) * P(B))) * (1-(P(A) * P(C))))` :x:
-`(3) P( (A AND B) OR (NOT(A) AND B) ) != 1 - ((1-(P(A) * P(B))) * (1-((1-P(A)) * P(B))))` :x:
+`(1) P(A AND A) != P(A) * P(A)` :x:<br/><br/>
+`(2) P( (A AND B) OR (A AND C) ) != 1 - ((1-(P(A) * P(B))) * (1-(P(A) * P(C))))` :x:<br/><br/>
+`(3) P( (A AND B) OR (NOT(A) AND B) ) != 1 - ((1-(P(A) * P(B))) * (1-((1-P(A)) * P(B))))` :x:<br/><br/>
 `(4) P( (A AND B) OR (NOT(A) AND C) ) != 1 - ((1-(P(A) * P(B))) * (1-((1-P(A)) * P(C))))` :x:
 
 Many of these issues (like (1), (2) and (3)) you can avoid with predicate logic optimization, so that each DPAV only appears once:
 
-`(1) P(A AND A) = P(A)` :white_check_mark:
-`(2) P( (A AND B) OR (A AND C) ) = P( A AND (B OR C) ) = P(A) * (1-((1-P(B)) * (1-P(C))))` :white_check_mark:
+`(1) P(A AND A) = P(A)` :white_check_mark:<br/><br/>
+`(2) P( (A AND B) OR (A AND C) ) = P( A AND (B OR C) ) = P(A) * (1-((1-P(B)) * (1-P(C))))` :white_check_mark:<br/><br/>
 `(3) P( (A AND B) OR (NOT(A) AND B) ) = P(B)` :white_check_mark:
 
 See also [De Morgan's Law](https://en.wikipedia.org/wiki/De_Morgan%27s_laws).
