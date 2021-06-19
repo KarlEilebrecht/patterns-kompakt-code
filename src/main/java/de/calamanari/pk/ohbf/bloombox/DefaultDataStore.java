@@ -119,7 +119,7 @@ public class DefaultDataStore implements BloomBoxDataStore {
             throw ex;
         }
         catch (IOException | RuntimeException ex) {
-            throw new BloomBoxException(String.format("Error restoring data store %s.", header), ex);
+            throw new BloomBoxException(String.format("Error loading data store %s into memory.", header), ex);
         }
 
     }
@@ -155,7 +155,7 @@ public class DefaultDataStore implements BloomBoxDataStore {
             throw ex;
         }
         catch (IOException | RuntimeException ex) {
-            throw new BloomBoxException(String.format("Error restoring data store %s.", header), ex);
+            throw new BloomBoxException(String.format("Error loading data store %s into memory.", header), ex);
         }
 
     }
