@@ -149,7 +149,7 @@ public class PbDpavProbabilityManager implements DpavProbabilityFetcher, PbDpavO
     }
 
     /**
-     * Creates a key for the multi-occurrence map that identifies reuse of the same data point within an expression
+     * Creates a key for the multi-occurrence map that identifies reuse of the same DPAV within an expression
      * 
      * @param rootExpressionId the expression using this data point
      * @param lpDpavId key/value identifier
