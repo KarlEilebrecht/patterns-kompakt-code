@@ -123,7 +123,6 @@ public class DefaultUpScaler implements UpScaler {
 
     /**
      * @param config scaling configuration, not null
-     * @param stats the results from the previously executed counting query
      */
     public DefaultUpScaler(UpScalingConfig config) {
         this.config = config;

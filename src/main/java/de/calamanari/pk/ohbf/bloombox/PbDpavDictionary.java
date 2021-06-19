@@ -66,7 +66,7 @@ public class PbDpavDictionary implements Serializable {
      * 
      * @param lpDpavId key candidate &gt;= {@value ExpressionIdUtil#MIN_GENERATED_LP_DPAV_ID}
      * @return lookup id &lt; {@value ExpressionIdUtil#MIN_GENERATED_LP_DPAV_ID} or lpDpavId &gt;= {@value ExpressionIdUtil#MIN_GENERATED_LP_DPAV_ID}
-     * @throws IllegalArgumentException if the lpDpavId < {@value ExpressionIdUtil#MIN_GENERATED_LP_DPAV_ID}
+     * @throws IllegalArgumentException if the given lpDpavId &lt; {@value ExpressionIdUtil#MIN_GENERATED_LP_DPAV_ID}
      */
     public int feed(int lpDpavId) {
         if (lpDpavId < ExpressionIdUtil.MIN_GENERATED_LP_DPAV_ID) {

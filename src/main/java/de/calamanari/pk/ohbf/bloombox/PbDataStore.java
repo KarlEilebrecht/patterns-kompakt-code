@@ -20,8 +20,6 @@
 
 package de.calamanari.pk.ohbf.bloombox;
 
-import java.util.Map;
-
 /**
  * Interface for data stores that support probabilities
  * 
@@ -35,7 +33,7 @@ public interface PbDataStore extends BloomBoxDataStore {
      * 
      * @param rowVector long vector (bloom filter)
      * @param rowIdx number of the row
-     * @param dppVector data point probability vector, encoded by {@link PbVectorCodec#encodeDataPointProbabilities(Map)}
+     * @param dppVector data point probability vector, encoded by {@link PbVectorCodec#encode(long[])}
      * @throws BloomBoxException if the map contains an unknown column or if a probability is not in range 0..1
      */
     public void feedRow(long[] rowVector, long rowIdx, long[] dppVector);

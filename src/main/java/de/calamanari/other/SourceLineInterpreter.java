@@ -157,10 +157,16 @@ public class SourceLineInterpreter {
         }
     }
 
+    /**
+     * marks if a phrase is a comment and which type
+     */
     public enum CommentType {
         NONE, SIMPLE_STAR, DOUBLE_STAR, STRING_LITERAL, CHAR_LITERAL, END_OF_LINE
     }
 
+    /**
+     * represents a code text phrase
+     */
     public static class Phrase {
         public final String text;
 
