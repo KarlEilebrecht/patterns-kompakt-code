@@ -27,7 +27,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BinaryMatchExpression;
 /**
  * The {@link DpavProbabilityFetcher} (Data Point Attribute Value Probability Fetcher) allows determining the probability of a DPAV as late as possible.
  * <p>
- * <b>Note:<b> This is by intention not a lambda because lambdas are not serializable and cannot cache data.
+ * <b>Note:</b> This is by intention not a lambda because lambdas are not serializable and cannot cache data.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *

@@ -35,7 +35,7 @@ import de.calamanari.pk.ohbf.bloombox.bbq.QuantumOptimizer;
  * its probability only appears once in an expression, the way we recursively create a product based on the {@link BbqExpression}s is correct. <br>
  * In the moment any DPAV is referenced more than once in the expression, this estimation is wrong, because the conditions become <i>dependent</i> in an
  * unpredictable way. <br>
- * A trivial example is the expression <code>(A or B) and B</code>. For any probability <code>0 < P(B) &lt; 1</code> you will see that
+ * A trivial example is the expression <code>(A or B) and B</code>. For any probability <code>0 &lt; P(B) &lt; 1</code> you will see that
  * <code>P( (A or B) and B ) <b>!=</b> (1 - ((1 - P(A)) * (1 - P(B)))) * P(B)</code>, obviously correct is: <code>P( (A or B) and B ) == P(B)</code>.<br>
  * Simple cases like this can be handled by the {@link QuantumOptimizer}, but there are cases the optimizer cannot handle.<br>
  * As we do not know the dependency between the events to do a perfect computation, and I cannot do a proper estimation either to correct the results (at least

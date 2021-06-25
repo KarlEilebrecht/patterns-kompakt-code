@@ -29,8 +29,8 @@ import java.util.TimeZone;
 import de.calamanari.pk.ohbf.BloomFilterConfig;
 
 /**
- * The {@link BloomBoxHeader} is part of the bloom box file format (BBX) and contains the core information to restore a serialized bloom box.<b> Technically
- * (see {@link HeaderUtil}) it is a json-one-liner containing the box version (see {@link BloomBox#VERSION} and the exact settings.
+ * The {@link BloomBoxHeader} is part of the bloom box file format (BBX) and contains the core information to restore a serialized bloom box.<br>
+ * Technically (see {@link HeaderUtil}) it is a single line of JSON containing the box version (see {@link BloomBox#VERSION} and the exact settings.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *

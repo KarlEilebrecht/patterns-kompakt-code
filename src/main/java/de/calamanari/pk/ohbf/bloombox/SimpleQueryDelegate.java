@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
  * A {@link SimpleQueryDelegate} decouples both the {@link BloomBoxQueryRunner} and the {@link BloomBoxDataStore} from the details of the query execution and
  * the state.
  * <p>
- * <b>Note:</b> On the same delegate calls to {@link #execute(long[], int)} and {@link #execute(long[], int, float[])} must not be mixed, because this leads to
- * erratic result counts.
+ * <b>Note:</b> On the same delegate calls to {@link #execute(long[], int)} and {@link #execute(long[], int, DpavProbabilityFetcher)} must not be mixed, because
+ * this leads to erratic result counts.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *

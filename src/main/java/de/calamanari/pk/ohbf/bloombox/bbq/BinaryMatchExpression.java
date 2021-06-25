@@ -122,7 +122,7 @@ public class BinaryMatchExpression implements BbqExpression, PbDpavDictionaryAwa
 
     /**
      * This id uniquely identifies the key/value pair with the given binary pattern, so the same key/value equals expression will have different ids on
-     * different stores but it will have the same {@link #getDpavId()}.
+     * different stores but it will have the same {@link Dpav#getDpavId()}.
      */
     @Override
     public long getExpressionId() {

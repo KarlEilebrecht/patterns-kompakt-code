@@ -23,9 +23,9 @@ package de.calamanari.pk.ohbf.bloombox;
 import java.io.Serializable;
 
 /**
- * The {@link DataStoreHeader} is part of the bloom box file format (BBX) and contains the core information to restore a serialized data store.<b> Technically
- * (see {@link HeaderUtil}) it is a json-one-liner containing the box version (see {@link BloomBox#VERSION} and the exact settings plus the data store class
- * name.<br>
+ * The {@link DataStoreHeader} is part of the bloom box file format (BBX) and contains the core information to restore a serialized data store.<br>
+ * Technically (see {@link HeaderUtil}) it is a single line of JSON containing the box version (see {@link BloomBox#VERSION} and the exact settings plus the
+ * data store class name.<br>
  * This way an individual data store can be restored in the destination environment if the custom {@link BloomBoxDataStore} class is present.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>

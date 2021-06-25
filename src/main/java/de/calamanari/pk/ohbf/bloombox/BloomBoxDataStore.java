@@ -29,7 +29,7 @@ import java.io.Serializable;
  * method {@link #dispatch(QueryDelegate)} decouples the bloom filter operation (matching) from iterating the records in the the store.
  * <p>
  * <b>Important:</b> Part of the {@link BloomBoxDataStore} contract is providing a static method<br>
- * <b><code>public static BloomBoxDataStore restore(InputStream is, DataStoreHeader header, Map<String, String> envSettings)</code></b> that will allow
+ * <b><code>public static BloomBoxDataStore restore(InputStream is, DataStoreHeader header, Map&lt;String, String&gt; envSettings)</code></b> that will allow
  * de-serialization of stores serialized by {@link #serializeToStream(OutputStream)}.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
