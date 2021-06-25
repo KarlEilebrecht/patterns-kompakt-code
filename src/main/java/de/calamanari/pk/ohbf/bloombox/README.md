@@ -145,7 +145,7 @@ ${query1} UNION ${query2}
 
 Optionally, any `IN` or `NOT IN` expression as part of a basic query can have constraints (bounds). This way you can check multiple values and restrict the number of values that match at the same time.
 
-Syntax: `*argName* IN ( value1, value2, ... [; lowerBound] [; upperBound] )`
+Syntax: `argName IN ( value1, value2, ... [; lowerBound] [; upperBound] )`
 
 This feature is only useful in scenarios with *multi-value-support*. E.g., the attribute `hobby` could be fed with multiple values *for the same row*. This is possible because of the way the BloomBox stores data point attributes. For each data point (row) there may be specified several hobbies. Now you want to query all users with at least 2 hobbies out of a list.
 
