@@ -11,3 +11,4 @@ doc/javadoc/
 .classpath
 *.backup
 /.project
+.DS_Store
