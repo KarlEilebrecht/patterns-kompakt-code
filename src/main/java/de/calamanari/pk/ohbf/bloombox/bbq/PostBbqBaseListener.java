@@ -20,11 +20,11 @@
 
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
-// Generated from PostBbq.g4 by ANTLR 4.9.2
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+
+// Generated from Bbq.g4 by ANTLR 4.9.2
 
 /**
  * This class provides an empty implementation of {@link PostBbqListener}, which can be extended to create a listener which only needs to handle a subset of the
@@ -118,6 +118,72 @@ public class PostBbqBaseListener implements PostBbqListener {
      */
     @Override
     public void exitReference(PostBbqParser.ReferenceContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void enterLowerBound(PostBbqParser.LowerBoundContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void exitLowerBound(PostBbqParser.LowerBoundContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void enterUpperBound(PostBbqParser.UpperBoundContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void exitUpperBound(PostBbqParser.UpperBoundContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void enterMinMaxExpression(PostBbqParser.MinMaxExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void exitMinMaxExpression(PostBbqParser.MinMaxExpressionContext ctx) {
     }
 
     /**

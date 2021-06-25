@@ -41,6 +41,9 @@ fragment O          : ('O'|'o') ;
 fragment R          : ('R'|'r') ;
 fragment I          : ('I'|'i') ;
 fragment T          : ('T'|'t') ;
+fragment M          : ('M'|'m') ;
+fragment X          : ('X'|'x') ;
+
 
 fragment SQUOTE     : ('\'') ;
 
@@ -61,12 +64,9 @@ NOT                 : N O T ;
 
 IN                  : I N ;
 
+MINMAX              : M I N M A X ;
 
-
-
-
-SIMPLE_WORD         : (~[ \t\r\n'"()!=,])+ ;
-
+SIMPLE_WORD         : (~[ \t\r\n'"()!=,;])+ ;
 
 SQWORD              : SQUOTE (~['\\] | ' ' | ESCESC | ESCSQ)* SQUOTE {setText(getText().substring(1, getText().length()-1).replace("\\'","'").replace("\\\\","\\"));};
 
@@ -78,21 +78,26 @@ DQWORD              : DQUOTE (~["\\] | ' ' | ESCESC | ESCDQ)* DQUOTE {setText(ge
 */
 
 
-argName             : (SIMPLE_WORD | SQWORD | DQWORD);
+argName             : (SIMPLE_WORD | SQWORD | DQWORD) ;
 
 argValue            : (SIMPLE_WORD | SQWORD | DQWORD) ;
 
+lowerBound          : SIMPLE_WORD ;
+
+upperBound          : SIMPLE_WORD ;
+
 inValue             : (' ' | '\t' | '\r' | '\n')* argValue (' ' | '\t' | '\r' | '\n')* ;
 nextValue           : ',' inValue ;
-
 
 cmpEquals           : argName (' ' | '\t' | '\r' | '\n')* '=' (' ' | '\t' | '\r' | '\n')* argValue ;
 
 cmpNotEquals        : argName (' ' | '\t' | '\r' | '\n')* '!' '=' (' ' | '\t' | '\r' | '\n')* argValue ;
 
-cmpIn               : argName (' ' | '\t' | '\r' | '\n')+ IN (' ' | '\t' | '\r' | '\n')* '(' inValue (nextValue)* ')' ;
+cmpIn               : argName (' ' | '\t' | '\r' | '\n')+ IN (' ' | '\t' | '\r' | '\n')* '(' inValue (nextValue)*  ( ';' (' ' | '\t' | '\r' | '\n')* lowerBound (' ' | '\t' | '\r' | '\n')*  )? ( ';' (' ' | '\t' | '\r' | '\n')* upperBound (' ' | '\t' | '\r' | '\n')*  )? ')' ;
 
-cmpNotIn            : argName (' ' | '\t' | '\r' | '\n')+ NOT (' ' | '\t' | '\r' | '\n')+ IN (' ' | '\t' | '\r' | '\n')* '(' inValue (nextValue)* ')' ;
+cmpNotIn            : argName (' ' | '\t' | '\r' | '\n')+ NOT (' ' | '\t' | '\r' | '\n')+ IN (' ' | '\t' | '\r' | '\n')* '(' inValue (nextValue)*  ( ';' (' ' | '\t' | '\r' | '\n')* lowerBound (' ' | '\t' | '\r' | '\n')*  )? ( ';' (' ' | '\t' | '\r' | '\n')* upperBound (' ' | '\t' | '\r' | '\n')*  )? ')' ;
+
+minMaxExpression    : (' ' | '\t' | '\r' | '\n')* MINMAX (' ' | '\t' | '\r' | '\n')* '(' bbqDetails (',' (' ' | '\t' | '\r' | '\n')* bbqDetails)* (' ' | '\t' | '\r' | '\n')* ';' (' ' | '\t' | '\r' | '\n')* lowerBound (' ' | '\t' | '\r' | '\n')* ( ';' (' ' | '\t' | '\r' | '\n')* upperBound (' ' | '\t' | '\r' | '\n')*  )? ')' ;
 
 expressionDetails   : (' ' | '\t' | '\r' | '\n')* (cmpEquals | cmpNotEquals | cmpIn | cmpNotIn) ;
 
@@ -102,9 +107,11 @@ andExpression       : (' ' | '\t' | '\r' | '\n')* AND (' ' | '\t' | '\r' | '\n')
 
 expression          : expressionDetails (andExpression | orExpression)* ;
 
-bracedExpression    : (' ' | '\t' | '\r' | '\n')* '(' fullBBQ ')' (' ' | '\t' | '\r' | '\n')* ;
+bracedExpression    : (' ' | '\t' | '\r' | '\n')* '(' fullBBQ (' ' | '\t' | '\r' | '\n')* ')' (' ' | '\t' | '\r' | '\n')* ;
 
-bbqDetails          : (expression | bracedExpression) ;
+notExpression       : (' ' | '\t' | '\r' | '\n')* NOT (' ' | '\t' | '\r' | '\n')* '(' fullBBQ (' ' | '\t' | '\r' | '\n')* ')' (' ' | '\t' | '\r' | '\n')* ;
+
+bbqDetails          : (expression | bracedExpression | notExpression | minMaxExpression) ;
 
 andBBQ              : (' ' | '\t' | '\r' | '\n')* AND bbqDetails ;
 

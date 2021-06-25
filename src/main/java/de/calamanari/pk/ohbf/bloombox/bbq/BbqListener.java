@@ -20,8 +20,9 @@
 
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
-// Generated from Bbq.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+
+// Generated from Bbq.g4 by ANTLR 4.9.2
 
 /**
  * This interface defines a complete listener for a parse tree produced by {@link BbqParser}.
@@ -54,6 +55,34 @@ public interface BbqListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitArgValue(BbqParser.ArgValueContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link BbqParser#lowerBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void enterLowerBound(BbqParser.LowerBoundContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link BbqParser#lowerBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void exitLowerBound(BbqParser.LowerBoundContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link BbqParser#upperBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void enterUpperBound(BbqParser.UpperBoundContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link BbqParser#upperBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void exitUpperBound(BbqParser.UpperBoundContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#inValue}.
@@ -140,6 +169,20 @@ public interface BbqListener extends ParseTreeListener {
     void exitCmpNotIn(BbqParser.CmpNotInContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link BbqParser#minMaxExpression}.
+     * 
+     * @param ctx the parse tree
+     */
+    void enterMinMaxExpression(BbqParser.MinMaxExpressionContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link BbqParser#minMaxExpression}.
+     * 
+     * @param ctx the parse tree
+     */
+    void exitMinMaxExpression(BbqParser.MinMaxExpressionContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link BbqParser#expressionDetails}.
      * 
      * @param ctx the parse tree
@@ -208,6 +251,20 @@ public interface BbqListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitBracedExpression(BbqParser.BracedExpressionContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link BbqParser#notExpression}.
+     * 
+     * @param ctx the parse tree
+     */
+    void enterNotExpression(BbqParser.NotExpressionContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link BbqParser#notExpression}.
+     * 
+     * @param ctx the parse tree
+     */
+    void exitNotExpression(BbqParser.NotExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#bbqDetails}.

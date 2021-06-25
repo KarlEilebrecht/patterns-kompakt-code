@@ -24,24 +24,32 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
+import de.calamanari.pk.ohbf.bloombox.BbxMessage;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.AndBBQContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.AndExpressionContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.ArgNameContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.ArgValueContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.BbqDetailsContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.BracedExpressionContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.CmpEqualsContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.CmpInContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.CmpNotEqualsContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.CmpNotInContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.LowerBoundContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.MinMaxExpressionContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.NotExpressionContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.OrBBQContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.OrExpressionContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.QueryContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.BbqParser.UpperBoundContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.BoundedOr.InvalidBoundsException;
 
 /**
  * The {@link IntermediateExpressionBuilder} uses ANTLR to transform a given textual BBQ-query (basic query) into a first tree of
@@ -120,11 +128,18 @@ public class IntermediateExpressionBuilder extends BbqBaseListener {
     public void exitCmpIn(CmpInContext ctx) {
         DataCollector currentCollector = stack.pop();
 
-        IntermediateOrExpression expression = new IntermediateOrExpression();
-        for (String value : currentCollector.values) {
-            expression.getSubExpressionList().add(new IntermediateEquals(currentCollector.argName, value));
+        if (currentCollector.lowerBound <= 0 && currentCollector.upperBound <= 0) {
+            IntermediateOrExpression expression = new IntermediateOrExpression();
+            for (String value : currentCollector.values) {
+                expression.getSubExpressionList().add(new IntermediateEquals(currentCollector.argName, value));
+            }
+            stack.peek().childExpressions.add(expression);
         }
-        stack.peek().childExpressions.add(expression);
+        else {
+            List<IntermediateExpression> conditions = currentCollector.values.stream().map(value -> new IntermediateEquals(currentCollector.argName, value))
+                    .collect(Collectors.toList());
+            stack.peek().childExpressions.add(createBoundedOr(conditions, currentCollector.lowerBound, currentCollector.upperBound, ctx.getText()));
+        }
     }
 
     @Override
@@ -136,11 +151,19 @@ public class IntermediateExpressionBuilder extends BbqBaseListener {
     public void exitCmpNotIn(CmpNotInContext ctx) {
         DataCollector currentCollector = stack.pop();
 
-        IntermediateAndExpression expression = new IntermediateAndExpression();
-        for (String value : currentCollector.values) {
-            expression.getSubExpressionList().add(new IntermediateNotEquals(currentCollector.argName, value));
+        if (currentCollector.lowerBound <= 0 && currentCollector.upperBound <= 0) {
+
+            IntermediateAndExpression expression = new IntermediateAndExpression();
+            for (String value : currentCollector.values) {
+                expression.getSubExpressionList().add(new IntermediateNotEquals(currentCollector.argName, value));
+            }
+            stack.peek().childExpressions.add(expression);
         }
-        stack.peek().childExpressions.add(expression);
+        else {
+            List<IntermediateExpression> conditions = currentCollector.values.stream().map(value -> new IntermediateNotEquals(currentCollector.argName, value))
+                    .collect(Collectors.toList());
+            stack.peek().childExpressions.add(createBoundedOr(conditions, currentCollector.lowerBound, currentCollector.upperBound, ctx.getText()));
+        }
     }
 
     @Override
@@ -198,6 +221,61 @@ public class IntermediateExpressionBuilder extends BbqBaseListener {
         IntermediateAndExpression expression = new IntermediateAndExpression();
         expression.getSubExpressionList().addAll(currentCollector.childExpressions);
         stack.peek().childExpressions.add(expression);
+    }
+
+    @Override
+    public void enterNotExpression(NotExpressionContext ctx) {
+        stack.push(new DataCollector(ElementType.BRACE));
+    }
+
+    @Override
+    public void exitNotExpression(NotExpressionContext ctx) {
+        DataCollector currentCollector = stack.pop();
+
+        IntermediateNotExpression expression = new IntermediateNotExpression();
+        expression.getSubExpressionList().addAll(currentCollector.childExpressions);
+        stack.peek().childExpressions.add(expression);
+    }
+
+    @Override
+    public void enterLowerBound(LowerBoundContext ctx) {
+        stack.peek().lowerBound = BoundedOr.parseBoundValue(ctx.getText(), ctx.getParent().getText());
+    }
+
+    @Override
+    public void enterUpperBound(UpperBoundContext ctx) {
+        stack.peek().upperBound = BoundedOr.parseBoundValue(ctx.getText(), ctx.getParent().getText());
+    }
+
+    @Override
+    public void enterMinMaxExpression(MinMaxExpressionContext ctx) {
+        stack.push(new DataCollector(ElementType.BRACE));
+        stack.peek().requiresOpenExtraBraces = true;
+    }
+
+    @Override
+    public void exitMinMaxExpression(MinMaxExpressionContext ctx) {
+        DataCollector currentCollector = stack.pop();
+        stack.peek().childExpressions
+                .add(createBoundedOr(currentCollector.childExpressions, currentCollector.lowerBound, currentCollector.upperBound, ctx.getText()));
+    }
+
+    @Override
+    public void enterBbqDetails(BbqDetailsContext ctx) {
+        if (stack.peek().requiresOpenExtraBraces) {
+            stack.push(new DataCollector(ElementType.BRACE));
+            stack.peek().requiresCloseExtraBraces = true;
+        }
+    }
+
+    @Override
+    public void exitBbqDetails(BbqDetailsContext ctx) {
+        if (stack.peek().requiresCloseExtraBraces) {
+            DataCollector currentCollector = stack.pop();
+            IntermediateBraces expression = new IntermediateBraces();
+            expression.getSubExpressionList().addAll(currentCollector.childExpressions);
+            stack.peek().childExpressions.add(expression);
+        }
     }
 
     @Override
@@ -268,6 +346,32 @@ public class IntermediateExpressionBuilder extends BbqBaseListener {
     }
 
     /**
+     * Creates for minmax and (not) in clauses a bounded expression
+     * 
+     * @param conditions elements
+     * @param lowerBound constraint
+     * @param upperBound constraint
+     * @param debugInfo to narrow a problem in error message
+     * @return bounded expression
+     */
+    private IntermediateExpression createBoundedOr(List<IntermediateExpression> conditions, int lowerBound, int upperBound, String debugInfo) {
+        IntermediateExpression res = null;
+        try {
+            // @formatter:off
+            res = BoundedOr.of(conditions)
+                             .min(lowerBound)
+                             .max(upperBound)
+                             .build();
+            // @formatter:on
+        }
+        catch (InvalidBoundsException ex) {
+            String msg = ex.getMessage() + String.format(" Problematic expression: '%s'.", debugInfo);
+            throw new InvalidBoundsException(BbxMessage.ERR_QUERY_SYNTAX_BOUNDS.format(msg));
+        }
+        return res;
+    }
+
+    /**
      * OBSERVER of the ANTLER processing, tracks issues and collects messages
      */
     private class ErrorListener extends BaseErrorListener {
@@ -326,6 +430,27 @@ public class IntermediateExpressionBuilder extends BbqBaseListener {
          * member expressions we found inside this expression
          */
         List<IntermediateExpression> childExpressions = new ArrayList<>();
+
+        /**
+         * minmax constraint
+         */
+        int lowerBound = 0;
+
+        /**
+         * minmax constraint
+         */
+        int upperBound = 0;
+
+        /**
+         * in case of MINMAX we need extra braces to keep comma-separated expressions intact
+         */
+        boolean requiresOpenExtraBraces = false;
+
+        /**
+         * MINMAX: close the extra braces
+         */
+        boolean requiresCloseExtraBraces = false;
+
     }
 
 }

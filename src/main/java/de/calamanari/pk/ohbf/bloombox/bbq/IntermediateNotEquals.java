@@ -38,12 +38,12 @@ public class IntermediateNotEquals implements IntermediateExpression {
     /**
      * name of the "column"
      */
-    private final String argName;
+    final String argName;
 
     /**
      * value that must not match
      */
-    private final String argValue;
+    final String argValue;
 
     /**
      * @param argName name of the "column"

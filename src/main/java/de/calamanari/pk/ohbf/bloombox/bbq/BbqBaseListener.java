@@ -20,11 +20,11 @@
 
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
-// Generated from Bbq.g4 by ANTLR 4.9.2
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+
+// Generated from Bbq.g4 by ANTLR 4.9.2
 
 /**
  * This class provides an empty implementation of {@link BbqListener}, which can be extended to create a listener which only needs to handle a subset of the
@@ -74,6 +74,50 @@ public class BbqBaseListener implements BbqListener {
      */
     @Override
     public void exitArgValue(BbqParser.ArgValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void enterLowerBound(BbqParser.LowerBoundContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void exitLowerBound(BbqParser.LowerBoundContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void enterUpperBound(BbqParser.UpperBoundContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void exitUpperBound(BbqParser.UpperBoundContext ctx) {
     }
 
     /**
@@ -216,6 +260,28 @@ public class BbqBaseListener implements BbqListener {
      * </p>
      */
     @Override
+    public void enterMinMaxExpression(BbqParser.MinMaxExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void exitMinMaxExpression(BbqParser.MinMaxExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
     public void enterExpressionDetails(BbqParser.ExpressionDetailsContext ctx) {
     }
 
@@ -316,6 +382,28 @@ public class BbqBaseListener implements BbqListener {
      */
     @Override
     public void exitBracedExpression(BbqParser.BracedExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void enterNotExpression(BbqParser.NotExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     */
+    @Override
+    public void exitNotExpression(BbqParser.NotExpressionContext ctx) {
     }
 
     /**

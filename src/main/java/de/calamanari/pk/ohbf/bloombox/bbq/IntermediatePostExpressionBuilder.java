@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -32,12 +33,17 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
 import de.calamanari.pk.ohbf.bloombox.BbxMessage;
+import de.calamanari.pk.ohbf.bloombox.bbq.BoundedOr.InvalidBoundsException;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.BracedExpressionContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.ExpressionContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.IntersectExpressionContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.LowerBoundContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.MinMaxExpressionContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.MinusExpressionContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.QueryContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.SourceContext;
 import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.UnionExpressionContext;
+import de.calamanari.pk.ohbf.bloombox.bbq.PostBbqParser.UpperBoundContext;
 
 /**
  * The {@link IntermediateExpressionBuilder} uses ANTLR to transform a given textual BBQ-query (post query) into a first tree of
@@ -164,6 +170,59 @@ public class IntermediatePostExpressionBuilder extends PostBbqBaseListener {
     }
 
     @Override
+    public void enterLowerBound(LowerBoundContext ctx) {
+        stack.peek().lowerBound = BoundedOr.parseBoundValue(ctx.getText(), ctx.getParent().getText());
+    }
+
+    @Override
+    public void enterUpperBound(UpperBoundContext ctx) {
+        stack.peek().upperBound = BoundedOr.parseBoundValue(ctx.getText(), ctx.getParent().getText());
+    }
+
+    @Override
+    public void enterMinMaxExpression(MinMaxExpressionContext ctx) {
+        DataCollector nested = new DataCollector(ElementType.BRACE);
+        nested.requiresOpenExtraBraces = true;
+        stack.peek().childCollectors.add(nested);
+        stack.push(nested);
+    }
+
+    @Override
+    public void exitMinMaxExpression(MinMaxExpressionContext ctx) {
+        DataCollector minMaxCollector = stack.pop();
+        List<IntermediateExpression> expressions = minMaxCollector.childCollectors.stream().map(DataCollector::createExpression).collect(Collectors.toList());
+        try {
+            // @formatter:off
+            minMaxCollector.expression = BoundedOr.of(expressions)
+                     .min(minMaxCollector.lowerBound)
+                     .max(minMaxCollector.upperBound)
+                     .build();
+            // @formatter:on
+        }
+        catch (InvalidBoundsException ex) {
+            String msg = ex.getMessage() + String.format(" Problematic expression: '%s'.", ctx.getText());
+            throw new InvalidBoundsException(BbxMessage.ERR_QUERY_SYNTAX_BOUNDS.format(msg));
+        }
+    }
+
+    @Override
+    public void enterExpression(ExpressionContext ctx) {
+        if (stack.peek().requiresOpenExtraBraces) {
+            DataCollector nested = new DataCollector(ElementType.BRACE);
+            nested.requiresCloseExtraBraces = true;
+            stack.peek().childCollectors.add(nested);
+            stack.push(nested);
+        }
+    }
+
+    @Override
+    public void exitExpression(ExpressionContext ctx) {
+        if (stack.peek().requiresCloseExtraBraces) {
+            stack.pop();
+        }
+    }
+
+    @Override
     public void enterQuery(QueryContext ctx) {
         this.root = new DataCollector(ElementType.ROOT);
         stack.clear();
@@ -262,6 +321,26 @@ public class IntermediatePostExpressionBuilder extends PostBbqBaseListener {
          * child collectors (build tree while walking through the stack)
          */
         List<DataCollector> childCollectors = new ArrayList<>();
+
+        /**
+         * minmax constraint
+         */
+        int lowerBound = 0;
+
+        /**
+         * minmax constraint
+         */
+        int upperBound = 0;
+
+        /**
+         * in case of MINMAX we need extra braces to keep comma-separated expressions intact
+         */
+        boolean requiresOpenExtraBraces = false;
+
+        /**
+         * MINMAX: close the extra braces
+         */
+        boolean requiresCloseExtraBraces = false;
 
         /**
          * @return intermediate expression representing the collected data or combining the expressions of all child collectors

@@ -235,22 +235,28 @@ public class InternalQuery implements PbDpavOccurrenceAware, Serializable {
     public void appendAsTree(StringBuilder sb) {
         sb.append("\nquery name: '");
         sb.append(name);
-        sb.append("'\n    base query: ");
+        sb.append("'\n    base query");
         if (baseQuery == null) {
-            sb.append("null");
+            sb.append(": null");
         }
         else {
+            sb.append(" (complexity=");
+            sb.append(baseQuery.getExpression().computeComplexity());
+            sb.append("): ");
             baseQuery.appendAsTree(2, sb);
         }
         if (subQueries != null && subQueries.length > 0) {
             for (int i = 0; i < subQueries.length; i++) {
                 sb.append("\n        sub query '");
                 sb.append(String.valueOf(subQueryLabels[i]));
-                sb.append("': ");
+                sb.append("'");
                 if (subQueries[i] == null) {
-                    sb.append("null\n");
+                    sb.append(": null\n");
                 }
                 else {
+                    sb.append(" (complexity=");
+                    sb.append(subQueries[i].getExpression().computeComplexity());
+                    sb.append("): ");
                     subQueries[i].appendAsTree(3, sb);
                 }
             }

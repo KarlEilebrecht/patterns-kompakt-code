@@ -91,6 +91,11 @@ public enum BbxMessage {
     ERR_INVALID_QUERY_REFERENCE("BBXE-1021"),
 
     /**
+     * The bounds in a MINMAX-statement are malformed
+     */
+    ERR_QUERY_SYNTAX_BOUNDS("BBXE-1024"),
+
+    /**
      * (Most likely) a problem with the quoting in a given query
      */
     ERR_QUERY_SYNTAX_QUOTES("BBXE-1025"),

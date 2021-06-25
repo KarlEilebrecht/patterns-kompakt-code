@@ -44,6 +44,11 @@ public enum IntermediateExpressionType {
     BRACES(false, false),
 
     /**
+     * enclosing NOT expression
+     */
+    NOT(false, false),
+
+    /**
      * condition that yields true if the member expressions are all true, otherwise false
      */
     AND(false, false),

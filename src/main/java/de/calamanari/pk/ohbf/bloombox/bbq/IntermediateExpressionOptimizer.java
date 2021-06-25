@@ -56,8 +56,11 @@ public class IntermediateExpressionOptimizer {
         if (!expression.getType().isSimple()) {
             List<IntermediateExpression> subExpressions = ((IntermediateCombinedExpression) expression).getSubExpressionList();
             subExpressions.forEach(this::convertToPrefixNotation);
-            suckInOrphanFromTheLeft(subExpressions, IntermediateExpressionType.AND);
-            suckInOrphanFromTheLeft(subExpressions, IntermediateExpressionType.OR);
+            // Only use magnet rules if the surrounding expression is still untyped
+            if (expression.getType() == IntermediateExpressionType.BRACES) {
+                suckInOrphanFromTheLeft(subExpressions, IntermediateExpressionType.AND);
+                suckInOrphanFromTheLeft(subExpressions, IntermediateExpressionType.OR);
+            }
         }
         LOGGER.trace("convertToPrefixNotation AFTER: \n{}", defer(() -> formatExpressionAsTree(expression)));
     }
@@ -159,7 +162,9 @@ public class IntermediateExpressionOptimizer {
         if (!expression.getType().isSimple()) {
             List<IntermediateExpression> subExpressions = ((IntermediateCombinedExpression) expression).getSubExpressionList();
             subExpressions.forEach(this::consolidateCombinedExpressions);
-            consolidateSubExpressionsOfSameType(subExpressions, expression.getType());
+            if (expression.getType() != IntermediateExpressionType.NOT) {
+                consolidateSubExpressionsOfSameType(subExpressions, expression.getType());
+            }
         }
         LOGGER.trace("consolidateCombinedExpressions AFTER: \n{}", defer(() -> formatExpressionAsTree(expression)));
     }
@@ -186,6 +191,60 @@ public class IntermediateExpressionOptimizer {
     }
 
     /**
+     * Removes nested negations recursively
+     * 
+     * @param expression candidate
+     * @return the optimized expression
+     */
+    IntermediateExpression removeNestedNegations(IntermediateExpression expression) {
+        final IntermediateExpression logExIn = expression;
+        LOGGER.trace("removeNestedNegations BEFORE: \n{}", defer(() -> formatExpressionAsTree(logExIn)));
+        if (!expression.getType().isSimple()) {
+            List<IntermediateExpression> subExpressions = ((IntermediateCombinedExpression) expression).getSubExpressionList();
+            for (int i = 0; i < subExpressions.size(); i++) {
+                IntermediateExpression subExpression = subExpressions.get(i);
+                IntermediateExpression optimizedSubExpression = removeNestedNegations(subExpression);
+                if (optimizedSubExpression != subExpression) {
+                    subExpressions.set(i, optimizedSubExpression);
+                }
+            }
+            if (expression.getType() == IntermediateExpressionType.NOT) {
+                expression = removeNestedNegation((IntermediateNotExpression) expression);
+            }
+        }
+
+        final IntermediateExpression logExOut = expression;
+        LOGGER.trace("removeNestedNegations AFTER: \n{}", defer(() -> formatExpressionAsTree(logExOut)));
+        return expression;
+
+    }
+
+    /**
+     * Removes nested negation
+     * 
+     * @param expression candidate
+     * @return the optimized expression
+     */
+    IntermediateExpression removeNestedNegation(IntermediateNotExpression expression) {
+        IntermediateExpression res = expression;
+        List<IntermediateExpression> subExpressions = expression.getSubExpressionList();
+        if (subExpressions.size() == 1) {
+            if (subExpressions.get(0).getType() == IntermediateExpressionType.NOT) {
+                List<IntermediateExpression> subSubExpressions = ((IntermediateCombinedExpression) subExpressions.get(0)).getSubExpressionList();
+                if (subSubExpressions.size() == 1) {
+                    res = subSubExpressions.get(0);
+                }
+            }
+            else if (subExpressions.get(0).getType() == IntermediateExpressionType.NOT_EQUALS) {
+                IntermediateNotEquals negated = (IntermediateNotEquals) subExpressions.get(0);
+                res = new IntermediateEquals(negated.argName, negated.argValue);
+            }
+        }
+
+        return res;
+    }
+
+    /**
      * Removes the remaining braces at the root (if any)
      * 
      * @param expression root expression
@@ -206,7 +265,7 @@ public class IntermediateExpressionOptimizer {
                 }
             }
         }
-        if (!expression.getType().isSimple()) {
+        if (expression.getType() != IntermediateExpressionType.NOT && !expression.getType().isSimple()) {
             IntermediateCombinedExpression casted = (IntermediateCombinedExpression) expression;
             if (casted.getSubExpressionList().size() == 1) {
                 expression = casted.getSubExpressionList().get(0);
@@ -344,7 +403,8 @@ public class IntermediateExpressionOptimizer {
         if (!expression.getType().isSimple()) {
             List<IntermediateExpression> subExpressions = ((IntermediateCombinedExpression) expression).getSubExpressionList();
             removeAndOrSingletons(subExpressions);
-            if (subExpressions.size() == 1) {
+            if ((expression.getType() == IntermediateExpressionType.AND || expression.getType() == IntermediateExpressionType.OR)
+                    && subExpressions.size() == 1) {
                 expression = subExpressions.get(0);
             }
         }
@@ -390,6 +450,7 @@ public class IntermediateExpressionOptimizer {
         removeAllBraces(expression);
         expression = convertRootBraces(expression);
         consolidateCombinedExpressions(expression);
+        expression = removeNestedNegations(expression);
         expression = removeAndOrSingletons(expression);
         sortAndDedup(expression);
         expression = removeAndOrSingletons(expression);

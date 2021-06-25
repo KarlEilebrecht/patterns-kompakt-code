@@ -35,7 +35,7 @@ Line breaks are treated as regular whitespace to support multi-line queries.
 
 grammar PostBbq;
 
-
+fragment A          : ('A'|'a') ;
 fragment U          : ('U'|'u') ;
 fragment N          : ('N'|'n') ;
 fragment I          : ('I'|'i') ;
@@ -46,6 +46,7 @@ fragment T          : ('T'|'t') ;
 fragment S          : ('S'|'s') ;
 fragment C          : ('C'|'c') ;
 fragment M          : ('M'|'m') ;
+fragment X          : ('X'|'x') ;
 
 fragment SQUOTE     : ('\'') ;
 
@@ -62,9 +63,10 @@ ESCDQ               : ESCAPE DQUOTE ;
 UNION               : U N I O N ;
 INTERSECT           : I N T E R S E C T ;
 MINUS               : M I N U S ;
+MINMAX              : M I N M A X ;
 
 
-SIMPLE_WORD         : (~[ \t\r\n'"()${},])+ ;
+SIMPLE_WORD         : (~[ \t\r\n'"()${},;])+ ;
 
 
 SQWORD              : SQUOTE (~['\\] | ' ' | ESCESC | ESCSQ)* SQUOTE {setText(getText().substring(1, getText().length()-1).replace("\\'","'").replace("\\\\","\\"));} ;
@@ -85,16 +87,21 @@ source              : (SIMPLE_WORD | SQWORD | DQWORD) ;
 
 reference           : refStart source refEnd ;
 
+lowerBound          : SIMPLE_WORD ;
 
-unionExpression     : (' ' | '\t' | '\r' | '\n')* UNION (' ' | '\t' | '\r' | '\n')* (bracedExpression | reference) ;
+upperBound          : SIMPLE_WORD ;
 
-intersectExpression : (' ' | '\t' | '\r' | '\n')* INTERSECT (' ' | '\t' | '\r' | '\n')* (bracedExpression | reference) ;
+minMaxExpression    : (' ' | '\t' | '\r' | '\n')* MINMAX (' ' | '\t' | '\r' | '\n')* '(' expression (',' (' ' | '\t' | '\r' | '\n')* expression)* (' ' | '\t' | '\r' | '\n')* ';' (' ' | '\t' | '\r' | '\n')* lowerBound (' ' | '\t' | '\r' | '\n')* ( ';' (' ' | '\t' | '\r' | '\n')* upperBound (' ' | '\t' | '\r' | '\n')*  )? ')' ;
 
-minusExpression     : (' ' | '\t' | '\r' | '\n')* MINUS (' ' | '\t' | '\r' | '\n')* (bracedExpression | reference) ;
+unionExpression     : (' ' | '\t' | '\r' | '\n')* UNION (' ' | '\t' | '\r' | '\n')* (bracedExpression | reference | minMaxExpression) ;
+
+intersectExpression : (' ' | '\t' | '\r' | '\n')* INTERSECT (' ' | '\t' | '\r' | '\n')* (bracedExpression | reference | minMaxExpression) ;
+
+minusExpression     : (' ' | '\t' | '\r' | '\n')* MINUS (' ' | '\t' | '\r' | '\n')* (bracedExpression | reference | minMaxExpression) ;
 
 bracedExpression    : (' ' | '\t' | '\r' | '\n')* '(' expression ')' (' ' | '\t' | '\r' | '\n')* ;
 
-expression          : reference | (reference | bracedExpression) (unionExpression+ | intersectExpression+ | minusExpression+) ;
+expression          : minMaxExpression | reference | (minMaxExpression | reference | bracedExpression) (unionExpression+ | intersectExpression+ | minusExpression+) ;
 
 
 query               : expression (' ' | '\t' | '\r' | '\n')* EOF ;

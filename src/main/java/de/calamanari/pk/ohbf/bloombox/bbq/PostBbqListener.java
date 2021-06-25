@@ -20,8 +20,9 @@
 
 package de.calamanari.pk.ohbf.bloombox.bbq;
 
-// Generated from PostBbq.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+
+// Generated from Bbq.g4 by ANTLR 4.9.2
 
 /**
  * This interface defines a complete listener for a parse tree produced by {@link PostBbqParser}.
@@ -82,6 +83,48 @@ public interface PostBbqListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitReference(PostBbqParser.ReferenceContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link PostBbqParser#lowerBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void enterLowerBound(PostBbqParser.LowerBoundContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link PostBbqParser#lowerBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void exitLowerBound(PostBbqParser.LowerBoundContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link PostBbqParser#upperBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void enterUpperBound(PostBbqParser.UpperBoundContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link PostBbqParser#upperBound}.
+     * 
+     * @param ctx the parse tree
+     */
+    void exitUpperBound(PostBbqParser.UpperBoundContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link PostBbqParser#minMaxExpression}.
+     * 
+     * @param ctx the parse tree
+     */
+    void enterMinMaxExpression(PostBbqParser.MinMaxExpressionContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link PostBbqParser#minMaxExpression}.
+     * 
+     * @param ctx the parse tree
+     */
+    void exitMinMaxExpression(PostBbqParser.MinMaxExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link PostBbqParser#unionExpression}.

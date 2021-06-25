@@ -19,7 +19,6 @@
 //@formatter:on
 
 package de.calamanari.pk.ohbf.bloombox.bbq;
-// Generated from PostBbq.g4 by ANTLR 4.9.2
 
 import java.util.List;
 
@@ -40,6 +39,8 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+// Generated from Bbq.g4 by ANTLR 4.9.2
+
 @SuppressWarnings({ "all", "warnings", "unchecked", "unused", "cast" })
 public class PostBbqParser extends Parser {
     static {
@@ -48,27 +49,28 @@ public class PostBbqParser extends Parser {
 
     protected static final DFA[] _decisionToDFA;
     protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
-    public static final int T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9, ESCESC = 10, ESCSQ = 11, ESCDQ = 12,
-            UNION = 13, INTERSECT = 14, MINUS = 15, SIMPLE_WORD = 16, SQWORD = 17, DQWORD = 18;
-    public static final int RULE_refStart = 0, RULE_refEnd = 1, RULE_source = 2, RULE_reference = 3, RULE_unionExpression = 4, RULE_intersectExpression = 5,
-            RULE_minusExpression = 6, RULE_bracedExpression = 7, RULE_expression = 8, RULE_query = 9;
+    public static final int T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, ESCESC = 12,
+            ESCSQ = 13, ESCDQ = 14, UNION = 15, INTERSECT = 16, MINUS = 17, MINMAX = 18, SIMPLE_WORD = 19, SQWORD = 20, DQWORD = 21;
+    public static final int RULE_refStart = 0, RULE_refEnd = 1, RULE_source = 2, RULE_reference = 3, RULE_lowerBound = 4, RULE_upperBound = 5,
+            RULE_minMaxExpression = 6, RULE_unionExpression = 7, RULE_intersectExpression = 8, RULE_minusExpression = 9, RULE_bracedExpression = 10,
+            RULE_expression = 11, RULE_query = 12;
 
     private static String[] makeRuleNames() {
-        return new String[] { "refStart", "refEnd", "source", "reference", "unionExpression", "intersectExpression", "minusExpression", "bracedExpression",
-                "expression", "query" };
+        return new String[] { "refStart", "refEnd", "source", "reference", "lowerBound", "upperBound", "minMaxExpression", "unionExpression",
+                "intersectExpression", "minusExpression", "bracedExpression", "expression", "query" };
     }
 
     public static final String[] ruleNames = makeRuleNames();
 
     private static String[] makeLiteralNames() {
-        return new String[] { null, "'$'", "'{'", "' '", "'\t'", "'\r'", "'\n'", "'}'", "'('", "')'" };
+        return new String[] { null, "'$'", "'{'", "' '", "'\t'", "'\r'", "'\n'", "'}'", "'('", "','", "';'", "')'" };
     }
 
     private static final String[] _LITERAL_NAMES = makeLiteralNames();
 
     private static String[] makeSymbolicNames() {
-        return new String[] { null, null, null, null, null, null, null, null, null, null, "ESCESC", "ESCSQ", "ESCDQ", "UNION", "INTERSECT", "MINUS",
-                "SIMPLE_WORD", "SQWORD", "DQWORD" };
+        return new String[] { null, null, null, null, null, null, null, null, null, null, null, null, "ESCESC", "ESCSQ", "ESCDQ", "UNION", "INTERSECT", "MINUS",
+                "MINMAX", "SIMPLE_WORD", "SQWORD", "DQWORD" };
     }
 
     private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -160,17 +162,17 @@ public class PostBbqParser extends Parser {
         try {
             enterOuterAlt(_localctx, 1);
             {
-                setState(20);
+                setState(26);
                 match(T__0);
-                setState(21);
+                setState(27);
                 match(T__1);
-                setState(25);
+                setState(31);
                 _errHandler.sync(this);
                 _la = _input.LA(1);
                 while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
                     {
                         {
-                            setState(22);
+                            setState(28);
                             _la = _input.LA(1);
                             if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                 _errHandler.recoverInline(this);
@@ -183,7 +185,7 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(27);
+                    setState(33);
                     _errHandler.sync(this);
                     _la = _input.LA(1);
                 }
@@ -230,13 +232,13 @@ public class PostBbqParser extends Parser {
         try {
             enterOuterAlt(_localctx, 1);
             {
-                setState(31);
+                setState(37);
                 _errHandler.sync(this);
                 _la = _input.LA(1);
                 while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
                     {
                         {
-                            setState(28);
+                            setState(34);
                             _la = _input.LA(1);
                             if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                 _errHandler.recoverInline(this);
@@ -249,11 +251,11 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(33);
+                    setState(39);
                     _errHandler.sync(this);
                     _la = _input.LA(1);
                 }
-                setState(34);
+                setState(40);
                 match(T__6);
             }
         }
@@ -310,7 +312,7 @@ public class PostBbqParser extends Parser {
         try {
             enterOuterAlt(_localctx, 1);
             {
-                setState(36);
+                setState(42);
                 _la = _input.LA(1);
                 if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SIMPLE_WORD) | (1L << SQWORD) | (1L << DQWORD))) != 0))) {
                     _errHandler.recoverInline(this);
@@ -375,12 +377,398 @@ public class PostBbqParser extends Parser {
         try {
             enterOuterAlt(_localctx, 1);
             {
-                setState(38);
+                setState(44);
                 refStart();
-                setState(39);
+                setState(45);
                 source();
-                setState(40);
+                setState(46);
                 refEnd();
+            }
+        }
+        catch (RecognitionException re) {
+            _localctx.exception = re;
+            _errHandler.reportError(this, re);
+            _errHandler.recover(this, re);
+        }
+        finally {
+            exitRule();
+        }
+        return _localctx;
+    }
+
+    public static class LowerBoundContext extends ParserRuleContext {
+        public TerminalNode SIMPLE_WORD() {
+            return getToken(PostBbqParser.SIMPLE_WORD, 0);
+        }
+
+        public LowerBoundContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_lowerBound;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof PostBbqListener)
+                ((PostBbqListener) listener).enterLowerBound(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof PostBbqListener)
+                ((PostBbqListener) listener).exitLowerBound(this);
+        }
+    }
+
+    public final LowerBoundContext lowerBound() throws RecognitionException {
+        LowerBoundContext _localctx = new LowerBoundContext(_ctx, getState());
+        enterRule(_localctx, 8, RULE_lowerBound);
+        try {
+            enterOuterAlt(_localctx, 1);
+            {
+                setState(48);
+                match(SIMPLE_WORD);
+            }
+        }
+        catch (RecognitionException re) {
+            _localctx.exception = re;
+            _errHandler.reportError(this, re);
+            _errHandler.recover(this, re);
+        }
+        finally {
+            exitRule();
+        }
+        return _localctx;
+    }
+
+    public static class UpperBoundContext extends ParserRuleContext {
+        public TerminalNode SIMPLE_WORD() {
+            return getToken(PostBbqParser.SIMPLE_WORD, 0);
+        }
+
+        public UpperBoundContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_upperBound;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof PostBbqListener)
+                ((PostBbqListener) listener).enterUpperBound(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof PostBbqListener)
+                ((PostBbqListener) listener).exitUpperBound(this);
+        }
+    }
+
+    public final UpperBoundContext upperBound() throws RecognitionException {
+        UpperBoundContext _localctx = new UpperBoundContext(_ctx, getState());
+        enterRule(_localctx, 10, RULE_upperBound);
+        try {
+            enterOuterAlt(_localctx, 1);
+            {
+                setState(50);
+                match(SIMPLE_WORD);
+            }
+        }
+        catch (RecognitionException re) {
+            _localctx.exception = re;
+            _errHandler.reportError(this, re);
+            _errHandler.recover(this, re);
+        }
+        finally {
+            exitRule();
+        }
+        return _localctx;
+    }
+
+    public static class MinMaxExpressionContext extends ParserRuleContext {
+        public TerminalNode MINMAX() {
+            return getToken(PostBbqParser.MINMAX, 0);
+        }
+
+        public List<ExpressionContext> expression() {
+            return getRuleContexts(ExpressionContext.class);
+        }
+
+        public ExpressionContext expression(int i) {
+            return getRuleContext(ExpressionContext.class, i);
+        }
+
+        public LowerBoundContext lowerBound() {
+            return getRuleContext(LowerBoundContext.class, 0);
+        }
+
+        public UpperBoundContext upperBound() {
+            return getRuleContext(UpperBoundContext.class, 0);
+        }
+
+        public MinMaxExpressionContext(ParserRuleContext parent, int invokingState) {
+            super(parent, invokingState);
+        }
+
+        @Override
+        public int getRuleIndex() {
+            return RULE_minMaxExpression;
+        }
+
+        @Override
+        public void enterRule(ParseTreeListener listener) {
+            if (listener instanceof PostBbqListener)
+                ((PostBbqListener) listener).enterMinMaxExpression(this);
+        }
+
+        @Override
+        public void exitRule(ParseTreeListener listener) {
+            if (listener instanceof PostBbqListener)
+                ((PostBbqListener) listener).exitMinMaxExpression(this);
+        }
+    }
+
+    public final MinMaxExpressionContext minMaxExpression() throws RecognitionException {
+        MinMaxExpressionContext _localctx = new MinMaxExpressionContext(_ctx, getState());
+        enterRule(_localctx, 12, RULE_minMaxExpression);
+        int _la;
+        try {
+            int _alt;
+            enterOuterAlt(_localctx, 1);
+            {
+                setState(55);
+                _errHandler.sync(this);
+                _la = _input.LA(1);
+                while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
+                    {
+                        {
+                            setState(52);
+                            _la = _input.LA(1);
+                            if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                _errHandler.recoverInline(this);
+                            }
+                            else {
+                                if (_input.LA(1) == Token.EOF)
+                                    matchedEOF = true;
+                                _errHandler.reportMatch(this);
+                                consume();
+                            }
+                        }
+                    }
+                    setState(57);
+                    _errHandler.sync(this);
+                    _la = _input.LA(1);
+                }
+                setState(58);
+                match(MINMAX);
+                setState(62);
+                _errHandler.sync(this);
+                _la = _input.LA(1);
+                while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
+                    {
+                        {
+                            setState(59);
+                            _la = _input.LA(1);
+                            if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                _errHandler.recoverInline(this);
+                            }
+                            else {
+                                if (_input.LA(1) == Token.EOF)
+                                    matchedEOF = true;
+                                _errHandler.reportMatch(this);
+                                consume();
+                            }
+                        }
+                    }
+                    setState(64);
+                    _errHandler.sync(this);
+                    _la = _input.LA(1);
+                }
+                setState(65);
+                match(T__7);
+                setState(66);
+                expression();
+                setState(77);
+                _errHandler.sync(this);
+                _la = _input.LA(1);
+                while (_la == T__8) {
+                    {
+                        {
+                            setState(67);
+                            match(T__8);
+                            setState(71);
+                            _errHandler.sync(this);
+                            _alt = getInterpreter().adaptivePredict(_input, 4, _ctx);
+                            while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
+                                if (_alt == 1) {
+                                    {
+                                        {
+                                            setState(68);
+                                            _la = _input.LA(1);
+                                            if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                                _errHandler.recoverInline(this);
+                                            }
+                                            else {
+                                                if (_input.LA(1) == Token.EOF)
+                                                    matchedEOF = true;
+                                                _errHandler.reportMatch(this);
+                                                consume();
+                                            }
+                                        }
+                                    }
+                                }
+                                setState(73);
+                                _errHandler.sync(this);
+                                _alt = getInterpreter().adaptivePredict(_input, 4, _ctx);
+                            }
+                            setState(74);
+                            expression();
+                        }
+                    }
+                    setState(79);
+                    _errHandler.sync(this);
+                    _la = _input.LA(1);
+                }
+                setState(83);
+                _errHandler.sync(this);
+                _la = _input.LA(1);
+                while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
+                    {
+                        {
+                            setState(80);
+                            _la = _input.LA(1);
+                            if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                _errHandler.recoverInline(this);
+                            }
+                            else {
+                                if (_input.LA(1) == Token.EOF)
+                                    matchedEOF = true;
+                                _errHandler.reportMatch(this);
+                                consume();
+                            }
+                        }
+                    }
+                    setState(85);
+                    _errHandler.sync(this);
+                    _la = _input.LA(1);
+                }
+                setState(86);
+                match(T__9);
+                setState(90);
+                _errHandler.sync(this);
+                _la = _input.LA(1);
+                while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
+                    {
+                        {
+                            setState(87);
+                            _la = _input.LA(1);
+                            if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                _errHandler.recoverInline(this);
+                            }
+                            else {
+                                if (_input.LA(1) == Token.EOF)
+                                    matchedEOF = true;
+                                _errHandler.reportMatch(this);
+                                consume();
+                            }
+                        }
+                    }
+                    setState(92);
+                    _errHandler.sync(this);
+                    _la = _input.LA(1);
+                }
+                setState(93);
+                lowerBound();
+                setState(97);
+                _errHandler.sync(this);
+                _la = _input.LA(1);
+                while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
+                    {
+                        {
+                            setState(94);
+                            _la = _input.LA(1);
+                            if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                _errHandler.recoverInline(this);
+                            }
+                            else {
+                                if (_input.LA(1) == Token.EOF)
+                                    matchedEOF = true;
+                                _errHandler.reportMatch(this);
+                                consume();
+                            }
+                        }
+                    }
+                    setState(99);
+                    _errHandler.sync(this);
+                    _la = _input.LA(1);
+                }
+                setState(114);
+                _errHandler.sync(this);
+                _la = _input.LA(1);
+                if (_la == T__9) {
+                    {
+                        setState(100);
+                        match(T__9);
+                        setState(104);
+                        _errHandler.sync(this);
+                        _la = _input.LA(1);
+                        while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
+                            {
+                                {
+                                    setState(101);
+                                    _la = _input.LA(1);
+                                    if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                        _errHandler.recoverInline(this);
+                                    }
+                                    else {
+                                        if (_input.LA(1) == Token.EOF)
+                                            matchedEOF = true;
+                                        _errHandler.reportMatch(this);
+                                        consume();
+                                    }
+                                }
+                            }
+                            setState(106);
+                            _errHandler.sync(this);
+                            _la = _input.LA(1);
+                        }
+                        setState(107);
+                        upperBound();
+                        setState(111);
+                        _errHandler.sync(this);
+                        _la = _input.LA(1);
+                        while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
+                            {
+                                {
+                                    setState(108);
+                                    _la = _input.LA(1);
+                                    if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
+                                        _errHandler.recoverInline(this);
+                                    }
+                                    else {
+                                        if (_input.LA(1) == Token.EOF)
+                                            matchedEOF = true;
+                                        _errHandler.reportMatch(this);
+                                        consume();
+                                    }
+                                }
+                            }
+                            setState(113);
+                            _errHandler.sync(this);
+                            _la = _input.LA(1);
+                        }
+                    }
+                }
+
+                setState(116);
+                match(T__10);
             }
         }
         catch (RecognitionException re) {
@@ -407,6 +795,10 @@ public class PostBbqParser extends Parser {
             return getRuleContext(ReferenceContext.class, 0);
         }
 
+        public MinMaxExpressionContext minMaxExpression() {
+            return getRuleContext(MinMaxExpressionContext.class, 0);
+        }
+
         public UnionExpressionContext(ParserRuleContext parent, int invokingState) {
             super(parent, invokingState);
         }
@@ -431,19 +823,19 @@ public class PostBbqParser extends Parser {
 
     public final UnionExpressionContext unionExpression() throws RecognitionException {
         UnionExpressionContext _localctx = new UnionExpressionContext(_ctx, getState());
-        enterRule(_localctx, 8, RULE_unionExpression);
+        enterRule(_localctx, 14, RULE_unionExpression);
         int _la;
         try {
             int _alt;
             enterOuterAlt(_localctx, 1);
             {
-                setState(45);
+                setState(121);
                 _errHandler.sync(this);
                 _la = _input.LA(1);
                 while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
                     {
                         {
-                            setState(42);
+                            setState(118);
                             _la = _input.LA(1);
                             if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                 _errHandler.recoverInline(this);
@@ -456,20 +848,20 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(47);
+                    setState(123);
                     _errHandler.sync(this);
                     _la = _input.LA(1);
                 }
-                setState(48);
+                setState(124);
                 match(UNION);
-                setState(52);
+                setState(128);
                 _errHandler.sync(this);
-                _alt = getInterpreter().adaptivePredict(_input, 3, _ctx);
+                _alt = getInterpreter().adaptivePredict(_input, 13, _ctx);
                 while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
                     if (_alt == 1) {
                         {
                             {
-                                setState(49);
+                                setState(125);
                                 _la = _input.LA(1);
                                 if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                     _errHandler.recoverInline(this);
@@ -483,29 +875,28 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(54);
+                    setState(130);
                     _errHandler.sync(this);
-                    _alt = getInterpreter().adaptivePredict(_input, 3, _ctx);
+                    _alt = getInterpreter().adaptivePredict(_input, 13, _ctx);
                 }
-                setState(57);
+                setState(134);
                 _errHandler.sync(this);
-                switch (_input.LA(1)) {
-                case T__2:
-                case T__3:
-                case T__4:
-                case T__5:
-                case T__7: {
-                    setState(55);
+                switch (getInterpreter().adaptivePredict(_input, 14, _ctx)) {
+                case 1: {
+                    setState(131);
                     bracedExpression();
                 }
                     break;
-                case T__0: {
-                    setState(56);
+                case 2: {
+                    setState(132);
                     reference();
                 }
                     break;
-                default:
-                    throw new NoViableAltException(this);
+                case 3: {
+                    setState(133);
+                    minMaxExpression();
+                }
+                    break;
                 }
             }
         }
@@ -533,6 +924,10 @@ public class PostBbqParser extends Parser {
             return getRuleContext(ReferenceContext.class, 0);
         }
 
+        public MinMaxExpressionContext minMaxExpression() {
+            return getRuleContext(MinMaxExpressionContext.class, 0);
+        }
+
         public IntersectExpressionContext(ParserRuleContext parent, int invokingState) {
             super(parent, invokingState);
         }
@@ -557,19 +952,19 @@ public class PostBbqParser extends Parser {
 
     public final IntersectExpressionContext intersectExpression() throws RecognitionException {
         IntersectExpressionContext _localctx = new IntersectExpressionContext(_ctx, getState());
-        enterRule(_localctx, 10, RULE_intersectExpression);
+        enterRule(_localctx, 16, RULE_intersectExpression);
         int _la;
         try {
             int _alt;
             enterOuterAlt(_localctx, 1);
             {
-                setState(62);
+                setState(139);
                 _errHandler.sync(this);
                 _la = _input.LA(1);
                 while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
                     {
                         {
-                            setState(59);
+                            setState(136);
                             _la = _input.LA(1);
                             if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                 _errHandler.recoverInline(this);
@@ -582,20 +977,20 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(64);
+                    setState(141);
                     _errHandler.sync(this);
                     _la = _input.LA(1);
                 }
-                setState(65);
+                setState(142);
                 match(INTERSECT);
-                setState(69);
+                setState(146);
                 _errHandler.sync(this);
-                _alt = getInterpreter().adaptivePredict(_input, 6, _ctx);
+                _alt = getInterpreter().adaptivePredict(_input, 16, _ctx);
                 while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
                     if (_alt == 1) {
                         {
                             {
-                                setState(66);
+                                setState(143);
                                 _la = _input.LA(1);
                                 if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                     _errHandler.recoverInline(this);
@@ -609,29 +1004,28 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(71);
+                    setState(148);
                     _errHandler.sync(this);
-                    _alt = getInterpreter().adaptivePredict(_input, 6, _ctx);
+                    _alt = getInterpreter().adaptivePredict(_input, 16, _ctx);
                 }
-                setState(74);
+                setState(152);
                 _errHandler.sync(this);
-                switch (_input.LA(1)) {
-                case T__2:
-                case T__3:
-                case T__4:
-                case T__5:
-                case T__7: {
-                    setState(72);
+                switch (getInterpreter().adaptivePredict(_input, 17, _ctx)) {
+                case 1: {
+                    setState(149);
                     bracedExpression();
                 }
                     break;
-                case T__0: {
-                    setState(73);
+                case 2: {
+                    setState(150);
                     reference();
                 }
                     break;
-                default:
-                    throw new NoViableAltException(this);
+                case 3: {
+                    setState(151);
+                    minMaxExpression();
+                }
+                    break;
                 }
             }
         }
@@ -659,6 +1053,10 @@ public class PostBbqParser extends Parser {
             return getRuleContext(ReferenceContext.class, 0);
         }
 
+        public MinMaxExpressionContext minMaxExpression() {
+            return getRuleContext(MinMaxExpressionContext.class, 0);
+        }
+
         public MinusExpressionContext(ParserRuleContext parent, int invokingState) {
             super(parent, invokingState);
         }
@@ -683,19 +1081,19 @@ public class PostBbqParser extends Parser {
 
     public final MinusExpressionContext minusExpression() throws RecognitionException {
         MinusExpressionContext _localctx = new MinusExpressionContext(_ctx, getState());
-        enterRule(_localctx, 12, RULE_minusExpression);
+        enterRule(_localctx, 18, RULE_minusExpression);
         int _la;
         try {
             int _alt;
             enterOuterAlt(_localctx, 1);
             {
-                setState(79);
+                setState(157);
                 _errHandler.sync(this);
                 _la = _input.LA(1);
                 while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
                     {
                         {
-                            setState(76);
+                            setState(154);
                             _la = _input.LA(1);
                             if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                 _errHandler.recoverInline(this);
@@ -708,20 +1106,20 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(81);
+                    setState(159);
                     _errHandler.sync(this);
                     _la = _input.LA(1);
                 }
-                setState(82);
+                setState(160);
                 match(MINUS);
-                setState(86);
+                setState(164);
                 _errHandler.sync(this);
-                _alt = getInterpreter().adaptivePredict(_input, 9, _ctx);
+                _alt = getInterpreter().adaptivePredict(_input, 19, _ctx);
                 while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
                     if (_alt == 1) {
                         {
                             {
-                                setState(83);
+                                setState(161);
                                 _la = _input.LA(1);
                                 if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                     _errHandler.recoverInline(this);
@@ -735,29 +1133,28 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(88);
+                    setState(166);
                     _errHandler.sync(this);
-                    _alt = getInterpreter().adaptivePredict(_input, 9, _ctx);
+                    _alt = getInterpreter().adaptivePredict(_input, 19, _ctx);
                 }
-                setState(91);
+                setState(170);
                 _errHandler.sync(this);
-                switch (_input.LA(1)) {
-                case T__2:
-                case T__3:
-                case T__4:
-                case T__5:
-                case T__7: {
-                    setState(89);
+                switch (getInterpreter().adaptivePredict(_input, 20, _ctx)) {
+                case 1: {
+                    setState(167);
                     bracedExpression();
                 }
                     break;
-                case T__0: {
-                    setState(90);
+                case 2: {
+                    setState(168);
                     reference();
                 }
                     break;
-                default:
-                    throw new NoViableAltException(this);
+                case 3: {
+                    setState(169);
+                    minMaxExpression();
+                }
+                    break;
                 }
             }
         }
@@ -801,19 +1198,19 @@ public class PostBbqParser extends Parser {
 
     public final BracedExpressionContext bracedExpression() throws RecognitionException {
         BracedExpressionContext _localctx = new BracedExpressionContext(_ctx, getState());
-        enterRule(_localctx, 14, RULE_bracedExpression);
+        enterRule(_localctx, 20, RULE_bracedExpression);
         int _la;
         try {
             int _alt;
             enterOuterAlt(_localctx, 1);
             {
-                setState(96);
+                setState(175);
                 _errHandler.sync(this);
                 _la = _input.LA(1);
                 while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
                     {
                         {
-                            setState(93);
+                            setState(172);
                             _la = _input.LA(1);
                             if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                 _errHandler.recoverInline(this);
@@ -826,24 +1223,24 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(98);
+                    setState(177);
                     _errHandler.sync(this);
                     _la = _input.LA(1);
                 }
-                setState(99);
+                setState(178);
                 match(T__7);
-                setState(100);
+                setState(179);
                 expression();
-                setState(101);
-                match(T__8);
-                setState(105);
+                setState(180);
+                match(T__10);
+                setState(184);
                 _errHandler.sync(this);
-                _alt = getInterpreter().adaptivePredict(_input, 12, _ctx);
+                _alt = getInterpreter().adaptivePredict(_input, 22, _ctx);
                 while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
                     if (_alt == 1) {
                         {
                             {
-                                setState(102);
+                                setState(181);
                                 _la = _input.LA(1);
                                 if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                     _errHandler.recoverInline(this);
@@ -857,9 +1254,9 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(107);
+                    setState(186);
                     _errHandler.sync(this);
-                    _alt = getInterpreter().adaptivePredict(_input, 12, _ctx);
+                    _alt = getInterpreter().adaptivePredict(_input, 22, _ctx);
                 }
             }
         }
@@ -875,6 +1272,10 @@ public class PostBbqParser extends Parser {
     }
 
     public static class ExpressionContext extends ParserRuleContext {
+        public MinMaxExpressionContext minMaxExpression() {
+            return getRuleContext(MinMaxExpressionContext.class, 0);
+        }
+
         public ReferenceContext reference() {
             return getRuleContext(ReferenceContext.class, 0);
         }
@@ -931,52 +1332,57 @@ public class PostBbqParser extends Parser {
 
     public final ExpressionContext expression() throws RecognitionException {
         ExpressionContext _localctx = new ExpressionContext(_ctx, getState());
-        enterRule(_localctx, 16, RULE_expression);
+        enterRule(_localctx, 22, RULE_expression);
         try {
             int _alt;
-            setState(130);
+            setState(211);
             _errHandler.sync(this);
-            switch (getInterpreter().adaptivePredict(_input, 18, _ctx)) {
+            switch (getInterpreter().adaptivePredict(_input, 28, _ctx)) {
             case 1:
                 enterOuterAlt(_localctx, 1); {
-                setState(108);
-                reference();
+                setState(187);
+                minMaxExpression();
             }
                 break;
             case 2:
                 enterOuterAlt(_localctx, 2); {
-                setState(111);
+                setState(188);
+                reference();
+            }
+                break;
+            case 3:
+                enterOuterAlt(_localctx, 3); {
+                setState(192);
                 _errHandler.sync(this);
-                switch (_input.LA(1)) {
-                case T__0: {
-                    setState(109);
+                switch (getInterpreter().adaptivePredict(_input, 23, _ctx)) {
+                case 1: {
+                    setState(189);
+                    minMaxExpression();
+                }
+                    break;
+                case 2: {
+                    setState(190);
                     reference();
                 }
                     break;
-                case T__2:
-                case T__3:
-                case T__4:
-                case T__5:
-                case T__7: {
-                    setState(110);
+                case 3: {
+                    setState(191);
                     bracedExpression();
                 }
                     break;
-                default:
-                    throw new NoViableAltException(this);
                 }
-                setState(128);
+                setState(209);
                 _errHandler.sync(this);
-                switch (getInterpreter().adaptivePredict(_input, 17, _ctx)) {
+                switch (getInterpreter().adaptivePredict(_input, 27, _ctx)) {
                 case 1: {
-                    setState(114);
+                    setState(195);
                     _errHandler.sync(this);
                     _alt = 1;
                     do {
                         switch (_alt) {
                         case 1: {
                             {
-                                setState(113);
+                                setState(194);
                                 unionExpression();
                             }
                         }
@@ -984,21 +1390,21 @@ public class PostBbqParser extends Parser {
                         default:
                             throw new NoViableAltException(this);
                         }
-                        setState(116);
+                        setState(197);
                         _errHandler.sync(this);
-                        _alt = getInterpreter().adaptivePredict(_input, 14, _ctx);
+                        _alt = getInterpreter().adaptivePredict(_input, 24, _ctx);
                     } while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER);
                 }
                     break;
                 case 2: {
-                    setState(119);
+                    setState(200);
                     _errHandler.sync(this);
                     _alt = 1;
                     do {
                         switch (_alt) {
                         case 1: {
                             {
-                                setState(118);
+                                setState(199);
                                 intersectExpression();
                             }
                         }
@@ -1006,21 +1412,21 @@ public class PostBbqParser extends Parser {
                         default:
                             throw new NoViableAltException(this);
                         }
-                        setState(121);
+                        setState(202);
                         _errHandler.sync(this);
-                        _alt = getInterpreter().adaptivePredict(_input, 15, _ctx);
+                        _alt = getInterpreter().adaptivePredict(_input, 25, _ctx);
                     } while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER);
                 }
                     break;
                 case 3: {
-                    setState(124);
+                    setState(205);
                     _errHandler.sync(this);
                     _alt = 1;
                     do {
                         switch (_alt) {
                         case 1: {
                             {
-                                setState(123);
+                                setState(204);
                                 minusExpression();
                             }
                         }
@@ -1028,9 +1434,9 @@ public class PostBbqParser extends Parser {
                         default:
                             throw new NoViableAltException(this);
                         }
-                        setState(126);
+                        setState(207);
                         _errHandler.sync(this);
-                        _alt = getInterpreter().adaptivePredict(_input, 16, _ctx);
+                        _alt = getInterpreter().adaptivePredict(_input, 26, _ctx);
                     } while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER);
                 }
                     break;
@@ -1083,20 +1489,20 @@ public class PostBbqParser extends Parser {
 
     public final QueryContext query() throws RecognitionException {
         QueryContext _localctx = new QueryContext(_ctx, getState());
-        enterRule(_localctx, 18, RULE_query);
+        enterRule(_localctx, 24, RULE_query);
         int _la;
         try {
             enterOuterAlt(_localctx, 1);
             {
-                setState(132);
+                setState(213);
                 expression();
-                setState(136);
+                setState(217);
                 _errHandler.sync(this);
                 _la = _input.LA(1);
                 while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) {
                     {
                         {
-                            setState(133);
+                            setState(214);
                             _la = _input.LA(1);
                             if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0))) {
                                 _errHandler.recoverInline(this);
@@ -1109,11 +1515,11 @@ public class PostBbqParser extends Parser {
                             }
                         }
                     }
-                    setState(138);
+                    setState(219);
                     _errHandler.sync(this);
                     _la = _input.LA(1);
                 }
-                setState(139);
+                setState(220);
                 match(EOF);
             }
         }
@@ -1128,34 +1534,65 @@ public class PostBbqParser extends Parser {
         return _localctx;
     }
 
-    public static final String _serializedATN = "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\24\u0090\4\2\t\2"
-            + "\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"
-            + "\t\13\3\2\3\2\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\3\7\3 \n\3\f\3\16\3#\13"
-            + "\3\3\3\3\3\3\4\3\4\3\5\3\5\3\5\3\5\3\6\7\6.\n\6\f\6\16\6\61\13\6\3\6\3"
-            + "\6\7\6\65\n\6\f\6\16\68\13\6\3\6\3\6\5\6<\n\6\3\7\7\7?\n\7\f\7\16\7B\13"
-            + "\7\3\7\3\7\7\7F\n\7\f\7\16\7I\13\7\3\7\3\7\5\7M\n\7\3\b\7\bP\n\b\f\b\16"
-            + "\bS\13\b\3\b\3\b\7\bW\n\b\f\b\16\bZ\13\b\3\b\3\b\5\b^\n\b\3\t\7\ta\n\t" + "\f\t\16\td\13\t\3\t\3\t\3\t\3\t\7\tj\n\t\f\t\16\tm\13\t\3\n\3\n\3\n\5"
-            + "\nr\n\n\3\n\6\nu\n\n\r\n\16\nv\3\n\6\nz\n\n\r\n\16\n{\3\n\6\n\177\n\n" + "\r\n\16\n\u0080\5\n\u0083\n\n\5\n\u0085\n\n\3\13\3\13\7\13\u0089\n\13"
-            + "\f\13\16\13\u008c\13\13\3\13\3\13\3\13\2\2\f\2\4\6\b\n\f\16\20\22\24\2"
-            + "\4\3\2\5\b\3\2\22\24\2\u009a\2\26\3\2\2\2\4!\3\2\2\2\6&\3\2\2\2\b(\3\2"
-            + "\2\2\n/\3\2\2\2\f@\3\2\2\2\16Q\3\2\2\2\20b\3\2\2\2\22\u0084\3\2\2\2\24"
-            + "\u0086\3\2\2\2\26\27\7\3\2\2\27\33\7\4\2\2\30\32\t\2\2\2\31\30\3\2\2\2" + "\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\3\3\2\2\2\35\33\3\2\2\2"
-            + "\36 \t\2\2\2\37\36\3\2\2\2 #\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"$\3\2\2\2"
-            + "#!\3\2\2\2$%\7\t\2\2%\5\3\2\2\2&\'\t\3\2\2\'\7\3\2\2\2()\5\2\2\2)*\5\6"
-            + "\4\2*+\5\4\3\2+\t\3\2\2\2,.\t\2\2\2-,\3\2\2\2.\61\3\2\2\2/-\3\2\2\2/\60"
-            + "\3\2\2\2\60\62\3\2\2\2\61/\3\2\2\2\62\66\7\17\2\2\63\65\t\2\2\2\64\63" + "\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\67;\3\2\2\28\66\3\2\2"
-            + "\29<\5\20\t\2:<\5\b\5\2;9\3\2\2\2;:\3\2\2\2<\13\3\2\2\2=?\t\2\2\2>=\3" + "\2\2\2?B\3\2\2\2@>\3\2\2\2@A\3\2\2\2AC\3\2\2\2B@\3\2\2\2CG\7\20\2\2DF"
-            + "\t\2\2\2ED\3\2\2\2FI\3\2\2\2GE\3\2\2\2GH\3\2\2\2HL\3\2\2\2IG\3\2\2\2J" + "M\5\20\t\2KM\5\b\5\2LJ\3\2\2\2LK\3\2\2\2M\r\3\2\2\2NP\t\2\2\2ON\3\2\2"
-            + "\2PS\3\2\2\2QO\3\2\2\2QR\3\2\2\2RT\3\2\2\2SQ\3\2\2\2TX\7\21\2\2UW\t\2"
-            + "\2\2VU\3\2\2\2WZ\3\2\2\2XV\3\2\2\2XY\3\2\2\2Y]\3\2\2\2ZX\3\2\2\2[^\5\20"
-            + "\t\2\\^\5\b\5\2][\3\2\2\2]\\\3\2\2\2^\17\3\2\2\2_a\t\2\2\2`_\3\2\2\2a" + "d\3\2\2\2b`\3\2\2\2bc\3\2\2\2ce\3\2\2\2db\3\2\2\2ef\7\n\2\2fg\5\22\n\2"
-            + "gk\7\13\2\2hj\t\2\2\2ih\3\2\2\2jm\3\2\2\2ki\3\2\2\2kl\3\2\2\2l\21\3\2" + "\2\2mk\3\2\2\2n\u0085\5\b\5\2or\5\b\5\2pr\5\20\t\2qo\3\2\2\2qp\3\2\2\2"
-            + "r\u0082\3\2\2\2su\5\n\6\2ts\3\2\2\2uv\3\2\2\2vt\3\2\2\2vw\3\2\2\2w\u0083"
-            + "\3\2\2\2xz\5\f\7\2yx\3\2\2\2z{\3\2\2\2{y\3\2\2\2{|\3\2\2\2|\u0083\3\2"
-            + "\2\2}\177\5\16\b\2~}\3\2\2\2\177\u0080\3\2\2\2\u0080~\3\2\2\2\u0080\u0081"
-            + "\3\2\2\2\u0081\u0083\3\2\2\2\u0082t\3\2\2\2\u0082y\3\2\2\2\u0082~\3\2" + "\2\2\u0083\u0085\3\2\2\2\u0084n\3\2\2\2\u0084q\3\2\2\2\u0085\23\3\2\2"
-            + "\2\u0086\u008a\5\22\n\2\u0087\u0089\t\2\2\2\u0088\u0087\3\2\2\2\u0089" + "\u008c\3\2\2\2\u008a\u0088\3\2\2\2\u008a\u008b\3\2\2\2\u008b\u008d\3\2"
-            + "\2\2\u008c\u008a\3\2\2\2\u008d\u008e\7\2\2\3\u008e\25\3\2\2\2\26\33!/" + "\66;@GLQX]bkqv{\u0080\u0082\u0084\u008a";
+    public static final String _serializedATN = "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27\u00e1\4\2\t\2"
+            + "\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13" + "\t\13\4\f\t\f\4\r\t\r\4\16\t\16\3\2\3\2\3\2\7\2 \n\2\f\2\16\2#\13\2\3"
+            + "\3\7\3&\n\3\f\3\16\3)\13\3\3\3\3\3\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\7"
+            + "\3\7\3\b\7\b8\n\b\f\b\16\b;\13\b\3\b\3\b\7\b?\n\b\f\b\16\bB\13\b\3\b\3"
+            + "\b\3\b\3\b\7\bH\n\b\f\b\16\bK\13\b\3\b\7\bN\n\b\f\b\16\bQ\13\b\3\b\7\b" + "T\n\b\f\b\16\bW\13\b\3\b\3\b\7\b[\n\b\f\b\16\b^\13\b\3\b\3\b\7\bb\n\b"
+            + "\f\b\16\be\13\b\3\b\3\b\7\bi\n\b\f\b\16\bl\13\b\3\b\3\b\7\bp\n\b\f\b\16"
+            + "\bs\13\b\5\bu\n\b\3\b\3\b\3\t\7\tz\n\t\f\t\16\t}\13\t\3\t\3\t\7\t\u0081"
+            + "\n\t\f\t\16\t\u0084\13\t\3\t\3\t\3\t\5\t\u0089\n\t\3\n\7\n\u008c\n\n\f"
+            + "\n\16\n\u008f\13\n\3\n\3\n\7\n\u0093\n\n\f\n\16\n\u0096\13\n\3\n\3\n\3"
+            + "\n\5\n\u009b\n\n\3\13\7\13\u009e\n\13\f\13\16\13\u00a1\13\13\3\13\3\13"
+            + "\7\13\u00a5\n\13\f\13\16\13\u00a8\13\13\3\13\3\13\3\13\5\13\u00ad\n\13"
+            + "\3\f\7\f\u00b0\n\f\f\f\16\f\u00b3\13\f\3\f\3\f\3\f\3\f\7\f\u00b9\n\f\f"
+            + "\f\16\f\u00bc\13\f\3\r\3\r\3\r\3\r\3\r\5\r\u00c3\n\r\3\r\6\r\u00c6\n\r"
+            + "\r\r\16\r\u00c7\3\r\6\r\u00cb\n\r\r\r\16\r\u00cc\3\r\6\r\u00d0\n\r\r\r"
+            + "\16\r\u00d1\5\r\u00d4\n\r\5\r\u00d6\n\r\3\16\3\16\7\16\u00da\n\16\f\16"
+            + "\16\16\u00dd\13\16\3\16\3\16\3\16\2\2\17\2\4\6\b\n\f\16\20\22\24\26\30" + "\32\2\4\3\2\5\b\3\2\25\27\2\u00f7\2\34\3\2\2\2\4\'\3\2\2\2\6,\3\2\2\2"
+            + "\b.\3\2\2\2\n\62\3\2\2\2\f\64\3\2\2\2\169\3\2\2\2\20{\3\2\2\2\22\u008d"
+            + "\3\2\2\2\24\u009f\3\2\2\2\26\u00b1\3\2\2\2\30\u00d5\3\2\2\2\32\u00d7\3" + "\2\2\2\34\35\7\3\2\2\35!\7\4\2\2\36 \t\2\2\2\37\36\3\2\2\2 #\3\2\2\2!"
+            + "\37\3\2\2\2!\"\3\2\2\2\"\3\3\2\2\2#!\3\2\2\2$&\t\2\2\2%$\3\2\2\2&)\3\2" + "\2\2\'%\3\2\2\2\'(\3\2\2\2(*\3\2\2\2)\'\3\2\2\2*+\7\t\2\2+\5\3\2\2\2,"
+            + "-\t\3\2\2-\7\3\2\2\2./\5\2\2\2/\60\5\6\4\2\60\61\5\4\3\2\61\t\3\2\2\2" + "\62\63\7\25\2\2\63\13\3\2\2\2\64\65\7\25\2\2\65\r\3\2\2\2\668\t\2\2\2"
+            + "\67\66\3\2\2\28;\3\2\2\29\67\3\2\2\29:\3\2\2\2:<\3\2\2\2;9\3\2\2\2<@\7" + "\24\2\2=?\t\2\2\2>=\3\2\2\2?B\3\2\2\2@>\3\2\2\2@A\3\2\2\2AC\3\2\2\2B@"
+            + "\3\2\2\2CD\7\n\2\2DO\5\30\r\2EI\7\13\2\2FH\t\2\2\2GF\3\2\2\2HK\3\2\2\2" + "IG\3\2\2\2IJ\3\2\2\2JL\3\2\2\2KI\3\2\2\2LN\5\30\r\2ME\3\2\2\2NQ\3\2\2"
+            + "\2OM\3\2\2\2OP\3\2\2\2PU\3\2\2\2QO\3\2\2\2RT\t\2\2\2SR\3\2\2\2TW\3\2\2" + "\2US\3\2\2\2UV\3\2\2\2VX\3\2\2\2WU\3\2\2\2X\\\7\f\2\2Y[\t\2\2\2ZY\3\2"
+            + "\2\2[^\3\2\2\2\\Z\3\2\2\2\\]\3\2\2\2]_\3\2\2\2^\\\3\2\2\2_c\5\n\6\2`b" + "\t\2\2\2a`\3\2\2\2be\3\2\2\2ca\3\2\2\2cd\3\2\2\2dt\3\2\2\2ec\3\2\2\2f"
+            + "j\7\f\2\2gi\t\2\2\2hg\3\2\2\2il\3\2\2\2jh\3\2\2\2jk\3\2\2\2km\3\2\2\2" + "lj\3\2\2\2mq\5\f\7\2np\t\2\2\2on\3\2\2\2ps\3\2\2\2qo\3\2\2\2qr\3\2\2\2"
+            + "ru\3\2\2\2sq\3\2\2\2tf\3\2\2\2tu\3\2\2\2uv\3\2\2\2vw\7\r\2\2w\17\3\2\2"
+            + "\2xz\t\2\2\2yx\3\2\2\2z}\3\2\2\2{y\3\2\2\2{|\3\2\2\2|~\3\2\2\2}{\3\2\2"
+            + "\2~\u0082\7\21\2\2\177\u0081\t\2\2\2\u0080\177\3\2\2\2\u0081\u0084\3\2"
+            + "\2\2\u0082\u0080\3\2\2\2\u0082\u0083\3\2\2\2\u0083\u0088\3\2\2\2\u0084" + "\u0082\3\2\2\2\u0085\u0089\5\26\f\2\u0086\u0089\5\b\5\2\u0087\u0089\5"
+            + "\16\b\2\u0088\u0085\3\2\2\2\u0088\u0086\3\2\2\2\u0088\u0087\3\2\2\2\u0089"
+            + "\21\3\2\2\2\u008a\u008c\t\2\2\2\u008b\u008a\3\2\2\2\u008c\u008f\3\2\2"
+            + "\2\u008d\u008b\3\2\2\2\u008d\u008e\3\2\2\2\u008e\u0090\3\2\2\2\u008f\u008d"
+            + "\3\2\2\2\u0090\u0094\7\22\2\2\u0091\u0093\t\2\2\2\u0092\u0091\3\2\2\2"
+            + "\u0093\u0096\3\2\2\2\u0094\u0092\3\2\2\2\u0094\u0095\3\2\2\2\u0095\u009a"
+            + "\3\2\2\2\u0096\u0094\3\2\2\2\u0097\u009b\5\26\f\2\u0098\u009b\5\b\5\2"
+            + "\u0099\u009b\5\16\b\2\u009a\u0097\3\2\2\2\u009a\u0098\3\2\2\2\u009a\u0099"
+            + "\3\2\2\2\u009b\23\3\2\2\2\u009c\u009e\t\2\2\2\u009d\u009c\3\2\2\2\u009e"
+            + "\u00a1\3\2\2\2\u009f\u009d\3\2\2\2\u009f\u00a0\3\2\2\2\u00a0\u00a2\3\2"
+            + "\2\2\u00a1\u009f\3\2\2\2\u00a2\u00a6\7\23\2\2\u00a3\u00a5\t\2\2\2\u00a4"
+            + "\u00a3\3\2\2\2\u00a5\u00a8\3\2\2\2\u00a6\u00a4\3\2\2\2\u00a6\u00a7\3\2"
+            + "\2\2\u00a7\u00ac\3\2\2\2\u00a8\u00a6\3\2\2\2\u00a9\u00ad\5\26\f\2\u00aa"
+            + "\u00ad\5\b\5\2\u00ab\u00ad\5\16\b\2\u00ac\u00a9\3\2\2\2\u00ac\u00aa\3" + "\2\2\2\u00ac\u00ab\3\2\2\2\u00ad\25\3\2\2\2\u00ae\u00b0\t\2\2\2\u00af"
+            + "\u00ae\3\2\2\2\u00b0\u00b3\3\2\2\2\u00b1\u00af\3\2\2\2\u00b1\u00b2\3\2"
+            + "\2\2\u00b2\u00b4\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b4\u00b5\7\n\2\2\u00b5" + "\u00b6\5\30\r\2\u00b6\u00ba\7\r\2\2\u00b7\u00b9\t\2\2\2\u00b8\u00b7\3"
+            + "\2\2\2\u00b9\u00bc\3\2\2\2\u00ba\u00b8\3\2\2\2\u00ba\u00bb\3\2\2\2\u00bb"
+            + "\27\3\2\2\2\u00bc\u00ba\3\2\2\2\u00bd\u00d6\5\16\b\2\u00be\u00d6\5\b\5"
+            + "\2\u00bf\u00c3\5\16\b\2\u00c0\u00c3\5\b\5\2\u00c1\u00c3\5\26\f\2\u00c2"
+            + "\u00bf\3\2\2\2\u00c2\u00c0\3\2\2\2\u00c2\u00c1\3\2\2\2\u00c3\u00d3\3\2"
+            + "\2\2\u00c4\u00c6\5\20\t\2\u00c5\u00c4\3\2\2\2\u00c6\u00c7\3\2\2\2\u00c7"
+            + "\u00c5\3\2\2\2\u00c7\u00c8\3\2\2\2\u00c8\u00d4\3\2\2\2\u00c9\u00cb\5\22"
+            + "\n\2\u00ca\u00c9\3\2\2\2\u00cb\u00cc\3\2\2\2\u00cc\u00ca\3\2\2\2\u00cc"
+            + "\u00cd\3\2\2\2\u00cd\u00d4\3\2\2\2\u00ce\u00d0\5\24\13\2\u00cf\u00ce\3"
+            + "\2\2\2\u00d0\u00d1\3\2\2\2\u00d1\u00cf\3\2\2\2\u00d1\u00d2\3\2\2\2\u00d2"
+            + "\u00d4\3\2\2\2\u00d3\u00c5\3\2\2\2\u00d3\u00ca\3\2\2\2\u00d3\u00cf\3\2"
+            + "\2\2\u00d4\u00d6\3\2\2\2\u00d5\u00bd\3\2\2\2\u00d5\u00be\3\2\2\2\u00d5"
+            + "\u00c2\3\2\2\2\u00d6\31\3\2\2\2\u00d7\u00db\5\30\r\2\u00d8\u00da\t\2\2"
+            + "\2\u00d9\u00d8\3\2\2\2\u00da\u00dd\3\2\2\2\u00db\u00d9\3\2\2\2\u00db\u00dc"
+            + "\3\2\2\2\u00dc\u00de\3\2\2\2\u00dd\u00db\3\2\2\2\u00de\u00df\7\2\2\3\u00df"
+            + "\33\3\2\2\2 !\'9@IOU\\cjqt{\u0082\u0088\u008d\u0094\u009a\u009f\u00a6" + "\u00ac\u00b1\u00ba\u00c2\u00c7\u00cc\u00d1\u00d3\u00d5\u00db";
     public static final ATN _ATN = new ATNDeserializer().deserialize(_serializedATN.toCharArray());
     static {
         _decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
