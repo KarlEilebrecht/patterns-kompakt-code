@@ -145,7 +145,7 @@ ${query1} UNION ${query2}
 
 Optionally, any `IN` or `NOT IN` expression as part of a basic query can have constraints (bounds). This way you can check multiple values and restrict the number of values that match at the same time.
 
-Syntax: `*argName* IN ( *value1*, *value2*, ... [; *lowerBound*] [; upperBound] )`
+Syntax: `*argName* IN ( value1, value2, ... [; lowerBound] [; upperBound] )`
 
 This feature is only useful in scenarios with *multi-value-support*. E.g., the attribute `hobby` could be fed with multiple values *for the same row*. This is possible because of the way the BloomBox stores data point attributes. For each data point (row) there may be specified several hobbies. Now you want to query all users with at least 2 hobbies out of a list.
 
@@ -169,14 +169,14 @@ A bound value <= 0 disables the corresponding bound. If `upperBound == lowerBoun
 
 For symmetry reasons the bounds-feature is also available for NOT IN.
 
-:warning: Bounds are syntactic sugar. Internally, bounds on (NOT) IN expressions translate to regular boolean expressions ([BoundedOr](./bbq/BoundedOr.java))) and thus can get quite large and complex.
+:warning: Bounds are syntactic sugar. Internally, bounds on (NOT) IN expressions translate to regular boolean expressions ([BoundedOr](./bbq/BoundedOr.java)) and thus can get quite large and complex.
 
 
 ### The MINMAX expression
 
 You can use the MINMAX-expression to surround a group of expressions and define how many must hold true at the same time (lower bound) and how many are allowed to be true at the same time.
 
-Syntax: `MINMAX( *expresssion1*, *expression2*, ... ; *lowerBound* [; upperBound] )`
+Syntax: `MINMAX( expresssion1, expression2, ... ; lowerBound [; upperBound] )`
 
 A bound value <= 0 disables the corresponding bound. If `upperBound == lowerBound = m` you request exactly `m` conditions out of the given ones to hold true at the same time. 
 
@@ -195,7 +195,7 @@ MINMAX(${query1}, ${query2}, ${query3};2;2)
 
 ```
 
-:warning: MINMAX is syntactic sugar. Internally, MINMAX-expressions translate to regular boolean expressions ([BoundedOr](./bbq/BoundedOr.java))) and thus can get quite large and complex.
+:warning: MINMAX is syntactic sugar. Internally, MINMAX-expressions translate to regular boolean expressions ([BoundedOr](./bbq/BoundedOr.java)) and thus can get quite large and complex.
 
 
 ### Errors and Warnings
