@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -71,27 +73,40 @@ public class QuantumOptimizer {
      */
     public BloomFilterQuery optimize(BloomFilterQuery query) {
 
+        final int complexityBefore = query.getExpression().computeComplexity();
+
         final BloomFilterQuery dbgQuery = query;
-        LOGGER.trace("Query to be optimized (complexity={}): \n{}", defer(() -> dbgQuery.getExpression().computeComplexity()),
-                defer(() -> formatExpressionAsTree(dbgQuery.getExpression())));
+        LOGGER.trace("Query to be optimized (complexity={}): \n{}", complexityBefore, defer(() -> formatExpressionAsTree(dbgQuery.getExpression())));
+
+        Map<Integer, BloomFilterQuery> expressionComplexityMap = new TreeMap<>();
+        expressionComplexityMap.put(complexityBefore, query);
 
         int iteration = 0;
         BloomFilterQuery source = null;
         do {
             source = query;
             BbqExpression expression = query.getExpression();
+
             BbqExpression optimizedExpression = this.optimize(expression);
 
             if (optimizedExpression.getExpressionId() != expression.getExpressionId()) {
                 query = new BloomFilterQuery(query.getSourceQuery(), optimizedExpression);
+                expressionComplexityMap.put(optimizedExpression.computeComplexity(), query);
             }
             iteration++;
         } while (source.getId() != query.getId() && iteration < 10);
 
         // Above I limit the number of runs, just in case I overlooked any flickering ... ;)
 
+        // take the version with the smallest complexity, optimizer should not increase complexity
+        BloomFilterQuery best = expressionComplexityMap.values().iterator().next();
+        if (query != best) {
+            LOGGER.trace("Final optimization increased complexity, taking version with smallest complexity instead!");
+            query = best;
+        }
+
         final BloomFilterQuery dbgQueryAfter = query;
-        LOGGER.trace("Optimized query (complexity={}): \n{}", defer(() -> dbgQueryAfter.getExpression().computeComplexity()),
+        LOGGER.trace("Optimized query (complexity={} ({})): \n{}", defer(() -> dbgQueryAfter.getExpression().computeComplexity()), complexityBefore,
                 defer(() -> formatExpressionAsTree(dbgQueryAfter.getExpression())));
         return query;
     }
@@ -137,6 +152,8 @@ public class QuantumOptimizer {
      */
     BbqExpression dissolveUselessNesting(BbqExpression expression) {
         if (isANDorOR(expression)) {
+            final BbqExpression dbgExpression2 = expression;
+            LOGGER.trace("dissolveUselessNesting BEFORE: \n{}", defer(() -> formatExpressionAsTree(dbgExpression2)));
             boolean changed = false;
             List<BbqExpression> childExpressions = new ArrayList<>();
             for (BbqExpression childExpression : expression.getChildExpressions()) {
@@ -153,6 +170,8 @@ public class QuantumOptimizer {
             if (changed) {
                 expression = combine(childExpressions, expression.getClass());
             }
+            final BbqExpression dbgExpression3 = expression;
+            LOGGER.trace("dissolveUselessNesting AFTER: \n{}", defer(() -> formatExpressionAsTree(dbgExpression3)));
         }
         return expression;
     }
@@ -164,14 +183,21 @@ public class QuantumOptimizer {
      * @return optimized expression
      */
     BbqExpression dissolveUselessNandNor(BbqExpression expression) {
+
         if (expression instanceof NegationExpression) {
+            final BbqExpression dbgExpression2 = expression;
+            LOGGER.trace("dissolveUselessNandNor BEFORE: \n{}", defer(() -> formatExpressionAsTree(dbgExpression2)));
             BbqExpression childExpression = expression.getChildExpressions().get(0);
             BbqExpression fixedChildExpression = dissolveMemberNegatedAndOrOfNegations(childExpression);
             if (fixedChildExpression.getExpressionId() != childExpression.getExpressionId()) {
                 expression = negateExpression(fixedChildExpression);
             }
+            final BbqExpression dbgExpression3 = expression;
+            LOGGER.trace("dissolveUselessNandNor AFTER: \n{}", defer(() -> formatExpressionAsTree(dbgExpression3)));
         }
         else if (isANDorOR(expression)) {
+            final BbqExpression dbgExpression2 = expression;
+            LOGGER.trace("dissolveUselessNandNor BEFORE: \n{}", defer(() -> formatExpressionAsTree(dbgExpression2)));
             boolean changed = false;
             List<BbqExpression> childExpressions = new ArrayList<>();
             for (BbqExpression childExpression : expression.getChildExpressions()) {
@@ -182,6 +208,8 @@ public class QuantumOptimizer {
             if (changed) {
                 expression = combine(childExpressions, expression.getClass());
             }
+            final BbqExpression dbgExpression3 = expression;
+            LOGGER.trace("dissolveUselessNandNor AFTER: \n{}", defer(() -> formatExpressionAsTree(dbgExpression3)));
         }
         return expression;
     }
@@ -221,12 +249,21 @@ public class QuantumOptimizer {
      */
     private BbqExpression pushDownNegations(BbqExpression expression) {
         if (expression instanceof NegationExpression) {
+            final BbqExpression dbgExpression2 = expression;
+            LOGGER.trace("pushDownNegations BEFORE: \n{}", defer(() -> formatExpressionAsTree(dbgExpression2)));
+
             BbqExpression fixed = negatePushDown(expression.getChildExpressions().get(0));
             if (fixed.getExpressionId() != expression.getExpressionId()) {
                 expression = fixed;
             }
+
+            final BbqExpression dbgExpression3 = expression;
+            LOGGER.trace("pushDownNegations AFTER: \n{}", defer(() -> formatExpressionAsTree(dbgExpression3)));
         }
         else if (isANDorOR(expression)) {
+            final BbqExpression dbgExpression2 = expression;
+            LOGGER.trace("pushDownNegations BEFORE: \n{}", defer(() -> formatExpressionAsTree(dbgExpression2)));
+
             boolean changed = false;
             List<BbqExpression> fixedChildExpressions = new ArrayList<>();
             for (BbqExpression childExpression : expression.getChildExpressions()) {
@@ -243,6 +280,9 @@ public class QuantumOptimizer {
                     expression = combine(fixedChildExpressions, expression.getClass());
                 }
             }
+
+            final BbqExpression dbgExpression3 = expression;
+            LOGGER.trace("pushDownNegations AFTER: \n{}", defer(() -> formatExpressionAsTree(dbgExpression3)));
         }
         return expression;
     }
@@ -286,12 +326,17 @@ public class QuantumOptimizer {
      */
     BbqExpression mergeOverlaps(BbqExpression expression) {
         if (isANDorOR(expression)) {
+            final BbqExpression dbgExpression2 = expression;
+            LOGGER.trace("mergeOverlaps BEFORE: \n{}", defer(() -> formatExpressionAsTree(dbgExpression2)));
+
             List<BbqExpression> childExpressions = new ArrayList<>(expression.getChildExpressions());
             boolean changed = premergeChildExpressionOverlaps(childExpressions);
             changed = mergeIntraChildExpressionOverlaps(childExpressions, expression.getClass()) || changed;
             if (changed) {
                 expression = combine(childExpressions, expression.getClass());
             }
+            final BbqExpression dbgExpression3 = expression;
+            LOGGER.trace("mergeOverlaps AFTER: \n{}", defer(() -> formatExpressionAsTree(dbgExpression3)));
         }
         return expression;
     }
@@ -479,12 +524,17 @@ public class QuantumOptimizer {
      */
     private BbqExpression mergeWithOverlapAND(List<BbqExpression> additional1, List<BbqExpression> additional2, List<BbqExpression> overlap) {
         List<BbqExpression> members = new ArrayList<>();
-        List<BbqExpression> additionals = new ArrayList<>();
-        additionals.addAll(additional1);
-        additionals.addAll(additional2);
-        members.add(combine(overlap, OrExpression.class));
-        members.add(combine(additionals, OrExpression.class));
-        return combine(members, AndExpression.class);
+        members.addAll(overlap);
+        List<BbqExpression> andMembers = new ArrayList<>();
+        if (!additional1.isEmpty()) {
+            andMembers.add(combine(additional1, OrExpression.class));
+        }
+        if (!additional2.isEmpty()) {
+            andMembers.add(combine(additional2, OrExpression.class));
+        }
+        members.add(combine(andMembers, AndExpression.class));
+
+        return combine(members, OrExpression.class);
     }
 
     /**
