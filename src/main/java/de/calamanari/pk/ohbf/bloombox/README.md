@@ -36,6 +36,7 @@ Not depicted above is the [ANTLR](https://www.antlr.org/)-based transformation o
 
 Still experimental is the support for upscaling. This is a useful feature if you only want to put a sufficient (and considerably smaller) sample into the box but report numbers extrapolated to the real dataset (called _target population_). While linear upscaling based on a representative sample is trivial (apply a fixed multiplier), it gets tricky if you want to correct a bias in the target population. I quickly realized that this needs more research, so I introducted the [UpScaler](UpScaler.java) interface as a further abstraction. The [DefaultUpScaler](DefaultUpScaler.java) is a first attempt. It uses supplementary queries in addition to the current user query to improve upscaling results. However, you can implement your own upscaler.
 
+
 ### The Finite Probability Overdrive (FBO)
 
 Upscaling can get quite complicated, and I was thinking about alternative ways to deal with the principle challenge that DPAVs (**d**ata **p**oint **a**ttribute **v**alue, e.g. `color=blue`) may have assigned probabilities.
@@ -140,6 +141,62 @@ ${query1} UNION ${query2}
 
 ```
 
+### Bounds for (NOT) IN
+
+Optionally, any `IN` or `NOT IN` expression as part of a basic query can have constraints (bounds). This way you can check multiple values and restrict the number of values that match at the same time.
+
+Syntax: `*argName* IN ( *value1*, *value2*, ... [; *lowerBound*] [; upperBound] )`
+
+This feature is only useful in scenarios with *multi-value-support*. E.g., the attribute `hobby` could be fed with multiple values *for the same row*. This is possible because of the way the BloomBox stores data point attributes. For each data point (row) there may be specified several hobbies. Now you want to query all users with at least 2 hobbies out of a list.
+
+```
+
+hobby in (reading, cycling, boating, running, programming;2)
+
+
+```
+
+You can also specify an upper bound to additionally limit the number of hobbies.
+
+```
+
+hobby in (reading, cycling, boating, running, programming;2;4)
+
+
+```
+
+A bound value <= 0 disables the corresponding bound. If `upperBound == lowerBound = m` you request exactly `m` conditions out of the given ones to hold (NOT) true at the same time. 
+
+For symmetry reasons the bounds-feature is also available for NOT IN.
+
+:warning: Bounds are syntactic sugar. Internally, bounds on (NOT) IN expressions translate to regular boolean expressions ([BoundedOr](./bbq/BoundedOr.java))) and thus can get quite large and complex.
+
+
+### The MINMAX expression
+
+You can use the MINMAX-expression to surround a group of expressions and define how many must hold true at the same time (lower bound) and how many are allowed to be true at the same time.
+
+Syntax: `MINMAX( *expresssion1*, *expression2*, ... ; *lowerBound* [; upperBound] )`
+
+A bound value <= 0 disables the corresponding bound. If `upperBound == lowerBound = m` you request exactly `m` conditions out of the given ones to hold true at the same time. 
+
+MINMAX is available in basic queries and also in post queries.
+
+```
+
+MINMAX(a=1, b=1, c=1;2)
+
+MINMAX(a=1, b=1, c=1, d=1;2;3)
+
+MINMAX(${query1}, ${query2}, ${query3};2)
+
+MINMAX(${query1}, ${query2}, ${query3};2;2)
+
+
+```
+
+:warning: MINMAX is syntactic sugar. Internally, MINMAX-expressions translate to regular boolean expressions ([BoundedOr](./bbq/BoundedOr.java))) and thus can get quite large and complex.
+
 
 ### Errors and Warnings
 
@@ -156,6 +213,17 @@ This way, any BloomBox using the [FileDataStore](FileDataStore.java) can run on 
 
 See also [BloomBoxHeader](BloomBoxHeader.java) and [DataStoreHeader](DataStoreHeader.java).
 
+## Good to know
+
+### Implicit multi-value support
+
+A BloomBox internally just stores keys. Each key represents a DPAV (data point attribute value), a combination of argName and argValue like `color=blue`. This means that you can add as many values as you like for the same "column" in a row. You just need to consider multi-values as extra-keys when you define epsilon to keep the false-positive rate under control. E.g., if you have 100 columns and let's say column 37 can contain up to 5 values at the same time, then you have 104 keys to consider for computing epsilon.
+
+### Why does the number of rows(!) affect the false-positive rate?
+
+A row is a bloom filter and you can control its false-positive rate (epsilon) quite well. E.g., If you configure epsilon to 1:1000 and you only have 100 columns, you may feel safe. The problem is that we are talking about probability (chance). If you query 100,000 rows, you have 100,000 times a small chance. So, especially, if you query a single attribute (DPAV) you may be surprised to see a couple of unexpected matches. These *ghost matches* will often already be gone by adding just one more attribute (AND) to your query because the small probability for a single false match (DPAV) multiplies with the other, resulting in a way smaller combined probability for a wrong match.
+
+
 ## Known Limitations
 
 * No support for quantitative data.
@@ -165,7 +233,6 @@ See also [BloomBoxHeader](BloomBoxHeader.java) and [DataStoreHeader](DataStoreHe
 * The size of the box still grows linearly with the number of rows.
  * You may feed the box with a representative sample and perform upscaling.
  
-
 
 ## The Bird Strikes Example
 
