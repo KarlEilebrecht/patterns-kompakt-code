@@ -154,7 +154,7 @@ public class BoundedOr {
 
         if (lowerBound <= 0) {
             // ONLY apply upper bound by computing all possible combinations
-            res = createCombinedOrOfAndGroups(expressionsNegated, lowerBoundNegated);
+            res = createCombinedOrOfAndGroups(getExpressionsNegated(), lowerBoundNegated);
         }
         else {
             IntermediateOrExpression fullExpression = createCombinedOrOfAndGroups(expressions, lowerBound);
