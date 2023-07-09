@@ -58,7 +58,9 @@ We can further simplify this formula as follows:
 
 ![s10](../../../../../../../../doc/patterns/images/collision_formula_2.svg)
 
-[Prof. Matt Might](https://matt.might.net/) shows in his article _[Counting hash collisions with the birthday paradox](https://matt.might.net/articles/counting-hash-collisions/)_ how to derive the same formula from the [Birthday Problem](https://en.wikipedia.org/wiki/Birthday_problem).
+:computer: [WolframAlpha](https://www.wolframalpha.com) finds [this equivalent formula](https://www.wolframalpha.com/input?i=s%28n%29%3D%5B%2F%2Fmath%3As%28n-1%29+%2B+%28%28n-1-s%28n-1%29%29%2Fm%29%2F%2F%5D%2C+s%281%29%3D%5B%2F%2Fdate%3A0%2F%2F%5D) and provides some nice insights if you set _m_ to a fixed value [(e.g., 6 for the dice example)](https://www.wolframalpha.com/input?i=s%28n%29%3D%5B%2F%2Fmath%3As%28n-1%29+%2B+%28%28n-1-s%28n-1%29%29%2F6%29%2F%2F%5D%2C+s%281%29%3D%5B%2F%2Fdate%3A0%2F%2F%5D). And if you insert a coin, you can even get a step-by-step explanation.
+
+:candy: [Prof. Matt Might](https://matt.might.net/) shows in his article _[Counting hash collisions with the birthday paradox](https://matt.might.net/articles/counting-hash-collisions/)_ how to derive the same formula from the [Birthday Problem](https://en.wikipedia.org/wiki/Birthday_problem).
 
 :warning: Be aware that during computation of _c(m,n)_ extremely large numbers and extremely small numbers come into play. Thus, the precision of common calculators and libraries will be insufficient. 
 
