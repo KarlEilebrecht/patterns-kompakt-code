@@ -50,8 +50,16 @@ Because we assume that the key generator behaves like a fair dice, this series c
 
 Unfortunately, computing a series for estimation is inconvenient and very slow. Instead of iteratively computing **_S<sub>n</sub>_** you can leverage the function **_c(m,n)_** depicted below:
 
-![s9](../../../../../../../../doc/patterns/images/collision_formula.svg)
+![s9](../../../../../../../../doc/patterns/images/collision_formula_1.svg)
 
 > Thanks to [Dmitry Dodin](https://de.linkedin.com/in/dodin-dmitry-56398295), data scientist and a great colleague, for helping me to transform the series _Sn_ into the formula _c(m,n)_.
 
-:warning: Be aware that during computation of _c(m,n)_ extremely large numbers and extremely small numbers come into play. Thus, the precision of common calculators and libraries will be insufficient.
+We can further simplify this formula as follows:
+
+![s10](../../../../../../../../doc/patterns/images/collision_formula_2.svg)
+
+[Prof. Matt Might](https://matt.might.net/) shows in his article _[Counting hash collisions with the birthday paradox](https://matt.might.net/articles/counting-hash-collisions/)_ how to derive the same formula from the [Birthday Problem](https://en.wikipedia.org/wiki/Birthday_problem).
+
+:warning: Be aware that during computation of _c(m,n)_ extremely large numbers and extremely small numbers come into play. Thus, the precision of common calculators and libraries will be insufficient. 
+
+:point_right: For some quick experiments I recommend using a high precision online calculator like [Tomasz Sowa's TTMath](https://www.ttmath.org/online_calculator).
