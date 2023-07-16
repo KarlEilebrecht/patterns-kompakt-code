@@ -44,7 +44,7 @@ This shall be our **working hypothesis**.
 
 However, we haven’t achieved much, yet. It is still a series.
 
-Luckily, for any _b≠1_ (remember: _b_=$(1-\frac{1}{m})$, _m>0_) we are allowed to replace a partial sum with its closed form as follows:
+Luckily, for any $b≠1$ (remember: $b=(1-\frac{1}{m}), m>0$) we are allowed to replace a partial sum with its closed form as follows:
 
 ![s9](../../../../../../../../doc/patterns/images/09-geo-closed.svg)
 
@@ -52,7 +52,7 @@ Let’s do that to get a closed form of _S<sub>n</sub>_:
 
 ![s10](../../../../../../../../doc/patterns/images/10-series-closed-b.svg)
 
-Now it is time to replace _b_ with its original definition _b_=$(1-\frac{1}{m})$:
+Now it is time to replace $b$ with its original definition $b=(1-\frac{1}{m})$:
 
 ![s11](../../../../../../../../doc/patterns/images/11-series-closed.svg)
 
