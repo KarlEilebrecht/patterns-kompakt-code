@@ -8,11 +8,13 @@ The goal is to develop a closed form for the following series:
 
 ![s1](../../../../../../../../doc/patterns/images/01-series-raw.svg)
 
+## Analysis of _S<sub>n</sub>_
+
 First, let’s simplify the series definition, so that the predecessor _S<sub>n-1</sub>_ only appears once:
 
 ![s2](../../../../../../../../doc/patterns/images/02-series-simplified.svg)
 
-To get a feeling for behavior of the series, we will now take a look at the first couple of elements:
+To get a feeling for the behavior of the series, we will now take a look at the first couple of elements:
 
 ![s3](../../../../../../../../doc/patterns/images/03-examples-raw.svg)
 
@@ -42,9 +44,11 @@ Based on our observations we assume:
 
 This shall be our **working hypothesis**.
 
+## Derivation of a closed form
+
 However, we haven’t achieved much, yet. It is still a series.
 
-Luckily, for any $b≠1$ (remember: $b=(1-\frac{1}{m}), m>0$) we are allowed to replace a partial sum with its closed form as follows:
+Luckily, for any $b≠1$ (remember: $b=(1-\frac{1}{m}), m>0$) [we are allowed](https://en.wikipedia.org/wiki/Geometric_series#Sum) to replace a partial sum with its closed form as follows:
 
 ![s9](../../../../../../../../doc/patterns/images/09-geo-closed.svg)
 
@@ -56,21 +60,23 @@ Now it is time to replace $b$ with its original definition $b=(1-\frac{1}{m})$:
 
 ![s11](../../../../../../../../doc/patterns/images/11-series-closed.svg)
 
-**Given the series**
+## Claim
+
+Given the series
 
 ![s12](../../../../../../../../doc/patterns/images/12-series-def-short.svg)
 
-**We claim**
+we claim:
 
 ![s13](../../../../../../../../doc/patterns/images/13-claim.svg)
 
-**Proof**
+## Proof
 
 ![s14](../../../../../../../../doc/patterns/images/16-proof-s0.svg)
 
 ![s15](../../../../../../../../doc/patterns/images/15-proof.svg)
 
-**Conclusion**
+## Conclusion
 
 ![s16](../../../../../../../../doc/patterns/images/17-conclusion.svg)
 
