@@ -12,15 +12,15 @@ The process of testing large sequences shall be sped up.
 
 In this scenario we want to apply the **Leader-Follower Pattern** to _meet the performance, fault-tolerance, or accuracy requirements of the component via a 'divide and conquer' strategy. Split its services into independent subtasks that can be executed in parallel, and combine the partial results returned by these subtasks to provide the service's final result_ (POSA). 
 
-![Test](../../../../../../../doc/patterns/images/master_slave_dn.png)
+![Test](../../../../../../../doc/patterns/images/leader_follower_dn.png)
 
 The palindrome test checks if the sequence is exactly the same when being read from the start to the end or vice-versa. This makes it quite easy to parallelize the test because we can cut the total sequence in subsequences, each consisting of some characters from the begin plus the same number of characters from the end of the source sequence. These _partitions_ all must be palindromes. If any of the partitions is not a palindrome, the source sequence cannot be a palindrome. 
 
-![Test](../../../../../../../doc/patterns/images/master_slave_cx.png)
+![Test](../../../../../../../doc/patterns/images/leader_follower_cx.png)
 
 The _PalindromeCheckLeader_ (virtually) cuts the input sequence into subsequences, each of these partitions becomes a _PalindromeCheckFollowerTask_. A configurable number of threads (the followers) execute the follower tasks asynchronously.
 
-![Test](../../../../../../../doc/patterns/images/master_slave_dx.png)
+![Test](../../../../../../../doc/patterns/images/leader_follower_dx.png)
 
 The _PalindromeCheckLeader_ derives the total test result (input sequence is a palindrome or not) from the partial results reported by the followers.
 
