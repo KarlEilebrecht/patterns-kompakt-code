@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Master Slave Test - demonstrates MASTER SLAVE pattern.
+ * Leader Follower Test - demonstrates LEADER FOLLOWER pattern.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.masterslave;
+package de.calamanari.pk.leaderfollower;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,13 +42,13 @@ import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 import de.calamanari.pk.util.itfa.ItfaConfiguration;
 
 /**
- * Master Slave Test - demonstrates MASTER SLAVE pattern.
+ * Leader Follower Test - demonstrates LEADER FOLLOWER pattern.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class MasterSlaveTest {
+public class LeaderFollowerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MasterSlaveTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LeaderFollowerTest.class);
 
     /**
      * Character set for the test
@@ -71,14 +71,14 @@ public class MasterSlaveTest {
     private static final int PALINDROME_SIZE = 1_111_111; // 1GB = 1_073_741_824;
 
     /**
-     * number of slaves (worker threads)
+     * number of followers (worker threads)
      */
-    private static final int NUMBER_OF_SLAVES = Runtime.getRuntime().availableProcessors();
+    private static final int NUMBER_OF_FOLLOWERS = Runtime.getRuntime().availableProcessors();
 
     /**
-     * size of partition each slave works on
+     * size of partition each follower works on
      */
-    private static final int SLAVE_PARTITION_SIZE = 10_000;
+    private static final int FOLLOWER_PARTITION_SIZE = 10_000;
 
     /**
      * Setting for the maxium number of character index entries to be created by the underlying {@link IndexedTextFileAccessor}, see also
@@ -87,19 +87,20 @@ public class MasterSlaveTest {
     private static final int MAX_NUMBER_OF_CHAR_INDEX_ENTRIES = 20_000;
 
     /**
-     * the MASTER
+     * the LEADER
      */
-    private PalindromeCheckMaster palindromeCheckMaster = new PalindromeCheckMaster(NUMBER_OF_SLAVES, SLAVE_PARTITION_SIZE, MAX_NUMBER_OF_CHAR_INDEX_ENTRIES);
+    private PalindromeCheckLeader palindromeCheckLeader = new PalindromeCheckLeader(NUMBER_OF_FOLLOWERS, FOLLOWER_PARTITION_SIZE,
+            MAX_NUMBER_OF_CHAR_INDEX_ENTRIES);
 
     @Test
-    public void testMasterSlavePalindrome() throws Exception {
+    public void testLeaderFollowerPalindrome() throws Exception {
 
         // HINTS:
-        // * Adjust the log-level in logback.xml to DEBUG to see the MASTER SLAVE working
-        // * Play with the settings for PALINDROME_SIZE / NUMBER_OF_SLAVES / SLAVE_PARTITION_SIZE and watch execution
+        // * Adjust the log-level in logback.xml to DEBUG to see the LEADER FOLLOWER working
+        // * Play with the settings for PALINDROME_SIZE / NUMBER_OF_FOLLOWERS / FOLLOWER_PARTITION_SIZE and watch execution
         // time and memory consumption
         // * Palindrome creation (below) uses the same approach, try to improve it!
-        // * The class IndexedTextFileAccessor used in this example internally uses Master-Slave to improve indexing
+        // * The class IndexedTextFileAccessor used in this example internally uses Leader-Follower to improve indexing
         // performance
 
         // THE SURROGATES PROBLEM:
@@ -136,7 +137,7 @@ public class MasterSlaveTest {
         // Palindrome with surrogate pair successfully detected.
         //
         // This example shows that the partitioning algorithm is extremely important
-        // when implementing this kind of MASTER-SLAVE scenario.
+        // when implementing this kind of LEADER-FOLLOWER scenario.
         // Partitioning can take a considerable amount of time.
         // Depending on the given requirements it is sometimes reasonable to implement
         // a simpler algorithm for performance reasons, accepting certain limitations.
@@ -144,36 +145,36 @@ public class MasterSlaveTest {
 
         File testFile = createPalindromeTestFile(PALINDROME_SIZE, null);
 
-        LOGGER.info("Test Master Slave Palindrome ...");
+        LOGGER.info("Test Leader Follower Palindrome ...");
         long startTimeNanos = System.nanoTime();
 
-        PalindromeCheckResult checkResult = palindromeCheckMaster.performPalindromeFileTest(testFile, CHARSET_NAME);
+        PalindromeCheckResult checkResult = palindromeCheckLeader.performPalindromeFileTest(testFile, CHARSET_NAME);
 
         assertEquals(PalindromeCheckResult.CONFIRMED, checkResult);
 
         String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
-        LOGGER.info("Test Master Slave Palindrome successful! Elapsed time: {} s", elapsedTimeString);
+        LOGGER.info("Test Leader Follower Palindrome successful! Elapsed time: {} s", elapsedTimeString);
 
         testFile.delete();
 
     }
 
     @Test
-    public void testMasterSlaveNonPalindrome() throws Exception {
+    public void testLeaderFollowerNonPalindrome() throws Exception {
 
         int errorPositionLeft = (PALINDROME_SIZE / 4);
         int errorPositionRight = (PALINDROME_SIZE - 1) - errorPositionLeft;
         File testFile = createPalindromeTestFile(PALINDROME_SIZE, new int[] { errorPositionLeft });
 
-        LOGGER.info("Test Master Slave Non Palindrome ...");
+        LOGGER.info("Test Leader Follower Non Palindrome ...");
         long startTimeNanos = System.nanoTime();
 
-        PalindromeCheckResult checkResult = palindromeCheckMaster.performPalindromeFileTest(testFile, CHARSET_NAME);
+        PalindromeCheckResult checkResult = palindromeCheckLeader.performPalindromeFileTest(testFile, CHARSET_NAME);
 
         assertEquals(PalindromeCheckResult.createFailedResult(errorPositionLeft, errorPositionRight), checkResult);
 
         String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
-        LOGGER.info("Test Master Slave Non Palindrome successful! Elapsed time: {} s", elapsedTimeString);
+        LOGGER.info("Test Leader Follower Non Palindrome successful! Elapsed time: {} s", elapsedTimeString);
 
         testFile.delete();
 
@@ -264,41 +265,42 @@ public class MasterSlaveTest {
             int currentPartitionSize = (remaining >= partitionSize ? partitionSize : remaining);
             int numberOfSubPartitions = (int) Math.ceil((double) currentPartitionSize / (double) subPartitionSize);
             int subRemaining = currentPartitionSize;
-            List<PalindromeCreatorSlave> slaveList = new ArrayList<>();
+            List<PalindromeCreatorFollower> followerList = new ArrayList<>();
             CountDownLatch latch = new CountDownLatch(Math.min(numberOfThreads, numberOfSubPartitions));
             int count = 0;
             while (subRemaining > 0) {
                 if (count > 0 && count % numberOfThreads == 0) {
                     latch.await();
-                    for (PalindromeCreatorSlave slave : slaveList) {
-                        writer.write(slave.getResult());
+                    for (PalindromeCreatorFollower follower : followerList) {
+                        writer.write(follower.getResult());
                     }
                     writer.flush();
-                    slaveList.clear();
+                    followerList.clear();
                     numberOfSubPartitions = numberOfSubPartitions - numberOfThreads;
                     latch = new CountDownLatch(Math.min(numberOfThreads, numberOfSubPartitions));
                 }
                 int currentSubPartitionSize = (subRemaining >= subPartitionSize ? subPartitionSize : subRemaining);
-                PalindromeCreatorSlave slave = new PalindromeCreatorSlave(startIdx, startIdx + (direction * currentSubPartitionSize), errorPositions, latch);
-                slaveList.add(slave);
-                executorService.execute(slave);
+                PalindromeCreatorFollower follower = new PalindromeCreatorFollower(startIdx, startIdx + (direction * currentSubPartitionSize), errorPositions,
+                        latch);
+                followerList.add(follower);
+                executorService.execute(follower);
                 startIdx = startIdx + (direction * currentSubPartitionSize);
                 subRemaining = subRemaining - currentSubPartitionSize;
                 count++;
             }
             remaining = remaining - currentPartitionSize;
             latch.await();
-            for (PalindromeCreatorSlave slave : slaveList) {
-                writer.write(slave.getResult());
+            for (PalindromeCreatorFollower follower : followerList) {
+                writer.write(follower.getResult());
             }
         }
 
     }
 
     /**
-     * Creating large palindromes took way to long, so I decided to use Master-Slave again for creation. :-)
+     * Creating large palindromes took way to long, so I decided to use Leader-Follower again for creation. :-)
      */
-    private class PalindromeCreatorSlave implements Runnable {
+    private class PalindromeCreatorFollower implements Runnable {
 
         final int fromIdx;
 
@@ -310,7 +312,7 @@ public class MasterSlaveTest {
 
         char[] buffer;
 
-        public PalindromeCreatorSlave(int fromIdx, int toIdx, int[] errorPositions, CountDownLatch latch) {
+        public PalindromeCreatorFollower(int fromIdx, int toIdx, int[] errorPositions, CountDownLatch latch) {
             this.fromIdx = fromIdx;
             this.toIdx = toIdx;
             this.errorPositions = errorPositions;

@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Palindrome Check Future - demonstrates MASTER SLAVE
+ * Palindrome Check Future - demonstrates LEADER FOLLOWER
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.masterslave;
+package de.calamanari.pk.leaderfollower;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Palindrome Check Future - allows the MASTER to poll for the result and the SLAVES to report their results.
+ * Palindrome Check Future - allows the LEADER to poll for the result and the FOLLOWERs to report their results.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
@@ -75,7 +75,7 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
     }
 
     /**
-     * This method indicates that we want to tell the slaves to terminate their work as fast as possible.
+     * This method indicates that we want to tell the followers to terminate their work as fast as possible.
      * 
      * @return true if execution has been canceled or is aborted due to completion
      */
@@ -124,7 +124,7 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
     }
 
     /**
-     * does a fast count down, internally used after we know the result, this avoids the need for the MASTER to wait for all SLAVES to complete
+     * does a fast count down, internally used after we know the result, this avoids the need for the LEADER to wait for all FOLLOWERs to complete
      */
     protected void countDownRemaining() {
         for (int i = 0; i < numberOfPartitions; i++) {
@@ -137,9 +137,9 @@ public class PalindromeCheckFuture implements Future<PalindromeCheckResult> {
      * 
      * @param partitionResult result for one partition
      */
-    public void reportSlaveResult(PalindromeCheckResult partitionResult) {
+    public void reportFollowerResult(PalindromeCheckResult partitionResult) {
         if (!isAborted() && !partitionResult.equals(PalindromeCheckResult.UNKNOWN) && !partitionResult.isPalindromeConfirmed()) {
-            // a slave reported a proof that the examined partition was no palindrome
+            // a follower reported a proof that the examined partition was no palindrome
             // now check if this was the first one ("the winner") who recognized a proof
             boolean callerIsWinner = abortDueToCompletion.compareAndSet(false, true);
             if (callerIsWinner) {

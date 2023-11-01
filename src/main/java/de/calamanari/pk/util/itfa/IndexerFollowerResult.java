@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Indexer Slave Result
+ * Indexer Follower Result
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -20,19 +20,19 @@
 package de.calamanari.pk.util.itfa;
 
 /**
- * Result from an indexer slave
+ * Result from an indexer follower
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-final class IndexerSlaveResult {
+final class IndexerFollowerResult {
 
     /**
-     * The slave uses a simple array to store the index positions: charIndex[1][235][280] means: second index entry,
+     * The folllower uses a simple array to store the index positions: charIndex[1][235][280] means: second index entry,
      * character no. 235 at byte position 280
      */
     public final long[][] charIndex;
 
     /**
-     * The slave uses a simple array to store the index positions: lineIndex[7][3895][107898] means: 8th index entry,
+     * The follower uses a simple array to store the index positions: lineIndex[7][3895][107898] means: 8th index entry,
      * line no. 3895 starts at byte position 107898
      */
     public final long[][] lineIndex;
@@ -72,7 +72,7 @@ final class IndexerSlaveResult {
      * @param numberOfCharIndexEntries count
      * @param numberOfLineIndexEntries count
      */
-    public IndexerSlaveResult(long[][] charIndex, long[][] lineIndex, long numberOfBytesProcessed,
+    public IndexerFollowerResult(long[][] charIndex, long[][] lineIndex, long numberOfBytesProcessed,
             long numberOfCharactersRead, long numberOfLinesRead, int numberOfCharIndexEntries,
             int numberOfLineIndexEntries) {
         this.charIndex = charIndex;

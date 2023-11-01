@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Palindrome Check Master - demonstrates MASTER SLAVE
+ * Palindrome Check Leader - demonstrates LEADER FOLLOWER
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.masterslave;
+package de.calamanari.pk.leaderfollower;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,14 +35,14 @@ import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 import de.calamanari.pk.util.itfa.ItfaConfiguration;
 
 /**
- * Palindrome Check Master - the MASTER in this MASTER SLAVE example, divides the task into subtasks waits for the slaves to complete the sub-tasks and returns
- * the result.
+ * Palindrome Check Leader - the LEADER in this LEADER FOLLOWER example, divides the task into subtasks waits for the followers to complete the sub-tasks and
+ * returns the result.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class PalindromeCheckMaster {
+public class PalindromeCheckLeader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PalindromeCheckMaster.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PalindromeCheckLeader.class);
 
     /**
      * simulated load
@@ -50,41 +50,41 @@ public class PalindromeCheckMaster {
     private static final long OTHER_TASK_DELAY_MILLIS = 1000;
 
     /**
-     * Size of the partitions a slave will work on
+     * Size of the partitions a follower will work on
      */
     private final int partitionSize;
 
     /**
-     * Internally used executor to control the slaves' work
+     * Internally used executor to control the followers' work
      */
     private final Executor executor;
 
     /**
      * Configuration for the underlying indexer.
      */
-    private final ItfaConfiguration checkMasterIndexerConfiguration;
+    private final ItfaConfiguration checkLeaderIndexerConfiguration;
 
     /**
-     * Creates the master with some configuration information
+     * Creates the leader with some configuration information
      * 
-     * @param numberOfSlaves number of parallel workers
-     * @param partitionSize the size (characters) of a partition (pair) a slave will work in
+     * @param numberOfFollowers number of parallel workers
+     * @param partitionSize the size (characters) of a partition (pair) a follower will work in
      * @param maxNumberOfCharIndexEntries positive index size, see {@link ItfaConfiguration#maxNumberOfCharIndexEntries}
      */
-    public PalindromeCheckMaster(int numberOfSlaves, int partitionSize, int maxNumberOfCharIndexEntries) {
+    public PalindromeCheckLeader(int numberOfFollowers, int partitionSize, int maxNumberOfCharIndexEntries) {
         this.partitionSize = partitionSize;
-        this.executor = Executors.newFixedThreadPool(numberOfSlaves);
+        this.executor = Executors.newFixedThreadPool(numberOfFollowers);
         ItfaConfiguration indexerConfig = new ItfaConfiguration();
         indexerConfig.setMaxNumberOfCharIndexEntries(maxNumberOfCharIndexEntries);
         indexerConfig.setMaxNumberOfLineIndexEntries(1);
-        this.checkMasterIndexerConfiguration = indexerConfig;
+        this.checkLeaderIndexerConfiguration = indexerConfig;
     }
 
     /**
-     * While waiting the MASTER can do other things
+     * While waiting the LEADER can do other things
      */
     private void doOtherStuff() {
-        LOGGER.debug("MASTER does other stuff while waiting ...");
+        LOGGER.debug("LEADER does other stuff while waiting ...");
         TimeUtils.sleepIgnoreException(OTHER_TASK_DELAY_MILLIS);
     }
 
@@ -103,7 +103,7 @@ public class PalindromeCheckMaster {
         PalindromeCheckResult res;
 
         LOGGER.info("Scanning input file (create index) ... ");
-        IndexedTextFileAccessor textFileAccessor = new IndexedTextFileAccessor(file, charsetName, checkMasterIndexerConfiguration);
+        IndexedTextFileAccessor textFileAccessor = new IndexedTextFileAccessor(file, charsetName, checkLeaderIndexerConfiguration);
 
         if (textFileAccessor.getNumberOfCharacters() < 2) {
             LOGGER.info("Skipped partitioning (nothing to do). ");
@@ -111,11 +111,11 @@ public class PalindromeCheckMaster {
         }
         else {
 
-            LOGGER.info("Preparing (create partitions for SLAVEs) ... ");
-            PalindromeCheckFuture future = partitionAndStartSlaves(textFileAccessor);
+            LOGGER.info("Preparing (create partitions for FOLLOWERs) ... ");
+            PalindromeCheckFuture future = partitionAndStartFollowers(textFileAccessor);
 
-            LOGGER.info("Preparation completed, MASTER is waiting for SLAVE-results ...");
-            waitForSlavesToComplete(future);
+            LOGGER.info("Preparation completed, LEADER is waiting for FOLLOWER-results ...");
+            waitForFollowersToComplete(future);
 
             LOGGER.debug("Palindrome check finished!");
             res = future.get();
@@ -128,21 +128,21 @@ public class PalindromeCheckMaster {
     }
 
     /**
-     * This method frequently polls for the master result (until we know whether the input was a palindrome or not).
+     * This method frequently polls for the leader result (until we know whether the input was a palindrome or not).
      * 
      * @param future allows polling
      */
-    private void waitForSlavesToComplete(PalindromeCheckFuture future) {
+    private void waitForFollowersToComplete(PalindromeCheckFuture future) {
         boolean done = false;
         do {
-            LOGGER.debug("MASTER polls for result ...");
+            LOGGER.debug("LEADER polls for result ...");
             done = future.isDone();
             if (!done) {
                 if (LOGGER.isInfoEnabled()) {
                     NumberFormat nf = NumberFormat.getInstance(Locale.US);
                     nf.setMaximumFractionDigits(0);
                     nf.setMinimumFractionDigits(0);
-                    LOGGER.info("{}% completed, MASTER is still waiting for SLAVE-results ...", nf.format(future.getProgressPerc()));
+                    LOGGER.info("{}% completed, LEADER is still waiting for FOLLOWER-results ...", nf.format(future.getProgressPerc()));
                 }
                 doOtherStuff();
             }
@@ -151,12 +151,12 @@ public class PalindromeCheckMaster {
 
     /**
      * This method divides the task into smaller sub-tasks by creating data partitions.<br>
-     * Afterwards it starts the slave executions using the {@link #executor}.
+     * Afterwards it starts the follower executions using the {@link #executor}.
      * 
      * @param textFileAccessor indexed source file accessor
-     * @return future to allow the master to combine the total result
+     * @return future to allow the leader to combine the total result
      */
-    private PalindromeCheckFuture partitionAndStartSlaves(IndexedTextFileAccessor textFileAccessor) {
+    private PalindromeCheckFuture partitionAndStartFollowers(IndexedTextFileAccessor textFileAccessor) {
         long numberOfCharacters = textFileAccessor.getNumberOfCharacters();
         long halfLen = numberOfCharacters / 2;
 
@@ -189,15 +189,16 @@ public class PalindromeCheckMaster {
         for (int i = 0; i < numberOfFullPartitions; i++) {
             long startOfLeftPartition = ((long) i) * partitionSize;
             long startOfRightPartition = numberOfCharacters - startOfLeftPartition - partitionSize;
-            PalindromeCheckSlaveTask task = new PalindromeCheckSlaveTask(textFileAccessor, startOfLeftPartition, startOfRightPartition, partitionSize, future);
+            PalindromeCheckFollowerTask task = new PalindromeCheckFollowerTask(textFileAccessor, startOfLeftPartition, startOfRightPartition, partitionSize,
+                    future);
             executor.execute(task);
         }
 
         if (remainderPartitionSize > 0) {
             long startOfLeftPartition = halfLen - remainderPartitionSize;
             long startOfRightPartition = numberOfCharacters - startOfLeftPartition - remainderPartitionSize;
-            PalindromeCheckSlaveTask task = new PalindromeCheckSlaveTask(textFileAccessor, startOfLeftPartition, startOfRightPartition, remainderPartitionSize,
-                    future);
+            PalindromeCheckFollowerTask task = new PalindromeCheckFollowerTask(textFileAccessor, startOfLeftPartition, startOfRightPartition,
+                    remainderPartitionSize, future);
             executor.execute(task);
         }
         return future;

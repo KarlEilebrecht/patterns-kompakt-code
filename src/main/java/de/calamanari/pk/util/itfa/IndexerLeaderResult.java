@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Indexer Master Result
+ * Indexer Leader Result
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -22,11 +22,11 @@ package de.calamanari.pk.util.itfa;
 import java.util.Map;
 
 /**
- * Result from an indexer master (a completed indexer run)
+ * Result from an indexer leader (a completed indexer run)
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-final class IndexerMasterResult {
+final class IndexerLeaderResult {
 
     /**
      * Stores the mapping character position to file position

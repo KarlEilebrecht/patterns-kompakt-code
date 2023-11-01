@@ -76,7 +76,7 @@ _Karl Eilebrecht, February 2021_
 * [Data Transfer Object (DTO)](src/test/java/de/calamanari/pk/datatransferobject/README.md)
 * [Transfer Object Assembler](src/test/java/de/calamanari/pk/transferobjectassembler/README.md)
 * [Active Object](src/test/java/de/calamanari/pk/activeobject/README.md)
-* [Master-Slave](src/test/java/de/calamanari/pk/masterslave/README.md)
+* [Leader-Follower](src/test/java/de/calamanari/pk/leaderfollower/README.md)
 
 ### Integration
 

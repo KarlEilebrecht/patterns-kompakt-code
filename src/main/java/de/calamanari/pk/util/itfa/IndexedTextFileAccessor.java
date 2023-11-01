@@ -195,8 +195,8 @@ public class IndexedTextFileAccessor {
         this.defaultChildReaderBufferSize = configuration.childReaderBufferSize;
         this.sourceFile = file;
 
-        IndexerMaster master = new IndexerMaster(configuration, file, charsetName, charLengthLookup);
-        IndexerMasterResult indexData = master.createIndex();
+        IndexerLeader leader = new IndexerLeader(configuration, file, charsetName, charLengthLookup);
+        IndexerLeaderResult indexData = leader.createIndex();
 
         this.fileSize = indexData.fileSize;
         this.characterPositionIndex = indexData.characterPositionIndex;

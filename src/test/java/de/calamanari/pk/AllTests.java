@@ -48,8 +48,8 @@ import de.calamanari.pk.identityfield.IdentityFieldTest;
 import de.calamanari.pk.identitymap.IdentityMapTest;
 import de.calamanari.pk.iterator.IteratorTest;
 import de.calamanari.pk.lazyload.LazyLoadTest;
+import de.calamanari.pk.leaderfollower.LeaderFollowerTest;
 import de.calamanari.pk.mapper.MapperTest;
-import de.calamanari.pk.masterslave.MasterSlaveTest;
 import de.calamanari.pk.modelviewcontroller.ModelViewControllerTest;
 import de.calamanari.pk.money.MoneyTest;
 import de.calamanari.pk.nullobject.NullObjectTest;
@@ -106,7 +106,7 @@ import de.calamanari.pk.wrapper.WrapperTest;
 	IteratorTest.class,
 	LazyLoadTest.class,
 	MapperTest.class,
-	MasterSlaveTest.class,
+	LeaderFollowerTest.class,
 	ModelViewControllerTest.class,
 	MoneyTest.class,
 	NullObjectTest.class,

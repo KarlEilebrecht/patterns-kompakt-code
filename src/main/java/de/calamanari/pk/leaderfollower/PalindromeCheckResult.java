@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Palindrome Check Result - demonstrates MASTER SLAVE
+ * Palindrome Check Result - demonstrates LEADER FOLLOWER
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.masterslave;
+package de.calamanari.pk.leaderfollower;
 
 /**
  * Palindrome Check Result - represents result of palindrome check
@@ -37,7 +37,7 @@ public final class PalindromeCheckResult {
     public static final PalindromeCheckResult UNKNOWN = new PalindromeCheckResult(false, -1, -1);
 
     /**
-     * This result may be used by a slave if something went wrong
+     * This result may be used by a follower if something went wrong
      */
     public static final PalindromeCheckResult ERROR = new PalindromeCheckResult(false, -999, -999);
 

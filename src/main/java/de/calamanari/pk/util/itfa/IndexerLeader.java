@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Indexer Master
+ * Indexer Leader
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -37,13 +37,13 @@ import de.calamanari.pk.util.CloseUtils;
 import de.calamanari.pk.util.pfis.ParallelFileInputStream;
 
 /**
- * Indexer Master<br>
- * Indexing is implemented using the MASTER-SLAVE pattern. The master cuts the work into peaces the slaves perform the indexing. Finally the master collects the
- * results and sets up the full index.
+ * Indexer Leader<br>
+ * Indexing is implemented using the LEADER-FOLLOWER pattern. The leader cuts the work into peaces the followers perform the indexing. Finally the leader
+ * collects the results and sets up the full index.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-final class IndexerMaster {
+final class IndexerLeader {
 
     /**
      * A lookup for all character codes to the length (in bytes) of the character represented using the current charset.
@@ -151,9 +151,9 @@ final class IndexerMaster {
     private ExecutorService executorService = null;
 
     /**
-     * The array of indexer slaves for fast access
+     * The array of indexer followers for fast access
      */
-    private IndexerSlave[] indexerSlaves = null;
+    private IndexerFollower[] indexerFollowers = null;
 
     /**
      * Number of Bytes processed last time<br>
@@ -162,14 +162,14 @@ final class IndexerMaster {
     private long lastNumberOfBytesProcessed = 0L;
 
     /**
-     * Creates the master, not started, yet
+     * Creates the leader, not started, yet
      * 
      * @param configuration indexer configuration
      * @param file The file being indexed
      * @param charsetName name of the charset for the underlying file
      * @param charLengthLookup A lookup for all character codes to the length (in bytes) of the character represented using the current charset.
      */
-    public IndexerMaster(ItfaConfiguration configuration, File file, String charsetName, byte[] charLengthLookup) {
+    public IndexerLeader(ItfaConfiguration configuration, File file, String charsetName, byte[] charLengthLookup) {
         this.configuration = configuration;
         this.file = file;
         this.fileSize = file.length();
@@ -181,19 +181,19 @@ final class IndexerMaster {
     }
 
     /**
-     * This method creates the index, an instance of {@link IndexerMasterResult}
+     * This method creates the index, an instance of {@link IndexerLeaderResult}
      * 
      * @return index data
      * @throws IOException on file access problems
      */
-    public IndexerMasterResult createIndex() throws IOException {
+    public IndexerLeaderResult createIndex() throws IOException {
 
         prepareRun();
 
-        ParallelFileInputStream masterStream = null;
+        ParallelFileInputStream leaderStream = null;
         try {
-            masterStream = prepareMasterStream();
-            indexAll(masterStream);
+            leaderStream = prepareLeaderStream();
+            indexAll(leaderStream);
         }
         finally {
             try {
@@ -206,7 +206,7 @@ final class IndexerMaster {
             catch (RuntimeException ex) {
                 // ignore
             }
-            CloseUtils.closeResourceCatch(masterStream);
+            CloseUtils.closeResourceCatch(leaderStream);
         }
 
         return createResult();
@@ -215,23 +215,23 @@ final class IndexerMaster {
     /**
      * This method creates the parallel file input stream for the indexer run and winds it forward to the first data position (after the byte-order-mark)
      * 
-     * @return prepared master stream
+     * @return prepared leader stream
      * @throws IOException on file access problems
      */
     // This method's job is to return an open stream, thus suppressing SonarLint complaint
     @SuppressWarnings("squid:S2095")
-    private ParallelFileInputStream prepareMasterStream() throws IOException {
-        ParallelFileInputStream masterStream;
-        masterStream = ParallelFileInputStream.createInputStream(file, configuration.indexerReadBufferSize, configuration.indexerReadBufferType);
+    private ParallelFileInputStream prepareLeaderStream() throws IOException {
+        ParallelFileInputStream leaderStream;
+        leaderStream = ParallelFileInputStream.createInputStream(file, configuration.indexerReadBufferSize, configuration.indexerReadBufferType);
 
         for (int i = 0; i < configuration.bomSize; i++) {
-            masterStream.read();
+            leaderStream.read();
         }
         // number of Bytes processed, yet
         // this allows us to determine the position within the file
-        lastNumberOfBytesProcessed = masterStream.getNumberOfBytesDelivered();
+        lastNumberOfBytesProcessed = leaderStream.getNumberOfBytesDelivered();
 
-        return masterStream;
+        return leaderStream;
     }
 
     /**
@@ -259,12 +259,12 @@ final class IndexerMaster {
             numberOfThreads = 1;
         }
 
-        // master uses a number of slaves
+        // leader uses a number of followers
         executorService = Executors.newFixedThreadPool(numberOfThreads);
 
-        indexerSlaves = new IndexerSlave[numberOfThreads];
+        indexerFollowers = new IndexerFollower[numberOfThreads];
         for (int i = 0; i < numberOfThreads; i++) {
-            indexerSlaves[i] = new IndexerSlave(this.charLengthLookup);
+            indexerFollowers[i] = new IndexerFollower(this.charLengthLookup);
         }
         characterPositionIndex.clear();
         linePositionIndex.clear();
@@ -273,13 +273,13 @@ final class IndexerMaster {
     /**
      * Processes all the data from the input file
      * 
-     * @param masterStream input data
+     * @param leaderStream input data
      * @throws IOException on file access problems
      */
-    private void indexAll(ParallelFileInputStream masterStream) throws IOException {
+    private void indexAll(ParallelFileInputStream leaderStream) throws IOException {
 
-        try (InputStreamReader isr = new InputStreamReader(masterStream, charsetName);
-                BufferedReader masterReader = new BufferedReader(isr, configuration.charBufferSize)) {
+        try (InputStreamReader isr = new InputStreamReader(leaderStream, charsetName);
+                BufferedReader leaderReader = new BufferedReader(isr, configuration.charBufferSize)) {
 
             long dataSize = fileSize - configuration.bomSize;
 
@@ -292,29 +292,29 @@ final class IndexerMaster {
                 linePositionIndex.put(0L, firstDataBytePos);
             }
 
-            indexPartitions(masterStream, masterReader, buffer);
+            indexPartitions(leaderStream, leaderReader, buffer);
         }
     }
 
     /**
      * Reads the underlying file's data partition-wise and indexes the obtained characters and lines.
      * 
-     * @param masterStream stream (for calculating absolute byte-positions)
-     * @param masterReader provides the character from the file
+     * @param leaderStream stream (for calculating absolute byte-positions)
+     * @param leaderReader provides the character from the file
      * @param buffer process character buffer (for partitioning)
      * @throws IOException on file access problems
      */
-    private void indexPartitions(ParallelFileInputStream masterStream, BufferedReader masterReader, char[] buffer) throws IOException {
+    private void indexPartitions(ParallelFileInputStream leaderStream, BufferedReader leaderReader, char[] buffer) throws IOException {
         int partitionSize = 0;
         int bufferStartIdx = 0;
-        while ((partitionSize = masterReader.read(buffer, bufferStartIdx, configuration.charBufferSize - bufferStartIdx)) != -1 || bufferStartIdx > 0) {
+        while ((partitionSize = leaderReader.read(buffer, bufferStartIdx, configuration.charBufferSize - bufferStartIdx)) != -1 || bufferStartIdx > 0) {
 
             if (partitionSize == -1) {
                 partitionSize = bufferStartIdx;
             }
 
             // memorize position AFTER partition
-            long numberOfBytesProcessed = masterStream.getNumberOfBytesDelivered();
+            long numberOfBytesProcessed = leaderStream.getNumberOfBytesDelivered();
 
             IndexerPartitionMetaData metaData = preparePartitionAndAdjustDeltas(buffer, partitionSize, numberOfBytesProcessed);
 
@@ -345,30 +345,30 @@ final class IndexerMaster {
      */
     private void indexPartition(char[] buffer, IndexerPartitionMetaData partitionMetaData) throws IOException {
 
-        // a latch to let the slaves communicate with the master
-        CountDownLatch slavesFinishedLatch = new CountDownLatch(partitionMetaData.numberOfSlaves);
+        // a latch to let the followers communicate with the leader
+        CountDownLatch followersFinishedLatch = new CountDownLatch(partitionMetaData.numberOfFollowers);
 
-        indexSubPartitionsAsync(buffer, partitionMetaData, slavesFinishedLatch);
+        indexSubPartitionsAsync(buffer, partitionMetaData, followersFinishedLatch);
 
-        waitForSlaves(slavesFinishedLatch);
+        waitForFollowers(followersFinishedLatch);
 
-        combineSlaveResults(partitionMetaData.numberOfSlaves);
+        combineFollowerResults(partitionMetaData.numberOfFollowers);
     }
 
     /**
-     * Splits the partition into sub-partition and starts asynchronous slave-tasks to index these.
+     * Splits the partition into sub-partition and starts asynchronous follower-tasks to index these.
      * 
      * @param buffer partition character data
      * @param partitionMetaData partition meta data
-     * @param slavesFinishedLatch latch, any slave shall count-down after having finished
+     * @param followersFinishedLatch latch, any follower shall count-down after having finished
      */
-    private void indexSubPartitionsAsync(char[] buffer, IndexerPartitionMetaData partitionMetaData, CountDownLatch slavesFinishedLatch) {
+    private void indexSubPartitionsAsync(char[] buffer, IndexerPartitionMetaData partitionMetaData, CountDownLatch followersFinishedLatch) {
 
         // at sub-partition boundaries we must again care for carriage return characters
         boolean subPartitionMovedCR = false;
 
-        // now setup and start slaves
-        for (int i = 0; i < partitionMetaData.numberOfSlaves; i++) {
+        // now setup and start followers
+        for (int i = 0; i < partitionMetaData.numberOfFollowers; i++) {
             int subPartitionStartIdx = i * partitionMetaData.defaultSubPartitionSize;
 
             int subPartitionSize = partitionMetaData.defaultSubPartitionSize;
@@ -386,46 +386,47 @@ final class IndexerMaster {
             }
 
             // shall we move a trailing carriage return?
-            subPartitionMovedCR = (i < (partitionMetaData.numberOfSlaves - 1) && buffer[subPartitionStartIdx + subPartitionSize - 1] == CARRIAGE_RETURN_CODE);
+            subPartitionMovedCR = (i < (partitionMetaData.numberOfFollowers - 1)
+                    && buffer[subPartitionStartIdx + subPartitionSize - 1] == CARRIAGE_RETURN_CODE);
 
             if (subPartitionMovedCR) {
                 // move carriage return to next sub-partition by (truncate)
                 subPartitionSize--;
             }
 
-            if (i == partitionMetaData.numberOfSlaves - 1) {
+            if (i == partitionMetaData.numberOfFollowers - 1) {
                 // special case: last sub-partition, process ALL remaining characters
                 subPartitionSize = partitionMetaData.partitionSize - subPartitionStartIdx;
             }
 
             indexSubPartitionAsync(buffer, i, subPartitionStartIdx, subPartitionSize, partitionMetaData.maxNumberOfCharEntriesInSubPartition,
-                    partitionMetaData.maxNumberOfLineEntriesInSubPartition, slavesFinishedLatch);
+                    partitionMetaData.maxNumberOfLineEntriesInSubPartition, followersFinishedLatch);
         }
     }
 
     /**
-     * Starts a the specified slave on the given sub-partition
+     * Starts a the specified follower on the given sub-partition
      * 
      * @param buffer current buffer data
-     * @param slaveNumber number of the slave 0-based
+     * @param followerNumber number of the follower 0-based
      * @param subPartitionStartIdx start of the sub-partition related to main partition
      * @param subPartitionSize size of the sub-partition
      * @param maxNumberOfCharEntriesInSubPartition maximum number of characters to be indexed in sub-partition
      * @param maxNumberOfLineEntriesInSubPartition maximum number of lines to be indexed in sub-partition
-     * @param slavesFinishedLatch latch, slave shall count-down after having finished
+     * @param followersFinishedLatch latch, follower shall count-down after having finished
      */
-    private void indexSubPartitionAsync(char[] buffer, int slaveNumber, int subPartitionStartIdx, int subPartitionSize,
-            int maxNumberOfCharEntriesInSubPartition, int maxNumberOfLineEntriesInSubPartition, CountDownLatch slavesFinishedLatch) {
-        IndexerSlave slave = indexerSlaves[slaveNumber];
-        slave.latch = slavesFinishedLatch;
-        slave.maxNumberOfCharEntries = maxNumberOfCharEntriesInSubPartition;
-        slave.maxNumberOfLineEntries = maxNumberOfLineEntriesInSubPartition;
-        slave.partition = buffer;
-        slave.startIdx = subPartitionStartIdx;
-        slave.subPartitionSize = subPartitionSize;
-        slave.propagateError.set(null);
-        slave.result.set(null);
-        executorService.execute(slave);
+    private void indexSubPartitionAsync(char[] buffer, int followerNumber, int subPartitionStartIdx, int subPartitionSize,
+            int maxNumberOfCharEntriesInSubPartition, int maxNumberOfLineEntriesInSubPartition, CountDownLatch followersFinishedLatch) {
+        IndexerFollower follower = indexerFollowers[followerNumber];
+        follower.latch = followersFinishedLatch;
+        follower.maxNumberOfCharEntries = maxNumberOfCharEntriesInSubPartition;
+        follower.maxNumberOfLineEntries = maxNumberOfLineEntriesInSubPartition;
+        follower.partition = buffer;
+        follower.startIdx = subPartitionStartIdx;
+        follower.subPartitionSize = subPartitionSize;
+        follower.propagateError.set(null);
+        follower.result.set(null);
+        executorService.execute(follower);
     }
 
     /**
@@ -476,47 +477,47 @@ final class IndexerMaster {
         int maxNumberOfLineEntriesInPartition = ((int) (Math.floor(exactMaxNumberOfLineEntriesInPartition)));
         lineEntryDelta = lineEntryDelta + (exactMaxNumberOfLineEntriesInPartition - maxNumberOfLineEntriesInPartition);
 
-        partitionMetaData.numberOfSlaves = 1;
+        partitionMetaData.numberOfFollowers = 1;
         partitionMetaData.defaultSubPartitionSize = partitionMetaData.partitionSize;
 
         if (partitionMetaData.partitionSize > configuration.multiThreadingThreshold) {
             partitionMetaData.defaultSubPartitionSize = partitionMetaData.partitionSize / numberOfThreads;
-            partitionMetaData.numberOfSlaves = numberOfThreads;
+            partitionMetaData.numberOfFollowers = numberOfThreads;
         }
 
         // in the code below we calculate how many entries we have to spread over the partition and its sub-partitions
 
-        double exactMaxNumberOfCharEntriesInSubPartition = (double) maxNumberOfCharEntriesInPartition / (double) partitionMetaData.numberOfSlaves;
+        double exactMaxNumberOfCharEntriesInSubPartition = (double) maxNumberOfCharEntriesInPartition / (double) partitionMetaData.numberOfFollowers;
 
         partitionMetaData.maxNumberOfCharEntriesInSubPartition = (int) Math.floor(exactMaxNumberOfCharEntriesInSubPartition);
         charEntryDelta = charEntryDelta
-                + (exactMaxNumberOfCharEntriesInSubPartition - partitionMetaData.maxNumberOfCharEntriesInSubPartition) * partitionMetaData.numberOfSlaves;
+                + (exactMaxNumberOfCharEntriesInSubPartition - partitionMetaData.maxNumberOfCharEntriesInSubPartition) * partitionMetaData.numberOfFollowers;
 
-        if (charEntryDelta > partitionMetaData.numberOfSlaves) {
+        if (charEntryDelta > partitionMetaData.numberOfFollowers) {
             partitionMetaData.maxNumberOfCharEntriesInSubPartition++;
-            charEntryDelta = charEntryDelta - partitionMetaData.numberOfSlaves;
+            charEntryDelta = charEntryDelta - partitionMetaData.numberOfFollowers;
         }
 
-        double exactMaxNumberOfLineEntriesInSubPartition = (double) maxNumberOfLineEntriesInPartition / (double) partitionMetaData.numberOfSlaves;
+        double exactMaxNumberOfLineEntriesInSubPartition = (double) maxNumberOfLineEntriesInPartition / (double) partitionMetaData.numberOfFollowers;
         partitionMetaData.maxNumberOfLineEntriesInSubPartition = (int) Math.floor(exactMaxNumberOfLineEntriesInSubPartition);
         lineEntryDelta = lineEntryDelta
-                + (exactMaxNumberOfLineEntriesInSubPartition - partitionMetaData.maxNumberOfLineEntriesInSubPartition) * partitionMetaData.numberOfSlaves;
+                + (exactMaxNumberOfLineEntriesInSubPartition - partitionMetaData.maxNumberOfLineEntriesInSubPartition) * partitionMetaData.numberOfFollowers;
 
-        if (lineEntryDelta > partitionMetaData.numberOfSlaves) {
+        if (lineEntryDelta > partitionMetaData.numberOfFollowers) {
             partitionMetaData.maxNumberOfLineEntriesInSubPartition++;
-            lineEntryDelta = lineEntryDelta - partitionMetaData.numberOfSlaves;
+            lineEntryDelta = lineEntryDelta - partitionMetaData.numberOfFollowers;
         }
     }
 
     /**
-     * Waits for all the started slaves
+     * Waits for all the started followers
      * 
-     * @param slavesFinishedLatch the countdown-latch the slaves use to signal finalization to the master
+     * @param followersFinishedLatch the countdown-latch the followers use to signal finalization to the leader
      * @throws IOException on file access problems
      */
-    private void waitForSlaves(CountDownLatch slavesFinishedLatch) throws IOException {
+    private void waitForFollowers(CountDownLatch followersFinishedLatch) throws IOException {
         try {
-            slavesFinishedLatch.await();
+            followersFinishedLatch.await();
         }
         catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
@@ -525,18 +526,18 @@ final class IndexerMaster {
     }
 
     /**
-     * After all slaves have finished we collect and combine their sub-partition index data.<br>
+     * After all followers have finished we collect and combine their sub-partition index data.<br>
      * The result is the the index data for the partition
      * 
-     * @param numberOfSlaves number of indexing slaves
+     * @param numberOfFollowers number of indexing followers
      * @throws IOException on file access problems
      */
-    private void combineSlaveResults(int numberOfSlaves) throws IOException {
-        for (int i = 0; i < numberOfSlaves; i++) {
-            IndexerSlave slave = indexerSlaves[i];
-            IndexerSlaveResult slaveResult = slave.result.get();
+    private void combineFollowerResults(int numberOfFollowers) throws IOException {
+        for (int i = 0; i < numberOfFollowers; i++) {
+            IndexerFollower follower = indexerFollowers[i];
+            IndexerFollowerResult followerResult = follower.result.get();
 
-            Throwable propagateError = slave.propagateError.get();
+            Throwable propagateError = follower.propagateError.get();
             if (propagateError != null) {
                 throw new IOException("Unexpected error during index run", propagateError);
             }
@@ -545,22 +546,22 @@ final class IndexerMaster {
             long offsetChars = totalNumberOfCharsRead;
             long offsetLines = totalNumberOfLinesRead;
 
-            totalNumberOfBytesProcessed = totalNumberOfBytesProcessed + slaveResult.numberOfBytesProcessed;
-            totalNumberOfCharsRead = totalNumberOfCharsRead + slaveResult.numberOfCharactersRead;
-            totalNumberOfLinesRead = totalNumberOfLinesRead + slaveResult.numberOfLinesRead;
+            totalNumberOfBytesProcessed = totalNumberOfBytesProcessed + followerResult.numberOfBytesProcessed;
+            totalNumberOfCharsRead = totalNumberOfCharsRead + followerResult.numberOfCharactersRead;
+            totalNumberOfLinesRead = totalNumberOfLinesRead + followerResult.numberOfLinesRead;
 
-            lostCharEntries = lostCharEntries + Math.max(0, slave.maxNumberOfCharEntries - slaveResult.numberOfCharIndexEntries);
-            lostLineEntries = lostLineEntries + Math.max(0, slave.maxNumberOfLineEntries - slaveResult.numberOfLineIndexEntries);
+            lostCharEntries = lostCharEntries + Math.max(0, follower.maxNumberOfCharEntries - followerResult.numberOfCharIndexEntries);
+            lostLineEntries = lostLineEntries + Math.max(0, follower.maxNumberOfLineEntries - followerResult.numberOfLineIndexEntries);
 
-            int numberOfCharIndexEntries = slaveResult.numberOfCharIndexEntries;
-            long[][] charIndex = slaveResult.charIndex;
+            int numberOfCharIndexEntries = followerResult.numberOfCharIndexEntries;
+            long[][] charIndex = followerResult.charIndex;
             for (int j = 0; j < numberOfCharIndexEntries; j++) {
                 long[] entry = charIndex[j];
                 characterPositionIndex.put(offsetChars + entry[0], offsetBytes + entry[1]);
             }
 
-            int numberOfLineIndexEntries = slaveResult.numberOfLineIndexEntries;
-            long[][] lineIndex = slaveResult.lineIndex;
+            int numberOfLineIndexEntries = followerResult.numberOfLineIndexEntries;
+            long[][] lineIndex = followerResult.lineIndex;
             for (int j = 0; j < numberOfLineIndexEntries; j++) {
                 long[] entry = lineIndex[j];
                 linePositionIndex.put(offsetLines + entry[0], offsetBytes + entry[1]);
@@ -573,8 +574,8 @@ final class IndexerMaster {
      * 
      * @return result
      */
-    private IndexerMasterResult createResult() {
-        IndexerMasterResult res = new IndexerMasterResult();
+    private IndexerLeaderResult createResult() {
+        IndexerLeaderResult res = new IndexerLeaderResult();
         res.fileSize = fileSize;
         res.characterPositionIndex = new HashMap<>(characterPositionIndex);
         res.linePositionIndex = new HashMap<>(linePositionIndex);

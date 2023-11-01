@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Indexer Slave
+ * Indexer Follower
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -31,34 +31,34 @@ import org.slf4j.LoggerFactory;
 import de.calamanari.pk.util.CharsetUtils;
 
 /**
- * Indexer Slave<br>
- * Indexing is implemented using the MASTER-SLAVE pattern. While the master (see {@link IndexerMaster}) splits the work into parts the slaves perform the
- * indexing. Finally the master collects the partial results and sets up the full index.<br>
- * Slaves can be recycled.
+ * Indexer Follower<br>
+ * Indexing is implemented using the LEADER-FOLLOWER pattern. While the leader (see {@link IndexerLeader}) splits the work into parts the leaders perform the
+ * indexing. Finally the leader collects the partial results and sets up the full index.<br>
+ * Followers can be recycled.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-final class IndexerSlave implements Runnable {
+final class IndexerFollower implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndexerSlave.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexerFollower.class);
 
     /**
-     * Number of index entries this slave may use for characters
+     * Number of index entries this follower may use for characters
      */
     int maxNumberOfCharEntries;
 
     /**
-     * Number of index entries this slave may use for lines
+     * Number of index entries this follower may use for lines
      */
     int maxNumberOfLineEntries;
 
     /**
-     * Position within the partition where the slave shall start indexing
+     * Position within the partition where the follower shall start indexing
      */
     int startIdx;
 
     /**
-     * Size of the slaves workspace within the partition
+     * Size of the followers workspace within the partition
      */
     int subPartitionSize;
 
@@ -68,9 +68,9 @@ final class IndexerSlave implements Runnable {
     char[] partition;
 
     /**
-     * Result of this slave
+     * Result of this follower
      */
-    final AtomicReference<IndexerSlaveResult> result = new AtomicReference<>();
+    final AtomicReference<IndexerFollowerResult> result = new AtomicReference<>();
 
     /**
      * lookup to re-calculate the length in bytes of a particular character
@@ -78,21 +78,21 @@ final class IndexerSlave implements Runnable {
     private final byte[] charLengthLookup;
 
     /**
-     * Errors will be memorized here to be propagated to/by the master
+     * Errors will be memorized here to be propagated to/by the leader
      */
     final AtomicReference<Throwable> propagateError = new AtomicReference<>();
 
     /**
-     * The countdown latch is a slave-to-master signal, the master waits until all slaves have completed
+     * The countdown latch is a follower-to-leader signal, the leader waits until all followers have completed
      */
     CountDownLatch latch;
 
     /**
-     * Creates new slave
+     * Creates new follower
      * 
      * @param charLengthLookup character length lookup used while indexing
      */
-    public IndexerSlave(byte[] charLengthLookup) {
+    public IndexerFollower(byte[] charLengthLookup) {
         this.charLengthLookup = charLengthLookup;
     }
 
@@ -101,13 +101,13 @@ final class IndexerSlave implements Runnable {
 
         try {
 
-            // copy instructions from master (config) and prepare state
+            // copy instructions from leader (config) and prepare state
 
             // immutable settings
-            SlaveConfig conf = createSlaveConfig();
+            FollowerConfig conf = createFollowerConfig();
 
             // processing state
-            SlaveState state = createSlaveState(conf);
+            FollowerState state = createFollowerState(conf);
 
             for (int i = 0; i < conf.currentSubPartitionSize; i++) {
                 processNextPartitionCharacter(conf, state, i);
@@ -126,8 +126,8 @@ final class IndexerSlave implements Runnable {
                 }
             }
 
-            // slave results for master
-            IndexerSlaveResult localResult = new IndexerSlaveResult(state.charIndex, state.lineIndex, state.currentBytePos, state.numberOfCharactersRead,
+            // follower results for leader
+            IndexerFollowerResult localResult = new IndexerFollowerResult(state.charIndex, state.lineIndex, state.currentBytePos, state.numberOfCharactersRead,
                     state.numberOfLinesRead, state.charEntryCount, state.lineEntryCount);
             this.result.set(localResult);
         }
@@ -141,7 +141,7 @@ final class IndexerSlave implements Runnable {
 
     }
 
-    private void processNextPartitionCharacter(SlaveConfig conf, SlaveState state, int idx) {
+    private void processNextPartitionCharacter(FollowerConfig conf, FollowerState state, int idx) {
         state.read = conf.currentPartition[conf.currentStartIdx + idx];
 
         // increase the byte position using reverse lookup
@@ -165,7 +165,7 @@ final class IndexerSlave implements Runnable {
         state.lastBytePos = state.currentBytePos;
     }
 
-    private void updateLineIndex(SlaveConfig conf, SlaveState state) {
+    private void updateLineIndex(FollowerConfig conf, FollowerState state) {
         // new Line
         state.numberOfLinesRead++;
         long newLineStart = state.currentBytePos;
@@ -188,7 +188,7 @@ final class IndexerSlave implements Runnable {
         }
     }
 
-    private void updateCharacterIndex(SlaveConfig conf, SlaveState state) {
+    private void updateCharacterIndex(FollowerConfig conf, FollowerState state) {
         // never create entries for low surrogate characters (56320-57343), because it is impossible to
         // directly read (decode) them without reading the mandatory high surrogate before
         // low surrogates don't have any absolute position
@@ -206,8 +206,8 @@ final class IndexerSlave implements Runnable {
         }
     }
 
-    private SlaveState createSlaveState(SlaveConfig conf) {
-        SlaveState state = new SlaveState();
+    private FollowerState createFollowerState(FollowerConfig conf) {
+        FollowerState state = new FollowerState();
 
         state.backupCharEntries = conf.currentMaxNumberOfCharEntries - conf.availableCharEntries;
         state.backupLineEntries = conf.currentMaxNumberOfLineEntries - conf.availableLineEntries;
@@ -238,8 +238,8 @@ final class IndexerSlave implements Runnable {
         return state;
     }
 
-    private SlaveConfig createSlaveConfig() {
-        SlaveConfig conf = new SlaveConfig();
+    private FollowerConfig createFollowerConfig() {
+        FollowerConfig conf = new FollowerConfig();
         conf.currentMaxNumberOfCharEntries = (maxNumberOfCharEntries <= subPartitionSize ? maxNumberOfCharEntries : subPartitionSize);
         conf.currentMaxNumberOfLineEntries = (maxNumberOfLineEntries <= subPartitionSize ? maxNumberOfLineEntries : subPartitionSize);
         conf.currentStartIdx = startIdx;
@@ -254,7 +254,7 @@ final class IndexerSlave implements Runnable {
         return conf;
     }
 
-    private static class SlaveConfig {
+    private static class FollowerConfig {
 
         int currentMaxNumberOfCharEntries;
         int currentMaxNumberOfLineEntries;
@@ -268,7 +268,7 @@ final class IndexerSlave implements Runnable {
 
     }
 
-    private static class SlaveState {
+    private static class FollowerState {
         int backupCharEntries;
         int backupLineEntries;
         boolean lastCharWasCR;

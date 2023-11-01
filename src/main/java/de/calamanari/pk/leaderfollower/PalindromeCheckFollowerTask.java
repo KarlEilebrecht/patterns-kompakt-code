@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * Palindrome Check Slave Task - demonstrates MASTER SLAVE
+ * Palindrome Check Follower Task - demonstrates LEADER FOLLOWER
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 //@formatter:on
-package de.calamanari.pk.masterslave;
+package de.calamanari.pk.leaderfollower;
 
 import static de.calamanari.pk.util.LambdaSupportLoggerProxy.defer;
 
@@ -31,14 +31,14 @@ import de.calamanari.pk.util.LambdaSupportLoggerProxy;
 import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
 
 /**
- * Palindrome Check Slave Task - executes a SLAVE's work in this MASTER-SLAVE example.<br>
- * An instance runs in a separate thread and sends its result to his MASTER.
+ * Palindrome Check Follower Task - executes a FOLLOWER's work in this LEADER-FOLLOWER example.<br>
+ * An instance runs in a separate thread and sends its result to his LEADER.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-public class PalindromeCheckSlaveTask implements Runnable {
+public class PalindromeCheckFollowerTask implements Runnable {
 
-    private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(PalindromeCheckSlaveTask.class));
+    private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(PalindromeCheckFollowerTask.class));
 
     /**
      * test result: the source was a palindrome
@@ -66,20 +66,21 @@ public class PalindromeCheckSlaveTask implements Runnable {
     private final IndexedTextFileAccessor textFileAccessor;
 
     /**
-     * future for communication from slave to master
+     * future for communication from follower to leader
      */
     private final PalindromeCheckFuture future;
 
     /**
-     * Creates a new slave task comparing two partitions start1-end1 vs. end2-start2
+     * Creates a new follower task comparing two partitions start1-end1 vs. end2-start2
      * 
      * @param textFileAccessor source
      * @param startIdx1 start of first partition (incl.), character position in source file
      * @param startIdx2 start of second partition (incl.), character position in source file
      * @param partitionSize size of partitions (number of characters)
-     * @param future the slave reports a partial result using this future
+     * @param future the follower reports a partial result using this future
      */
-    public PalindromeCheckSlaveTask(IndexedTextFileAccessor textFileAccessor, long startIdx1, long startIdx2, int partitionSize, PalindromeCheckFuture future) {
+    public PalindromeCheckFollowerTask(IndexedTextFileAccessor textFileAccessor, long startIdx1, long startIdx2, int partitionSize,
+            PalindromeCheckFuture future) {
         this.textFileAccessor = textFileAccessor;
         this.startIdx1 = startIdx1;
         this.startIdx2 = startIdx2;
@@ -93,7 +94,7 @@ public class PalindromeCheckSlaveTask implements Runnable {
         PalindromeCheckResult result = PalindromeCheckResult.UNKNOWN;
         try {
             if (!future.isAborted()) {
-                LOGGER.debug("SLAVE-Thread @{} executes {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
+                LOGGER.debug("FOLLOWER-Thread @{} executes {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
                         defer(() -> Integer.toHexString(Thread.currentThread().hashCode())), this.getClass().getSimpleName(), startIdx1, startIdx2,
                         partitionSize);
                 char[] partition1 = getPartition(startIdx1);
@@ -107,7 +108,7 @@ public class PalindromeCheckSlaveTask implements Runnable {
                 }
             }
             else {
-                LOGGER.debug("SLAVE-Thread @{} skips {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
+                LOGGER.debug("FOLLOWER-Thread @{} skips {}({startIdx1={}, startIdx2={}, partitionSize={}}).",
                         defer(() -> Integer.toHexString(Thread.currentThread().hashCode())), this.getClass().getSimpleName(), startIdx1, startIdx2,
                         partitionSize);
             }
@@ -115,12 +116,12 @@ public class PalindromeCheckSlaveTask implements Runnable {
         catch (IOException | RuntimeException ex) {
             LOGGER.error("Error while checking partitions [{}, {}) vs. [{}, {})", startIdx1, (startIdx1 + partitionSize), startIdx2,
                     (startIdx2 + partitionSize), ex);
-            // tell the MASTER about the problem
+            // tell the LEADER about the problem
             result = PalindromeCheckResult.ERROR;
         }
         finally {
-            LOGGER.debug("SLAVE-Thread @{} reports to MASTER via Future: {}", defer(() -> Integer.toHexString(Thread.currentThread().hashCode())), result);
-            future.reportSlaveResult(result);
+            LOGGER.debug("FOLLOWER-Thread @{} reports to LEADER via Future: {}", defer(() -> Integer.toHexString(Thread.currentThread().hashCode())), result);
+            future.reportFollowerResult(result);
             textFileAccessor.cleanup();
         }
     }

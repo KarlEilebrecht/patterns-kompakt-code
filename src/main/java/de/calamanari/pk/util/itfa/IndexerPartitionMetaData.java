@@ -37,9 +37,9 @@ final class IndexerPartitionMetaData {
     long partitionSizeInBytes;
 
     /**
-     * number of slaves to be used for processing the main partition
+     * number of followers to be used for processing the main partition
      */
-    int numberOfSlaves;
+    int numberOfFollowers;
 
     /**
      * default sub-partition size
