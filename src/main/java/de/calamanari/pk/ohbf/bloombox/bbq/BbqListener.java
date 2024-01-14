@@ -22,7 +22,7 @@ package de.calamanari.pk.ohbf.bloombox.bbq;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
-// Generated from Bbq.g4 by ANTLR 4.9.2
+//Generated from Bbq.g4 by ANTLR 4.13.1 
 
 /**
  * This interface defines a complete listener for a parse tree produced by {@link BbqParser}.
@@ -30,308 +30,264 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 public interface BbqListener extends ParseTreeListener {
     /**
      * Enter a parse tree produced by {@link BbqParser#argName}.
-     * 
      * @param ctx the parse tree
      */
     void enterArgName(BbqParser.ArgNameContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#argName}.
-     * 
      * @param ctx the parse tree
      */
     void exitArgName(BbqParser.ArgNameContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#argValue}.
-     * 
      * @param ctx the parse tree
      */
     void enterArgValue(BbqParser.ArgValueContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#argValue}.
-     * 
      * @param ctx the parse tree
      */
     void exitArgValue(BbqParser.ArgValueContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#lowerBound}.
-     * 
      * @param ctx the parse tree
      */
     void enterLowerBound(BbqParser.LowerBoundContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#lowerBound}.
-     * 
      * @param ctx the parse tree
      */
     void exitLowerBound(BbqParser.LowerBoundContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#upperBound}.
-     * 
      * @param ctx the parse tree
      */
     void enterUpperBound(BbqParser.UpperBoundContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#upperBound}.
-     * 
      * @param ctx the parse tree
      */
     void exitUpperBound(BbqParser.UpperBoundContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#inValue}.
-     * 
      * @param ctx the parse tree
      */
     void enterInValue(BbqParser.InValueContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#inValue}.
-     * 
      * @param ctx the parse tree
      */
     void exitInValue(BbqParser.InValueContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#nextValue}.
-     * 
      * @param ctx the parse tree
      */
     void enterNextValue(BbqParser.NextValueContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#nextValue}.
-     * 
      * @param ctx the parse tree
      */
     void exitNextValue(BbqParser.NextValueContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#cmpEquals}.
-     * 
      * @param ctx the parse tree
      */
     void enterCmpEquals(BbqParser.CmpEqualsContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#cmpEquals}.
-     * 
      * @param ctx the parse tree
      */
     void exitCmpEquals(BbqParser.CmpEqualsContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#cmpNotEquals}.
-     * 
      * @param ctx the parse tree
      */
     void enterCmpNotEquals(BbqParser.CmpNotEqualsContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#cmpNotEquals}.
-     * 
      * @param ctx the parse tree
      */
     void exitCmpNotEquals(BbqParser.CmpNotEqualsContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#cmpIn}.
-     * 
      * @param ctx the parse tree
      */
     void enterCmpIn(BbqParser.CmpInContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#cmpIn}.
-     * 
      * @param ctx the parse tree
      */
     void exitCmpIn(BbqParser.CmpInContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#cmpNotIn}.
-     * 
      * @param ctx the parse tree
      */
     void enterCmpNotIn(BbqParser.CmpNotInContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#cmpNotIn}.
-     * 
      * @param ctx the parse tree
      */
     void exitCmpNotIn(BbqParser.CmpNotInContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#minMaxExpression}.
-     * 
      * @param ctx the parse tree
      */
     void enterMinMaxExpression(BbqParser.MinMaxExpressionContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#minMaxExpression}.
-     * 
      * @param ctx the parse tree
      */
     void exitMinMaxExpression(BbqParser.MinMaxExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#expressionDetails}.
-     * 
      * @param ctx the parse tree
      */
     void enterExpressionDetails(BbqParser.ExpressionDetailsContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#expressionDetails}.
-     * 
      * @param ctx the parse tree
      */
     void exitExpressionDetails(BbqParser.ExpressionDetailsContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#orExpression}.
-     * 
      * @param ctx the parse tree
      */
     void enterOrExpression(BbqParser.OrExpressionContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#orExpression}.
-     * 
      * @param ctx the parse tree
      */
     void exitOrExpression(BbqParser.OrExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#andExpression}.
-     * 
      * @param ctx the parse tree
      */
     void enterAndExpression(BbqParser.AndExpressionContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#andExpression}.
-     * 
      * @param ctx the parse tree
      */
     void exitAndExpression(BbqParser.AndExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#expression}.
-     * 
      * @param ctx the parse tree
      */
     void enterExpression(BbqParser.ExpressionContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#expression}.
-     * 
      * @param ctx the parse tree
      */
     void exitExpression(BbqParser.ExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#bracedExpression}.
-     * 
      * @param ctx the parse tree
      */
     void enterBracedExpression(BbqParser.BracedExpressionContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#bracedExpression}.
-     * 
      * @param ctx the parse tree
      */
     void exitBracedExpression(BbqParser.BracedExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#notExpression}.
-     * 
      * @param ctx the parse tree
      */
     void enterNotExpression(BbqParser.NotExpressionContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#notExpression}.
-     * 
      * @param ctx the parse tree
      */
     void exitNotExpression(BbqParser.NotExpressionContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#bbqDetails}.
-     * 
      * @param ctx the parse tree
      */
     void enterBbqDetails(BbqParser.BbqDetailsContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#bbqDetails}.
-     * 
      * @param ctx the parse tree
      */
     void exitBbqDetails(BbqParser.BbqDetailsContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#andBBQ}.
-     * 
      * @param ctx the parse tree
      */
     void enterAndBBQ(BbqParser.AndBBQContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#andBBQ}.
-     * 
      * @param ctx the parse tree
      */
     void exitAndBBQ(BbqParser.AndBBQContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#orBBQ}.
-     * 
      * @param ctx the parse tree
      */
     void enterOrBBQ(BbqParser.OrBBQContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#orBBQ}.
-     * 
      * @param ctx the parse tree
      */
     void exitOrBBQ(BbqParser.OrBBQContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#fullBBQ}.
-     * 
      * @param ctx the parse tree
      */
     void enterFullBBQ(BbqParser.FullBBQContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#fullBBQ}.
-     * 
      * @param ctx the parse tree
      */
     void exitFullBBQ(BbqParser.FullBBQContext ctx);
 
     /**
      * Enter a parse tree produced by {@link BbqParser#query}.
-     * 
      * @param ctx the parse tree
      */
     void enterQuery(BbqParser.QueryContext ctx);
 
     /**
      * Exit a parse tree produced by {@link BbqParser#query}.
-     * 
      * @param ctx the parse tree
      */
     void exitQuery(BbqParser.QueryContext ctx);
