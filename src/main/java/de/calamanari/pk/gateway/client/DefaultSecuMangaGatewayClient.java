@@ -20,6 +20,8 @@
 package de.calamanari.pk.gateway.client;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -74,9 +76,9 @@ public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
         String sUrl = null;
         try {
             sUrl = "http://" + hostName + ":" + port + "/SecuMangaWebService?wsdl";
-            url = new URL(sUrl);
+            url = new URI(sUrl).toURL();
         }
-        catch (MalformedURLException ex) {
+        catch (URISyntaxException | MalformedURLException ex) {
             LOGGER.error("Could not create URL({})!", sUrl);
         }
         return url;

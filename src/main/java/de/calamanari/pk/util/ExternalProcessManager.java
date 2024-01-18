@@ -19,6 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ import org.slf4j.event.Level;
 public final class ExternalProcessManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExternalProcessManager.class);
+
+    /**
+     * Fully qualified java command that belongs to the current process, used to spawn further processes
+     */
+    private static final String JAVA_COMMAND = new File(new File(System.getProperties().getProperty("java.home", "<??java.home??>"), "bin"), "java").toString();
 
     /**
      * The only instance
@@ -101,7 +107,7 @@ public final class ExternalProcessManager {
         try {
             List<String> args = new ArrayList<>();
 
-            args.add("java");
+            args.add(JAVA_COMMAND);
             args.add("-classpath");
             args.add(System.getProperties().getProperty("java.class.path", null));
             args.add(mainClass.getName());

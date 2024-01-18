@@ -19,10 +19,10 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.annotation.Resource;
 
 /**
  * Component With annotation based Injection

@@ -20,6 +20,7 @@
 package de.calamanari.pk.gateway.client;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -51,11 +52,10 @@ public class SecuMangaService extends Service {
     static {
         URL url = null;
         try {
-            URL baseUrl;
-            baseUrl = de.calamanari.pk.gateway.client.SecuMangaService.class.getResource(".");
-            url = new URL(baseUrl, "http://localhost:8091/SecuMangaWebService?wsdl");
+            URL baseUrl = de.calamanari.pk.gateway.client.SecuMangaService.class.getResource(".");
+            url = baseUrl.toURI().resolve("http://localhost:8091/SecuMangaWebService?wsdl").toURL();
         }
-        catch (MalformedURLException e) {
+        catch (URISyntaxException | MalformedURLException e) {
             LOGGER.warn("Failed to create URL for the wsdl Location: " + "'http://localhost:8091/SecuMangaWebService?wsdl', retrying as a local file");
             LOGGER.warn(e.getMessage());
         }

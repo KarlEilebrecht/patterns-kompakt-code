@@ -24,6 +24,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
@@ -97,13 +99,13 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
                     throw new DerbyJarNotFoundException("Unexpected Derby jar structure: " + url);
                 }
                 s = s.substring(0, afterJarPos);
-                res = new URL(s);
+                res = new URI(s).toURL();
                 File file = new File(URLDecoder.decode(res.getFile(), "UTF-8"));
                 if (!file.exists()) {
                     throw new DerbyJarNotFoundException("Could not find derby-xxx.jar: " + url + "");
                 }
             }
-            catch (MalformedURLException | UnsupportedEncodingException | RuntimeException ex) {
+            catch (URISyntaxException | MalformedURLException | UnsupportedEncodingException | RuntimeException ex) {
                 throw new DerbyJarNotFoundException("Unable to create URL for derby-xxx.jar: " + s, ex);
             }
         }

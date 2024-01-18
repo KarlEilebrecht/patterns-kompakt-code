@@ -77,8 +77,8 @@ public class BbxProtocol implements Serializable {
     public void logEntry(long executionId, String message) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        this.entries.add(String.format("%d %s %s@%s: %s", executionId, df.format(new Date()), Long.toHexString(Thread.currentThread().getId()), BBX_PROCESS_ID,
-                message));
+        this.entries.add(String.format("%d %s %s@%s: %s", executionId, df.format(new Date()), Long.toHexString(Thread.currentThread().threadId()),
+                BBX_PROCESS_ID, message));
     }
 
     /**
