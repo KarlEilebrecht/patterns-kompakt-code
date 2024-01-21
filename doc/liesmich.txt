@@ -5,8 +5,8 @@ herunterzuladen.
 
 Fuehren Sie folgende Schritte aus, um loszulegen:
 
- 1. Installieren Sie Java 15 (JDK) 
- 2. Installieren Sie Maven (3.6.3 oder neuer) - Sie finden die Instruktionen im Internet
+ 1. Installieren Sie Java 21 (JDK) 
+ 2. Installieren Sie Maven (3.8 oder neuer) - Sie finden die Instruktionen im Internet
  3. Installieren Sie eine IDE (z.B. Eclipse)
  4. Entpacken Sie pk-examples.zip in den Ordner, den Sie fuer das Projekt nutzen moechten
  5. Starten Sie Ihre IDE (hier Eclipse)
