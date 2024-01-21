@@ -16,25 +16,25 @@
 				<exclude>test/java/de/calamanari/other/**</exclude>
 				<exclude>test/java/de/calamanari/**/*.md.backup</exclude>
 			</excludes>
-			<outputDirectory>/pk-examples-a5/src</outputDirectory>
+			<outputDirectory>/pk-examples-a6/src</outputDirectory>
 		</fileSet>
 	</fileSets>
 	<files>
 		<file>
 			<source>${project.basedir}/doc/eclipse-code-formatter.xml</source>
-			<outputDirectory>/pk-examples-a5/doc</outputDirectory>
+			<outputDirectory>/pk-examples-a6/doc</outputDirectory>
 		</file>
 		<file>
 			<source>${project.basedir}/doc/eclipse-preferences.epf</source>
-			<outputDirectory>/pk-examples-a5/doc</outputDirectory>
+			<outputDirectory>/pk-examples-a6/doc</outputDirectory>
 		</file>
 		<file>
 			<source>${project.basedir}/doc/liesmich.txt</source>
-			<outputDirectory>/pk-examples-a5/doc</outputDirectory>
+			<outputDirectory>/pk-examples-a6/doc</outputDirectory>
 		</file>
 		<file>
 			<source>${project.basedir}/pom.xml</source>
-			<outputDirectory>/pk-examples-a5</outputDirectory>
+			<outputDirectory>/pk-examples-a6</outputDirectory>
 		</file>
 	</files>
 </assembly>
