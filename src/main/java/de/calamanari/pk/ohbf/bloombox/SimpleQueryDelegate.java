@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
 
     @Override
     public SimpleQueryDelegate createSpawn() {
-        return new SimpleQueryDelegate(queries, this.results.stream().map(BloomBoxQueryResult::createSpawn).collect(Collectors.toList()), true);
+        return new SimpleQueryDelegate(queries, this.results.stream().map(BloomBoxQueryResult::createSpawn).toList(), true);
     }
 
     @Override

@@ -308,7 +308,7 @@ public class IntermediateExpressionOptimizer {
      * @return the first detected AND/OR
      */
     private IntermediateExpressionType detectStartTypeAndOr(IntermediateCombinedExpression root) {
-        List<IntermediateExpressionType> types = root.getSubExpressionList().stream().map(IntermediateExpression::getType).collect(Collectors.toList());
+        List<IntermediateExpressionType> types = root.getSubExpressionList().stream().map(IntermediateExpression::getType).toList();
 
         IntermediateExpressionType currentType = IntermediateExpressionType.AND;
         for (IntermediateExpressionType type : types) {

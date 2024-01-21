@@ -119,11 +119,11 @@ public class AndExpression implements BbqExpression {
             else {
                 for (int j = i + 1; !res && j < expressions.length; j++) {
                     BbqExpression otherExpression = expressions[j];
-                    if (expression instanceof NegationExpression) {
-                        res = ((NegationExpression) expression).isNegationOf(otherExpression);
+                    if (expression instanceof NegationExpression negation) {
+                        res = negation.isNegationOf(otherExpression);
                     }
-                    else if (otherExpression instanceof NegationExpression) {
-                        res = ((NegationExpression) otherExpression).isNegationOf(expression);
+                    else if (otherExpression instanceof NegationExpression negation) {
+                        res = negation.isNegationOf(expression);
                     }
                 }
             }

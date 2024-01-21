@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A {@link QueryBundle} is a set of (dependent) queries to be executed in one scan.
@@ -80,7 +79,7 @@ public class QueryBundle implements Serializable {
         try {
             String[] lines = script.split("[\\r\\n]+");
             BloomBoxQuery currentQuery = null;
-            List<String> contentLines = Arrays.stream(lines).filter(line -> line != null && !line.trim().startsWith("#")).collect(Collectors.toList());
+            List<String> contentLines = Arrays.stream(lines).filter(line -> line != null && !line.trim().startsWith("#")).toList();
 
             for (String line : contentLines) {
                 currentLineParsed = line;

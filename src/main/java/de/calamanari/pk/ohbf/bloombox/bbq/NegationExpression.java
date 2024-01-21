@@ -111,9 +111,9 @@ public class NegationExpression implements BbqExpression {
     public boolean isNegationOf(BbqExpression other) {
         int inversionCounter = 0;
 
-        while (other instanceof NegationExpression) {
+        while (other instanceof NegationExpression negation) {
             inversionCounter++;
-            other = ((NegationExpression) other).delegateExpression;
+            other = negation.delegateExpression;
         }
         return this.delegateExpression.getExpressionId() == other.getExpressionId() && (inversionCounter % 2 == 0);
     }

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import de.calamanari.pk.ohbf.bloombox.BbxMessage;
 import de.calamanari.pk.ohbf.bloombox.BloomBoxException;
@@ -159,8 +158,7 @@ public class BoundedOr {
         else {
             IntermediateOrExpression fullExpression = createCombinedOrOfAndGroups(expressions, lowerBound);
 
-            List<IntermediateAndExpression> andGroups = fullExpression.getSubExpressionList().stream().map(IntermediateAndExpression.class::cast)
-                    .collect(Collectors.toList());
+            List<IntermediateAndExpression> andGroups = fullExpression.getSubExpressionList().stream().map(IntermediateAndExpression.class::cast).toList();
 
             for (IntermediateAndExpression andGroup : andGroups) {
                 List<IntermediateExpression> othersNegated = getOthersNegated(andGroup.getSubExpressionList());
@@ -185,7 +183,7 @@ public class BoundedOr {
      */
     private List<IntermediateExpression> getExpressionsNegated() {
         if (expressionsNegated == null) {
-            expressionsNegated = expressions.stream().map(IntermediateNotExpression::new).collect(Collectors.toList());
+            expressionsNegated = expressions.stream().map(IntermediateNotExpression::new).map(IntermediateExpression.class::cast).toList();
         }
         return expressionsNegated;
     }

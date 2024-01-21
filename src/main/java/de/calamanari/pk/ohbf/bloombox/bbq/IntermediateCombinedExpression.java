@@ -70,7 +70,7 @@ public abstract class IntermediateCombinedExpression implements IntermediateExpr
     @Override
     public BbqExpression createBbqEquivalent(LwGenericOHBF bloomFilter, Map<Long, BbqExpression> expressionCache) {
         List<BbqExpression> expressions = this.getSubExpressionList().stream()
-                .map(intermediateExpression -> intermediateExpression.createBbqEquivalent(bloomFilter, expressionCache)).collect(Collectors.toList());
+                .map(intermediateExpression -> intermediateExpression.createBbqEquivalent(bloomFilter, expressionCache)).toList();
         BbqExpression combinedExpression = createNewCombinedBbqExpression(expressions);
         BbqExpression cachedExpression = expressionCache.putIfAbsent(combinedExpression.getExpressionId(), combinedExpression);
         return (cachedExpression != null) ? cachedExpression : combinedExpression;

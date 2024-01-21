@@ -37,6 +37,8 @@ import org.slf4j.event.Level;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+// Singleton by intention
+@SuppressWarnings("java:S6548")
 public final class ExternalProcessManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExternalProcessManager.class);

@@ -175,8 +175,8 @@ final class IndexerLeader {
         this.fileSize = file.length();
         this.charsetName = charsetName;
         this.charLengthLookup = charLengthLookup;
-        this.characterPositionIndex = new HashMap<>(configuration.maxNumberOfCharIndexEntries);
-        this.linePositionIndex = new HashMap<>(configuration.maxNumberOfLineIndexEntries);
+        this.characterPositionIndex = HashMap.newHashMap(configuration.maxNumberOfCharIndexEntries);
+        this.linePositionIndex = HashMap.newHashMap(configuration.maxNumberOfLineIndexEntries);
 
     }
 

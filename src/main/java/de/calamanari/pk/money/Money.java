@@ -564,8 +564,8 @@ public class Money implements Serializable, Comparable<Money> {
     @Override
     public boolean equals(Object obj) {
         boolean res = false;
-        if (obj instanceof Money) {
-            res = this.stringValue.equals(((Money) obj).stringValue);
+        if (obj instanceof Money money) {
+            res = this.stringValue.equals(money.stringValue);
         }
         return res;
     }

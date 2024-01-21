@@ -93,7 +93,7 @@ public class ConcreteHostNameData implements HostNameData {
     }
 
     @Override
-    public boolean containsAll(Collection<? extends String> coll) {
+    public boolean containsAll(Collection<String> coll) {
         LOGGER.debug("{}.containsAll({}) called.", ConcreteHostNameData.class.getSimpleName(), coll);
         return internalList.containsAll(coll);
     }
@@ -125,8 +125,10 @@ public class ConcreteHostNameData implements HostNameData {
     /**
      * Creates a copy of this object, so that the internal state of the copy will be independent.<br>
      * This is not a deep clone as the values will not be copied but referenced.
+     * 
      * @return copy of this object
      */
+    @Override
     public <T extends HostNameData> T copy() {
         LOGGER.debug("{}.copy() called.", ConcreteHostNameData.class.getSimpleName());
         @SuppressWarnings("unchecked")

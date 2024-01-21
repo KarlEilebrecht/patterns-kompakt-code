@@ -603,8 +603,8 @@ public final class LockManager {
      */
     private static LockInfo doSimulateDatabaseSelectLock(String elementId) {
         LockInfo res = null;
-        AtomicReference<String[]> record = DATABASE.get(elementId);
-        String[] recordData = (record == null ? null : record.get());
+        AtomicReference<String[]> dbRecord = DATABASE.get(elementId);
+        String[] recordData = (dbRecord == null ? null : dbRecord.get());
         if (recordData != null) {
             LockType lockType = LockType.valueOf(recordData[0]);
             List<String> lockOwnerIds = Collections.emptyList();
@@ -635,8 +635,8 @@ public final class LockManager {
     private static boolean doSimulateDatabaseInsertLock(String elementId, LockType lockType, List<String> ownerIds) {
         boolean success = false;
         String[] recordData = new String[] { lockType.toString(), ownerIdListToCommaSeparatedString(ownerIds), "0" };
-        AtomicReference<String[]> record = new AtomicReference<>(recordData);
-        success = (DATABASE.putIfAbsent(elementId, record) == null);
+        AtomicReference<String[]> dbRecord = new AtomicReference<>(recordData);
+        success = (DATABASE.putIfAbsent(elementId, dbRecord) == null);
         return success;
     }
 
@@ -651,9 +651,9 @@ public final class LockManager {
      */
     private static int doSimulateDatabaseUpdateLock(String elementId, LockType lockType, List<String> ownerIds, long expectedVersion) {
         int numberOfUpdatedRows = 0;
-        AtomicReference<String[]> record = DATABASE.get(elementId);
+        AtomicReference<String[]> dbRecord = DATABASE.get(elementId);
 
-        String[] recordData = (record == null ? null : record.get());
+        String[] recordData = (dbRecord == null ? null : dbRecord.get());
         if (recordData != null) {
             long currentVersion = 0;
             try {
@@ -665,7 +665,7 @@ public final class LockManager {
             }
             if (currentVersion == expectedVersion) {
                 String[] newRecordData = new String[] { lockType.toString(), ownerIdListToCommaSeparatedString(ownerIds), "" + (currentVersion + 1) };
-                boolean success = record.compareAndSet(recordData, newRecordData);
+                boolean success = dbRecord.compareAndSet(recordData, newRecordData);
                 if (success) {
                     numberOfUpdatedRows = 1;
                 }

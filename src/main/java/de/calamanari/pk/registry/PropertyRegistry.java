@@ -102,7 +102,7 @@ public final class PropertyRegistry {
      */
     private PropertyRegistry(Properties properties) {
         LOGGER.debug("{}-instance created", PropertyRegistry.class.getSimpleName());
-        Map<String, String> map = new HashMap<>(properties.size());
+        Map<String, String> map = HashMap.newHashMap(properties.size());
         for (Enumeration<?> en = properties.propertyNames(); en.hasMoreElements();) {
             String propertyName = (String) en.nextElement();
             String propertyValue = properties.getProperty(propertyName);

@@ -119,11 +119,8 @@ public class Article {
     @Override
     public boolean equals(Object obj) {
         boolean res = false;
-        if (obj instanceof Article) {
-            Article other = (Article) obj;
-            if (this.id != null && other.id != null) {
-                res = this.id.equals(other.id);
-            }
+        if (obj instanceof Article other && this.id != null && other.id != null) {
+            res = this.id.equals(other.id);
         }
         return res;
     }

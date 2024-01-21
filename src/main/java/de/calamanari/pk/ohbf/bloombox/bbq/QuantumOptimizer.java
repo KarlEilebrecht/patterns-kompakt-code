@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -658,7 +657,7 @@ public class QuantumOptimizer {
             // Goal: NOT ( AND(NOT(A), NOT(B)) ) => NOT ( NOR(A, B) ) => OR(A, B)
 
             // Implicitly negate the negated child expressions
-            childExpressions = childExpressions.stream().map(e -> e.getChildExpressions().get(0)).collect(Collectors.toList());
+            childExpressions = childExpressions.stream().map(e -> e.getChildExpressions().get(0)).toList();
             if (expression.getClass() == AndExpression.class) {
                 res = combine(childExpressions, OrExpression.class);
             }
@@ -943,8 +942,8 @@ public class QuantumOptimizer {
      * @return true if expression1 negates expression2
      */
     private boolean isContradiction(BbqExpression expression1, BbqExpression expression2) {
-        return (expression1 instanceof NegationExpression && ((NegationExpression) expression1).isNegationOf(expression2))
-                || (expression2 instanceof NegationExpression && ((NegationExpression) expression2).isNegationOf(expression1));
+        return (expression1 instanceof NegationExpression negation1 && negation1.isNegationOf(expression2))
+                || (expression2 instanceof NegationExpression negation2 && negation2.isNegationOf(expression1));
     }
 
     /**

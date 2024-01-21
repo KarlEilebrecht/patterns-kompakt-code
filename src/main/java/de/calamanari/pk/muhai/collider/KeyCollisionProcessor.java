@@ -38,7 +38,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.LongSupplier;
-import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import org.apfloat.Apfloat;
@@ -53,6 +52,7 @@ import de.calamanari.pk.util.LambdaSupportLoggerProxy;
  * A {@link KeyCollisionProcessor} generates a specified number of keys provided by a supplier in a keyspace and analyzes key collisions.
  * <p>
  * To support really large number of keys, this processor uses the disk to store the keys during operation.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
@@ -128,6 +128,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * <li>{@link KeyCollisionCollectionPolicies#TRACK_POSITIONS_AND_DISCARD_KEYS}</li>
      * <li>keepFiles=false (cleanup after successful processing)</li>
      * </ul>
+     * 
      * @param outputDir storage location
      * @return default processor instance
      */
@@ -137,6 +138,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Creates a new processor with the given environment settings
+     * 
      * @param outputDir storage location
      * @param maxKeysInMemory defines how many keys we want to store in memory before writing to disk
      * @param maxKeysInChunk size (number of items) of a single file on the disk, it should be a multiple of maxKeysInMemory
@@ -154,6 +156,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * This method takes the specified number of keys from the given supplier and reports occurrences of the same key
+     * 
      * @param keySupplier key generator
      * @param limit keys to be generated
      * @param sizeOfKeyspace the total size of the keyspace (for computing the expected collions)
@@ -176,6 +179,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Phase I: create the keys and store them in chunk files
+     * 
      * @param keySupplier key generator
      * @return list of created chunk files
      * @throws IOException on any problem with the file system
@@ -206,6 +210,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Phase II: Iterate over all keys in key-order and group occurrences
+     * 
      * @param keyChunkFiles input
      * @return list of collision chunk files
      * @throws IOException on any error with the file system
@@ -220,7 +225,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
             CollisionAggregationProgressObserver observer = new CollisionAggregationProgressObserver();
 
             keyChunkFiles.forEach(this::openAndRegisterChunkReader);
-            Collection<Iterator<KeyAtPos>> chunkIterators = openChunkReaders.stream().map(this::toKeyIterator).collect(Collectors.toList());
+            Collection<Iterator<KeyAtPos>> chunkIterators = openChunkReaders.stream().map(this::toKeyIterator).toList();
             CombinedOrderedItemIterator<KeyAtPos> allKeysOrderedIterator = new CombinedOrderedItemIterator<>(chunkIterators);
 
             KeyCollisionIterator<K> collisionIterator = new KeyCollisionIterator<>(allKeysOrderedIterator, keyCollisionCollectionPolicy,
@@ -252,6 +257,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Phase III: Iterate over the collisions ordered by occurrence and create statistics
+     * 
      * @param keyCollisionChunkFiles collision chunk files
      */
     private void computeCollisionStats(List<File> keyCollisionChunkFiles) {
@@ -261,7 +267,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
         try {
             keyCollisionChunkFiles.forEach(this::openAndRegisterChunkReader);
-            Collection<Iterator<K>> chunkIterators = openChunkReaders.stream().map(this::toCollisionIterator).collect(Collectors.toList());
+            Collection<Iterator<K>> chunkIterators = openChunkReaders.stream().map(this::toCollisionIterator).toList();
             CombinedOrderedItemIterator<K> allCollisionsOrderedIterator = new CombinedOrderedItemIterator<>(chunkIterators);
             long lastCollisionReportedAt = 0;
             long collidedKeysProcessed = 0;
@@ -326,6 +332,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Creates a reader for the given chunk and puts it into the list
+     * 
      * @param chunkFile file, a buffered reader shall be created for
      */
     // suppressing this try-with-resource sonar rule because this method is intended to supply open resources
@@ -353,6 +360,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Computes the expected number of collisions after creating a number of random keys in a limited keyspace
+     * 
      * @param sizeOfKeyspace
      * @param numberOfKeysGenerated
      * @return expected number of collisions
@@ -374,6 +382,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Helper method to make computation formula code more readable
+     * 
      * @param l (treaded as unsigned integer value)
      * @return Apfloat with a precision of 500
      */
@@ -386,6 +395,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Shorthand for formatting completion status
+     * 
      * @param perc percentage
      * @return percentage value with two decimal digits as a string
      */
@@ -398,6 +408,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * compute percentage of completion
+     * 
      * @param processed number of items processed
      * @param total number of items total
      * @return percentage value
@@ -410,6 +421,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * Converts the given long into an unsigned big integer value for further computation
+     * 
      * @param l source value (negative included)
      * @return unsigned big integer (negatives become positive after {@link Long#MAX_VALUE})
      */
@@ -431,6 +443,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
         /**
          * logs the progress information
+         * 
          * @param consumed number of items read from the source
          * @param returned number of aggregated items returned
          */
@@ -448,6 +461,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
     /**
      * This BUILDER helps to subsequently fill the summary from the different processing steps
+     * 
      * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
      *
      */
@@ -494,6 +508,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
         /**
          * Analyzes the given collision and updates the stats
+         * 
          * @param collision a keys that occurred at least 2 times
          * @return this builder
          */
@@ -514,6 +529,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
         /**
          * Counts and collects the number of times the key occurred (number of different positions)
+         * 
          * @param numberOfOccurences (this is the slot in the histogram)
          */
         private void updateMultiOccurrenceStats(long numberOfOccurences) {
@@ -558,6 +574,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
 
         /**
          * Final action to obtain the result, afterwards this builder becomes <b>invalid</b>
+         * 
          * @return summary
          */
         KeyCollisionSummary getResult() {
@@ -570,6 +587,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         /**
          * We collect data for {@link KeyCollisionProcessor#MAX_DATA_POINTS} slots, this method computes the correct slots and updates the detected collision
          * count.
+         * 
          * @param collision to be added
          */
         private void createOrUpdateDataPointForCollision(KeyCollision<?> collision) {

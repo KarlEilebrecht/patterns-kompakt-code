@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+// Singleton by intention
+@SuppressWarnings("java:S6548")
 public final class HostNameDataNullObject implements HostNameData {
 
     private static final long serialVersionUID = 7701315306173959234L;
@@ -91,7 +93,7 @@ public final class HostNameDataNullObject implements HostNameData {
     }
 
     @Override
-    public boolean containsAll(Collection<? extends String> names) {
+    public boolean containsAll(Collection<String> names) {
         LOGGER.debug("{}.containsAll({}) called.", HostNameDataNullObject.class.getSimpleName(), names);
         return false;
     }

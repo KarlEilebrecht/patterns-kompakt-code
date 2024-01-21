@@ -61,6 +61,8 @@ import de.calamanari.pk.util.LambdaSupportLoggerProxy;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+// Suppressed Sonar-warning about "monster class", there is currently no intention to improve the design of this POC-class, feel free ...
+@SuppressWarnings("java:S6539")
 public class BloomBoxQueryRunner {
 
     private static final Logger LOGGER = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(BloomBoxQueryRunner.class));
@@ -473,8 +475,8 @@ public class BloomBoxQueryRunner {
 
         for (int i = 0; i < allQueriesInBundle.length; i++) {
             InternalQuery query = allQueriesInBundle[i];
-            if (query instanceof ErrorPlaceholderQuery) {
-                results.get(i).setErrorMessage(((ErrorPlaceholderQuery) query).getErrorMessage());
+            if (query instanceof ErrorPlaceholderQuery epq) {
+                results.get(i).setErrorMessage(epq.getErrorMessage());
             }
             else {
                 try {
@@ -484,8 +486,7 @@ public class BloomBoxQueryRunner {
 
                     if (query.subQueries != null) {
 
-                        List<BbqExpression> subExpressionList = Arrays.stream(query.subQueries).map(BloomFilterQuery::getExpression)
-                                .collect(Collectors.toList());
+                        List<BbqExpression> subExpressionList = Arrays.stream(query.subQueries).map(BloomFilterQuery::getExpression).toList();
 
                         subExpressionList
                                 .forEach(subExpression -> subExpression.collectUniqueDepthFirst().forEach(e -> allExpressions.put(e.getExpressionId(), e)));
@@ -645,7 +646,7 @@ public class BloomBoxQueryRunner {
             LOGGER.trace(sb.toString());
         }
         else if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Executing {}", Arrays.stream(queries).map(InternalQuery::getName).collect(Collectors.toList()));
+            LOGGER.debug("Executing {}", Arrays.stream(queries).map(InternalQuery::getName).toList());
         }
     }
 

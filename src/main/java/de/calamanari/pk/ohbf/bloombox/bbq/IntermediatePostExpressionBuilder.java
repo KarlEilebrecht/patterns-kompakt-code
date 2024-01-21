@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -190,7 +189,7 @@ public class IntermediatePostExpressionBuilder extends PostBbqBaseListener {
     @Override
     public void exitMinMaxExpression(MinMaxExpressionContext ctx) {
         DataCollector minMaxCollector = stack.pop();
-        List<IntermediateExpression> expressions = minMaxCollector.childCollectors.stream().map(DataCollector::createExpression).collect(Collectors.toList());
+        List<IntermediateExpression> expressions = minMaxCollector.childCollectors.stream().map(DataCollector::createExpression).toList();
         try {
             // @formatter:off
             minMaxCollector.expression = BoundedOr.of(expressions)

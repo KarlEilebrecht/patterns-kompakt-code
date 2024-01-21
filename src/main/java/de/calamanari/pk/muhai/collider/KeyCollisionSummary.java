@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -195,7 +194,7 @@ public class KeyCollisionSummary {
         this.collisionStats = Stream.of(csv.split("\\|")).skip(1).map(s -> {
             String[] arr = s.split(";");
             return new KeyCollisionDataPoint(Long.parseUnsignedLong(arr[0]), Long.parseUnsignedLong(arr[1]), Long.parseUnsignedLong(arr[2]));
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
 }

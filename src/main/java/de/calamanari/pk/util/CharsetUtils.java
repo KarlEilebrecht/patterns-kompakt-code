@@ -70,7 +70,7 @@ public final class CharsetUtils {
      */
     public static final List<String> CONTEXT_AGNOSTIC_CHARSETS;
     static {
-        String[] supportedCharsets = CONTEXT_AGNOSTIC_CHARSET_NAMES.split("[,]");
+        String[] supportedCharsets = CONTEXT_AGNOSTIC_CHARSET_NAMES.split(",");
         List<String> supportedCharsetList = new ArrayList<>(supportedCharsets.length);
         for (String charsetName : supportedCharsets) {
             supportedCharsetList.add(charsetName.trim().toLowerCase());

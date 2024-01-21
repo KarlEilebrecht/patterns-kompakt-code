@@ -84,6 +84,7 @@ import de.calamanari.pk.util.JavaWrapperType;
  * <p>
  * Some detail steps like {@link #convertAttributeToByteArray(Object)} for attribute conversion are implemented as TEMPLATE METHODS, so implementors may
  * sub-class this class and override methods to modify the generator's behavior.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
@@ -148,6 +149,7 @@ public class MuhaiGenerator implements Serializable {
      * Returns the cached instance of the digest after resetting it for the next use.
      * <p>
      * This default implementation returns an SHA-1-digest, cached in a ThreadLocal.
+     * 
      * @return clean digest
      */
     protected MessageDigest initDigest() {
@@ -159,6 +161,7 @@ public class MuhaiGenerator implements Serializable {
     /**
      * Adds a single object to the given digest. This default implementation uses a couple of indicators to represent special values and escapes the
      * {@link #IND_SPACER} in the content (see {@link #escapeSpacerBytes(byte[])} and {@link MuhaiGenerator} spec).
+     * 
      * @param md digest
      * @param srcValue value to be added
      */
@@ -167,9 +170,9 @@ public class MuhaiGenerator implements Serializable {
         if (srcValue == null) {
             md.update(IND_NULL);
         }
-        else if (srcValue instanceof byte[]) {
+        else if (srcValue instanceof byte[] byteArray) {
             md.update(IND_BYTE_ARRAY_VALUE);
-            sourceBytes = (byte[]) srcValue;
+            sourceBytes = byteArray;
         }
         else {
             if (srcValue instanceof String) {
@@ -214,6 +217,7 @@ public class MuhaiGenerator implements Serializable {
 
     /**
      * Computes a hash over the given attributes using the {@link #IND_EMPTY} as delimiter, see the spec of {@link MuhaiGenerator}.
+     * 
      * @param attributes source attributes (NOT EMPTY, NOT NULL), each attribute can be null.
      * @return hash value
      * @throws MuhaiException if the array was empty/null or the hashing failed for any reason
@@ -246,6 +250,7 @@ public class MuhaiGenerator implements Serializable {
     /**
      * Escapes any occurrence of {@link #IND_SPACER} in the given byte sequence.<br />
      * This default implementation just doubles the spacer following the spec of {@link MuhaiGenerator}.
+     * 
      * @param src not null, won't be modified
      * @return either src or a new longer byte sequence to replace the given one
      */
@@ -297,6 +302,7 @@ public class MuhaiGenerator implements Serializable {
 
     /**
      * Constructor to create a new generator
+     * 
      * @param prefix bit sequence, also defines the keyspace of this generator, not null (instead use {@link LongPrefix#NONE}
      * @param pepper an optional byte sequence to be included in all hash computations, null or empty array will turn the pepper off
      */
@@ -311,6 +317,7 @@ public class MuhaiGenerator implements Serializable {
 
     /**
      * Constructor to create a new generator
+     * 
      * @param prefix bit sequence, also defines the keyspace of this generator, not null (instead use {@link LongPrefix#NONE}
      * @param pepper an optional character sequence to be included in all hash computations, null or empty will turn the pepper off
      */
@@ -320,6 +327,7 @@ public class MuhaiGenerator implements Serializable {
 
     /**
      * Constructor to create a new generator without a hash pepper
+     * 
      * @param prefix bit sequence, also defines the keyspace of this generator, not null (instead use {@link LongPrefix#NONE}
      */
     public MuhaiGenerator(LongPrefix prefix) {
@@ -335,6 +343,7 @@ public class MuhaiGenerator implements Serializable {
 
     /**
      * Returns a copy of the hash pepper byte sequence this generator uses.
+     * 
      * @return byte array, if the pepper was specified as a string these are the UTF-8 bytes
      */
     public byte[] getHashPepper() {
@@ -347,6 +356,7 @@ public class MuhaiGenerator implements Serializable {
 
     /**
      * Computes a key (MUHAI) from the given attributes.
+     * 
      * @param attributes values to be included in hashing (NOT EMPTY, NOT NULL), each attribute can be null.
      * @return key prefixed hash value as a long following the spec of {@link MuhaiGenerator}
      */
@@ -373,6 +383,7 @@ public class MuhaiGenerator implements Serializable {
     /**
      * @return description
      */
+    @Override
     public String toString() {
         String prefixString = this.prefix.toBinaryString();
         return MuhaiGenerator.class.getSimpleName() + "(prefix=" + (prefixString.isEmpty() ? "<NONE>" : "'" + prefixString + "'") + ", hashPepper="

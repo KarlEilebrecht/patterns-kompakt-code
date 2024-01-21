@@ -496,8 +496,7 @@ public class Fraction implements Comparable<Fraction>, Serializable {
     @Override
     public boolean equals(Object obj) {
         boolean res = false;
-        if (obj instanceof Fraction) {
-            Fraction other = (Fraction) obj;
+        if (obj instanceof Fraction other) {
             res = (this.reducedDenominator.equals(other.reducedDenominator) && this.reducedNumerator.equals(other.reducedNumerator));
         }
         return res;

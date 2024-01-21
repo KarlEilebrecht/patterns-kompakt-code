@@ -23,7 +23,6 @@ package de.calamanari.pk.ohbf.bloombox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +54,7 @@ public class PbDataStoreFeeder extends DataStoreFeeder {
 
     @Override
     public boolean addRow(Map<String, ?> columnMap) {
-        return this.addRow(columnMap.entrySet().stream().map(e -> new PbDpav(e.getKey(), convertValueToString(e.getKey(), e.getValue()), 1.0d))
-                .collect(Collectors.toList()));
+        return this.addRow(columnMap.entrySet().stream().map(e -> new PbDpav(e.getKey(), convertValueToString(e.getKey(), e.getValue()), 1.0d)).toList());
     }
 
     @Override
@@ -115,8 +113,8 @@ public class PbDataStoreFeeder extends DataStoreFeeder {
     protected String convertValueToString(String columnName, Object columnValue) {
         String res = null;
         if (columnValue != null) {
-            if (columnValue instanceof String) {
-                res = (String) columnValue;
+            if (columnValue instanceof String str) {
+                res = str;
             }
             else {
                 LOGGER.warn("Feeding with implicit columnValue.toString() conversion may lead to unexpected results, given: columnName={}, columnValue={} ({})",

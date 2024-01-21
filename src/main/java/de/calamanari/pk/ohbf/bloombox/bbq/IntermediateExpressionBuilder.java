@@ -24,7 +24,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -58,6 +57,8 @@ import de.calamanari.pk.ohbf.bloombox.bbq.BoundedOr.InvalidBoundsException;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+// Suppressed Sonar-warning about "monster class", language-related methods kept together by intention
+@SuppressWarnings("java:S6539")
 public class IntermediateExpressionBuilder extends BbqBaseListener {
 
     // This builder creates a raw intermediate expression
@@ -136,8 +137,8 @@ public class IntermediateExpressionBuilder extends BbqBaseListener {
             stack.peek().childExpressions.add(expression);
         }
         else {
-            List<IntermediateExpression> conditions = currentCollector.values.stream().map(value -> new IntermediateEquals(currentCollector.argName, value))
-                    .collect(Collectors.toList());
+            List<IntermediateExpression> conditions = currentCollector.values.stream()
+                    .map(value -> (IntermediateExpression) new IntermediateEquals(currentCollector.argName, value)).toList();
             stack.peek().childExpressions.add(createBoundedOr(conditions, currentCollector.lowerBound, currentCollector.upperBound, ctx.getText()));
         }
     }
@@ -160,8 +161,8 @@ public class IntermediateExpressionBuilder extends BbqBaseListener {
             stack.peek().childExpressions.add(expression);
         }
         else {
-            List<IntermediateExpression> conditions = currentCollector.values.stream().map(value -> new IntermediateNotEquals(currentCollector.argName, value))
-                    .collect(Collectors.toList());
+            List<IntermediateExpression> conditions = currentCollector.values.stream()
+                    .map(value -> (IntermediateExpression) new IntermediateNotEquals(currentCollector.argName, value)).toList();
             stack.peek().childExpressions.add(createBoundedOr(conditions, currentCollector.lowerBound, currentCollector.upperBound, ctx.getText()));
         }
     }

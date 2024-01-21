@@ -146,8 +146,8 @@ public class FileMacroPlugin implements MacroPlugin {
         if (args.length == 2) {
             arg2 = args[1];
         }
-        if (arg1 instanceof String) {
-            arg1 = new File((String) arg1);
+        if (arg1 instanceof String str) {
+            arg1 = new File(str);
         }
         if (!(arg1 instanceof File) || (arg2 != null && !(arg2 instanceof String))) {
             throw new ExampleScriptingFrameworkException("Could not execute macro 'readFileToString' - illegal arguments.");
@@ -171,8 +171,8 @@ public class FileMacroPlugin implements MacroPlugin {
         if (args.length == MAX_ARGS) {
             arg3 = args[2];
         }
-        if (arg2 instanceof String) {
-            arg2 = new File((String) arg2);
+        if (arg2 instanceof String str) {
+            arg2 = new File(str);
         }
         if (!(arg1 instanceof String) || !(arg2 instanceof File) || (arg3 != null && !(arg3 instanceof String))) {
             throw new ExampleScriptingFrameworkException("Could not execute macro 'writeStringToFile' - illegal arguments.");

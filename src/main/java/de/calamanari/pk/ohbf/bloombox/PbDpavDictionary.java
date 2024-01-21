@@ -58,7 +58,7 @@ public class PbDpavDictionary implements Serializable {
      * Creates new dictionary with an initial capacity of {@link ExpressionIdUtil#MIN_GENERATED_LP_DPAV_ID} / 2 elements
      */
     public PbDpavDictionary() {
-        this.lookup = new HashMap<>(ExpressionIdUtil.MIN_GENERATED_LP_DPAV_ID / 2);
+        this.lookup = HashMap.newHashMap(ExpressionIdUtil.MIN_GENERATED_LP_DPAV_ID / 2);
     }
 
     /**

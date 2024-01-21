@@ -316,8 +316,8 @@ public final class ParallelFileInputStream extends InputStream {
      */
     private void handleError(Throwable error) throws IOException {
         if (this.readError != null) {
-            if (error instanceof IOException) {
-                this.readError = (IOException) error;
+            if (error instanceof IOException ioException) {
+                this.readError = ioException;
             }
             else {
                 this.readError = new IOException(error);

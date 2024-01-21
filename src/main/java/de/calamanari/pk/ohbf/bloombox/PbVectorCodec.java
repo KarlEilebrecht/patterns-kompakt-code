@@ -438,7 +438,7 @@ public class PbVectorCodec implements Serializable {
      * @return map lpDpavId to probability
      */
     public static Map<Integer, Double> dataPointProbabilityVectorToMap(long[] dpps) {
-        Map<Integer, Double> res = new HashMap<>(dpps.length);
+        Map<Integer, Double> res = HashMap.newHashMap(dpps.length);
         for (long dpp : dpps) {
             int lpDataPointId = decodeLpDpavId(dpp);
             double probability = decodeDpavProbability(dpp);

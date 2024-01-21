@@ -119,9 +119,9 @@ public class Entity {
     public boolean equals(Object obj) {
         LOGGER.debug("{}.equals(...) called ...", this.getClass().getSimpleName());
         boolean res = false;
-        if (obj instanceof Entity) {
+        if (obj instanceof Entity entity) {
             LOGGER.debug("Comparing compound keys");
-            res = this.id.equals(((Entity) obj).id);
+            res = this.id.equals(entity.id);
         }
         LOGGER.debug("Returning {}", res);
         return res;

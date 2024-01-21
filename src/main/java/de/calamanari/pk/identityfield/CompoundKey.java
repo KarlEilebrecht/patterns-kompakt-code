@@ -148,8 +148,7 @@ public final class CompoundKey implements Serializable {
     public boolean equals(Object obj) {
 
         boolean res = false;
-        if (obj instanceof CompoundKey) {
-            CompoundKey other = (CompoundKey) obj;
+        if (obj instanceof CompoundKey other) {
             int numberOfParts = other.keyFieldValues.length;
             if (other.hashCode == this.hashCode && numberOfParts == this.keyFieldValues.length) {
                 res = true; // maybe

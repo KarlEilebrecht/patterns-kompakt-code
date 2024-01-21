@@ -65,7 +65,7 @@ public interface HostNameData extends Iterable<String>, Serializable {
      * @param names collection of names to look for
      * @return true if all names of the given list where found in this list
      */
-    public boolean containsAll(Collection<? extends String> names);
+    public boolean containsAll(Collection<String> names);
 
     /**
      * Returns an array with all the names from the list
@@ -93,6 +93,7 @@ public interface HostNameData extends Iterable<String>, Serializable {
     /**
      * Creates a copy of this object, so that the internal state of the copy will be independent.<br>
      * This is not a deep clone as the values will not be copied but referenced.
+     * 
      * @param <T> expected concrete class implementing {@link HostNameData}
      * @return copy of this object
      */

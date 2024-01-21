@@ -135,18 +135,18 @@ public class LegacyCustomerInfo implements CustomerInfo {
     /**
      * Returns the value from the legacy record for the given key
      * 
-     * @param record customer data or history data
+     * @param customerRecord customer data or history data
      * @param key field name
      * @return value
      */
-    private String getValue(String[] record, String key) {
+    private String getValue(String[] customerRecord, String key) {
         LOGGER.debug("Interpreting legacy data structure ...");
         String res = null;
-        if (record != null) {
-            int len = record.length;
+        if (customerRecord != null) {
+            int len = customerRecord.length;
             for (int i = 0; i < len; i = i + 2) {
-                if (key.equals(record[i])) {
-                    res = record[i + 1];
+                if (key.equals(customerRecord[i])) {
+                    res = customerRecord[i + 1];
                     break;
                 }
             }

@@ -36,6 +36,8 @@ import java.util.WeakHashMap;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+// Singleton by intention
+@SuppressWarnings("java:S6548")
 public final class SimpleAccessManager {
 
     private static final String MSG_SECURITY_PROBLEM_ACCESS_DENIED = "Security problem: access denied";

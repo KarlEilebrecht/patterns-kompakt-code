@@ -66,6 +66,7 @@ public class QueryRequestFuture {
             }
         }
         catch (Exception ex) {
+            Thread.currentThread().interrupt();
             LOGGER.error("Failed to get result!", ex);
         }
         return NO_RESULT;

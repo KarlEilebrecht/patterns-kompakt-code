@@ -115,8 +115,8 @@ public class StringMacroPlugin implements MacroPlugin {
             throw new ExampleScriptingFrameworkException("Could not execute macro 'newString' - insufficient arguments.");
         }
         Object arg1 = args[0];
-        if (arg1 instanceof CharSequence) {
-            res = ((CharSequence) arg1).toString();
+        if (arg1 instanceof CharSequence charSequence) {
+            res = charSequence.toString();
         }
         else {
             throw new ExampleScriptingFrameworkException("Could not execute macro 'newString' - illegal argument (String expected).");

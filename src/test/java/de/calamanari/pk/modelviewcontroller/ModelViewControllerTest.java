@@ -21,7 +21,9 @@ package de.calamanari.pk.modelviewcontroller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assume.assumeFalse;
 
+import java.awt.GraphicsEnvironment;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.AbstractButton;
@@ -29,6 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.awaitility.Awaitility;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +46,15 @@ import de.calamanari.pk.util.TimeUtils;
 public class ModelViewControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelViewControllerTest.class);
+
+    @Before
+    public void beforeMethod() {
+        boolean headless = GraphicsEnvironment.isHeadless();
+        if (headless) {
+            LOGGER.warn("Headless mode detected: Skipping UI-test!");
+        }
+        assumeFalse(headless);
+    }
 
     @Test
     public void testModelViewController() throws Exception {

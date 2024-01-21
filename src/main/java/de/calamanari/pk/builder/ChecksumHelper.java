@@ -82,17 +82,17 @@ public class ChecksumHelper {
                 if (element == null || element instanceof String) {
                     checksumBuilder.addString((String) element);
                 }
-                else if (element instanceof Integer) {
-                    checksumBuilder.addInteger((Integer) element);
+                else if (element instanceof Integer intValue) {
+                    checksumBuilder.addInteger(intValue);
                 }
-                else if (element instanceof Long) {
-                    checksumBuilder.addLong((Long) element);
+                else if (element instanceof Long longValue) {
+                    checksumBuilder.addLong(longValue);
                 }
-                else if (element instanceof Double) {
-                    checksumBuilder.addDouble((Double) element);
+                else if (element instanceof Double doubleValue) {
+                    checksumBuilder.addDouble(doubleValue);
                 }
-                else if (element instanceof byte[]) {
-                    checksumBuilder.addBytes((byte[]) element);
+                else if (element instanceof byte[] byteArray) {
+                    checksumBuilder.addBytes(byteArray);
                 }
             }
         }

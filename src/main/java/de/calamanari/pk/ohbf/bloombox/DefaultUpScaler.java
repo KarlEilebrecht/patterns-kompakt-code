@@ -191,20 +191,20 @@ public class DefaultUpScaler implements UpScaler {
         List<BbqExpression> expressionsBottomUp = rootExpression.collectUniqueDepthFirst();
         Leverage leverage = null;
         for (BbqExpression expression : expressionsBottomUp) {
-            if (expression instanceof BinaryMatchExpression) {
-                leverage = computeLeverage((BinaryMatchExpression) expression);
+            if (expression instanceof BinaryMatchExpression binaryMatch) {
+                leverage = computeLeverage(binaryMatch);
             }
-            else if (expression instanceof NegationExpression) {
-                leverage = computeLeverage((NegationExpression) expression);
+            else if (expression instanceof NegationExpression negation) {
+                leverage = computeLeverage(negation);
             }
-            else if (expression instanceof AndExpression) {
-                leverage = computeLeverage((AndExpression) expression);
+            else if (expression instanceof AndExpression andExpression) {
+                leverage = computeLeverage(andExpression);
             }
-            else if (expression instanceof OrExpression) {
-                leverage = computeLeverage((OrExpression) expression);
+            else if (expression instanceof OrExpression orExpression) {
+                leverage = computeLeverage(orExpression);
             }
-            else if (expression instanceof BbqBooleanLiteral) {
-                leverage = computeLeverage((BbqBooleanLiteral) expression);
+            else if (expression instanceof BbqBooleanLiteral booleanLiteral) {
+                leverage = computeLeverage(booleanLiteral);
             }
             else {
                 throw new QueryPreparationException(String.format("Unsupported BbqExpression type: %s, root expression was: %s", expression, rootExpression));
@@ -524,8 +524,7 @@ public class DefaultUpScaler implements UpScaler {
     protected void addAndCorrectionExpressions(Map<Long, BbqExpression> allExpressions, PreparationQueryStats res) {
         List<BbqExpression> candidates = new ArrayList<>(allExpressions.values());
         for (BbqExpression expression : candidates) {
-            if (expression instanceof AndExpression) {
-                AndExpression andExpression = (AndExpression) expression;
+            if (expression instanceof AndExpression andExpression) {
                 addAndCorrectionExpressions(andExpression, allExpressions, res);
             }
         }
