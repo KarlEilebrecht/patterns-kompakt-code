@@ -60,7 +60,11 @@ public class AbstractFactoryTest {
     /**
      * Test text sample
      */
-    private static final String FUNNY_TEXT = "Three little birds\n(Anton, Jenny and Laura)\neat " + "five big pigs\nwith potato wedges.";
+    private static final String FUNNY_TEXT = """
+            Three little birds
+            (Anton, Jenny and Laura)
+            eat five big pigs
+            with potato wedges.""";
 
     /**
      * name of the file to be created
@@ -73,13 +77,13 @@ public class AbstractFactoryTest {
     private static final boolean KEEP_FILES_AFTER_TEST = false;
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() throws RuntimeException {
         SYSTEM_REGISTRY.put(CONFIG_KEY1, new PlainFileDataManager());
         SYSTEM_REGISTRY.put(CONFIG_KEY2, new SecureFileDataManager());
     }
 
     @AfterClass
-    public static void setUpAfterClass() throws Exception {
+    public static void setUpAfterClass() throws RuntimeException {
         if (!KEEP_FILES_AFTER_TEST) {
             File file1 = new File(FileUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".txt");
             File file2 = new File(FileUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".sec");

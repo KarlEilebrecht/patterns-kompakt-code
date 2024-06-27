@@ -47,12 +47,12 @@ public class BuilderTest {
     private ChecksumHelper checksumHelper = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         checksumHelper = new ChecksumHelper(new Crc32ChecksumBuilder());
     }
 
     @Test
-    public void testBuilder() throws Exception {
+    public void testBuilder() {
 
         // hint: adjust the log-levels in logback.xml to DEBUG to see BUILDER working
 

@@ -78,7 +78,7 @@ public class DecoratorTest {
             usedIdsInOrder.add(nextId);
         }
 
-        LOGGER.info("Test decorator shuffling successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test decorator shuffling successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
 
         logUsedIds(usedIdsInOrder);
 

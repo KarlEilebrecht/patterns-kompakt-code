@@ -73,7 +73,7 @@ public class CoarseGrainedLockTest {
     private final AtomicReference<String> firstError = new AtomicReference<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         customerDb.clear();
         addressDb.clear();
         orderDb.clear();
@@ -122,7 +122,7 @@ public class CoarseGrainedLockTest {
 
         assertEquals("Order({id='8877', customerId='4711', orderData='POLKIJUHZGT77653FF'})", orderDb.get("9966").toString());
 
-        LOGGER.info("Test Coarse Grained Lock successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Coarse Grained Lock successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class CoarseGrainedLockTest {
 
             assertEquals(10000, valueHolder[0]);
 
-            LOGGER.info("Test Lock Stress successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+            LOGGER.info("Test Lock Stress successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
 
         }
         else {

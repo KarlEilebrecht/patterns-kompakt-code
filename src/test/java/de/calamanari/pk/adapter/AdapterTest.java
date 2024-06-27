@@ -45,7 +45,7 @@ public class AdapterTest {
     private SourceSystemPersonView sourceSystemPersonViewInstance;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws RuntimeException {
         sourceSystemPersonViewInstance = new SourceSystemPersonView(12345, "Jack", "Miller", "Special Agent, works for Secret Shopper Service");
     }
 
@@ -61,10 +61,14 @@ public class AdapterTest {
         String name = personViewAdapter.getName();
         String description = personViewAdapter.getDescription();
         boolean valid = personViewAdapter.isValid();
-        LOGGER.debug(
-                "\n=====================================================================\nID:          '{}',\nname:        '{}',\ndescription: '{}',"
-                        + "\nvalid:       {}\n=====================================================================",
-                id, name, description, (valid ? "YES" : "NO"));
+        LOGGER.debug("""
+
+                =====================================================================
+                ID:          '{}',
+                name:        '{}',
+                description: '{}',
+                valid:       {}
+                =====================================================================""", id, name, description, (valid ? "YES" : "NO"));
         assertEquals("12345", id);
         assertEquals("Jack Miller", name);
         assertEquals("Special Agent, works for Secret Shopper Service", description);

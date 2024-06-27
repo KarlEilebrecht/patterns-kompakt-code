@@ -48,7 +48,7 @@ public class StrategyTest {
     private static final Context CONTEXT = new Context();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         CONTEXT.clear();
         HashStrategy hashStrategyCrc32 = new Crc32HashStrategy();
         CONTEXT.putHashStrategy(hashStrategyCrc32.getName(), hashStrategyCrc32);

@@ -48,10 +48,9 @@ public class SimpleThreadPoolTest {
     private static final int NUMBER_OF_RUNS = 500;
 
     /**
-     * count down latch to be notified when all threads have finished their work Note: this reference will be
-     * re-initialized before each test (see setUp()) and accessed by multiple threads concurrently. To avoid that a
-     * thread during the second test gets the (exhausted) latch object from the first test, I declare the reference
-     * volatile. This has nothing to do with the latch itself!
+     * count down latch to be notified when all threads have finished their work Note: this reference will be re-initialized before each test (see setUp()) and
+     * accessed by multiple threads concurrently. To avoid that a thread during the second test gets the (exhausted) latch object from the first test, I declare
+     * the reference volatile. This has nothing to do with the latch itself!
      */
     private static volatile CountDownLatch doneCount;
 
@@ -78,7 +77,7 @@ public class SimpleThreadPoolTest {
     };
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         LOGGER.info("Test setup ... ");
         doneCount = new CountDownLatch(NUMBER_OF_RUNS);
         THREAD_NO.set(0);

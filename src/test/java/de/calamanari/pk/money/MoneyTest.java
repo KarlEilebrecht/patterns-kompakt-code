@@ -20,6 +20,7 @@
 package de.calamanari.pk.money;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -132,6 +133,8 @@ public class MoneyTest {
             caughtEx = ex;
         }
 
+        assertNull(amount);
+
         assertTrue(caughtEx instanceof ArithmeticException);
         // huh?
         // Problem 1: 1/3 has no exact representation, its a surd number
@@ -208,6 +211,7 @@ public class MoneyTest {
         catch (Exception ex) {
             caughtEx = ex;
         }
+        assertNull(sum);
         assertTrue(caughtEx instanceof IllegalArgumentException);
 
         sum = money2.add(money3.negate());

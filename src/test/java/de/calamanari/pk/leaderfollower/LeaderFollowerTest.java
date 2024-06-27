@@ -68,7 +68,8 @@ public class LeaderFollowerTest {
     /**
      * Number of characters in the palindrome
      */
-    private static final int PALINDROME_SIZE = 1_111_111; // 1GB = 1_073_741_824;
+    @SuppressWarnings("java:S125")
+    private static final int PALINDROME_SIZE = 1_111_111; // 1 GB = 1_073_741_824;
 
     /**
      * number of followers (worker threads)

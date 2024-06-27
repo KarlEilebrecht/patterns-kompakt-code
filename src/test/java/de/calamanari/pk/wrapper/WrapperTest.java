@@ -45,7 +45,7 @@ public class WrapperTest {
     private LegacyCustomerInfoProvider legacyCustomerInfoProvider = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         OldSysCustomerMgrMock testCustomerManager = null;
         OldSysHistoryMgrMock testHistoryManager = null;
 
@@ -91,7 +91,7 @@ public class WrapperTest {
 
         List<CustomerInfo> list = legacyCustomerInfoProvider.findCustomerInfosOfSegment(11);
         assertEquals(2, list.size());
-        LOGGER.debug("" + list);
+        LOGGER.debug("{}", list);
 
         List<CustomerInfo> list2 = legacyCustomerInfoProvider.findCustomerInfosOfSegment(20);
         assertEquals(1, list2.size());

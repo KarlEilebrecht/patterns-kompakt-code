@@ -104,7 +104,7 @@ public class DataTransferObjectTest {
 
         Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
-        LOGGER.info("Test without data transfer object successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test without data transfer object successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(elapsed));
 
     }
 
@@ -124,7 +124,7 @@ public class DataTransferObjectTest {
 
         Awaitility.await().pollDelay(1, TimeUnit.SECONDS).until(() -> true);
 
-        LOGGER.info("Test with data transfer object successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test with data transfer object successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(elapsed));
 
     }
 

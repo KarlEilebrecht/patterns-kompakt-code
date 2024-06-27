@@ -330,7 +330,7 @@ public class BloomBoxTest {
 
         bundle.setUpScalingConfig(usc);
 
-        LOGGER.info("\n" + runner.execute(bundle));
+        LOGGER.info("\n{}", runner.execute(bundle));
 
         assertEquals(numberOfRows, bloomBox.getDataStore().getNumberOfRows());
         assertEquals(numberOfColumns, bloomBox.getConfig().getNumberOfInsertedElementsN());
@@ -396,7 +396,7 @@ public class BloomBoxTest {
 
         assertEquals(numberOfRows, lineNumber);
 
-        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+        LOGGER.info("Feeding complete: {} entries processed.", lineNumber);
 
         feeder.close();
 
@@ -439,15 +439,16 @@ public class BloomBoxTest {
 
         assertEquals(numberOfRows, lineNumber);
 
-        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+        LOGGER.info("Feeding complete: {} entries processed.", lineNumber);
 
         feeder.close();
 
         File testBox = new File("/mytemp/birdstrikes_PB_r9999.bbx");
 
-        bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
-                + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php"
-                + "\nwith attached probabilities 0.9999");
+        bloomBox.setDescription("""
+                Bird Strikes BloomBox, based on free data provided by Wisdom Axis
+                See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php
+                with attached probabilities 0.9999""");
 
         bloomBox.saveToFile(testBox);
 
@@ -476,8 +477,8 @@ public class BloomBoxTest {
                                 .build();
         // @formatter:on
 
-        Random rand = new Random(numberOfRows);
-        DistributedRandomTable randomTable = new DistributedRandomTable(rand, numberOfRows, 10_000);
+        Random randLocal = new Random(numberOfRows);
+        DistributedRandomTable randomTable = new DistributedRandomTable(randLocal, numberOfRows, 10_000);
         LOGGER.debug("Random table complete");
 
         DataStoreFeeder feeder = bloomBox.getFeeder();
@@ -491,16 +492,17 @@ public class BloomBoxTest {
 
         assertEquals(numberOfRows, lineNumber);
 
-        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+        LOGGER.info("Feeding complete: {} entries processed.", lineNumber);
 
         feeder.close();
 
         File testBox = new File("/mytemp/birdstrikes_10Ka.bbx");
 
-        bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
-                + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php\n"
-                + "Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the\n"
-                + "value is set to 1, otherwise 0, using a random distribution across the rows.");
+        bloomBox.setDescription("""
+                Bird Strikes BloomBox, based on free data provided by Wisdom Axis
+                See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php
+                Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the
+                value is set to 1, otherwise 0, using a random distribution across the rows.""");
 
         bloomBox.saveToFile(testBox);
 
@@ -523,16 +525,14 @@ public class BloomBoxTest {
                                 .build();
         // @formatter:on
 
-        Random rand = new Random(numberOfRows);
-        DistributedRandomTable randomTable = new DistributedRandomTable(rand, numberOfRows, 10_000);
+        Random randLocal = new Random(numberOfRows);
+        DistributedRandomTable randomTable = new DistributedRandomTable(randLocal, numberOfRows, 10_000);
         LOGGER.debug("Random table complete");
 
         PbDataStoreFeeder feeder = (PbDataStoreFeeder) bloomBox.getFeeder();
 
         columnNames = null;
         lineNumber = -1;
-
-        rand = new Random(823342);
 
         // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
         Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
@@ -544,17 +544,18 @@ public class BloomBoxTest {
 
         assertEquals(numberOfRows, lineNumber);
 
-        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+        LOGGER.info("Feeding complete: {} entries processed.", lineNumber);
 
         feeder.close();
 
         File testBox = new File("/mytemp/birdstrikes_10K_PB.bbx");
 
-        bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
-                + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php\n"
-                + "Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the\n"
-                + "value is set to 1, otherwise 0, using a random distribution across the rows. Probability 1.0.\n"
-                + "One more column r25=1 with probabilitiy 0.25");
+        bloomBox.setDescription("""
+                Bird Strikes BloomBox, based on free data provided by Wisdom Axis
+                See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php
+                Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the
+                value is set to 1, otherwise 0, using a random distribution across the rows. Probability 1.0.
+                One more column r25=1 with probabilitiy 0.25""");
 
         bloomBox.saveToFile(testBox);
 
@@ -576,8 +577,8 @@ public class BloomBoxTest {
                                 .build();
         // @formatter:on
 
-        Random rand = new Random(numberOfRows);
-        DistributedRandomTable randomTable = new DistributedRandomTable(rand, numberOfRows, 10_000);
+        Random randLocal = new Random(numberOfRows);
+        DistributedRandomTable randomTable = new DistributedRandomTable(randLocal, numberOfRows, 10_000);
         LOGGER.debug("Random table complete");
 
         PbThresholdBinaryFeeder feeder = (PbThresholdBinaryFeeder) bloomBox.getFeeder();
@@ -596,17 +597,18 @@ public class BloomBoxTest {
 
         assertEquals(numberOfRows, lineNumber);
 
-        LOGGER.info("Feeding complete: " + lineNumber + " entries processed.");
+        LOGGER.info("Feeding complete: {} entries processed.", lineNumber);
 
         feeder.close();
 
         File testBox = new File("/mytemp/birdstrikes_10K_PBT.bbx");
 
-        bloomBox.setDescription("Bird Strikes BloomBox, based on free data provided by Wisdom Axis\n"
-                + "See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php\n"
-                + "Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the\n"
-                + "value is set to 1, otherwise 0, using a random distribution across the rows. Probability 1.0.\n"
-                + "One more column r25=1 with probability 0.25. During feeding all probabilities turned into a 0/1 decision.");
+        bloomBox.setDescription("""
+                Bird Strikes BloomBox, based on free data provided by Wisdom Axis
+                See https://www.wisdomaxis.com/technology/software/data/for-reports/bird-strikes-data-for-reports.php
+                Enhanced with 10000 binary colums ('occ_0' - 'occ_9999'), the number indicates the number of rows where the
+                value is set to 1, otherwise 0, using a random distribution across the rows. Probability 1.0.
+                One more column r25=1 with probability 0.25. During feeding all probabilities turned into a 0/1 decision.""");
 
         bloomBox.saveToFile(testBox);
 
@@ -643,7 +645,7 @@ public class BloomBoxTest {
     private Map<String, ?> createRow(int rowNumber, Map<Integer, ValueRequest> columnValueRequestMap) {
 
         Map<String, String> res = new HashMap<String, String>();
-
+        LOGGER.trace("Processing row {} ...", rowNumber);
         for (int i = 0; i < numberOfColumns; i++) {
 
             ValueRequest req = columnValueRequestMap.get(i);

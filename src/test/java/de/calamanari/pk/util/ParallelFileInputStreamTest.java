@@ -82,7 +82,7 @@ public class ParallelFileInputStreamTest {
     }
 
     @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
         emptyFile.delete();
         oneByteFile.delete();
         twoBytesFile.delete();

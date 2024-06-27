@@ -93,7 +93,7 @@ public class CommandTest {
 
         assertEquals("The quick brown fox jumped over the lazy duck.", textComponent.toString());
 
-        LOGGER.info("Test Commmand successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Commmand successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
     }
 
 }

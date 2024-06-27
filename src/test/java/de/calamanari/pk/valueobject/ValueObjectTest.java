@@ -43,7 +43,7 @@ public class ValueObjectTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValueObjectTest.class);
 
     @Test
-    public void testValueObject() throws Exception {
+    public void testValueObject() {
 
         // to demonstrate a value object we use fractions - you know from school :-)
         // here each fraction is immutable, calculating around with them causes

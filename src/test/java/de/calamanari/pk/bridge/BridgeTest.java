@@ -64,7 +64,7 @@ public class BridgeTest {
     private PersonDataConnectorImp multiGlomImp = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         halCorpPersonTestIds.clear();
         multiGlomPersonTestIds.clear();
         HalCorpSecurePersonDataConnectorImp imp1 = new HalCorpSecurePersonDataConnectorImp();

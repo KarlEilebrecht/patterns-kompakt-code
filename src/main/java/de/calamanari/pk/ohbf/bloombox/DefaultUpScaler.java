@@ -191,24 +191,27 @@ public class DefaultUpScaler implements UpScaler {
         List<BbqExpression> expressionsBottomUp = rootExpression.collectUniqueDepthFirst();
         Leverage leverage = null;
         for (BbqExpression expression : expressionsBottomUp) {
-            if (expression instanceof BinaryMatchExpression binaryMatch) {
+
+            switch (expression) {
+            case BinaryMatchExpression binaryMatch:
                 leverage = computeLeverage(binaryMatch);
-            }
-            else if (expression instanceof NegationExpression negation) {
+                break;
+            case NegationExpression negation:
                 leverage = computeLeverage(negation);
-            }
-            else if (expression instanceof AndExpression andExpression) {
+                break;
+            case AndExpression andExpression:
                 leverage = computeLeverage(andExpression);
-            }
-            else if (expression instanceof OrExpression orExpression) {
+                break;
+            case OrExpression orExpression:
                 leverage = computeLeverage(orExpression);
-            }
-            else if (expression instanceof BbqBooleanLiteral booleanLiteral) {
+                break;
+            case BbqBooleanLiteral booleanLiteral:
                 leverage = computeLeverage(booleanLiteral);
-            }
-            else {
+                break;
+            default:
                 throw new QueryPreparationException(String.format("Unsupported BbqExpression type: %s, root expression was: %s", expression, rootExpression));
             }
+
             LOGGER.trace("Computed leverage for BbqExpression {}: {}", expression, leverage);
         }
     }

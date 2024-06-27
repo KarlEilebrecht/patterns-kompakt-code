@@ -46,7 +46,7 @@ public class TransferObjectAssemblerTest {
     private CustomerService customerService = new CustomerService();
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
 
         // @formatter:off
 

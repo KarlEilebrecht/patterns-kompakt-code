@@ -57,7 +57,7 @@ public class ModelViewControllerTest {
     }
 
     @Test
-    public void testModelViewController() throws Exception {
+    public void testModelViewController() {
 
         // In this example we have an application for team management (some sports).
         // A team can have at most 6 members.

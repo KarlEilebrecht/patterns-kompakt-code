@@ -52,7 +52,7 @@ public class AddressValidatorServiceMock implements AddressValidatorService {
 
     @Override
     public boolean validateAddress(String street, String zipCode, String city) {
-        LOGGER.debug(this.getClass().getSimpleName() + ".validateAddress('" + street + "', '" + zipCode + "', '" + city + "') called.");
+        LOGGER.debug("{}.validateAddress('{}', '{}', '{}') called.", this.getClass().getSimpleName(), street, zipCode, city);
         LOGGER.debug("Returning {}", validationResult);
         return validationResult;
     }

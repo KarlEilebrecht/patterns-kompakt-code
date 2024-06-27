@@ -214,6 +214,7 @@ public class ObjectPoolTest {
      * @throws Exception on any error
      */
     @Test
+    @SuppressWarnings("java:S125")
     public void testWithPoolConcurrent() throws Exception {
 
         // Have a look on the runtime of the concurrent test:

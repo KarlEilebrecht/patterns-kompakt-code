@@ -98,7 +98,7 @@ public class MuhaiTest {
         // * In the package de.calamanari.pk.muhai you can find the class KeyCollisionTest
         // There you can experiment with large amounts of MUHAIs and possible collisions
 
-        List<Record> records = Stream.of(TEST_RECORDS.split("[\\r?\\n]+")).skip(1).map(RecordField::parse).collect(Collectors.toList());
+        List<Record> records = Stream.of(TEST_RECORDS.split("[\\r?\\n]+")).skip(1).map(RecordField::parse).toList();
 
         assertEquals(13, records.size());
 
@@ -117,7 +117,7 @@ public class MuhaiTest {
 
         MuhaiGenerator generator = new MuhaiGenerator(prefix);
 
-        records.forEach(record -> record.dwhId = generator.createKey(record.areaCode, record.tenant, record.level, record.pxdCode, record.provider));
+        records.forEach(mRecord -> mRecord.dwhId = generator.createKey(mRecord.areaCode, mRecord.tenant, mRecord.level, mRecord.pxdCode, mRecord.provider));
 
         Map<Long, List<Record>> groupedByDwhId = records.stream().collect(Collectors.groupingBy(Record::getDwhId));
 
@@ -136,7 +136,7 @@ public class MuhaiTest {
 
     private Map<List<Object>, List<Record>> groupRecordsBySourceFields(List<Record> records) {
         Map<List<Object>, List<Record>> groupedByAreaAndTenantAndLevelAndPxdAndProvider = records.stream()
-                .collect(Collectors.groupingBy(record -> Arrays.asList(record.areaCode, record.tenant, record.level, record.pxdCode, record.provider)));
+                .collect(Collectors.groupingBy(mRecord -> Arrays.asList(mRecord.areaCode, mRecord.tenant, mRecord.level, mRecord.pxdCode, mRecord.provider)));
         return groupedByAreaAndTenantAndLevelAndPxdAndProvider;
     }
 
@@ -206,8 +206,8 @@ public class MuhaiTest {
         StringBuilder sb = new StringBuilder();
         groupedByDwhId.forEach((dwhId, groupedRecords) -> {
             sb.append("\nDWH-ID: ").append(dwhId).append("\n").append("-------------------------------\n");
-            groupedRecords.forEach(record -> {
-                sb.append(record).append("\n");
+            groupedRecords.forEach(mRecord -> {
+                sb.append(mRecord).append("\n");
             });
         });
 
@@ -218,8 +218,8 @@ public class MuhaiTest {
         StringBuilder sb = new StringBuilder();
         groupedByDwhId.forEach((dwhId, groupedRecords) -> {
             sb.append("\nTuple: ").append(dwhId).append("\n").append("-------------------------------\n");
-            groupedRecords.forEach(record -> {
-                sb.append(record).append("\n");
+            groupedRecords.forEach(myRecord -> {
+                sb.append(myRecord).append("\n");
             });
         });
 
@@ -277,55 +277,55 @@ public class MuhaiTest {
     enum RecordField {
 
         // @formatter:off
-        GNA((sVal, record) -> {
-            record.gna = sVal;
+        GNA((sVal, mRecord) -> {
+            mRecord.gna = sVal;
         }),
         
-        AREA_CODE((sVal, record) -> {
-            record.areaCode = Integer.parseInt(sVal);
+        AREA_CODE((sVal, mRecord) -> {
+            mRecord.areaCode = Integer.parseInt(sVal);
         }),
         
-        TENANT((sVal, record) -> {
-            record.tenant = sVal;
+        TENANT((sVal, mRecord) -> {
+            mRecord.tenant = sVal;
         }),
         
-        LEVEL((sVal, record) -> {
-            record.level = Integer.parseInt(sVal);
+        LEVEL((sVal, mRecord) -> {
+            mRecord.level = Integer.parseInt(sVal);
         }),
         
-        PXD((sVal, record) -> {
-            record.pxdCode = sVal;
+        PXD((sVal, mRecord) -> {
+            mRecord.pxdCode = sVal;
         }),
         
-        PROVIDER((sVal, record) -> {
-            record.provider = sVal;
+        PROVIDER((sVal, mRecord) -> {
+            mRecord.provider = sVal;
         }),
         
-        FCOLOR((sVal, record) -> {
-            record.colorCode= Integer.parseInt(sVal);
+        FCOLOR((sVal, mRecord) -> {
+            mRecord.colorCode= Integer.parseInt(sVal);
         }),
         
-        FINCIDENT((sVal, record) -> {
-            record.incidentCode = sVal;
+        FINCIDENT((sVal, mRecord) -> {
+            mRecord.incidentCode = sVal;
         }),
         
-        OPCODE((sVal, record) -> {
-            record.opcode = Integer.parseInt(sVal);
+        OPCODE((sVal, mRecord) -> {
+            mRecord.opcode = Integer.parseInt(sVal);
         }),
         
-        FABRIC((sVal, record) -> {
+        FABRIC((sVal, mRecord) -> {
             // unused, ignore
         }),
         
-        SUM((sVal, record) -> {
-            record.sum = Long.parseLong(sVal);
+        SUM((sVal, mRecord) -> {
+            mRecord.sum = Long.parseLong(sVal);
         });
         // @formatter:on
 
         final BiConsumer<String, Record> fieldUpdater;
 
-        public void update(Record record, String[] fields) {
-            fieldUpdater.accept(fields[this.ordinal()], record);
+        public void update(Record mRecord, String[] fields) {
+            fieldUpdater.accept(fields[this.ordinal()], mRecord);
         }
 
         RecordField(BiConsumer<String, Record> fieldUpdater) {

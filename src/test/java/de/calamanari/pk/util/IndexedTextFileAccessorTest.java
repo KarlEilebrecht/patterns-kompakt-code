@@ -186,7 +186,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
         emptyFile.delete();
         onlyEmptyLines3File.delete();
         singleCharFile.delete();

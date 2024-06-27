@@ -86,7 +86,7 @@ public class CommandProcessorTest {
 
         assertEquals("The quick brown fox jumped over the lazy dog.", textComponent.toString());
 
-        LOGGER.info("Test Commmand Processor successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Commmand Processor successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
     }
 
 }

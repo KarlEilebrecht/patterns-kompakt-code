@@ -40,7 +40,7 @@ public class IdentityMapTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityMapTest.class);
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
 
         // @formatter:off
         

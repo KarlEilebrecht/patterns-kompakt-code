@@ -46,7 +46,7 @@ public class PluginTest {
     private static final boolean KEEP_FILES_AFTER_TEST = false;
 
     @AfterClass
-    public static void setUpAfterClass() throws Exception {
+    public static void setUpAfterClass() {
         if (!KEEP_FILES_AFTER_TEST) {
             File file1 = new File(FileUtils.getHomeDirectory(), "plugin-test-script.out");
             File file2 = new File(FileUtils.getHomeDirectory(), "plugin-test-script2.out");

@@ -60,7 +60,7 @@ public class FacadeTest {
     ArticleViewFacade articleViewfacade = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         articleManager = new ArticleManager();
         articleHistory = new ArticleHistory();
         articleManager.storeArticle(new Article("0815", "Pencil \"Golden Delicious\"", 7.50));
@@ -98,7 +98,7 @@ public class FacadeTest {
         assertEquals(nf.format(-1), nf.format(markDownPrice2));
         assertEquals(nf.format(-1), nf.format(markDownPrice3));
 
-        LOGGER.info("Test Facade successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Facade successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
 
     }
 

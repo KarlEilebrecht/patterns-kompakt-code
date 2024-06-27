@@ -20,6 +20,7 @@
 package de.calamanari.pk.registry;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Properties;
 
@@ -54,6 +55,8 @@ public class RegistryTest {
         catch (Exception ex) {
             caughtEx = ex;
         }
+        assertNull(registry);
+
         // framework has not yet initialized the registry
         assertEquals("Registry not initialized.", (caughtEx == null ? "" : caughtEx.getMessage()));
 

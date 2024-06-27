@@ -45,7 +45,7 @@ public class CompositeTest {
     private ArrayList<EnterpriseNode> testNodes = new ArrayList<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         testNodes.clear();
 
         StaffMember staffMember = new StaffMember("Jack", "Miller", "General Manager");
@@ -82,19 +82,19 @@ public class CompositeTest {
             // however sometimes an explicit type-check becomes necessary:
             if (enterpriseNode instanceof StaffMember) {
                 StaffMember member = (StaffMember) enterpriseNode;
-                LOGGER.debug(member.getFirstName() + " " + member.getLastName() + " is a staff member!");
+                LOGGER.debug("{} {} is a staff member!", member.getFirstName(), member.getLastName());
                 if (enterpriseNode.getParentNode() == null) {
-                    LOGGER.debug("No enterprise unit assigned for " + member.getFirstName() + " " + member.getLastName() + "!");
+                    LOGGER.debug("No enterprise unit assigned to {} {}!", member.getFirstName(), member.getLastName());
                 }
             }
             else if (enterpriseNode instanceof AbstractEnterpriseUnit) {
                 AbstractEnterpriseUnit unit = (AbstractEnterpriseUnit) enterpriseNode;
-                LOGGER.debug(unit.getName() + " is an organizational unit!");
+                LOGGER.debug("{} is an organizational unit!", unit.getName());
                 assertEquals(1, unit.getChildNodes().size());
             }
 
         }
-        LOGGER.info("Test Composite successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Composite successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
     }
 
 }

@@ -155,7 +155,7 @@ public class BoxingUtilsTest {
             Object input = testInput.input;
 
             Object output1 = BoxingUtils.boxArray(input);
-            Object wrappers = output1;
+            Object wrappers = null;
             if (output1 == input) {
                 Object output2 = BoxingUtils.unboxArray(input);
                 wrappers = BoxingUtils.boxArray(output2);

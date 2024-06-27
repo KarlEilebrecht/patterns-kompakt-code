@@ -51,7 +51,7 @@ public class UUIDTest {
     private static final int NUMBER_OF_RUNS = 25;
 
     @Test
-    public void testUUID() throws Exception {
+    public void testUUID() {
 
         LOGGER.info("Test UUID ...");
         long startTimeNanos = System.nanoTime();

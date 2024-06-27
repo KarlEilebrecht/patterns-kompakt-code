@@ -93,12 +93,12 @@ public class FlyweightTest {
     private final CounterFlyweightCarryingItem[] workingMemory = new CounterFlyweightCarryingItem[NUMBER_OF_ITEMS];
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
         memInitial = getApproxMemory();
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
             workingMemory[i] = null;
         }
@@ -118,7 +118,7 @@ public class FlyweightTest {
         // * play with the settings for NUMBER_OF_ITEMS and for the payloads until OutOfMemory-death
 
         LOGGER.info("Test Flyweight ...");
-        LOGGER.info("Approx. memory consumption BEFORE: " + getApproxMemory() + " bytes");
+        LOGGER.info("Approx. memory consumption BEFORE: {} bytes", getApproxMemory());
         long startTimeNanos = System.nanoTime();
         CounterFlyweightFactory flyweightFactory = new CounterFlyweightFactory(FLYWEIGHT_WORKLOAD, false);
         for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
@@ -133,9 +133,9 @@ public class FlyweightTest {
 
         triggerGC();
 
-        LOGGER.info("Approx. memory consumption AFTER: " + getApproxMemory() + " bytes");
+        LOGGER.info("Approx. memory consumption AFTER: {} bytes", getApproxMemory());
 
-        LOGGER.info("Test Flyweight successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test Flyweight successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(elapsed));
 
     }
 
@@ -146,7 +146,7 @@ public class FlyweightTest {
         // This is for comparing memory consumption.
 
         LOGGER.info("Test Flyweight Unshared ...");
-        LOGGER.info("Approx. memory consumption BEFORE: " + getApproxMemory() + " bytes");
+        LOGGER.info("Approx. memory consumption BEFORE: {} bytes", getApproxMemory());
         long startTimeNanos = System.nanoTime();
         CounterFlyweightFactory flyweightFactory = new CounterFlyweightFactory(FLYWEIGHT_WORKLOAD, true);
         for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
@@ -161,9 +161,9 @@ public class FlyweightTest {
 
         triggerGC();
 
-        LOGGER.info("Approx. memory consumption AFTER: " + getApproxMemory() + " bytes");
+        LOGGER.info("Approx. memory consumption AFTER: {} bytes", getApproxMemory());
 
-        LOGGER.info("Test Flyweight Unshared successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(elapsed) + " s");
+        LOGGER.info("Test Flyweight Unshared successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(elapsed));
 
     }
 

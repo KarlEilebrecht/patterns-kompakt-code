@@ -56,7 +56,7 @@ public class PessimisticOfflineLockTest {
     private final AtomicReference<String> firstError = new AtomicReference<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         customerDb.clear();
         customerDb.put("4711", new Customer("4711", "Jack", "Miller", "17, Citrus Ave", "286736", "Lemon Village"));
         firstError.set(null);

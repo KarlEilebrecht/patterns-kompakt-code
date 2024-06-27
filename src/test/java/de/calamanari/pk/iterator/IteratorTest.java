@@ -45,7 +45,7 @@ public class IteratorTest {
     private AbstractWorker rootWorker = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         Worker mary = new Worker("Mary");
         Worker john = new Worker("John");
@@ -72,7 +72,7 @@ public class IteratorTest {
         Iterator<? extends AbstractWorker> iterator = rootWorker.createSubordinatesIterator();
         while (iterator.hasNext()) {
             AbstractWorker worker = iterator.next();
-            LOGGER.info("--> " + worker);
+            LOGGER.info("--> {}", worker);
             if (sb.length() > 0) {
                 sb.append(", ");
             }

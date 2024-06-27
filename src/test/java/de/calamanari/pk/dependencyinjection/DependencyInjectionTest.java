@@ -54,7 +54,7 @@ public class DependencyInjectionTest {
             component.printData();
         }
 
-        LOGGER.info("Test dependency injection successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test dependency injection successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
     }
 
 }

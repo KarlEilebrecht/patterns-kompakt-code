@@ -20,6 +20,7 @@
 package de.calamanari.pk.servicestub;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -59,6 +60,7 @@ public class ServiceStubTest {
         catch (Exception ex) {
             caughtEx = ex;
         }
+        assertNull(account);
         assertTrue(caughtEx instanceof NullPointerException);
 
         // Problem: We cannot test AccountManager, because address validation service is
@@ -81,12 +83,14 @@ public class ServiceStubTest {
         // negative test
         serviceStub.setValidationResult(false);
         caughtEx = null;
+        account = null;
         try {
             account = accountManager.createAccount("Jack", "Miller", "4711, Angry Road", "827382", "Strange Town");
         }
         catch (Exception ex) {
             caughtEx = ex;
         }
+        assertNull(account);
         assertTrue(caughtEx instanceof AccountValidationException);
         assertEquals("Could not create account, invalid address.", caughtEx.getMessage());
 

@@ -46,7 +46,7 @@ public class MapperTest {
     private DataManager dataManager = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         dataManager = new DataManager();
         Person person1 = new Person("1", "Rudy", "Rubbish", "2001-08-17");
         Address address1 = new Address("1", "Laurel-Street 16", "71627", "Sucksburg");

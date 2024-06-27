@@ -66,7 +66,7 @@ public class ActiveObjectTest {
     private static final int NUMBER_OF_WORKERS = 2; // Runtime.getRuntime().availableProcessors()
 
     @Test
-    public void testActiveObject() throws Exception {
+    public void testActiveObject() {
 
         // HINTS:
         // * Adjust the log-level in logback.xml to DEBUG to see the ACTIVE OBJECT working
@@ -111,7 +111,7 @@ public class ActiveObjectTest {
     }
 
     @Test
-    public void testActiveObjectCancel() throws Exception {
+    public void testActiveObjectCancel() throws RuntimeException {
 
         LOGGER.info("Test Active Object cancel ...");
         long startTimeNanos = System.nanoTime();

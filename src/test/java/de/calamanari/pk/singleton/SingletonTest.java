@@ -60,7 +60,7 @@ public class SingletonTest {
     private static final boolean DELETE_LOG_FILES_AFTER_TEST = true;
 
     @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
         Tracer.shutdown(DELETE_LOG_FILES_AFTER_TEST);
         Tracer2.shutdown(DELETE_LOG_FILES_AFTER_TEST);
     }

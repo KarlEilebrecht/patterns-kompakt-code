@@ -114,13 +114,14 @@ public class GenericOHBFTest {
             if (bloom.put(i)) {
                 numberOfElementsInserted++;
             }
-            LOGGER.debug("Puts: " + (i + 1) + ", successful inserts: " + numberOfElementsInserted + ", estimatedNumberOfInserts: "
-                    + bloom.getEstimatedNumberOfElementsInserted() + ", bitsInUse: " + bloom.getNumberOfBitsUsed());
+            LOGGER.debug("Puts: {}, successful inserts: {}, estimatedNumberOfInserts: {}, bitsInUse: {}", (i + 1), numberOfElementsInserted,
+                    bloom.getEstimatedNumberOfElementsInserted(), bloom.getNumberOfBitsUsed());
             assertTrue(bloom.mightContain(i));
             assertEquals(i, numberOfElementsInserted - 2);
             assertTrue(Math.abs(bloom.getEstimatedNumberOfElementsInserted() - numberOfElementsInserted) <= 3);
-            LOGGER.debug("Puts: " + (i + 1) + ", successful inserts: " + numberOfElementsInserted + ", estimatedNumberOfInserts: "
-                    + bloom.getEstimatedNumberOfElementsInserted() + ", bitsInUse: " + bloom.getNumberOfBitsUsed());
+
+            LOGGER.debug("Puts: {}, successful inserts: {}, estimatedNumberOfInserts: {}, bitsInUse: {}", (i + 1), numberOfElementsInserted,
+                    bloom.getEstimatedNumberOfElementsInserted(), bloom.getNumberOfBitsUsed());
         }
 
         int falseClaims = 0;

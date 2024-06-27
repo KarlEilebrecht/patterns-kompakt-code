@@ -74,7 +74,7 @@ public class GatewayTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void test() {
 
         LOGGER.info("Test gateway ...");
         long startTimeNanos = System.nanoTime();

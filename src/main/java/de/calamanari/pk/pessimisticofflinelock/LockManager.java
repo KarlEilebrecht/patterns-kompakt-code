@@ -117,15 +117,17 @@ public final class LockManager {
             if (lockEntryExists) {
                 LOGGER.debug(MSG_LOCK_FOUND, Thread.currentThread().getName());
 
-                if (currentLockType == LockType.NONE) {
+                switch (currentLockType) {
+                case LockType.NONE:
                     success = tryAcquireUpdateReadLock(elementId, ownerId, newLockType, version);
-                }
-                else if (currentLockType == LockType.WRITE_LOCK) {
+                    break;
+                case LockType.WRITE_LOCK: {
                     LOGGER.debug("{}: Existing write lock detected - aborting.", Thread.currentThread().getName());
                     // there is a write lock, thus cannot acquire read lock
                     abort = true;
+                    break;
                 }
-                else {
+                default:
                     success = tryAcquireFurtherReadLock(elementId, ownerId, newLockType, lockOwnerIds, version);
                 }
             }

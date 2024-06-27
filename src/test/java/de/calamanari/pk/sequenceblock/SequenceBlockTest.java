@@ -62,10 +62,9 @@ public class SequenceBlockTest {
     private static final AtomicInteger THREAD_NO = new AtomicInteger(0);
 
     /**
-     * count down latch to be notified when all threads have finished their work Note: this reference will be
-     * re-initialized before each test (see setUp()) and accessed by multiple threads concurrently. To avoid that a
-     * thread during the second test gets the (exhausted) latch object from the first test, I declare the reference
-     * volatile. This has nothing to do with the latch itself!
+     * count down latch to be notified when all threads have finished their work Note: this reference will be re-initialized before each test (see setUp()) and
+     * accessed by multiple threads concurrently. To avoid that a thread during the second test gets the (exhausted) latch object from the first test, I declare
+     * the reference volatile. This has nothing to do with the latch itself!
      */
     private static volatile CountDownLatch doneCount;
 
@@ -117,8 +116,8 @@ public class SequenceBlockTest {
     };
 
     /**
-     * work sample, each thread processes, all using a local sequence block cache but the same simulated database (hint:
-     * SequenceBlockCache.simulatedDatabase is declared static).
+     * work sample, each thread processes, all using a local sequence block cache but the same simulated database (hint: SequenceBlockCache.simulatedDatabase is
+     * declared static).
      */
     private static final Runnable WORK_SAMPLE_LOCAL = new Runnable() {
         @Override
@@ -181,7 +180,7 @@ public class SequenceBlockTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         LOGGER.info("Test setup ... ");
         doneCount = new CountDownLatch(NUMBER_OF_RUNS);
         THREAD_NO.set(0);

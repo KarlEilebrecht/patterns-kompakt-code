@@ -55,7 +55,7 @@ public class FactoryMethodTest {
     private static final String COMPANY_KEY_FREAKLIES = "Freaklies Shop";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         SYSTEM_REGISTRY.put(COMPANY_KEY_MORONSTORE, new MoronStoreVoucherCreator());
         SYSTEM_REGISTRY.put(COMPANY_KEY_FREAKLIES, new FreakliesShopVoucherCreator());
     }
@@ -75,14 +75,14 @@ public class FactoryMethodTest {
         for (String companyKey : companies) {
             AbstractVoucherCreator creator = SYSTEM_REGISTRY.get(companyKey);
             String voucher = creator.createVoucher("Jack", "Miller", 100).toString();
-            LOGGER.info("Voucher for " + companyKey + ": " + voucher);
+            LOGGER.info("Voucher for {}: {}", companyKey, voucher);
             sb.append(voucher);
         }
 
         assertEquals("MoronStoreVoucher({id=777777, displayCode=bde31, firstName=Jack, lastName=Miller, value=100.0})"
                 + "FreakliesShopVoucher({id=S11111111, displayCode=vjm11111111, " + "firstName=Jack, lastName=Miller, value=100.0})", sb.toString());
 
-        LOGGER.info("Test Factory Method successful! Elapsed time: " + TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos) + " s");
+        LOGGER.info("Test Factory Method successful! Elapsed time: {} s", TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos));
     }
 
 }

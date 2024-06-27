@@ -48,7 +48,8 @@ import org.slf4j.spi.LoggingEventBuilder;
 // I disagree with the Sonar rule below, because mixing syntax (sometimes with eq(), sometimes without)
 // is also confusing. It is not the first time I scratched my head because I FORGOT an eq(), thus I prefer
 // to consequently write eq() when using Mockito
-@SuppressWarnings("java:S6068")
+// S3457 is ignored because the test does not need to include format specifiers
+@SuppressWarnings({ "java:S6068", "java:S3457" })
 public class LambdaSupportLoggerProxyTest {
 
     @Test

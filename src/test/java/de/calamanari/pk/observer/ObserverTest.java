@@ -78,7 +78,7 @@ public class ObserverTest {
     private final AtomicInteger observedCallDeniedCounter = new AtomicInteger();
 
     @Test
-    public void testObserver() throws Exception {
+    public void testObserver() {
 
         // Hint: set the log-level in logback.xml to DEBUG to watch OBSERVER working.
 

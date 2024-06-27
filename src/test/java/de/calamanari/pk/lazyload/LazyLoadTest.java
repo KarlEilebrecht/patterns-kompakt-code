@@ -45,7 +45,7 @@ public class LazyLoadTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(LazyLoadTest.class);
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
         PersistenceSession.addInvoice("INV-001", "154.23", "Charly Brown", "Dogstreet 12", "64354", "Pumpkin Lake");
         PersistenceSession.addInvoice("INV-002", "623.98", "Sandy Bridge", "Paganini Pines 1", "44323", "Lost Hills");
         PersistenceSession.addInvoice("INV-003", "788.11", "Song Lan Yi", "Subway 7", "72632", "Shocking");
@@ -84,6 +84,7 @@ public class LazyLoadTest {
     }
 
     @Test
+    @SuppressWarnings("java:S125")
     public void testLazyLoadShowRippleEffect() {
 
         LOGGER.info("Test Lazy Load Show Ripple Effect ...");
@@ -105,7 +106,7 @@ public class LazyLoadTest {
 
         // Hint: change the finder-call to
         // PersistenceManager.findAllInvoices(false);
-        // and compare runtimes!
+        // and compare the runtimes!
 
         String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
         LOGGER.info("Test Lazy Load Show Ripple Effect successful! Elapsed time: {} s", elapsedTimeString);
@@ -113,7 +114,7 @@ public class LazyLoadTest {
     }
 
     @Test
-    public void testLazyLoadShowClosedSessionEffect() throws Exception {
+    public void testLazyLoadShowClosedSessionEffect() {
 
         LOGGER.info("Test Lazy Load Show Closed Session Effect ...");
         long startTimeNanos = System.nanoTime();

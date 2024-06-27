@@ -327,24 +327,22 @@ public class IntermediateExpressionOptimizer {
      * @return new expression instance
      */
     private IntermediateCombinedExpression createNewCombinedExpression(IntermediateExpressionType type) {
-        if (type == IntermediateExpressionType.AND) {
+
+        switch (type) {
+        case IntermediateExpressionType.AND:
             return new IntermediateAndExpression();
-        }
-        else if (type == IntermediateExpressionType.OR) {
+        case IntermediateExpressionType.OR:
             return new IntermediateOrExpression();
-        }
-        else if (type == IntermediateExpressionType.UNION) {
+        case IntermediateExpressionType.UNION:
             return new IntermediateUnionExpression();
-        }
-        else if (type == IntermediateExpressionType.INTERSECT) {
+        case IntermediateExpressionType.INTERSECT:
             return new IntermediateIntersectExpression();
-        }
-        else if (type == IntermediateExpressionType.MINUS) {
+        case IntermediateExpressionType.MINUS:
             return new IntermediateMinusExpression();
-        }
-        else {
+        default:
             throw new IllegalArgumentException("Not applicable to type " + type);
         }
+
     }
 
     /**
