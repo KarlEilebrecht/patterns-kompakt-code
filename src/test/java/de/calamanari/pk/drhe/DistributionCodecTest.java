@@ -56,7 +56,7 @@ public class DistributionCodecTest {
             stats.consume(src, encoded);
 
         }
-        LOGGER.debug("{}", stats);
+        LOGGER.debug("\n{}", stats);
 
     }
 
@@ -83,7 +83,7 @@ public class DistributionCodecTest {
             stats.consume(src, encoded);
 
         }
-        LOGGER.debug("{}", stats);
+        LOGGER.debug("\n{}", stats);
 
     }
 
@@ -108,7 +108,7 @@ public class DistributionCodecTest {
             stats.consume(src, encoded);
 
         }
-        LOGGER.debug("{}", stats);
+        LOGGER.debug("\n{}", stats);
 
     }
 
@@ -135,7 +135,7 @@ public class DistributionCodecTest {
             stats.consume(src, encoded);
 
         }
-        LOGGER.debug("{}", stats);
+        LOGGER.debug("\n{}", stats);
 
     }
 
@@ -165,7 +165,7 @@ public class DistributionCodecTest {
             }
 
         }
-        LOGGER.info("{}", stats);
+        LOGGER.info("\n{}", stats);
 
     }
 
@@ -197,9 +197,37 @@ public class DistributionCodecTest {
             }
 
         }
-        LOGGER.info("{}", stats);
+        LOGGER.info("\n{}", stats);
 
     }
+
+    @Test
+    public void testIntDistPattern() {
+
+        // This test case creates the input of 1 million digits to be tested with the NIST test suite
+
+        StringBuilder sb = new StringBuilder();
+
+        int len = 1_000_000;
+
+        int src = 0;
+        do {
+            int encoded = DistributionCodec.encode(src);
+            LOGGER.debug("{}", encoded);
+            sb.append(binStr(encoded));
+
+            src++;
+        } while (sb.length() < len);
+
+        assertTrue(sb.length() >= len);
+
+        sb.setLength(len);
+
+        LOGGER.debug("\n{}", sb);
+
+    }
+
+
 
     @Test
     @Ignore("Long running test")
@@ -234,7 +262,7 @@ public class DistributionCodecTest {
 
         }
 
-        LOGGER.info("{}", stats);
+        LOGGER.info("\n{}", stats);
 
     }
 
@@ -274,8 +302,36 @@ public class DistributionCodecTest {
             src = src + increment;
 
         }
-        LOGGER.info("{}", stats);
+        LOGGER.info("\n{}", stats);
 
     }
+
+    @Test
+    public void testLongDistPattern() {
+
+        // This test case creates the input of 1 million digits to be tested with the NIST test suite
+
+        StringBuilder sb = new StringBuilder();
+
+        int len = 1_000_000;
+
+        long src = 0;
+        do {
+            long encoded = DistributionCodec.encode(src);
+            LOGGER.debug("{}", encoded);
+            sb.append(binStr(encoded));
+
+            src++;
+        } while (sb.length() < len);
+
+        assertTrue(sb.length() >= len);
+
+        sb.setLength(len);
+
+        LOGGER.debug("\n{}", sb);
+
+    }
+
+
 
 }

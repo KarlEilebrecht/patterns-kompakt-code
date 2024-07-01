@@ -47,20 +47,24 @@ public class DistributionCodecRandomGeneratorTest {
 
         DistributionCodecRandomGenerator rand = new DistributionCodecRandomGenerator();
 
-        long src = 0;
+        long increment = Integer.toUnsignedLong(Integer.MIN_VALUE) * 2;
 
-        for (long l = 0; l < Integer.toUnsignedLong(Integer.MIN_VALUE) * 2; l++) {
+        // to avoid biasing the src-dest distance we use the same virtual sampling
+        // we earlier applied in the distribution test
+        long ref = Long.MIN_VALUE;
+        for (long l = 0; l < increment; l++) {
             long val = rand.nextValue();
-
-            stats.consume(src, val);
+            
+            stats.consume(ref, val);
 
             if (stats.getCount() % 100_000_000 == 0) {
                 LOGGER.info("=============================================\n{}", stats);
             }
 
+            ref = ref + increment;
         }
         assertEquals(4294967296L, stats.getCount());
-        LOGGER.info("{}", stats);
+        LOGGER.info("\n{}", stats);
 
     }
 
@@ -69,16 +73,16 @@ public class DistributionCodecRandomGeneratorTest {
 
         // This test case creates the input of 1 million digits to be tested with the NIST test suite
 
-        DistributionCodecRandomGenerator rl = new DistributionCodecRandomGenerator(0);
+        DistributionCodecRandomGenerator rl = new DistributionCodecRandomGenerator(1);
 
         StringBuilder sb = new StringBuilder();
 
         int len = 1_000_000;
 
         do {
-            long encoded = rl.nextValue(32);
+            long encoded = rl.nextValue();
             LOGGER.debug("{}", encoded);
-            sb.append(binStr(encoded).substring(59));
+            sb.append(binStr(encoded));
 
         } while (sb.length() < len);
 
@@ -86,7 +90,7 @@ public class DistributionCodecRandomGeneratorTest {
 
         sb.setLength(len);
 
-        LOGGER.debug("{}", sb);
+        LOGGER.debug("\n{}", sb);
 
     }
 
