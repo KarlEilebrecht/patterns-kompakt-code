@@ -207,8 +207,15 @@ public class DistributionCodecTest {
 
         GenStats stats = new GenStats();
 
-        for (long l = 0; l < Integer.toUnsignedLong(Integer.MIN_VALUE) * 10; l++) {
-            long src = l;
+        // the long-range (2^64) is too big to iterate through all possible values
+        // thus we take a large sample (2^32 values) and use the increment 2^32
+        // this way we are sure to consider values across the whole range
+
+        long increment = Integer.toUnsignedLong(Integer.MIN_VALUE) * 2;
+
+        long src = Long.MIN_VALUE;
+        for (long l = 0; l < increment; l++) {
+
             long encoded = DistributionCodec.encode(src);
             long decoded = DistributionCodec.decode(encoded);
 
@@ -223,6 +230,7 @@ public class DistributionCodecTest {
             if (stats.getCount() % 100_000_000 == 0) {
                 LOGGER.info("=============================================\n{}", stats);
             }
+            src = src + increment;
 
         }
 
@@ -230,14 +238,23 @@ public class DistributionCodecTest {
 
     }
 
+
+
     @Test
-    @Ignore("Long running test to gather some stats")
+    @Ignore("Even longer running test")
     public void testLongCodecPreserveSign() {
 
         GenStats stats = new GenStats(true);
 
-        for (long l = Integer.MIN_VALUE; l < Integer.toUnsignedLong(Integer.MIN_VALUE) * 2; l++) {
-            long src = l;
+        // the long-range (2^64) is too big to iterate through all possible values
+        // thus we take a large sample (2^32 values) and use the increment 2^32
+        // this way we are sure to consider values across the whole range
+
+        long increment = Integer.toUnsignedLong(Integer.MIN_VALUE) * 2;
+
+        long src = Long.MIN_VALUE;
+
+        for (long l = 0; l < increment; l++) {
             long encoded = DistributionCodec.encodePreserveSign(src);
 
             assertTrue((src < 0 && encoded < 0) || (src >= 0 && encoded >= 0));
@@ -254,6 +271,7 @@ public class DistributionCodecTest {
             if (stats.getCount() % 100_000_000 == 0) {
                 LOGGER.info("=============================================\n{}", stats);
             }
+            src = src + increment;
 
         }
         LOGGER.info("{}", stats);
