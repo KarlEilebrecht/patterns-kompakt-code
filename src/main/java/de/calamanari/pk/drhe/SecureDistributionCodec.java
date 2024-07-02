@@ -25,7 +25,7 @@ import java.util.Base64;
 import de.calamanari.pk.drhe.util.BitUtils;
 
 /**
- * This implementation uses the previously created classes {@link DistributionCodec}, {@link DistributionCodecRandomGenerator} and {@link DistributionCodecHash}
+ * This implementation uses the previously created classes {@link DistributionCodec}, {@link DistributionCodecRandomGenerator} and {@link DistributionCodecHashBuilder}
  * to implement a secure symmetric encryption.
  * <p/>
  * Be aware that this is solely meant for demonstration purposes.
@@ -52,7 +52,7 @@ public class SecureDistributionCodec {
      * @return encoded data
      */
     public static byte[] encode(byte[] input, String password) {
-        long passcode = DistributionCodecHash.hash(password.getBytes(StandardCharsets.UTF_8));
+        long passcode = DistributionCodecHashBuilder.hash(password.getBytes(StandardCharsets.UTF_8));
         SecureDistributionEncoder encoder = new SecureDistributionEncoder(passcode, input);
         return encoder.encode();
     }
@@ -63,7 +63,7 @@ public class SecureDistributionCodec {
      * @return decoded data
      */
     public static byte[] decode(byte[] input, String password) {
-        long passcode = DistributionCodecHash.hash(password.getBytes(StandardCharsets.UTF_8));
+        long passcode = DistributionCodecHashBuilder.hash(password.getBytes(StandardCharsets.UTF_8));
         SecureDistributionDecoder decoder = new SecureDistributionDecoder(passcode, input);
         return decoder.decode();
     }
@@ -146,7 +146,7 @@ public class SecureDistributionCodec {
             // hash-prefix
             outputLen = outputLen + 8;
 
-            this.hash = input.length == 0 ? 0 : DistributionCodecHash.hash(input);
+            this.hash = input.length == 0 ? 0 : DistributionCodecHashBuilder.hash(input);
             this.content = input;
             this.rand = new DistributionCodecRandomGenerator(passcode ^ hash);
             this.output = new byte[outputLen];

@@ -23,7 +23,7 @@ import de.calamanari.pk.drhe.util.BitUtils;
 import de.calamanari.pk.drhe.util.PrimePatterns;
 
 /**
- * Hashing (digest) based on the {@link DistributionCodec}.
+ * Hashing (digest) based on the {@link DistributionCodec}, implementing a kind of BUILDER.
  * <p/>
  * This implementation roughly follows the <a href="https://en.wikipedia.org/wiki/Merkle%E2%80%93Damg%C3%A5rd_construction">Merkle-Damgård construction</a>
  * using the distribution methods provided by {@link DistributionCodec} to encode a single block.
@@ -45,7 +45,7 @@ import de.calamanari.pk.drhe.util.PrimePatterns;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class DistributionCodecHash {
+public class DistributionCodecHashBuilder {
 
     /**
      * This pattern is used to initialize the first half of the 16 bytes block.
@@ -119,7 +119,7 @@ public class DistributionCodecHash {
      * @return 64 bits hash value
      */
     public static final long hash(byte[] input) {
-        DistributionCodecHash instance = new DistributionCodecHash();
+        DistributionCodecHashBuilder instance = new DistributionCodecHashBuilder();
         instance.update(input);
         return instance.getHashValue();
     }
@@ -356,7 +356,7 @@ public class DistributionCodecHash {
     /**
      * Creates a new stateful instance.
      */
-    public DistributionCodecHash() {
+    public DistributionCodecHashBuilder() {
         // fresh instance
     }
 

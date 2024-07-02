@@ -38,9 +38,9 @@ import de.calamanari.pk.drhe.util.GenStats;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-public class DistributionCodecHashTest {
+public class DistributionCodecHashBuilderTest {
 
-    static final Logger LOGGER = LoggerFactory.getLogger(DistributionCodecHashTest.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(DistributionCodecHashBuilderTest.class);
 
     @Test
     @Ignore("Long running, just to gather some stats")
@@ -48,7 +48,7 @@ public class DistributionCodecHashTest {
 
         GenStats stats = new GenStats();
 
-        DistributionCodecHash digest = new DistributionCodecHash();
+        DistributionCodecHashBuilder digest = new DistributionCodecHashBuilder();
 
         for (long l = 0; l < Integer.toUnsignedLong(Integer.MIN_VALUE) * 2; l++) {
             long src = l - Integer.MAX_VALUE;
@@ -75,11 +75,11 @@ public class DistributionCodecHashTest {
 
     }
 
-    private long hash(DistributionCodecHash digest, String input, int blockNumber) {
+    private long hash(DistributionCodecHashBuilder digest, String input, int blockNumber) {
         return hash(digest, input.getBytes(StandardCharsets.UTF_8), blockNumber);
     }
 
-    private long hash(DistributionCodecHash digest, byte[] input, int blockNumber) {
+    private long hash(DistributionCodecHashBuilder digest, byte[] input, int blockNumber) {
 
         digest.update(blockNumber);
         digest.update((byte) '>');
@@ -101,9 +101,9 @@ public class DistributionCodecHashTest {
         // We take as much as we need from this file to concatenate hash values until we reach the required 1 M digits
         // to perform tests at https://mzsoltmolnar.github.io/random-bitstream-tester/
 
-        byte[] input = DistributionCodecHashTest.class.getResourceAsStream("/example-payload.png").readAllBytes();
+        byte[] input = DistributionCodecHashBuilderTest.class.getResourceAsStream("/example-payload.png").readAllBytes();
 
-        DistributionCodecHash digest = new DistributionCodecHash();
+        DistributionCodecHashBuilder digest = new DistributionCodecHashBuilder();
 
         StringBuilder sb = new StringBuilder();
 
@@ -132,7 +132,7 @@ public class DistributionCodecHashTest {
         // We subsequently hash the input and concatenate hash values until we reach the required 1 M digits
         // to perform tests at https://mzsoltmolnar.github.io/random-bitstream-tester/
 
-        DistributionCodecHash digest = new DistributionCodecHash();
+        DistributionCodecHashBuilder digest = new DistributionCodecHashBuilder();
 
         String input = "Fluffy, Tuffy and Muffy went to town. They all got killed in a terrible accident.";
 
