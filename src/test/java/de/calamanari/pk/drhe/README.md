@@ -1,7 +1,28 @@
-#### [Project Overview](../../../../../../../README.md)
-----
+####  [Project Overview](../../../../../../../README.md)
 
 # Distribution, Random, Hash, Encryption
+
+
+* [Introduction](#Introduction)
+* [Goals](#Goals)
+* [Idea](#Idea)
+* [Preparation](#Preparation)
+	* [Concept of Result Assessment](#Concept-of-Result-Assessment)
+		* [What is a pseudo-random distribution?](#What-is-a-pseudo-random-distribution)
+		* [How to quickly detect a *bad* distribution?](#How-to-quickly-detect-a-bad-distribution)
+	* [Providing a Tool Set](#Providing-a-Tool-Set)
+* [The Experiments](#The-Experiments)
+	* [Experiment I: Distribution of Numbers](#Experiment-I-Distribution-of-Numbers)
+	* [Experiment II: Random Numbers](#Experiment-II-Random-Numbers)
+	* [Experiment III: Hashing](#Experiment-III-Hashing)
+	* [Experiment IV: Encryption](#Experiment-IV-Encryption)
+* [Observations and Criticism](#Observations-and-Criticism)
+	* [Consider Godhart's Law](#Consider-Godharts-Law)
+	* [What about these two errors reported by the Random Bitstream Tester?](#What-about-these-two-errors-reported-by-the-Random-Bitstream-Tester)
+	* [Keep It Simple Stupid](#Keep-It-Simple-Stupid)
+	* [Avoid *Desparate Fixing*](#Avoid-Desparate-Fixing)
+	* [Repetition is not your friend](#Repetition-is-not-your-friend)
+
 
 ## Introduction
 
@@ -9,17 +30,22 @@ Shuffling the numbers to create a pseudo-random distribution is usually a holist
 
 However, what do you do if the range is too large and thus contains way too many elements to hold them in memory?
 
-Wouldn't it be great if there was a function `f(n)` that for any number in a given range R returns a number in R where all the mappings are unique and the output sequence for `n=1,2,3,4...` looks pseudo-random?
+Wouldn't it be great if there was a function $f(n)$ that for any number in a given range $R$ returns a number in $R$ where all the mappings are unique and the output sequence for $n=1,2,3,4...$ *looks* random?
 
 The experiments below provide an investigation of the above random distribution challenge and connected problems.
 
 ## Goals
 
-* Implement a distribution method `f(n)` to distribute a sequence `1,2,3,4, ...` of a particular range `R` to bijectively to numbers in the same range.
+* Implement a stateless distribution function $f(n)$ to distribute a sequence $1,2,3,4, ...$ of a particular range $R$ to bijectively to numbers in the same range.
+
 * Use the created distribution function to implement further utilities:
   * a random number generator
   * a hash function
   * a symmetric encryption method
+
+### Limitations
+
+The range $R$ cannot be chosen arbitrarily. It will be aligned to the common data types $byte$ ($2^8=256$ values), $short$ ($2^{16}=65,536$ values), $int$ ($2^32=4,294,967,296$ values), and $long$ ($2^64=18,446,744,073,709,551,616$ values).
 
 ### A Word of Caution
 
@@ -37,17 +63,17 @@ If this is true, then it is also true for the bit patterns of their underlying b
 
 Can we somehow leverage this intrinsic randomness to *spread disorder* over a range of numbers?
 
-I want to try to do so by only applying the operations `XOR` and `ROTATE`. 
-* Let `P[]` be a list of unique prime numbers 
-* Step 0: Set the working state `WS` to the input number.
-* Step 1: Take next prime number `P` from `P[]`.
-* Step 2: `XOR` the `WS` with `P`.
-* Step 3: Rotate the working state `WS` by the number of `1`s in `WS`.
-* Step 4: If there are more prime numbers, continue with Step 1, else end.
+I want to try to do so by only applying the operations `XOR` ($\oplus$) and `ROTATE`.
+* Let $P[]$ be a list of unique prime numbers 
+* Step 0: Set the working state $WS$ to the input number.
+* Step 1: Take next prime number $P$ from $P[]$.
+* Step 2: Perform $WS = WS \oplus P$.
+* Step 3: Rotate the working state $WS$ by the number of $1s$ in $WS$.
+* Step 4: If there are more prime numbers, continue with Step 1, else return $result:=WS$.
 
-This is a bijective mapping, no two inputs can ever result in the same output. We can `undo` the operation by simply applying `P[]` in reverse order using the same algorithm.
+This is a bijective mapping, no two inputs can ever result in the same output. We can `undo` the operation by simply applying $P[]$ in reverse order using the same algorithm.
 
-After a few rounds (number of prime numbers in `P[]`) the result should look completely unpredictable, hopefully pseudo-random.
+After a few rounds ($length(P[])$) the $result$ should look completely unpredictable, hopefully pseudo-random.
 
 ## Preparation
 
@@ -57,7 +83,7 @@ Before we start we should have a solid foundation, some tests and tools to judge
 
 When we produce a result we need a defined way to tell whether it is good or bad.
 
-With a handful of values we might be able to do this `by looking closely`, however, with millions or billions this hopeless.
+With a handful of values we might be able to do this *by looking closely*, however, with millions or billions this is hopeless.
 
 So, what are we looking for? Randomness, right? - Hmm ... :confused:
 
@@ -83,7 +109,7 @@ Drastically simplified: A sequence is pseudo-random if you cannot distinguish it
 
 Yao's work can be seen as the theoretic foundation of the [NIST test suite](https://csrc.nist.gov/Projects/Random-Bit-Generation/Documentation-and-Software).
 
-Luckily, with the [Random Bitstream Tester](https://mzsoltmolnar.github.io/random-bitstream-tester/) Zsolt Molnár provides an a JavaScript-implementation of the test suite with an easy web-interface.
+Luckily, with the [Random Bitstream Tester](https://mzsoltmolnar.github.io/random-bitstream-tester/) Zsolt Molnár provides an a JavaScript-implementation of the test suite with a simple web-interface.
 
 Although the Random Bitstream tester is no officially certified implementation, it should be sufficient for our purposes.
 
@@ -91,46 +117,46 @@ Although the Random Bitstream tester is no officially certified implementation, 
 
 Whenever we implement a new algorithm or tweak/tune an existing one we need to perform again all the tests on a large number of output bits.
 
-Obviously, this is tedious work. We cannot avoid these tests for promising candidates but maybe we can implement a `quick test` to detect and discard *bad* candidates early.
+Obviously, this is tedious work. We cannot completely avoid these tests but maybe we can implement a `quick test` to detect and discard *bad* candidates early.
 
 So, how can we observe a stream and tell that its output is *not* random?
 
 When we perform a bijective mapping of numbers of a range on the numbers in the same range, then there are a few cheap KPIs we can gather easily. 
 
-* KPI `sucDist`: The distance between two subsequently generated (mapped) numbers.
+* KPI $sucDist$: The distance between two subsequently generated (mapped) numbers.
 
-If our function `output = f(input)` creates an even and pseudo-random distribution, then the *average* of the successor distances `avgSucDist` should move towards the *average* distance of two randomly chosen numbers in that interval, if we generate (map) a large amount of mappings. If this is not the case then our distribution is not worth further investigation. 
+If our function $output = f(input)$ creates an even and pseudo-random distribution, then the *average* of the successor distances $avgSucDist$ should move towards the *average* distance of two *randomly chosen* numbers in that same interval, [given that we generate (map) a large amount of mappings](https://en.wikipedia.org/wiki/Law_of_large_numbers). If this is not the case then our distribution is not worth further investigation. 
 
-Reasoning: If `avgSucDist` is way too low or way too high, then our distribution process *must* produce an unwanted pattern. 
+Reasoning: If $avgSucDist$ is way too low or way too high, then our distribution process *must* produce some unwanted pattern. 
 
-* KPI `srcDist`: The distance between the input (sequential number) and the output (mapped number).
+* KPI $srcDist$: The distance between the input (sequential number) and the output (mapped number).
 
-When we think beyond, then also the average distance `avgSrcDist`  between the sequence number `input` and the mapped number `output = f(input)` should also move towards the average distance of two randomly selected numbers in the interval over time. It may take longer because the input is heavily biased (it is not randomly picked but a steadily increasing sequence with the increment 1). If the `avgSrcDist` is *not* moving towards (close to) the expected value, then there must be another hidden pattern disqualifying the candidate from further investigation.
+When we think beyond, then also the average distance $avgSrcDist$  between the sequence number $input$ and the mapped number $output = f(input)$ should also move towards the average distance of two randomly selected numbers in the interval over time. It may take longer because the input is heavily biased (it is not randomly picked but a steadily increasing sequence with the increment $1$). If the $avgSrcDist$ is *not* moving towards (close to) the expected value, then there must be a hidden pattern disqualifying the candidate from further investigation.
 
-**Clarification:** This test only detects bad candidates early. You cannot take these KPIs as a proof of a good observation!
+**Clarification:** This test only detects *bad* candidates early. You cannot take these KPIs as a proof of a good observation!
 
 **Conclusion:** When we observe the two KPIs while generating (mapping) a sequence of numbers we should be able to discard the majority of bad recipes, so we can concentrate on the remaining good ones. To those we still must apply the expensive tests.
 
 ### Providing a Tool Set
 
-Implementing the experiments obviously requires trial and error. This often leads to duplicated code and relicts from previous attempts. Especially, multiple implementations of the same methods (e.g., for measurement) quickly diverge which leads to errors, frustration, and fixing effort.
+Implementing the experiments will require some trial and error. This often leads to duplicated code and relicts from previous attempts. Especially, multiple implementations of the same methods (e.g., for measurement) quickly diverge which leads to errors, frustration, and fixing effort.
 
-Thus, I want to start with a small tool set encapsulating some boilerplate code which will help me to concentrate on the actual experiments later. These tools you can find in the `util` package.
+Thus, I want to start with a small set of tools encapsulating some boilerplate code which will help me to concentrate on the actual experiments later. These tools you can find in the `util` package.
 
 #### [GenStats](../../../../../../../src/main/java/de/calamanari/pk/drhe/util/GenStats.java)
 
 As explained before I want to observe the *source distance* and the *successor distance* during the experiments to use them as KPIs. Collection, minimum, maximum as well as average computation should be implemented once and once only.
 
-Depending on the size of the range `R` the source and target values stem from we can simply collect and compute based on data type `java.lang.long` (64 bits) which is very fast.
-Unfortunately, when we analyze `R=2^64` the required value sums no longer fit into a `long` and will cause overflows. Typically, we would use `BigInteger` and call it a day. But incrementing vast amounts of numbers using `BigInteger` makes data collection extremely slow (compared to incrementing `long`). `GenStats` avoids this by implementing the data collection based on `long`-values and only performing the final computation with `BigInteger`.
+Depending on the size of the range $R$ the source and target values stem from we can simply collect and compute based on data type `java.lang.long` (64 bits) which is very fast.
+Unfortunately, when we analyze $R=2^{64}$ the required value sums no longer fit into a `long` and will cause overflows. Typically, we would use now `BigInteger` and call it a day. But incrementing vast amounts of numbers using `BigInteger` makes data collection extremely slow (compared to incrementing `long`). `GenStats` avoids this by implementing the data collection based on `long`-values and only performing the final computation with `BigInteger`.
 
 *See also [GenStatsTest](../../../../../../../src/test/java/de/calamanari/pk/drhe/util/GenStatsTest.java)*
 
 #### [BitUtils](../../../../../../../src/main/java/de/calamanari/pk/drhe/util/BitUtils.java)
 
-Working with large binary values can be painful, especially in languages like Java that work with signed data types.
+Working with large binary values can be painful, especially in languages like Java that provide *signed* data types.
 
-It is complicated to compose or decompose values, and simple log statements for debugging purposes suffer from problems like unexpected accidential promotion. Of course, the JDK provides solutions in the form of auxiliary methods. But they are sometimes hard to find. This causes repeating boilerplate code for trivial operations. Bugs will sneak in quickly.
+It is complicated to compose or decompose values. Trivial log statements for debugging purposes suffer from problems like unexpected accidential promotion. Of course, the JDK provides solutions in the form of auxiliary methods. But they are sometimes hard to find. This causes repetitive boilerplate code for simple operations. Bugs will sneak in quickly.
 
 Thus, I decided to implement `BitUtils` along with some tests to help working with binaries in a natural (left-to-right) way consistently across all the related types (`byte`, `short`, `int` and `long`).
 
@@ -138,9 +164,9 @@ Thus, I decided to implement `BitUtils` along with some tests to help working wi
 
 #### [PrimePatterns](../../../../../../../src/main/java/de/calamanari/pk/drhe/util/PrimePatterns.java)
 
-To realize the idea of using prime numbers we of course need a reasonable number of prime numbers of different sizes (according to the data type we process, 8, 16, 32 and 64 bits) with certain qualities. These constants can be found in the `PrimePatterns` class.
+To realize the idea of using prime numbers we of course need a reasonable number of prime numbers of various sizes (according to the data type we process: 8, 16, 32 and 64 bits) with certain qualities. These constants can be found in the `PrimePatterns` class along with some documentation.
 
-You may wonder about the bit-flip-distances. The reasoning behind is that when we `XOR` a prime pattern with a given bit sequence (working state) then each bit ideally should change with a 50%-probability. The `PrimePatterns` have been selected considering the number on `1`s in a pattern (`0` doesn't change anything!) on the one hand and the bit-flip-distance among the prime patterns. This shall reduce the likelihood that applying the next prime subsequently will undo the effect of the previous round or amplify any pattern.
+You may wonder about the *bit-flip-distances*. The reasoning behind is that when we `XOR` a prime pattern with a given bit sequence (working state) then each bit ideally should change with a 50%-probability. The `PrimePatterns` have been selected considering the number on `1`s in a pattern (`0` doesn't change anything!) on the one hand and the bit-flip-distance among the prime patterns. This shall reduce the likelihood that applying the next prime subsequently will undo the effect of the previous round or amplify any pattern.
 
 Try it out! Use `XoRotUtils` to apply some of the patterns to a given value and `BitUtils` to check what's happening on bit-level.
 
@@ -149,9 +175,6 @@ Try it out! Use `XoRotUtils` to apply some of the patterns to a given value and 
 Previously, I explained the basic idea to combine `XOR` and bit-rotation to achieve my goal: mapping a stream of values to create a pseudo-random distribution.
 
 Because I'll need the same logic for different data types multiple times it makes sense to implement a couple of utility methods along with tests.
-
-:bulb: Did you know [`XOR`](https://en.wikipedia.org/wiki/Exclusive_or) was effectively used for data encryption *before* the name "exclusive-or" (xor) was invented?
-> [Gilbert Sandford Vernam](https://en.wikipedia.org/wiki/Gilbert_Vernam) realized in 1917, that a plaintext, combined with a key of the *same length* in the right way, would create an unbreakable encryption, known as the Vernam-Chiffre (patented 1919).
 
 The class `XoRotUtils` contains a set of functions. Besides the standard rotation I also implemented sign-preserving rotations which is useful for experiments where signed values should not change their signum.
 
@@ -168,21 +191,19 @@ Out of curiosity I also added `encodePreserveSign` and `decodePreserveSign` meth
 
 The corresponding tests (simulations) can be found in [DistributionCodecTest](../../../../../../../src/test/java/de/calamanari/pk/drhe/DistributionCodecTest.java).
 
-:bulb: For the types `int` and `long` you first need to remove the `@Ignore` statement because execution will take some time.
-
-#### Expectation
+#### Expectations
 
 Based on the formula for the average distance $d$ of two randomly selected numbers in an interval we can set some expectations:
 
 If $b$ is the number of available bits, then the range has $2^b$ elements.
 
-$avgDist = \frac{2^b}{3}$
+$Dist_{avg}$ &rarr; $\frac{2^b}{3}$ *([explanation](avgDistInRange.md))*
 
 If we preserve the sign then the effective range is just half the size, accordingly:
 
-$avgDist' = \frac{2^b}{6}$
+$Dist_{avg}'$ &rarr; $\frac{2^{b-1}}{3} = \frac{2^b}{6}$
 
-|  Type   | bit count | avgDist                                  | avgDist' (sign preserved)                |
+|  $Type$   | $bit$ $count$ | $Dist_{avg}$                                  | $Dist_{avg}'$ $(sign$ $preserved)$                |
 |---------|-----------|------------------------------------------|------------------------------------------|
 | `byte`  | $8$       | $85.\overline{3}$                        | $42.\overline{6}$                        |
 | `short` | $16$      | $21,845.\overline{3}$                    | $10,922.\overline{6}$                    |
@@ -227,7 +248,7 @@ Self-mapped:      0
 }
 ```
 
-Although the range is small we see the expected averages, which looks great. Unfortunately, with just 256 possible values in a range we cannot apply the NIST tests with the Random Bitstream Tester.
+Although the range of the `byte` data type is small, we see the expected averages, which looks great. Unfortunately, with just 256 possible values in a range we cannot apply the NIST tests with the Random Bitstream Tester.
 
 #### Results `short`
 
@@ -267,7 +288,7 @@ Self-mapped:      0
 }
 ```
 
-For the short data type the average is also very close to the expected value. Unfortunately, with just 65,536 possible values in a range we still cannot apply the NIST tests with the Random Bitstream Tester.
+For the `short` data type the averages are also very close to the expected values. Unfortunately, with just 65,536 possible values in a range we still cannot apply the NIST tests with the Random Bitstream Tester.
 
 #### Results `int`
 
@@ -307,15 +328,17 @@ Self-mapped:      0
 }
 ```
 
-For the int data type with its $2^{32}=4294967296$ we see the averages *very* close to the expected values. 
+For the `int` data type with its $2^{32}=4,294,967,296$ values we see the averages *very* close to the expected values. 
 
-This time the range is big enough, so we can eventually feed the Random Bit Stream Tester.
+This time the range is big enough, so we can feed the Random Bit Stream Tester.
 
 **`testIntDistPattern()`**
 
 ![testIntDistPattern](testIntDistPattern.png)
 
-I see two errors for the last two tests I could not find any explanation but the other tests look great. We can assume that the 1 million bits created from the sequence indeed *look random*.
+I see two errors for the last two tests I could not find any explanation for - but the other tests look great! 
+
+We can assume that the 1 million bits created from the sequence indeed *look random*.
 
 #### Results `long`
 
@@ -355,7 +378,7 @@ Self-mapped:      0
 }
 ```
 
-For the long data type with its $2^{64}=18,446,744,073,709,551,616$ the range is too big to test all elements, so I took a sample of 4 billion elements across the range.
+For the `long` data type with its $2^{64}=18,446,744,073,709,551,616$ the range is way too big to test *all* values, so I took a sample of 4 billion elements across the range.
 
 Again, we see the observed averages close to the expected values, which is a good sign for our candidate.
 
@@ -365,27 +388,33 @@ Let's feed the Random Bit Stream Tester again.
 
 ![testLongDistPattern](testLongDistPattern.png)
 
-Again I see two errors for the last two tests, and all the other tests look great. We can assume that the 1 million bits created from the sequence indeed *look random*.
+Again, I see these errors for the last two tests, and all the other tests look great. 
+
+We can assume that the 1 million bits created from the sequence indeed *look random*.
 
 #### Conclusion
 
-Apart from the last two tests who neither failed nor passed but ran into errors, I see the results as a stunning success. With only a few operations we could realize an implementation that passes complicated tests.
+Apart from the last two tests who neither failed nor passed but ran into errors, I see the results as a success. With only a few operations we could realize an implementation that passes complicated statistical tests!
 
-For the types `int` and `long` we can now assume the produced distribution is *pseudo-random*. The 64 bit version is most important because it will be the basis for subsequent experiments.
+For the types `int` and `long` we can now assume the produced distribution is *pseudo-random*.
 
 ### Experiment II: Random Numbers
 
 The next challenge shall be implementing a random number generator (64 bits) based on our distribution function.
 
-Note, that simply taking the next element, `f(1)`, `f(2)`, `f(3)`, etc. wouldn't produce what we expect from a random number generator.
-* There must be a seed, so that we can get different sequences.
+Note, that simply taking the next element, $f(1), f(2), f(3), ...$, would look random, but it wouldn't produce what we expect from a random number generator.
+* There should be a seed, so that we can produce different sequences of values.
 * It must be possible to get the same number a few times in a row.
 
-As our distribution function is bijective, it would just create a single long sequence.
+As our distribution function is bijective, it would just create a single long sequence and start over when the range is exhausted.
 
-Thus, the [DistributionCodecRandomGenerator](../../../../../../../src/main/java/de/calamanari/pk/drhe/DistributionCodecRandomGenerator.java) uses a different approach. First, I just took the last value to encode it again, but that created unwanted patterns. The current implementation works with an extra internal `noise` which evolves independently from the last returned value and gets involved to compute the next value the generator returns.
+Thus, the [DistributionCodecRandomGenerator](../../../../../../../src/main/java/de/calamanari/pk/drhe/DistributionCodecRandomGenerator.java) uses a different approach. 
+
+In a first attempt, I just took the last value to encode it again, but that quickly created unwanted patterns. Thus, the current implementation works with an extra internal `noise` which evolves independently from the last returned value and gets involved in computing the next value the generator returns.
 
 You can find the related simulations in [DistributionCodecRandomGeneratorTest](../../../../../../../src/test/java/de/calamanari/pk/drhe/DistributionCodecRandomGeneratorTest.java).
+
+#### Results
 
 **`testRandom()`**
 
@@ -405,11 +434,9 @@ Self-mapped:      0
 }
 ```
 
-:bulb: `src` is here the next *reference point*. To avoid a bias I use the same sampling as in the distribution test (range $2^{64}$ is just too big) with an increment of $2^{32}$. This only affects the statistics, not the random number generation itself.
+:bulb: To gather the typical statistics in the usual way I needed a source value `src`, which is of course unavailable. I could have used a simple sequence number `1,2,3, ...`, but that creates a heavy bias because we are not producing $2^{64}$ numbers. To avoid this problem I use the same sampling approach as in the distribution test with an increment of $2^{32}$ to compute a the *virtual* `src` that covers the full range. This only affects the statistics, not the random number generation itself.
 
 As you can see, both averages are very close to the expected ideal of $6,148,914,691,236,517,205.\overline{3}$ which makes us hope for good results in the Random Bitstream Tester!
-
-:warning: I have not investigated if and how soon this random number generator goes into a cycle.
 
 Let's feed the Random Bitstream Tester with bits from our generator.
 
@@ -419,10 +446,109 @@ Let's feed the Random Bitstream Tester with bits from our generator.
 
 Well, that looks great! Finally, all tests passed, no error this time.
 
+#### Conclusion
+
+Now we have our own home-made 64-bit random number generator.
+
+:warning: I have not investigated if and how soon this random number generator goes into a cycle.
+
 ### Experiment III: Hashing
+
+After the first experiment we have a distribution method `d(n)` which bijectively maps inputs of a range to values of the same range with pseudo-random characteristics.
+
+**Approach**
+
+* Split a source message into input blocks ($input_i$ with $i$ as block index) of the same length (add padding if required). 
+* Use $d(input_i)$ ($i=1..n$) as keys to encode the working state (same length as the block length) *over and over again* until the full input has been considered.
+* Return the working state as result, a hashcode of a fixed length.
+
+This approach roughly follows the idea of a [Merkle-Damgård-Construction](https://en.wikipedia.org/wiki/Merkle%E2%80%93Damg%C3%A5rd_construction).
+
+![merkle-damgard-construction](merkle-damgard.png)
+
+My implementation can be found in [DistributionCodecHashBuilder](../../../../../../../src/main/java/de/calamanari/pk/drhe/DistributionCodecHashBuilder.java).
+
+It generates 64-bit hashes for arbitrary inputs.
+
+In [DistributionCodecHashBuilderTest](../../../../../../../src/test/java/de/calamanari/pk/drhe/DistributionCodecHashBuilderTest.java) you can find the related tests and simulations.
+
+#### Results
+
+**`testHash()`**
+
+```
+GenStats {
+Total count:      4294967296
+
+Minimum src diff: 60509038
+Maximum src diff: 18446457744536997112
+Average src diff: 6149018109453884815
+
+Minimum suc diff: 4
+Maximum suc diff: 18446356868256507009
+Average suc diff: 6148884193996035760
+
+Self-mapped:      0
+}
+```
+
+To get an idea of the randomness of the created hashes I hashed a sample of 4 billion numbers out of the available space $2^{64}$.
+
+The two main KPIs look excellent (expected was $6,148,914,691,236,517,205.\overline{3}$). Thus we can be optimistic that the produced hashes look random.
+
+**`testRandomPatternFromHash()`**
+
+Of course a single hash value is way too short to perform any statistical tests, so I will simply hash the input and concatenate the hash values.
+
+To make the test more challenging the available input will be a single short sentence.
+> "Fluffy, Tuffy and Muffy went to town. They all got killed in a terrible accident."
+
+However, we must be sure to create different hash values in every round, so we add the current sequential number as a [hash salt](https://en.wikipedia.org/wiki/Salt_(cryptography)).
+
+Let's feed the Random Bitstream Tester one again.
+
+![testRandomPatternFromHash](testRandomPatternFromHash.png)
+
+Excellent! All tests passed, despite the fact that the input was super repetitive.
+
+#### Conclusion
+
+Now we have our own home-made 64-bit hash function.
+
+:warning: I have not investigated [collision resistance](https://en.wikipedia.org/wiki/Collision_resistance).
+
 
 ### Experiment IV: Encryption
 
+In a final experiment I want to use my previously created functions to implement [symmetric-key encryption](https://en.wikipedia.org/wiki/Symmetric-key_algorithm).
+
+The algorithm is quite simple:
+* Take some plain text and a password
+* Use the [DistributionCodecHashBuilder](../../../../../../../src/main/java/de/calamanari/pk/drhe/DistributionCodecHashBuilder.java) to turn the password into a 64-bit hash value.
+* Initialize a new instance of [DistributionCodecRandomGenerator](../../../../../../../src/main/java/de/calamanari/pk/drhe/DistributionCodecRandomGenerator.java) with the hash value as its seed.
+* Use the random generator to create a [$oneTimePad$](https://en.wikipedia.org/wiki/One-time_pad) of the same length as the input.
+* Encrypt the message with the one-time pad using `XOR`: $encrypted = message \oplus oneTimePad$.
+* Decrypt the encrypted message with the same operation: $message = encrypted \oplus oneTimePad$
+
+My implementation can be found in [SecureDistributionCodec](../../../../../../../src/main/java/de/calamanari/pk/drhe/SecureDistributionCodec.java).
+
+Please review the related simulations and tests in [SecureDistributionCodecTest](../../../../../../../src/test/java/de/calamanari/pk/drhe/SecureDistributionCodecTest.java). 
+
+#### Results
+
+**`testRandomPatternFromEncryption()`**
+
+For this test we will again use a short input sentences and repeat (concatenate) it until we get the desired length, so that the encoded version will have enough bits to feed the Random Bitstream Tester.
+
+> "The quick brown fox jumped over the lazy dog."
+
+The resulting monotone (boring) plain text will be used to challenge the encryption method. Password shall be `1234`.
+
+Let's feed the Random Bitstream Tester with the encrypted binary sequence.
+
+![testRandomPatternFromEncryption](testRandomPatternFromEncryption.png)
+
+Once again, we have passed all tests! So we can assume our encryption method creates pseudo-random output.
 
 
 ## Observations and Criticism
@@ -431,7 +557,9 @@ Well, that looks great! Finally, all tests passed, no error this time.
 
 First of all: **I plead guilty for cheating!** :wink:
 
-If you just read through this article you may wonder about the excellent test results I achieved. No worries, I did not *fake* anything. All results are real.
+If you just read through this article you may wonder about the excellent test results I achieved with minor effort. I have to admit, I have cheated a little bit. 
+
+No worries, I did not *fake* anything. All results you see are real, and you can reproduce the tests.
 
 However, I had *full control* about the selected example *inputs* for hashing and encryption resp. the *seed* of the random number generator.
 
@@ -441,22 +569,34 @@ However, I had *full control* about the selected example *inputs* for hashing an
 
 > *"When a measure becomes a target, it ceases to be a good measure."*
 
-Although it was hard work to get this NIST test suite within the Random Bitstream Tester fully green for a particular input, it was not impossible. Consequently, if you change the input (test sentences) certain tests may fail, especially the *Runs test* is painful to pass.
+Although it was hard work to get this NIST test suite within the Random Bitstream Tester fully green for a particular input, it was not impossible. Consequently, if you change the input (test sentence, seed, password, etc.) some tests may suddenly fail, especially the *Runs test* is painful to pass.
 
-It would be way harder to design an algorithm that passes all the tests for *arbitrary* inputs.
+It would be way harder to design an algorithm that passes all the tests for *arbitrary* inputs!
 
 You are invited to play with the given examples and the code to get a better understanding of this effect.
 
+### What about these two errors reported by the Random Bitstream Tester?
+
+I did not further investigate these issues. 
+
+**[Random Excursions Test](https://csrc.nist.gov/glossary/term/Random_Excursion_Test#:~:text=Random%20Excursion%20Test%20Definitions%3A%20The%20purpose%20of%20this,what%20one%20would%20expect%20for%20a%20random%20sequence.)**
+> The purpose of the this test is to determine if the number of visits to a state within a random walk exceeds what one would expect for a random sequence.
+
+As I understand this test needs a considerable number of values to be collected in memory. 
+
+I *speculate* that the errors we see occasionally may stem from internal overflows when building internal structures for further analysis. So, the test neither says passed nor failed. 
+
+Another explanation might be that for this test the required sample size should be bigger (somehow depending on the characteristics of the sample?).
+
 ### Keep It Simple Stupid
 
-The [KISS-principle](https://en.wikipedia.org/wiki/KISS_principle) also applies to our experiments. Adding too many parameters or fancy operations to your recipe make it hard to understand what is happening and why. Also, obscure implementation details may blur the impact of later optimization attempts.
+The [KISS-principle](https://en.wikipedia.org/wiki/KISS_principle) also applies to our experiments. Adding too many parameters or fancy operations to your recipe makes it hard to understand what is happening and why. Also, obscure implementations are hard to optimize.
 
 ### Avoid *Desparate Fixing*
 
-In the shady field of pseudo-randomness you often see results which seem to be *close to perfect*, only a little bit off, etc.
-Tweaking here and there seems to be so promising!
+In the shady field of pseudo-randomness you often see results which seem to be *close to perfect*, only a little bit off, etc. Tweaking here and there seems to be *so* promising!
 
-However, a personal observation during my experiments was that you should not try to fix a broken concept by adding further complex operations (another rotate, invert, whatever you like).
+However, one observation during my experiments was that you should not try to fix a broken concept by adding further complex operations (another rotate, invert, whatever you like).
 
 Whenever you do so, you just increase complexity, runtime and obscurity.
 
@@ -466,7 +606,7 @@ It is almost guaranteed that improving one end will lead to worse results on the
 
 ### Repetition is not your friend
 
-Temptation is high to try improving results by applying the same operation again: `f'(input) = f(f(input))`, like shaking a bottle again when mixing a cocktail.
+Temptation is high to try improving results by applying the same operation again: $f'(input) = f(f(input))$, like shaking a bottle again when mixing a cocktail.
 
 This is not a good idea. Sometimes, you may even see test results getting worse rather than better. 
 
@@ -474,7 +614,6 @@ This is not a good idea. Sometimes, you may even see test results getting worse 
 
 The NIST test suite among others focusses on unexpected regularities (patterns). By applying the same imperfect transformation multiple times you increase the likelihood of *amplifying* an unwanted pattern hidden in your approach.
 
-If you want to apply your recipe in multiple *rounds*, you must ensure that every subsequent run clearly differs from the previous one (either algorithmic or through parameters), like `f'(input) = g(f(input))` or `f'(input) = f(f(input, X), Y)`.
+If you want to apply your recipe in multiple *rounds*, you must ensure that every subsequent run clearly differs from the previous one (either algorithmic or through parameters), like $f'(input) = g(f(input))$ or $f'(input) = f(f(input, X), Y)$.
 
-However, any chaining or recursion will negatively impact the performance.
 

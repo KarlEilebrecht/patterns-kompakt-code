@@ -330,4 +330,32 @@ public class GenStatsTest {
         }
     }
 
+
+    @Test
+    public void testFaker() {
+
+        GenStats stats = new GenStats();
+
+        for (long l = Integer.MIN_VALUE; l <= Integer.MAX_VALUE; l++) {
+
+            int src = (int)l;
+
+            int encoded = Faker.encode(src);
+
+            stats.consume(src, encoded);
+
+            if (stats.getCount() % 100_000_000 == 0) {
+                LOGGER.info("=============================================\n{}", stats);
+            }
+
+            int decoded = Faker.decode(encoded);
+
+            assertEquals(src, decoded);
+        }
+
+        LOGGER.info("\n{}", stats);
+
+    }
+    
+
 }

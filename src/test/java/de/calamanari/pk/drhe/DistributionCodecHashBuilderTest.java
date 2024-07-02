@@ -23,7 +23,6 @@ import static de.calamanari.pk.drhe.util.BitUtils.binStr;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -50,8 +49,16 @@ public class DistributionCodecHashBuilderTest {
 
         DistributionCodecHashBuilder digest = new DistributionCodecHashBuilder();
 
-        for (long l = 0; l < Integer.toUnsignedLong(Integer.MIN_VALUE) * 2; l++) {
-            long src = l - Integer.MAX_VALUE;
+        // the long-range (2^64) is too big to iterate through all possible values
+        // thus we take a large sample (2^32 values) and use the increment 2^32
+        // this way we are sure to consider values across the whole range
+
+        long increment = Integer.toUnsignedLong(Integer.MIN_VALUE) * 2;
+
+        long src = Long.MIN_VALUE;
+
+
+        for (long l = 0; l < increment; l++) {
 
             digest.update(src);
 
@@ -67,25 +74,21 @@ public class DistributionCodecHashBuilderTest {
             if (stats.getCount() % 100_000_000 == 0) {
                 LOGGER.info("=============================================\n{}", stats);
             }
+            src = src + increment;
 
         }
 
         assertTrue(stats.getCount() > 0);
-        LOGGER.info("{}", stats);
+        LOGGER.info("\n{}", stats);
 
     }
 
-    private long hash(DistributionCodecHashBuilder digest, String input, int blockNumber) {
-        return hash(digest, input.getBytes(StandardCharsets.UTF_8), blockNumber);
-    }
+    private long hash(DistributionCodecHashBuilder digest, String input, String salt) {
 
-    private long hash(DistributionCodecHashBuilder digest, byte[] input, int blockNumber) {
-
-        digest.update(blockNumber);
-        digest.update((byte) '>');
-        digest.update(input);
-        digest.update((byte) '<');
-        digest.update(blockNumber);
+        digest.update(salt.getBytes(StandardCharsets.UTF_8));
+        digest.update('>');
+        digest.update(input.getBytes(StandardCharsets.UTF_8));
+        digest.update('<');
         long res = digest.getHashValue();
 
         LOGGER.debug("{} --> {} ({})", input, res, BitUtils.binStr(res));
@@ -94,42 +97,13 @@ public class DistributionCodecHashBuilderTest {
         return res;
     }
 
-    @Test
-    public void testCreateRandomPatternFromFile() throws Exception {
-
-        // The example payload is an uncompressed image with a lot of redundancy.
-        // We take as much as we need from this file to concatenate hash values until we reach the required 1 M digits
-        // to perform tests at https://mzsoltmolnar.github.io/random-bitstream-tester/
-
-        byte[] input = DistributionCodecHashBuilderTest.class.getResourceAsStream("/example-payload.png").readAllBytes();
-
-        DistributionCodecHashBuilder digest = new DistributionCodecHashBuilder();
-
-        StringBuilder sb = new StringBuilder();
-
-        int len = 1_000_000;
-
-        int offset = 0;
-        int blockNumber = 0;
-        do {
-            blockNumber++;
-            sb.append(binStr(hash(digest, Arrays.copyOfRange(input, offset, offset + 100), blockNumber)));
-            offset = offset + 100;
-        } while (sb.length() < len);
-
-        assertTrue(sb.length() >= len);
-
-        sb.setLength(len);
-
-        LOGGER.info("{}", sb);
-
-    }
 
     @Test
-    public void testCreateRandomPatternFromHash() {
+    public void testRandomPatternFromHash() {
 
-        // In this extreme test we take a very short sentence as a basis.
-        // We subsequently hash the input and concatenate hash values until we reach the required 1 M digits
+        // In this simulation we take a very short sentence as a basis.
+        // Because a single hash value won't be long enough
+        // we concatenate hash values until we reach the required 1 M digits
         // to perform tests at https://mzsoltmolnar.github.io/random-bitstream-tester/
 
         DistributionCodecHashBuilder digest = new DistributionCodecHashBuilder();
@@ -139,19 +113,21 @@ public class DistributionCodecHashBuilderTest {
         StringBuilder sb = new StringBuilder();
 
         int len = 1_000_000;
-        int blockNumber = 0;
+        int salt = 0;
 
         do {
-            blockNumber++;
-            sb.append(binStr(hash(digest, input, blockNumber)));
+            salt++;
+            sb.append(binStr(hash(digest, input, Integer.toHexString(salt))));
         } while (sb.length() < len);
 
         assertTrue(sb.length() >= len);
 
         sb.setLength(len);
 
-        LOGGER.info("{}", sb);
+        LOGGER.debug("\n{}", sb);
 
     }
+
+
 
 }

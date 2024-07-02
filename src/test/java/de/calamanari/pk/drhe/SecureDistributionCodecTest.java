@@ -58,7 +58,7 @@ public class SecureDistributionCodecTest {
     }
 
     @Test
-    public void testCreateRandomPattern() {
+    public void testRandomPatternFromEncryption() {
 
         // We create a very repetitive input document by concatenating the same sentence over and over again.
         // Then we encode (encrypt) it using our codec to create a bit sequence so we can perform tests
@@ -83,6 +83,6 @@ public class SecureDistributionCodecTest {
             sbResult.append(BitUtils.binStr(b));
         }
 
-        LOGGER.debug("{}", sbResult);
+        LOGGER.debug("\n{}", sbResult);
     }
 }

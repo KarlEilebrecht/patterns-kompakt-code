@@ -113,3 +113,4 @@ _Karl Eilebrecht, January 2024_
 
 * [Generic One-Hashing Bloom Filter](src/main/java/de/calamanari/pk/ohbf/README.md)
 * [The BloomBox](src/main/java/de/calamanari/pk/ohbf/bloombox/README.md)
+* [Distribution, Random, Hash, Encryption](src/test/java/de/calamanari/pk/drhe/README.md)
