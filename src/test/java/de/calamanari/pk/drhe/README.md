@@ -201,7 +201,7 @@ $Dist_{avg}$ &rarr; $\dfrac{2^b}{3}$ *([explanation](avgDistInRange.md))*
 
 If we preserve the sign then the effective range is just half the size, accordingly:
 
-$Dist_{avg}'$ &rarr; $\ddfrac{2^{b-1}}{3} = \frac{2^b}{6}$
+$Dist_{avg}'$ &rarr; $\dfrac{2^{b-1}}{3} = \frac{2^b}{6}$
 
 |  $Type$   | $bit$ $count$ | $Dist_{avg}$                                  | $Dist_{avg}'$ $(sign$ $preserved)$                |
 |---------|-----------|------------------------------------------|------------------------------------------|
