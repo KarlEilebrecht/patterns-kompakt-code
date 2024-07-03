@@ -227,8 +227,6 @@ public class DistributionCodecTest {
 
     }
 
-
-
     @Test
     @Ignore("Long running test")
     public void testLongCodec() {
@@ -265,8 +263,6 @@ public class DistributionCodecTest {
         LOGGER.info("\n{}", stats);
 
     }
-
-
 
     @Test
     @Ignore("Even longer running test")
@@ -331,7 +327,5 @@ public class DistributionCodecTest {
         LOGGER.debug("\n{}", sb);
 
     }
-
-
 
 }

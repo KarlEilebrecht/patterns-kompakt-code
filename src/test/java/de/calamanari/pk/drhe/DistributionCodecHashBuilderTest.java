@@ -57,7 +57,6 @@ public class DistributionCodecHashBuilderTest {
 
         long src = Long.MIN_VALUE;
 
-
         for (long l = 0; l < increment; l++) {
 
             digest.update(src);
@@ -97,7 +96,6 @@ public class DistributionCodecHashBuilderTest {
         return res;
     }
 
-
     @Test
     public void testRandomPatternFromHash() {
 
@@ -127,7 +125,5 @@ public class DistributionCodecHashBuilderTest {
         LOGGER.debug("\n{}", sb);
 
     }
-
-
 
 }

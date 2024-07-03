@@ -54,7 +54,7 @@ public class DistributionCodecRandomGeneratorTest {
         long ref = Long.MIN_VALUE;
         for (long l = 0; l < increment; l++) {
             long val = rand.nextValue();
-            
+
             stats.consume(ref, val);
 
             if (stats.getCount() % 100_000_000 == 0) {
