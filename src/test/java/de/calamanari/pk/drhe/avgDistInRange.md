@@ -66,7 +66,7 @@ Consequently, instead of investigating the distances in $I := [a,b]$ we can look
 
 > With $\delta := 1 - a$ 
 
-$ \Rightarrow I_{focus} = [1, n]$
+$\Rightarrow$ $I_{focus} = [1, n]$
 
 If we find and prove an average distance function $f(n)$ for $I_{focus} := [1,n]$ with $n \in \mathbb{N}$ being the number of elements in $I_{focus}$ then this function will be applicable to *every* interval in $\mathbb{Z}$ with $n$ elements.
 
@@ -76,7 +76,7 @@ First of all we need to get an impression. So, let's take a look at some example
 
 For a couple of interval sizes ($n$) we will draw all possible distances in an $n \times n$ matrix and measure the results.
 
-*Why a matrix? That's redundant!*
+*Why $n \times n$? That's redundant!*
 
 When we compute all distances in *both directions*, then the number of distances will always be $n^2$, no matter if $n$ is even or odd. This reduces complexity.
 
@@ -209,6 +209,6 @@ $\displaystyle\lim_{n \to \infty}(f(n)) = \displaystyle\lim_{n \to \infty}(\dfra
 
 ## Summary
 
-* $f(n) = \dfrac{1}{3}(n - \dfrac{1}{n})$ computes the average distance $Dist_{avg}$ of two randomly selected numbers in an interval $I := [a,b]$ with $a, b \in \mathbb{Z}$ with $n = b - a + 1$ elements. 
+* $f(n) = \dfrac{1}{3}(n - \dfrac{1}{n})$ computes the average distance $d_{avg}$ of two randomly selected numbers in an interval $I := [a,b]$ with $a, b \in \mathbb{Z}$ with $n = b - a + 1$ elements. 
 * The function's limit $\dfrac{1}{3}n$ is a convienient estimator for the *expected* average distance in large intervals.
 
