@@ -20,13 +20,13 @@ We want to find a function that quickly tells us the *average distance* of two *
 
 ## Definitions
 
-$I := [a, b]$ with $a, b \in \mathbb{Z}$ and $b \ge a$ is defined as the list of of numbers $e \in \mathbb{Z}$ with $a \le e \le b$.
+* $I := [a, b]$ with $a, b \in \mathbb{Z}$ and $b \ge a$ is defined as the list of of numbers $e \in \mathbb{Z}$ with $a \le e \le b$.
 
-For two numbers $a, b \in \mathbb{Z}$ with $b \ge a$ the *distance* $d$ of two elements $e_1, e_2 \in I$ is defined as $d(e_1,e_2) := |e_2 - e_1|$. The case $e_1 = e_2$ is valid (hence $d(e_1,e_2) \ge 0$).
+* For two numbers $a, b \in \mathbb{Z}$ with $b \ge a$ the *distance* $d$ of two elements $e_1, e_2 \in I$ is defined as $d(e_1,e_2) := |e_2 - e_1|$. The case $e_1 = e_2$ is valid (hence $d(e_1,e_2) \ge 0$).
 
-The *number of elements* $n$ in an interval $I := [a,b]$ with $a, b \in \mathbb{Z}$ and $b \ge a$ is defined as $n := b - a + 1$ (upper and lower bounds included).
+* The *number of elements* $n$ in an interval $I := [a,b]$ with $a, b \in \mathbb{Z}$ and $b \ge a$ is defined as $n := b - a + 1$ (upper and lower bounds included).
 
-The *average distance* $d_{avg}$ of two numbers in an interval $[a, b]$ in $\mathbb{Z}$ is the arithmetic mean of all *possible* distances of two numbers in that interval including the distance $0$ of a number to itself, e.g. $dist(a,a) = 0$.
+* The *average distance* $d_{avg}$ of two numbers in an interval $[a, b]$ in $\mathbb{Z}$ is the arithmetic mean of all *possible* distances of two numbers in that interval including the distance $0$ of a number to itself, e.g. $dist(a,a) = 0$.
 
 ## Goal
 
@@ -78,7 +78,7 @@ For a couple of interval sizes ($n$) we will draw all possible distances in an $
 
 *Why $n \times n$? That's redundant!*
 
-When we compute all distances in *both directions*, then the number of distances will always be $n^2$, no matter if $n$ is even or odd. This reduces complexity.
+When we compute all distances in *both directions*, then the number of distances will always be $n^2$, no matter if $n$ is even or odd. This reduces complexity of the subsequent steps.
 
 * sum of all distances: $s$
 * number of distances: $d_{cnt} := n^2$
