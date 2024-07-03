@@ -7,6 +7,9 @@ We want to find a function that quickly tells us the *average distance* of two *
 
 ## Definitions
 
+$\text{For two numbers } a, b \in \mathbb{Z} \text{ with } b \ge a \text{ the *distance* } d \text{ of two elements } e_1, e_2 \in R \text{ is defined as } d(e_1,e_2) := |e_2 - e_1| \text{. The case } e_1 = e_2 \text{ is valid (hence } d(e_1,e_2) \ge 0 \text{).}$
+
+
 For two numbers $a, b \in \mathbb{Z}$ with $b \ge a$ the *distance* $d$ of two elements $e_1, e_2 \in R$ is defined as $d(e_1,e_2) := |e_2 - e_1|$. The case $e_1 = e_2$ is valid (hence $d(e_1,e_2) \ge 0$).
 
 The *number of elements* $n$ in an interval $R := [a,b]$ with $a, b \in \mathbb{Z}$ and $b \ge a$ is defined as $n := b - a + 1$ (upper and lower bounds included).

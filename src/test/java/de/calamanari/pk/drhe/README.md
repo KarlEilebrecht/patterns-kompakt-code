@@ -73,7 +73,7 @@ I want to try to do so by only applying the operations `XOR` ($\oplus$) and `ROT
 
 This is a bijective mapping, no two inputs can ever result in the same output. We can `undo` the operation by simply applying $P[]$ in reverse order using the same algorithm.
 
-After a few rounds ($length(P[])$) the $result$ should look completely unpredictable, hopefully pseudo-random.
+After a few rounds (patterns in ($P[]$)) the $result$ should look completely unpredictable, hopefully pseudo-random.
 
 ## Preparation
 
@@ -101,7 +101,7 @@ Here are two prominent quotes that show how shady the field of pseudo-randomness
 
 > *"A random sequence is a vague notion embodying the idea of a sequence in which each term is unpredictable to the uninitiated and whose digits pass a certain number of tests, traditional with statisticians and depending on the uses to which the sequence is to be put."*
 
-[Derrick Henry Lehmer], 1941
+[Derrick Henry Lehmer](https://en.wikipedia.org/wiki/D._H._Lehmer), 1941
 
 Finally, in 1982, [Andrew Yao](https://en.wikipedia.org/wiki/Andrew_Yao) developed the concept of **Computational Indistinguishability**. In 2000 he recieved the Turing Award for his work on pseudo-randomness.
 
@@ -133,7 +133,7 @@ Reasoning: If $avgSucDist$ is way too low or way too high, then our distribution
 
 When we think beyond, then also the average distance $avgSrcDist$  between the sequence number $input$ and the mapped number $output = f(input)$ should also move towards the average distance of two randomly selected numbers in the interval over time. It may take longer because the input is heavily biased (it is not randomly picked but a steadily increasing sequence with the increment $1$). If the $avgSrcDist$ is *not* moving towards (close to) the expected value, then there must be a hidden pattern disqualifying the candidate from further investigation.
 
-**Clarification:** This test only detects *bad* candidates early. You cannot take these KPIs as a proof of a good observation!
+**Clarification:** This test only detects *bad* candidates early. You cannot take these KPIs as a proof of a good distribution!
 
 **Conclusion:** When we observe the two KPIs while generating (mapping) a sequence of numbers we should be able to discard the majority of bad recipes, so we can concentrate on the remaining good ones. To those we still must apply the expensive tests.
 
@@ -197,11 +197,11 @@ Based on the formula for the average distance $d$ of two randomly selected numbe
 
 If $b$ is the number of available bits, then the range has $2^b$ elements.
 
-$Dist_{avg}$ &rarr; $\frac{2^b}{3}$ *([explanation](avgDistInRange.md))*
+$Dist_{avg}$ &rarr; $\dfrac{2^b}{3}$ *([explanation](avgDistInRange.md))*
 
 If we preserve the sign then the effective range is just half the size, accordingly:
 
-$Dist_{avg}'$ &rarr; $\frac{2^{b-1}}{3} = \frac{2^b}{6}$
+$Dist_{avg}'$ &rarr; $\ddfrac{2^{b-1}}{3} = \frac{2^b}{6}$
 
 |  $Type$   | $bit$ $count$ | $Dist_{avg}$                                  | $Dist_{avg}'$ $(sign$ $preserved)$                |
 |---------|-----------|------------------------------------------|------------------------------------------|
