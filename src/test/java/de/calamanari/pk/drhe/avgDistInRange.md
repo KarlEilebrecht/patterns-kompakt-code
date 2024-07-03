@@ -10,9 +10,9 @@ We want to find a function that quickly tells us the *average distance* of two *
   * [Simplification](#Simplification)
 * [Analysis](#Analysis)
   * [Observations](#Observations)
-* [The series $s(n)$ for the sum of distances](#the-series--for-the-sum-of-distances)
-* [Developing a closed form of $s(n)$](#developing-a-closed-form-of)
-  * [The function $f(n)$](#the-function)
+* [The series $s(n)$ for the sum of distances](#the-series-sn-for-the-sum-of-distances)
+* [Developing a closed form of $s(n)$](#developing-a-closed-form-of-sn)
+  * [The function $f(n)$](#the-function-fn)
     * [Limit](#limit)
 * [Summary](#summary)
 
