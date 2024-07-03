@@ -71,7 +71,7 @@ I want to try to do so by only applying the operations `XOR` ($\oplus$) and `ROT
 * Step 3: Rotate the working state $WS$ by the number of $1s$ in $WS$.
 * Step 4: If there are more prime numbers, continue with Step 1, else return $result:=WS$.
 
-This is a bijective mapping, no two inputs can ever result in the same output. We can `undo` the operation by simply applying $P[]$ in reverse order using the same algorithm.
+This is a bijective mapping, no two inputs can ever result in the same output. We can *undo* the operation by simply applying $P[]$ in reverse order using the same algorithm.
 
 After a few rounds (patterns in ($P[]$)) the $result$ should look completely unpredictable, hopefully pseudo-random.
 
@@ -117,7 +117,7 @@ Although the Random Bitstream tester is no officially certified implementation, 
 
 Whenever we implement a new algorithm or tweak/tune an existing one we need to perform again all the tests on a large number of output bits.
 
-Obviously, this is tedious work. We cannot completely avoid these tests but maybe we can implement a `quick test` to detect and discard *bad* candidates early.
+Obviously, this is tedious work. We cannot completely avoid these tests but maybe we can implement a *quick test* to detect and discard *bad* candidates early.
 
 So, how can we observe a stream and tell that its output is *not* random?
 
@@ -166,7 +166,7 @@ Thus, I decided to implement `BitUtils` along with some tests to help working wi
 
 To realize the idea of using prime numbers we of course need a reasonable number of prime numbers of various sizes (according to the data type we process: 8, 16, 32 and 64 bits) with certain qualities. These constants can be found in the `PrimePatterns` class along with some documentation.
 
-You may wonder about the *bit-flip-distances*. The reasoning behind is that when we `XOR` a prime pattern with a given bit sequence (working state) then each bit ideally should change with a 50%-probability. The `PrimePatterns` have been selected considering the number on `1`s in a pattern (`0` doesn't change anything!) on the one hand and the bit-flip-distance among the prime patterns. This shall reduce the likelihood that applying the next prime subsequently will undo the effect of the previous round or amplify any pattern.
+You may wonder about the *bit-flip-distances*. The reasoning behind is that when we `XOR` a prime pattern with a given bit sequence (working state) then each bit ideally should change with a 50%-probability. The `PrimePatterns` have been selected considering the number of `1`s in a pattern (`0` doesn't change anything!) on the one hand and the bit-flip-distance among the prime patterns. This shall reduce the likelihood that applying the next prime subsequently will undo the effect of the previous round or amplify any pattern.
 
 Try it out! Use `XoRotUtils` to apply some of the patterns to a given value and `BitUtils` to check what's happening on bit-level.
 
@@ -201,7 +201,7 @@ $Dist_{avg}$ &rarr; $\dfrac{2^b}{3}$ *([explanation](avgDistInRange.md))*
 
 If we preserve the sign then the effective range is just half the size, accordingly:
 
-$Dist_{avg}'$ &rarr; $\dfrac{2^{b-1}}{3} = \frac{2^b}{6}$
+$Dist_{avg}'$ &rarr; $\dfrac{2^{b-1}}{3} = \dfrac{2^b}{6}$
 
 |  $Type$   | $bit$ $count$ | $Dist_{avg}$                                  | $Dist_{avg}'$ $(sign$ $preserved)$                |
 |---------|-----------|------------------------------------------|------------------------------------------|
@@ -526,7 +526,7 @@ The algorithm is quite simple:
 * Take some plain text and a password
 * Use the [DistributionCodecHashBuilder](../../../../../../../src/main/java/de/calamanari/pk/drhe/DistributionCodecHashBuilder.java) to turn the password into a 64-bit hash value.
 * Initialize a new instance of [DistributionCodecRandomGenerator](../../../../../../../src/main/java/de/calamanari/pk/drhe/DistributionCodecRandomGenerator.java) with the hash value as its seed.
-* Use the random generator to create a [$oneTimePad$](https://en.wikipedia.org/wiki/One-time_pad) of the same length as the input.
+* Use the random generator to create a [oneTimePad](https://en.wikipedia.org/wiki/One-time_pad) of the same length as the input.
 * Encrypt the message with the one-time pad using `XOR`: $encrypted = message \oplus oneTimePad$.
 * Decrypt the encrypted message with the same operation: $message = encrypted \oplus oneTimePad$
 
@@ -615,5 +615,10 @@ This is not a good idea. Sometimes, you may even see test results getting worse 
 The NIST test suite among others focusses on unexpected regularities (patterns). By applying the same imperfect transformation multiple times you increase the likelihood of *amplifying* an unwanted pattern hidden in your approach.
 
 If you want to apply your recipe in multiple *rounds*, you must ensure that every subsequent run clearly differs from the previous one (either algorithmic or through parameters), like $f'(input) = g(f(input))$ or $f'(input) = f(f(input, X), Y)$.
+
+### Performance
+
+I have not further investigated the runtime of my implementations. However, it should be obvious that we will not break any speed records. :wink: 
+
 
 
