@@ -45,7 +45,7 @@ The experiments below provide an investigation of the above random distribution 
 
 ### Limitations
 
-The range $R$ cannot be chosen arbitrarily. It will be aligned to the common data types $byte$ ($2^8=256$ values), $short$ ($2^{16}=65,536$ values), $int$ ($2^32=4,294,967,296$ values), and $long$ ($2^64=18,446,744,073,709,551,616$ values).
+The range $R$ cannot be chosen arbitrarily. It will be aligned to the common data types $byte$ ($2^8=256$ values), $short$ ($2^{16}=65,536$ values), $int$ ($2^{32}=4,294,967,296$ values), and $long$ ($2^{64}=18,446,744,073,709,551,616$ values).
 
 ### A Word of Caution
 

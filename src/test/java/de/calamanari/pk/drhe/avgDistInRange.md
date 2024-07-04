@@ -42,11 +42,11 @@ Moving a given interval $I := [a, b]$ by any $\delta \in \mathbb{Z}$ on the numb
 
 Be $I := [a,b]$ with $a, b \in \mathbb{Z}$ with $b \ge a$ then every number $e \in I$ can be written as $e = a+k$ or $e = b-l$ with $k, l \in \mathbb{Z}$. 
 
-Accordingly, for $e_1, e_2 \in I$: $d(e_1,e_2) := |a + k_2 - (a + k_1)|) = |b - l_2 - (b - l_1)|)$ with $k_1, k_1, k_2, l_2 \in \mathbb{Z}$.
+Accordingly, for $e_1, e_2 \in I:\\d(e_1,e_2) := |a + k_2 - (a + k_1)|) = |b - l_2 - (b - l_1)|)$ 
 
 Moving the whole interval on the number line means adding $\delta \in \mathbb{Z}$ to $a$ and $b$: $I' := [a + \delta,b + \delta]$.
 
-$\Rightarrow$ for $e_1', e_2' \in I'$: $d(e_1',e_2') := |a + \delta + k_2 - (a + \delta + k_1)|) = |b + \delta - l_2 - (b + \delta - l_1)|) = |a + k_2 - (a + k_1)|) = |b - l_2 - (b - l_1)|) = d(e_1,e_2)$.
+$\Rightarrow$ for $e_1', e_2' \in I':\\d(e_1',e_2') := |a + \delta + k_2 - (a + \delta + k_1)|) = |b + \delta - l_2 - (b + \delta - l_1)|) \\= |a + k_2 - (a + k_1)|) = |b - l_2 - (b - l_1)|) = d(e_1,e_2)$.
 
 $\blacksquare$
 
