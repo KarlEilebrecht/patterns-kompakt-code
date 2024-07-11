@@ -52,6 +52,7 @@ import de.calamanari.pk.leaderfollower.LeaderFollowerTest;
 import de.calamanari.pk.mapper.MapperTest;
 import de.calamanari.pk.modelviewcontroller.ModelViewControllerTest;
 import de.calamanari.pk.money.MoneyTest;
+import de.calamanari.pk.muhai.MuhaiTest;
 import de.calamanari.pk.nullobject.NullObjectTest;
 import de.calamanari.pk.objectpool.ObjectPoolTest;
 import de.calamanari.pk.objectpool.SimpleThreadPoolTest;
@@ -77,6 +78,11 @@ import de.calamanari.pk.wrapper.WrapperTest;
 
 /**
  * All Tests - Test suite for all pattern tests.
+ * <p/>
+ * This is a selection out of all available tests. <br/>
+ * To run also the others, first disable the suite using the Ignore annotation on this class. <br/>
+ * Then open the pom.xml and remove the sure-fire plugin configuration that limits the test execution to this suite.
+ * 
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
@@ -109,6 +115,7 @@ import de.calamanari.pk.wrapper.WrapperTest;
 	LeaderFollowerTest.class,
 	ModelViewControllerTest.class,
 	MoneyTest.class,
+	MuhaiTest.class,
 	NullObjectTest.class,
 	ObjectPoolTest.class,
 	ObserverTest.class,
