@@ -21,6 +21,7 @@ package de.calamanari.pk.muhai.collider;
 
 /**
  * This class provides convenient access to the standard policies for key collision collection.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
@@ -30,7 +31,7 @@ public class KeyCollisionCollectionPolicies {
      * This collection mode tracks the keys but not all positions (only the first collision position) and the count, so we still get insides about the key's
      * nature but no longer about the position details (histogram data unavailable)
      */
-    public static final KeyCollisionCollectionPolicy<CountingKeyCollision> COUNT_POSITIONS = new KeyCollisionCollectionPolicy<CountingKeyCollision>() {
+    public static final KeyCollisionCollectionPolicy<CountingKeyCollision> COUNT_POSITIONS = new KeyCollisionCollectionPolicy<>() {
 
         @Override
         public CountingKeyCollision createKeyCollision(long key, long... positions) {
@@ -48,7 +49,7 @@ public class KeyCollisionCollectionPolicies {
      * This light-weight collection mode only the first collision position and the count. The key will be discarded after detecting the collision. <br/>
      * This way we can get statistics, but neither of a single key not of its concrete collision distribution (histogram data unavailable).
      */
-    public static final KeyCollisionCollectionPolicy<AnonymousCountingKeyCollision> COUNT_POSITIONS_AND_DISCARD_KEYS = new KeyCollisionCollectionPolicy<AnonymousCountingKeyCollision>() {
+    public static final KeyCollisionCollectionPolicy<AnonymousCountingKeyCollision> COUNT_POSITIONS_AND_DISCARD_KEYS = new KeyCollisionCollectionPolicy<>() {
 
         @Override
         public AnonymousCountingKeyCollision createKeyCollision(long key, long... positions) {
@@ -65,7 +66,7 @@ public class KeyCollisionCollectionPolicies {
     /**
      * This heavy collection mode tracks the key and all positions, it is made for runs where we are interested in the nature of key occurrences
      */
-    public static final KeyCollisionCollectionPolicy<TrackingKeyCollision> TRACK_POSITIONS = new KeyCollisionCollectionPolicy<TrackingKeyCollision>() {
+    public static final KeyCollisionCollectionPolicy<TrackingKeyCollision> TRACK_POSITIONS = new KeyCollisionCollectionPolicy<>() {
 
         @Override
         public TrackingKeyCollision createKeyCollision(long key, long... positions) {
@@ -85,7 +86,7 @@ public class KeyCollisionCollectionPolicies {
      * <p>
      * Recommended default
      */
-    public static final KeyCollisionCollectionPolicy<AnonymousTrackingKeyCollision> TRACK_POSITIONS_AND_DISCARD_KEYS = new KeyCollisionCollectionPolicy<AnonymousTrackingKeyCollision>() {
+    public static final KeyCollisionCollectionPolicy<AnonymousTrackingKeyCollision> TRACK_POSITIONS_AND_DISCARD_KEYS = new KeyCollisionCollectionPolicy<>() {
 
         @Override
         public AnonymousTrackingKeyCollision createKeyCollision(long key, long... positions) {

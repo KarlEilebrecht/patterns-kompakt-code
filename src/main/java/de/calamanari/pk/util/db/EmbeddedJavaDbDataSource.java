@@ -136,6 +136,7 @@ public final class EmbeddedJavaDbDataSource implements DataSource {
     /**
      * Creates the only instance on demand
      */
+    @SuppressWarnings("resource")
     private EmbeddedJavaDbDataSource() {
         try {
             ClassLoader loader = URLClassLoader.newInstance(new URL[] { findDerbyJar() });

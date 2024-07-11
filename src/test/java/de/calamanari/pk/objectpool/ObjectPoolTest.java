@@ -41,6 +41,7 @@ import de.calamanari.pk.util.TimeUtils;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
+@SuppressWarnings("resource")
 public class ObjectPoolTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectPoolTest.class);

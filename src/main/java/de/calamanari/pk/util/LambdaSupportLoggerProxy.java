@@ -84,6 +84,7 @@ public class LambdaSupportLoggerProxy implements Logger {
 
     /**
      * Creates a wrapper for the underlying logger with extended interface
+     * 
      * @param logger underlying logger for delegation
      * @return wrapper (enriched logger)
      */
@@ -93,6 +94,7 @@ public class LambdaSupportLoggerProxy implements Logger {
 
     /**
      * This method performs a "cast" of the given supplier lambda expression to java.lang.Object to prepare it for later conditional execution by the logger.
+     * 
      * @param supplier lambda expression (null will be handled gracefully)
      * @return supplier
      */
@@ -108,6 +110,7 @@ public class LambdaSupportLoggerProxy implements Logger {
 
     // delegate all existing methods to the original logger
 
+    @Override
     public String getName() {
         return logger.getName();
     }
@@ -117,30 +120,37 @@ public class LambdaSupportLoggerProxy implements Logger {
         return logger.makeLoggingEventBuilder(level);
     }
 
+    @Override
     public boolean isTraceEnabled() {
         return logger.isTraceEnabled();
     }
 
+    @Override
     public void trace(String msg) {
         logger.trace(msg);
     }
 
+    @Override
     public void trace(String format, Object arg1) {
         logger.trace(format, eval(format, arg1, 1, isTraceEnabled()));
     }
 
+    @Override
     public void trace(String format, Object arg1, Object arg2) {
         logger.trace(format, eval(format, arg1, 1, isTraceEnabled()), eval(format, arg2, 2, isTraceEnabled()));
     }
 
+    @Override
     public void trace(String format, Object... arguments) {
         logger.trace(format, eval(format, arguments, 1, isTraceEnabled()));
     }
 
+    @Override
     public void trace(String msg, Throwable t) {
         logger.trace(msg, t);
     }
 
+    @Override
     public boolean isTraceEnabled(Marker marker) {
         return logger.isTraceEnabled(marker);
     }
@@ -150,70 +160,87 @@ public class LambdaSupportLoggerProxy implements Logger {
         return logger.atTrace();
     }
 
+    @Override
     public void trace(Marker marker, String msg) {
         logger.trace(marker, msg);
     }
 
+    @Override
     public void trace(Marker marker, String format, Object arg1) {
         logger.trace(marker, format, eval(format, arg1, 1, isTraceEnabled(marker)));
     }
 
+    @Override
     public void trace(Marker marker, String format, Object arg1, Object arg2) {
         logger.trace(marker, format, eval(format, arg1, 1, isTraceEnabled(marker)), eval(format, arg2, 2, isTraceEnabled(marker)));
     }
 
+    @Override
     public void trace(Marker marker, String format, Object... argArray) {
         logger.trace(marker, format, eval(format, argArray, 1, isTraceEnabled(marker)));
     }
 
+    @Override
     public void trace(Marker marker, String msg, Throwable t) {
         logger.trace(marker, msg, t);
     }
 
+    @Override
     public boolean isDebugEnabled() {
         return logger.isDebugEnabled();
     }
 
+    @Override
     public void debug(String msg) {
         logger.debug(msg);
     }
 
+    @Override
     public void debug(String format, Object arg1) {
         logger.debug(format, eval(format, arg1, 1, isDebugEnabled()));
     }
 
+    @Override
     public void debug(String format, Object arg1, Object arg2) {
         logger.debug(format, eval(format, arg1, 1, isDebugEnabled()), eval(format, arg2, 2, isDebugEnabled()));
     }
 
+    @Override
     public void debug(String format, Object... arguments) {
         logger.debug(format, eval(format, arguments, 1, isDebugEnabled()));
     }
 
+    @Override
     public void debug(String msg, Throwable t) {
         logger.debug(msg, t);
     }
 
+    @Override
     public boolean isDebugEnabled(Marker marker) {
         return logger.isDebugEnabled(marker);
     }
 
+    @Override
     public void debug(Marker marker, String msg) {
         logger.debug(marker, msg);
     }
 
+    @Override
     public void debug(Marker marker, String format, Object arg1) {
         logger.debug(marker, format, eval(format, arg1, 1, isDebugEnabled(marker)));
     }
 
+    @Override
     public void debug(Marker marker, String format, Object arg1, Object arg2) {
         logger.debug(marker, format, eval(format, arg1, 1, isDebugEnabled(marker)), eval(format, arg2, 2, isDebugEnabled(marker)));
     }
 
+    @Override
     public void debug(Marker marker, String format, Object... arguments) {
         logger.debug(marker, format, eval(format, arguments, 1, isDebugEnabled(marker)));
     }
 
+    @Override
     public void debug(Marker marker, String msg, Throwable t) {
         logger.debug(marker, msg, t);
     }
@@ -223,50 +250,62 @@ public class LambdaSupportLoggerProxy implements Logger {
         return logger.atDebug();
     }
 
+    @Override
     public boolean isInfoEnabled() {
         return logger.isInfoEnabled();
     }
 
+    @Override
     public void info(String msg) {
         logger.info(msg);
     }
 
+    @Override
     public void info(String format, Object arg1) {
         logger.info(format, eval(format, arg1, 1, isInfoEnabled()));
     }
 
+    @Override
     public void info(String format, Object arg1, Object arg2) {
         logger.info(format, eval(format, arg1, 1, isInfoEnabled()), eval(format, arg2, 2, isInfoEnabled()));
     }
 
+    @Override
     public void info(String format, Object... arguments) {
         logger.info(format, eval(format, arguments, 1, isInfoEnabled()));
     }
 
+    @Override
     public void info(String msg, Throwable t) {
         logger.info(msg, t);
     }
 
+    @Override
     public boolean isInfoEnabled(Marker marker) {
         return logger.isInfoEnabled(marker);
     }
 
+    @Override
     public void info(Marker marker, String msg) {
         logger.info(marker, msg);
     }
 
+    @Override
     public void info(Marker marker, String format, Object arg1) {
         logger.info(marker, format, eval(format, arg1, 1, isInfoEnabled(marker)));
     }
 
+    @Override
     public void info(Marker marker, String format, Object arg1, Object arg2) {
         logger.info(marker, format, eval(format, arg1, 1, isInfoEnabled(marker)), eval(format, arg2, 2, isInfoEnabled(marker)));
     }
 
+    @Override
     public void info(Marker marker, String format, Object... arguments) {
         logger.info(marker, format, eval(format, arguments, 1, isInfoEnabled(marker)));
     }
 
+    @Override
     public void info(Marker marker, String msg, Throwable t) {
         logger.info(marker, msg, t);
     }
@@ -276,50 +315,62 @@ public class LambdaSupportLoggerProxy implements Logger {
         return logger.atInfo();
     }
 
+    @Override
     public boolean isWarnEnabled() {
         return logger.isWarnEnabled();
     }
 
+    @Override
     public void warn(String msg) {
         logger.warn(msg);
     }
 
+    @Override
     public void warn(String format, Object arg1) {
         logger.warn(format, eval(format, arg1, 1, isWarnEnabled()));
     }
 
+    @Override
     public void warn(String format, Object arg1, Object arg2) {
         logger.warn(format, eval(format, arg1, 1, isWarnEnabled()), eval(format, arg2, 2, isWarnEnabled()));
     }
 
+    @Override
     public void warn(String format, Object... arguments) {
         logger.warn(format, eval(format, arguments, 1, isWarnEnabled()));
     }
 
+    @Override
     public void warn(String msg, Throwable t) {
         logger.warn(msg, t);
     }
 
+    @Override
     public boolean isWarnEnabled(Marker marker) {
         return logger.isWarnEnabled(marker);
     }
 
+    @Override
     public void warn(Marker marker, String msg) {
         logger.warn(marker, msg);
     }
 
+    @Override
     public void warn(Marker marker, String format, Object arg1) {
         logger.warn(marker, format, eval(format, arg1, 1, isWarnEnabled(marker)));
     }
 
+    @Override
     public void warn(Marker marker, String format, Object arg1, Object arg2) {
         logger.warn(marker, format, eval(format, arg1, 1, isWarnEnabled(marker)), eval(format, arg2, 2, isWarnEnabled(marker)));
     }
 
+    @Override
     public void warn(Marker marker, String format, Object... arguments) {
         logger.warn(marker, format, eval(format, arguments, 1, isWarnEnabled(marker)));
     }
 
+    @Override
     public void warn(Marker marker, String msg, Throwable t) {
         logger.warn(marker, msg, t);
     }
@@ -329,50 +380,62 @@ public class LambdaSupportLoggerProxy implements Logger {
         return logger.atWarn();
     }
 
+    @Override
     public boolean isErrorEnabled() {
         return logger.isErrorEnabled();
     }
 
+    @Override
     public void error(String msg) {
         logger.error(msg);
     }
 
+    @Override
     public void error(String format, Object arg1) {
         logger.error(format, eval(format, arg1, 1, isErrorEnabled()));
     }
 
+    @Override
     public void error(String format, Object arg1, Object arg2) {
         logger.error(format, eval(format, arg1, 1, isErrorEnabled()), eval(format, arg2, 2, isErrorEnabled()));
     }
 
+    @Override
     public void error(String format, Object... arguments) {
         logger.error(format, eval(format, arguments, 1, isErrorEnabled()));
     }
 
+    @Override
     public void error(String msg, Throwable t) {
         logger.error(msg, t);
     }
 
+    @Override
     public boolean isErrorEnabled(Marker marker) {
         return logger.isErrorEnabled(marker);
     }
 
+    @Override
     public void error(Marker marker, String msg) {
         logger.error(marker, msg);
     }
 
+    @Override
     public void error(Marker marker, String format, Object arg1) {
         logger.error(marker, format, eval(format, arg1, 1, isErrorEnabled(marker)));
     }
 
+    @Override
     public void error(Marker marker, String format, Object arg1, Object arg2) {
         logger.error(marker, format, eval(format, arg1, 1, isErrorEnabled(marker)), eval(format, arg2, 2, isErrorEnabled(marker)));
     }
 
+    @Override
     public void error(Marker marker, String format, Object... arguments) {
         logger.error(marker, format, eval(format, arguments, 1, isErrorEnabled(marker)));
     }
 
+    @Override
     public void error(Marker marker, String msg, Throwable t) {
         logger.error(marker, msg, t);
     }
@@ -386,6 +449,7 @@ public class LambdaSupportLoggerProxy implements Logger {
 
     /**
      * Tests the given object. If it is a supplier, it will be evaluated to return the result.
+     * 
      * @param format original message for debugging
      * @param arg the possible supplier to be evaluated
      * @param argNumber position of the argument in the method call for debugging
@@ -410,6 +474,7 @@ public class LambdaSupportLoggerProxy implements Logger {
 
     /**
      * Tests all given array elements (non-recursive) and calls {@link #eval(String, Object, int, boolean)} to potentially convert them.
+     * 
      * @param format original message for debugging
      * @param args array with arguments, will be modified if a supplier needed to be evaluated
      * @param argNumber position of the arguments array in the method call for debugging

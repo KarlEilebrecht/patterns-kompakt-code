@@ -123,6 +123,7 @@ public abstract class AbstractThreadedSocketServer extends AbstractConsoleServer
     }
 
     @Override
+    @SuppressWarnings("resource")
     protected void doRequestProcessing() {
         while (serverSocket != null) {
             try {

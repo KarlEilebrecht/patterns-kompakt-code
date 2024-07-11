@@ -127,6 +127,7 @@ public final class LockManager {
                     abort = true;
                     break;
                 }
+                // $CASES-OMITTED$
                 default:
                     success = tryAcquireFurtherReadLock(elementId, ownerId, newLockType, lockOwnerIds, version);
                 }

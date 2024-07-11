@@ -87,6 +87,7 @@ public final class ExternalProcessManager {
      * @param commandLineArgs optional arguments
      * @throws ExternalProcessManagementException on any error during start
      */
+    @SuppressWarnings("resource")
     public synchronized void startExternal(Class<?> mainClass, Logger logger, String... commandLineArgs) throws ExternalProcessManagementException {
 
         if (mainClass == null) {

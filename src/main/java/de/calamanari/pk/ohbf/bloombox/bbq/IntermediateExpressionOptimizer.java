@@ -339,6 +339,7 @@ public class IntermediateExpressionOptimizer {
             return new IntermediateIntersectExpression();
         case IntermediateExpressionType.MINUS:
             return new IntermediateMinusExpression();
+        // $CASES-OMITTED$
         default:
             throw new IllegalArgumentException("Not applicable to type " + type);
         }

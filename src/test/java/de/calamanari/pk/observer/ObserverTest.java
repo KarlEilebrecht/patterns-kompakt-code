@@ -43,6 +43,7 @@ import de.calamanari.pk.util.tpl.ThroughputListener;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("resource")
 public class ObserverTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ObserverTest.class);

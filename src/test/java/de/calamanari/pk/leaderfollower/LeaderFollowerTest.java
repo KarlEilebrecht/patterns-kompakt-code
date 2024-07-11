@@ -46,6 +46,7 @@ import de.calamanari.pk.util.itfa.ItfaConfiguration;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("resource")
 public class LeaderFollowerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LeaderFollowerTest.class);

@@ -336,7 +336,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
      * @param chunkFile file, a buffered reader shall be created for
      */
     // suppressing this try-with-resource sonar rule because this method is intended to supply open resources
-    @SuppressWarnings("java:S2093")
+    @SuppressWarnings({ "java:S2093", "resource" })
     private void openAndRegisterChunkReader(File chunkFile) {
         FileInputStream fis = null;
         BufferedReader res = null;

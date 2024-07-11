@@ -53,6 +53,7 @@ import de.calamanari.pk.util.SimpleFixedLengthBitVector;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("resource")
 public class BloomBoxTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BloomBoxTest.class);
 
@@ -644,7 +645,7 @@ public class BloomBoxTest {
      */
     private Map<String, ?> createRow(int rowNumber, Map<Integer, ValueRequest> columnValueRequestMap) {
 
-        Map<String, String> res = new HashMap<String, String>();
+        Map<String, String> res = new HashMap<>();
         LOGGER.trace("Processing row {} ...", rowNumber);
         for (int i = 0; i < numberOfColumns; i++) {
 

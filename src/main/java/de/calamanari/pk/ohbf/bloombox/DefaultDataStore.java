@@ -285,6 +285,7 @@ public class DefaultDataStore implements BloomBoxDataStore {
      * 
      * @param queryDelegate the delegate to be dispatched in parallel mode
      */
+    @SuppressWarnings("resource")
     protected <Q extends QueryDelegate<Q>> void dispatchParallel(Q queryDelegate) {
         if (NUMBER_OF_CORES > 1 && numberOfRows > NUMBER_OF_CORES) {
             LOGGER.debug("Executing query delegate {} with {} threads ...", queryDelegate, NUMBER_OF_CORES);
