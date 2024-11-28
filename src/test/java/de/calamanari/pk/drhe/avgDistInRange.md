@@ -79,7 +79,7 @@ First of all we need to get an impression. So, let's take a look at some example
 
 For a couple of interval sizes ($n$) we will draw all possible distances in an $n \times n$ matrix and measure the results.
 
-*Why $n \times n$? That's redundant!*
+*Why* $n \times n$*? That's redundant!*
 
 When we compute all distances in *both directions*, then the number of distances will always be $n^2$, no matter if $n$ is even or odd. This reduces complexity of the subsequent steps.
 
