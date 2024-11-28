@@ -517,6 +517,7 @@ Now we have our own home-made 64-bit hash function.
 
 :warning: I have not investigated [collision resistance](https://en.wikipedia.org/wiki/Collision_resistance).
 
+:bulb: If you are interested in this topic, [:point_right: here](../../../../../../../doc/CMN%20Hashing.pptx) you can find an illustrated slide deck (German only) about hashing and its numerous use cases with a few more links for further reading at the end of the presentation.
 
 ### Experiment IV: Encryption
 
