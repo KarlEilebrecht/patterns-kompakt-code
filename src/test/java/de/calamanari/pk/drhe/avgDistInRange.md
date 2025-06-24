@@ -217,4 +217,4 @@ $\displaystyle\lim_{n \to \infty}(f(n)) = \displaystyle\lim_{n \to \infty}(\dfra
 
 ## Epilogue
 
-Later, I found this [stack exchange discussion](https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment) about the more generic question about the average distance of two randomly chosen points on a line segment of length $L$. Using various approaches all participants eventually come to the same conclusion: $\dfrac{1}{3}L$. This average distance estimator applies to $\mathbb{R}$ (not only $\mathbb{Z}$).
+Later, I found this [stack exchange discussion](https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment) about the more generic question regarding the average distance of two randomly chosen points on a line segment of length $L$. Using various approaches all participants eventually come to the same conclusion: $\dfrac{1}{3}L$. This average distance estimator applies to $\mathbb{R}$ (not only $\mathbb{Z}$).
