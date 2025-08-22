@@ -109,8 +109,9 @@ _Karl Eilebrecht, January 2024_
 * [Service Stub (Mock)](src/test/java/de/calamanari/pk/servicestub/README.md)
 * [Value Object](src/test/java/de/calamanari/pk/valueobject/README.md)
 
-### Experimental Stuff
+### Other Stuff
 
+* [Fluent builders for custom classes](src/test/java/de/calamanari/pk/fluent/README.md)
 * [Generic One-Hashing Bloom Filter](src/main/java/de/calamanari/pk/ohbf/README.md)
 * [The BloomBox](src/main/java/de/calamanari/pk/ohbf/bloombox/README.md)
 * [Distribution, Random, Hash, Encryption](src/test/java/de/calamanari/pk/drhe/README.md)
