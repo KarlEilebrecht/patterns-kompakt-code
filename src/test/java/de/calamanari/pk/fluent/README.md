@@ -471,6 +471,45 @@ public record MainConfig(int id, String systemType, Contact contact, Map<String,
 }
 ```
 
+Here are examples how the fluent configuration looks:
+```java
+        // @formatter:off
+        
+        MainConfig mainConf01 = 
+			MainConfig.withId(1007)
+            	          .type("ZULUFIX")
+                          .contact("Ronda Ruthless")
+                      	  	  .email("Ronda.Ruthless@neversend.com")
+                          .parameter("q8", "true")
+                          .parameter("global", "yes")
+                      .get();
+
+        MainConfig mainConf02 = 
+			MainConfig.withId(1009)
+                          .type("TETRA")
+                          .contact("Biff Tannen")
+                              .email("Biff.Tannen@neversend.com")
+                          .parameter("delay", "8173")
+                          .parameter("wipe", "no")
+                          .regionConfig(
+                              RegionConfig.withId(987)
+                                  .code("R987")
+                                  .contact("Laura Giller")
+                                      .email("Laura.Giller@neversend.com")
+                                      .phone("+1555-62372384")
+                                  .parameter("op4", "yes")
+                                  .parameter("proactive", "yes")
+                              .get())
+                          .get();
+
+        MainConfig mainConf03 = MainConfig.withId(9999)
+                                              .type("TEST")
+                                          .get();
+        
+        // @formatter:on
+
+```
+
 ## Documentation
 
 A big plus of fluent builders is the availability to provide useful documentation on each step. However, as we have seen there are many similar interfaces. Of course, we don't want to create (and maintain!) the same java-doc comments over and over again.
