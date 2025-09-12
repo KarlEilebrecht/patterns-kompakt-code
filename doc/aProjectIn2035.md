@@ -29,7 +29,7 @@ I would suggest that I will first give an overview how we work and how we would 
 
 **Karen:** Please start!
 
-**Laura:** Talsamon is a relative young company, founded in 2028, fully focussed on AI. Hence, our mantra *"you don't need to understand us, we understand you!"*. We don't see us as a tech company in the first place. Although we are actively maintaining our AI core product *Talsamon Graven*, the focus of our business is helping traditional companies transitioning to modern IT-processes.
+**Laura:** Talsamon is a relatively young company, founded in 2028, fully focussed on AI. Hence, our mantra *"you don't need to understand us, we understand you!"*. We don't see us as a tech company in the first place. Although we are actively maintaining our AI core product *Talsamon Graven*, the focus of our business is helping traditional companies transitioning to modern IT-processes.
 
 **Chen:** So, you still have your own software engineering team?
 
