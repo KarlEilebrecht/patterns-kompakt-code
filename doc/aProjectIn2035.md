@@ -3,6 +3,8 @@
 
 # A software project in 2035
 
+<img align="right" width="33%" height="33%" src="./outlook2035.png" alt="Witch looking pensively into a crystal orb showing the ai-controlled future of 2035; created with help of chatGPT" />
+
 In this purely fictional story I want to take a look into the future, at a software transition project in 2035.
 
 **Morla Chemicals** is a traditional mid-size company with around 240 employees. They still sit on classical mix of software from the 90th, modernized begin of the 2020th. A lot components are custom-built, tailored or have been customized internally (e.g., macros).
