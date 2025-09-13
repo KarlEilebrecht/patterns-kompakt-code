@@ -159,7 +159,7 @@ A chatbot is available 24/7. Initially, we typically assign a THIT-team as human
 
 ---
 
-### chatGPT summary (unredacted):
+### chatGPT summary (not redacted):
 ----
 The fictional story takes place in **2035 at Morla Chemicals**, a mid-sized company struggling with outdated IT systems. After a leadership change, the company hires **Talsamon Consulting** to modernize its IT using their AI-driven **Lightspeed Process**.
 
