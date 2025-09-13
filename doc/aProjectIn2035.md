@@ -3,7 +3,7 @@
 
 # A software project in 2035
 
-<img align="right" src="./outlook2035s2.png" alt="Witch looking pensively into a crystal orb showing the ai-controlled future of 2035; created with help of chatGPT" />
+<img align="right" src="./outlook2035s3.png" alt="Witch looking pensively into a crystal orb showing the ai-controlled future of 2035; created with help of chatGPT" />
 
 In this purely fictional story I want to take a look into the future, at a software transition project in 2035.
 
