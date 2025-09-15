@@ -111,7 +111,7 @@ _Karl Eilebrecht, January 2024_
 
 ### Other Stuff
 
-* [A software project in 2035 (a look into the future)](./doc/aProjectIn2035.md)
+* [A software project in 2035 (a look into the future)](./doc/aProjectIn2035.md#a-software-project-in-2035)
 * [Fluent builders for custom classes](src/test/java/de/calamanari/pk/fluent/README.md)
 * [Generic One-Hashing Bloom Filter](src/main/java/de/calamanari/pk/ohbf/README.md)
 * [The BloomBox](src/main/java/de/calamanari/pk/ohbf/bloombox/README.md)
