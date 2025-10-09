@@ -19,11 +19,11 @@
 //@formatter:on
 package de.calamanari.pk.flyweight;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +34,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class FlyweightTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlyweightTest.class);
@@ -92,13 +93,13 @@ public class FlyweightTest {
      */
     private final CounterFlyweightCarryingItem[] workingMemory = new CounterFlyweightCarryingItem[NUMBER_OF_ITEMS];
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
+    @BeforeAll
+    static void setUpBeforeClass() {
         memInitial = getApproxMemory();
     }
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         for (int i = 0; i < NUMBER_OF_ITEMS; i++) {
             workingMemory[i] = null;
         }
@@ -108,7 +109,7 @@ public class FlyweightTest {
     }
 
     @Test
-    public void testFlyweight() {
+    void testFlyweight() {
 
         // HINTS:
         // * adjust the log-level in logback.xml to DEBUG to watch FLYWEIGHT details
@@ -140,7 +141,7 @@ public class FlyweightTest {
     }
 
     @Test
-    public void testFlyweightUnshared() {
+    void testFlyweightUnshared() {
 
         // this test uses only unshared flyweights - effectively disabling all advantages of FLYWEIGHT
         // This is for comparing memory consumption.

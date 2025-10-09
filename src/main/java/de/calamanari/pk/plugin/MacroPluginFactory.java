@@ -94,7 +94,7 @@ public class MacroPluginFactory {
             // inject framework reference
             plugin.setFrameworkReference(frameworkReference);
             for (String macroName : plugin.getMacros()) {
-                if (macroName != null && macroName.trim().length() > 0) {
+                if (macroName != null && !macroName.trim().isEmpty()) {
                     macroPluginLookup.put(macroName.trim().toLowerCase(), plugin);
                 }
             }

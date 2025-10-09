@@ -98,7 +98,7 @@ public final class SimpleAccessManager {
      */
     public void allow(Thread thread, String operationName) {
         if (checkPermission()) {
-            Set<String> permissions = permissionsMap.computeIfAbsent(thread, t -> new HashSet<>());
+            Set<String> permissions = permissionsMap.computeIfAbsent(thread, _ -> new HashSet<>());
             permissions.add(operationName);
         }
         else {

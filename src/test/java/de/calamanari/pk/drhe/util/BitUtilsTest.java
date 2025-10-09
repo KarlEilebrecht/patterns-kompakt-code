@@ -19,21 +19,22 @@
 //@formatter:on
 package de.calamanari.pk.drhe.util;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class BitUtilsTest {
 
     @Test
-    public void testLongBinStr() {
+    void testLongBinStr() {
 
         assertEquals(64, BitUtils.binStr(0L).length());
         assertEquals(64, BitUtils.binStr(1L).length());
@@ -49,7 +50,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntBinStr() {
+    void testIntBinStr() {
         assertEquals(32, BitUtils.binStr(0).length());
         assertEquals(32, BitUtils.binStr(1).length());
         assertEquals(32, BitUtils.binStr(Integer.MIN_VALUE).length());
@@ -64,7 +65,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortBinStr() {
+    void testShortBinStr() {
         assertEquals(16, BitUtils.binStr((short) 0).length());
         assertEquals(16, BitUtils.binStr((short) 1).length());
         assertEquals(16, BitUtils.binStr(Short.MIN_VALUE).length());
@@ -79,7 +80,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testByteBinStr() {
+    void testByteBinStr() {
         assertEquals(8, BitUtils.binStr((byte) 0).length());
         assertEquals(8, BitUtils.binStr((byte) 1).length());
         assertEquals(8, BitUtils.binStr(Byte.MIN_VALUE).length());
@@ -94,7 +95,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testParseLong() {
+    void testParseLong() {
         assertEquals(Long.MIN_VALUE, BitUtils.parseLong("1000000000000000000000000000000000000000000000000000000000000000"));
         assertEquals(Long.MAX_VALUE, BitUtils.parseLong("0111111111111111111111111111111111111111111111111111111111111111"));
         assertEquals(0L, BitUtils.parseLong("0000000000000000000000000000000000000000000000000000000000000000"));
@@ -110,7 +111,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testParseInt() {
+    void testParseInt() {
         assertEquals(Integer.MIN_VALUE, BitUtils.parseInt("10000000000000000000000000000000"));
         assertEquals(Integer.MAX_VALUE, BitUtils.parseInt("01111111111111111111111111111111"));
         assertEquals(0, BitUtils.parseInt("00000000000000000000000000000000"));
@@ -126,7 +127,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testParseShort() {
+    void testParseShort() {
         assertEquals(Short.MIN_VALUE, BitUtils.parseShort("1000000000000000"));
         assertEquals(Short.MAX_VALUE, BitUtils.parseShort("0111111111111111"));
         assertEquals((short) 0, BitUtils.parseShort("0000000000000000"));
@@ -142,7 +143,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testParseByte() {
+    void testParseByte() {
         assertEquals(Byte.MIN_VALUE, BitUtils.parseByte("10000000"));
         assertEquals(Byte.MAX_VALUE, BitUtils.parseByte("01111111"));
         assertEquals((byte) 0, BitUtils.parseByte("00000000"));
@@ -158,7 +159,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongBitFlipDistance() {
+    void testLongBitFlipDistance() {
         assertEquals(countBinaryChanges(Long.MIN_VALUE, 0), BitUtils.bitFlipDistance(Long.MIN_VALUE, 0));
         assertEquals(BitUtils.bitFlipDistance(0, Long.MIN_VALUE), BitUtils.bitFlipDistance(Long.MIN_VALUE, 0));
         assertEquals(countBinaryChanges(Long.MAX_VALUE, 0), BitUtils.bitFlipDistance(Long.MAX_VALUE, 0));
@@ -171,7 +172,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntBitFlipDistance() {
+    void testIntBitFlipDistance() {
         assertEquals(countBinaryChanges(Integer.MIN_VALUE, 0), BitUtils.bitFlipDistance(Integer.MIN_VALUE, 0));
         assertEquals(BitUtils.bitFlipDistance(0, Integer.MIN_VALUE), BitUtils.bitFlipDistance(Integer.MIN_VALUE, 0));
         assertEquals(countBinaryChanges(Integer.MAX_VALUE, 0), BitUtils.bitFlipDistance(Integer.MAX_VALUE, 0));
@@ -184,7 +185,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortBitFlipDistance() {
+    void testShortBitFlipDistance() {
         assertEquals(countBinaryChanges(Short.MIN_VALUE, 0), BitUtils.bitFlipDistance(Short.MIN_VALUE, 0));
         assertEquals(BitUtils.bitFlipDistance(0, Short.MIN_VALUE), BitUtils.bitFlipDistance(Short.MIN_VALUE, 0));
         assertEquals(countBinaryChanges(Short.MAX_VALUE, 0), BitUtils.bitFlipDistance(Short.MAX_VALUE, 0));
@@ -197,7 +198,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testByteBitFlipDistance() {
+    void testByteBitFlipDistance() {
         assertEquals(countBinaryChanges(Byte.MIN_VALUE, 0), BitUtils.bitFlipDistance(Byte.MIN_VALUE, 0));
         assertEquals(BitUtils.bitFlipDistance(0, Byte.MIN_VALUE), BitUtils.bitFlipDistance(Byte.MIN_VALUE, 0));
         assertEquals(countBinaryChanges(Byte.MAX_VALUE, 0), BitUtils.bitFlipDistance(Byte.MAX_VALUE, 0));
@@ -210,7 +211,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongBitCount() {
+    void testLongBitCount() {
         assertEquals(countBinaryChanges(Long.MIN_VALUE, 0), BitUtils.bitCount(Long.MIN_VALUE));
         assertEquals(countBinaryChanges(Long.MAX_VALUE, 0), BitUtils.bitCount(Long.MAX_VALUE));
         assertEquals(0, BitUtils.bitCount(0L));
@@ -221,7 +222,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntBitCount() {
+    void testIntBitCount() {
         assertEquals(countBinaryChanges(Integer.MIN_VALUE, 0), BitUtils.bitCount(Integer.MIN_VALUE));
         assertEquals(countBinaryChanges(Integer.MAX_VALUE, 0), BitUtils.bitCount(Integer.MAX_VALUE));
         assertEquals(0, BitUtils.bitCount(0));
@@ -232,7 +233,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortBitCount() {
+    void testShortBitCount() {
         assertEquals(countBinaryChanges(Short.MIN_VALUE, (short) 0), BitUtils.bitCount(Short.MIN_VALUE));
         assertEquals(countBinaryChanges(Short.MAX_VALUE, (short) 0), BitUtils.bitCount(Short.MAX_VALUE));
         assertEquals(0, BitUtils.bitCount((short) 0));
@@ -243,7 +244,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testByteBitCount() {
+    void testByteBitCount() {
         assertEquals(countBinaryChanges(Byte.MIN_VALUE, (byte) 0), BitUtils.bitCount(Byte.MIN_VALUE));
         assertEquals(countBinaryChanges(Byte.MAX_VALUE, (byte) 0), BitUtils.bitCount(Byte.MAX_VALUE));
         assertEquals(0, BitUtils.bitCount((byte) 0));
@@ -254,7 +255,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongRotateBits() {
+    void testLongRotateBits() {
         for (long src : longTestPatterns()) {
 
             for (int distance = -64; distance < 65; distance++) {
@@ -276,7 +277,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntRotateBits() {
+    void testIntRotateBits() {
         for (int src : intTestPatterns()) {
 
             for (int distance = -32; distance < 33; distance++) {
@@ -298,7 +299,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortRotateBits() {
+    void testShortRotateBits() {
         for (short src : shortTestPatterns()) {
 
             for (int distance = -16; distance < 17; distance++) {
@@ -320,7 +321,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testByteRotateBits() {
+    void testByteRotateBits() {
 
         for (byte src : byteTestPatterns()) {
 
@@ -343,7 +344,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongGetSetIntAt() {
+    void testLongGetSetIntAt() {
 
         int[] patterns = intTestPatterns();
 
@@ -365,7 +366,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongGetSetShortAt() {
+    void testLongGetSetShortAt() {
 
         short[] patterns = shortTestPatterns();
 
@@ -397,7 +398,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongGetSetByteAt() {
+    void testLongGetSetByteAt() {
 
         byte[] patterns = byteTestPatterns();
 
@@ -449,7 +450,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongGetSetFlipBitAt() {
+    void testLongGetSetFlipBitAt() {
         for (long src : longTestPatterns()) {
 
             String srcS = BitUtils.binStr(src);
@@ -473,7 +474,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntGetSetFlipBitAt() {
+    void testIntGetSetFlipBitAt() {
         for (int src : intTestPatterns()) {
 
             String srcS = BitUtils.binStr(src);
@@ -497,7 +498,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortGetSetFlipBitAt() {
+    void testShortGetSetFlipBitAt() {
         for (short src : shortTestPatterns()) {
 
             String srcS = BitUtils.binStr(src);
@@ -521,7 +522,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testByteGetSetFlipBitAt() {
+    void testByteGetSetFlipBitAt() {
         for (byte src : byteTestPatterns()) {
 
             String srcS = BitUtils.binStr(src);
@@ -545,7 +546,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongGetBytes() {
+    void testLongGetBytes() {
         for (long src : longTestPatterns()) {
             byte[] bytes = BitUtils.getBytes(src);
 
@@ -558,7 +559,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntGetBytes() {
+    void testIntGetBytes() {
         for (int src : intTestPatterns()) {
             byte[] bytes = BitUtils.getBytes(src);
 
@@ -571,7 +572,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortGetBytes() {
+    void testShortGetBytes() {
         for (short src : shortTestPatterns()) {
             byte[] bytes = BitUtils.getBytes(src);
 
@@ -584,7 +585,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongWriteRead() {
+    void testLongWriteRead() {
 
         byte[] buffer1 = new byte[8];
         byte[] buffer2 = new byte[10];
@@ -603,7 +604,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntWriteRead() {
+    void testIntWriteRead() {
 
         byte[] buffer1 = new byte[4];
         byte[] buffer2 = new byte[6];
@@ -622,7 +623,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortWriteRead() {
+    void testShortWriteRead() {
 
         byte[] buffer1 = new byte[2];
         byte[] buffer2 = new byte[4];
@@ -641,7 +642,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testLongCompose() {
+    void testLongCompose() {
 
         for (long src : longTestPatterns()) {
 
@@ -673,7 +674,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testIntCompose() {
+    void testIntCompose() {
 
         for (int src : intTestPatterns()) {
 
@@ -694,7 +695,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testShortCompose() {
+    void testShortCompose() {
 
         for (short src : shortTestPatterns()) {
 
@@ -708,7 +709,7 @@ public class BitUtilsTest {
     }
 
     @Test
-    public void testRotationVerficationCode() {
+    void testRotationVerficationCode() {
 
         for (long l : longTestPatterns()) {
 

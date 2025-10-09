@@ -19,15 +19,15 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import de.calamanari.pk.util.pfis.BufferType;
 import de.calamanari.pk.util.pfis.ParallelFileInputStream;
@@ -37,6 +37,7 @@ import de.calamanari.pk.util.pfis.ParallelFileInputStream;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class ParallelFileInputStreamTest {
 
     private static final String EXECUTION_UUID = UUID.randomUUID().toString();
@@ -71,8 +72,8 @@ public class ParallelFileInputStreamTest {
      */
     private static File thirtyBytesFile = null;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
         emptyFile = createBytesFile(0);
         oneByteFile = createBytesFile(1);
         twoBytesFile = createBytesFile(2);
@@ -81,8 +82,8 @@ public class ParallelFileInputStreamTest {
         thirtyBytesFile = createBytesFile(30);
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+    @AfterAll
+    static void tearDownAfterClass() {
         emptyFile.delete();
         oneByteFile.delete();
         twoBytesFile.delete();
@@ -92,7 +93,7 @@ public class ParallelFileInputStreamTest {
     }
 
     @Test
-    public void testWithEmptyFile() throws Exception {
+    void testWithEmptyFile() throws Exception {
         for (BufferType bufferType : BufferType.values()) {
             testInternal(emptyFile, 1, bufferType);
             testInternal(emptyFile, 10, bufferType);
@@ -100,7 +101,7 @@ public class ParallelFileInputStreamTest {
     }
 
     @Test
-    public void testWithOneByteFile() throws Exception {
+    void testWithOneByteFile() throws Exception {
         for (BufferType bufferType : BufferType.values()) {
             testInternal(oneByteFile, 1, bufferType);
             testInternal(oneByteFile, 10, bufferType);
@@ -108,7 +109,7 @@ public class ParallelFileInputStreamTest {
     }
 
     @Test
-    public void testWithTwoBytesFile() throws Exception {
+    void testWithTwoBytesFile() throws Exception {
         for (BufferType bufferType : BufferType.values()) {
             testInternal(twoBytesFile, 1, bufferType);
             testInternal(twoBytesFile, 10, bufferType);
@@ -116,7 +117,7 @@ public class ParallelFileInputStreamTest {
     }
 
     @Test
-    public void testWithTenBytesFile() throws Exception {
+    void testWithTenBytesFile() throws Exception {
         for (BufferType bufferType : BufferType.values()) {
             testInternal(tenBytesFile, 1, bufferType);
             testInternal(tenBytesFile, 10, bufferType);
@@ -124,7 +125,7 @@ public class ParallelFileInputStreamTest {
     }
 
     @Test
-    public void testWithElevenBytesFile() throws Exception {
+    void testWithElevenBytesFile() throws Exception {
         for (BufferType bufferType : BufferType.values()) {
             testInternal(elevenBytesFile, 1, bufferType);
             testInternal(elevenBytesFile, 10, bufferType);
@@ -132,7 +133,7 @@ public class ParallelFileInputStreamTest {
     }
 
     @Test
-    public void testWithThirtyBytesFile() throws Exception {
+    void testWithThirtyBytesFile() throws Exception {
         for (BufferType bufferType : BufferType.values()) {
             testInternal(thirtyBytesFile, 1, bufferType);
             testInternal(thirtyBytesFile, 10, bufferType);

@@ -65,7 +65,7 @@ public class Person {
         try {
             this.firstOrderDate = firstOrderDateISO == null ? null : sdf.parse(firstOrderDateISO);
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             throw new IllegalArgumentException("Unable to parse firstOrderDateISO='" + firstOrderDateISO + "' as date (expected: yyyy-MM-dd).");
         }
     }

@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.factorymethod;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +35,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class FactoryMethodTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FactoryMethodTest.class);
@@ -54,14 +55,14 @@ public class FactoryMethodTest {
      */
     private static final String COMPANY_KEY_FREAKLIES = "Freaklies Shop";
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         SYSTEM_REGISTRY.put(COMPANY_KEY_MORONSTORE, new MoronStoreVoucherCreator());
         SYSTEM_REGISTRY.put(COMPANY_KEY_FREAKLIES, new FreakliesShopVoucherCreator());
     }
 
     @Test
-    public void testFactoryMethod() {
+    void testFactoryMethod() {
 
         // Hint: set the log-level in logback.xml to DEBUG to see FACTORY METHOD at work.
 

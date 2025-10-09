@@ -96,9 +96,9 @@ public class PbVectorCodec implements Serializable {
      * Afterwards the instance can still be used by the invoking thread, but recreating internal structures will cause a certain overhead.
      */
     public void cleanUp() {
-        deflaterHolder.get().end();
+        deflaterHolder.get().close();
         deflaterHolder.remove();
-        inflaterHolder.get().end();
+        inflaterHolder.get().close();
         inflaterHolder.remove();
     }
 
@@ -197,6 +197,7 @@ public class PbVectorCodec implements Serializable {
         int encodedPartLength = 0;
 
         if (capacity > 0) {
+            @SuppressWarnings("resource")
             Deflater deflater = deflaterHolder.get();
             deflater.reset();
 
@@ -233,6 +234,7 @@ public class PbVectorCodec implements Serializable {
      * @param destPos where to start writing
      * @return number of uncompressed bytes written
      */
+    @SuppressWarnings("resource")
     protected int uncompress(byte[] src, int srcPos, byte[] dest, int destPos) {
         int res = 0;
         int encodedPartLength = readInt(src, srcPos);

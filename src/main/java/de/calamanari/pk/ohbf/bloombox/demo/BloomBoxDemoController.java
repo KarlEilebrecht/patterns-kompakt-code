@@ -164,8 +164,8 @@ public class BloomBoxDemoController {
         this.view = view;
         this.bloomBox = bloomBox;
         this.runner = runner;
-        this.view.btnExecute.addActionListener(e -> this.executeQuery());
-        this.view.btnHelp.addActionListener(e -> this.showHelpPopup());
+        this.view.btnExecute.addActionListener(_ -> this.executeQuery());
+        this.view.btnHelp.addActionListener(_ -> this.showHelpPopup());
 
         this.view.lblBloomBoxIcon.addMouseListener(new MouseAdapter() {
 
@@ -294,7 +294,7 @@ public class BloomBoxDemoController {
         res.getBaseQueryResults().forEach(r -> appendToProtocol(r, sb));
         res.getPostQueryResults().forEach(r -> appendToProtocol(r, sb));
         String msg = sb.toString();
-        if (msg.trim().length() > 0) {
+        if (!msg.trim().isEmpty()) {
             showProtocolPopup(msg);
         }
     }

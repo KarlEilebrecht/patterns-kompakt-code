@@ -19,28 +19,30 @@
 //@formatter:on
 package de.calamanari.pk.muhai;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.calamanari.pk.util.CloneUtils;
 
 /**
  * Test coverage for the LongPrefix
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class LongPrefixTest {
 
     @Test
-    public void testPrefixCreation() {
+    void testPrefixCreation() {
 
         assertSame(LongPrefix.NONE, LongPrefix.fromBinaryString(""));
         assertSame(LongPrefix.DEFAULT, LongPrefix.fromBinaryString("00"));
@@ -87,7 +89,7 @@ public class LongPrefixTest {
     }
 
     @Test
-    public void testPrefixApplicationAndMatching() {
+    void testPrefixApplicationAndMatching() {
         for (long key : new long[] { Long.MIN_VALUE, -1L, 0L, Long.MAX_VALUE }) {
             assertEquals(key, LongPrefix.NONE.applyTo(key));
         }
@@ -106,7 +108,7 @@ public class LongPrefixTest {
     }
 
     @Test
-    public void testStraightKeyGeneration() {
+    void testStraightKeyGeneration() {
         assertKeyRepresentationLength(63, LongPrefix.STRAIGHT, Long::toBinaryString, false);
         assertKeyRepresentationLength(19, LongPrefix.STRAIGHT, Long::toUnsignedString, false);
         assertKeyRepresentationLength(16, LongPrefix.STRAIGHT, Long::toHexString, false);
@@ -116,7 +118,7 @@ public class LongPrefixTest {
     }
 
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
         assertSame(LongPrefix.DEFAULT, CloneUtils.passByValue(LongPrefix.DEFAULT));
         assertSame(LongPrefix.NONE, CloneUtils.passByValue(LongPrefix.NONE));
         assertSame(LongPrefix.POSITIVE, CloneUtils.passByValue(LongPrefix.POSITIVE));
@@ -196,6 +198,6 @@ public class LongPrefixTest {
         catch (RuntimeException ex) {
             expectedError = ex;
         }
-        assertTrue("The prefix '" + prefix + "' should have caused an exceptio but did not!", expectedError instanceof InvalidPrefixException);
+        assertTrue(expectedError instanceof InvalidPrefixException, "The prefix '" + prefix + "' should have caused an exceptio but did not!");
     }
 }

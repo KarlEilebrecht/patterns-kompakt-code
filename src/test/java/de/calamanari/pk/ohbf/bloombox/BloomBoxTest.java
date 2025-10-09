@@ -36,8 +36,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import org.awaitility.Awaitility;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,15 +53,16 @@ import de.calamanari.pk.util.SimpleFixedLengthBitVector;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
-@SuppressWarnings("resource")
+@SuppressWarnings({ "resource", "java:S5786" })
 public class BloomBoxTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BloomBoxTest.class);
+
+    private static final String OTHER = "other";
 
     private Random rand = null;
 
     private int numberOfColumns = 0;
 
-    private String OTHER = "other";
     private BloomBox bloomBox = null;
 
     private GenStats stats = null;
@@ -72,9 +73,9 @@ public class BloomBoxTest {
 
     private int lineNumber = -1;
 
-    @Ignore("Creates a box in memory (takes a couple of minutes), stores it to file and loads it again")
+    @Disabled("Creates a box in memory (takes a couple of minutes), stores it to file and loads it again")
     @Test
-    public void testSaveLoadMem() {
+    void testSaveLoadMem() {
         this.rand = new Random(3843745);
         this.numberOfColumns = 10_000;
         int numberOfRows = 10_000;
@@ -136,9 +137,9 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Small generated data box and some queries")
+    @Disabled("Small generated data box and some queries")
     @Test
-    public void testSimple() {
+    void testSimple() {
 
         this.rand = new Random(3843745);
         this.numberOfColumns = 10;
@@ -252,9 +253,9 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Small generated data box and some queries and upscaling")
+    @Disabled("Small generated data box and some queries and upscaling")
     @Test
-    public void testScale() {
+    void testScale() {
 
         this.rand = new Random(3843745);
         this.numberOfColumns = 10;
@@ -374,9 +375,9 @@ public class BloomBoxTest {
         return lineMap;
     }
 
-    @Ignore("Short running creation of bird strikes bloom box, only needed on demand")
+    @Disabled("Short running creation of bird strikes bloom box, only needed on demand")
     @Test
-    public void testCreateBirdStrikesBloomBox() throws Exception {
+    void testCreateBirdStrikesBloomBox() throws Exception {
         this.numberOfColumns = 17;
         int numberOfRows = 99_404;
         // @formatter:off
@@ -393,7 +394,7 @@ public class BloomBoxTest {
 
         // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
         Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
-                .filter(Predicate.not(Map::isEmpty)).forEach(argMap -> feeder.addRow(argMap));
+                .filter(Predicate.not(Map::isEmpty)).forEach(feeder::addRow);
 
         assertEquals(numberOfRows, lineNumber);
 
@@ -413,9 +414,9 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Short running creation of bird strikes bloom box with probabilities, only needed on demand")
+    @Disabled("Short running creation of bird strikes bloom box with probabilities, only needed on demand")
     @Test
-    public void testCreateBirdStrikesBloomBox_PB() throws Exception {
+    void testCreateBirdStrikesBloomBox_PB() throws Exception {
         this.numberOfColumns = 17;
         int numberOfRows = 99_404;
         // @formatter:off
@@ -466,9 +467,9 @@ public class BloomBoxTest {
         return res;
     }
 
-    @Ignore("Long running creation of 2.9 GB box (enriched)")
+    @Disabled("Long running creation of 2.9 GB box (enriched)")
     @Test
-    public void testCreateEnrichedBirdStrikesBloomBox() throws Exception {
+    void testCreateEnrichedBirdStrikesBloomBox() throws Exception {
         this.numberOfColumns = 10017;
         int numberOfRows = 99_404;
         // @formatter:off
@@ -489,7 +490,7 @@ public class BloomBoxTest {
 
         // The file birdstrikes.csv is included in /test/resources/birdstrikes.csv.zip
         Files.lines(new File("/mytemp/birdstrikes.csv").toPath()).filter(Predicate.not(String::isBlank)).map(this::lineToArgMap)
-                .filter(Predicate.not(Map::isEmpty)).map(m -> this.enrichMap(m, randomTable)).forEach(argMap -> feeder.addRow(argMap));
+                .filter(Predicate.not(Map::isEmpty)).map(m -> this.enrichMap(m, randomTable)).forEach(feeder::addRow);
 
         assertEquals(numberOfRows, lineNumber);
 
@@ -512,9 +513,9 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Very long running, more than 5GB result")
+    @Disabled("Very long running, more than 5GB result")
     @Test
-    public void testCreateEnrichedBirdStrikesBloomBox_PB() throws Exception {
+    void testCreateEnrichedBirdStrikesBloomBox_PB() throws Exception {
         this.numberOfColumns = 10018;
         int numberOfRows = 99_404;
         // @formatter:off
@@ -541,7 +542,7 @@ public class BloomBoxTest {
                     List<PbDpav> res = createDataPointsWithFixedProbability(1.0d, am);
                     res.add(new PbDpav("r25", "1", 0.25));
                     return res;
-                }).forEach(pointList -> feeder.addRow(pointList));
+                }).forEach(feeder::addRow);
 
         assertEquals(numberOfRows, lineNumber);
 
@@ -565,9 +566,9 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Long running, 2.9 GB result")
+    @Disabled("Long running, 2.9 GB result")
     @Test
-    public void testCreateEnrichedBirdStrikesBloomBox_PBT() throws Exception {
+    void testCreateEnrichedBirdStrikesBloomBox_PBT() throws Exception {
         this.numberOfColumns = 10018;
         int numberOfRows = 99_404;
         // @formatter:off
@@ -583,6 +584,9 @@ public class BloomBoxTest {
         LOGGER.debug("Random table complete");
 
         PbThresholdBinaryFeeder feeder = (PbThresholdBinaryFeeder) bloomBox.getFeeder();
+
+        rand = new Random(823342);
+
         feeder.setRandom(rand);
 
         columnNames = null;
@@ -594,7 +598,7 @@ public class BloomBoxTest {
                     List<PbDpav> res = createDataPointsWithFixedProbability(1.0d, am);
                     res.add(new PbDpav("r25", "1", 0.25));
                     return res;
-                }).forEach(pointList -> feeder.addRow(pointList));
+                }).forEach(feeder::addRow);
 
         assertEquals(numberOfRows, lineNumber);
 
@@ -618,9 +622,9 @@ public class BloomBoxTest {
 
     }
 
-    @Ignore("Use this method to start the demo UI application")
+    @Disabled("Use this method to start the demo UI application")
     @Test
-    public void testBloomBoxDemoUI() {
+    void testBloomBoxDemoUI() {
 
         this.bloomBox = BloomBox.loadFromFile(new File("/mytemp/birdstrikes_10K_PBT.bbx"), Collections.emptyMap());
 
@@ -692,7 +696,7 @@ public class BloomBoxTest {
      * @param value generated value
      */
     private void countColumnValue(int column, String value) {
-        Map<String, Integer> valueStats = stats.columnValueStats.computeIfAbsent("col" + column, key -> new HashMap<>());
+        Map<String, Integer> valueStats = stats.columnValueStats.computeIfAbsent("col" + column, _ -> new HashMap<>());
 
         Integer currentCount = valueStats.get(value);
 

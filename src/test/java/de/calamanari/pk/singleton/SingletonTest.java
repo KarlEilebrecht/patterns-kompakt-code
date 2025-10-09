@@ -19,7 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.singleton;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,8 +28,8 @@ import java.io.ObjectOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +40,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class SingletonTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SingletonTest.class);
@@ -59,14 +60,14 @@ public class SingletonTest {
      */
     private static final boolean DELETE_LOG_FILES_AFTER_TEST = true;
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+    @AfterAll
+    static void tearDownAfterClass() {
         Tracer.shutdown(DELETE_LOG_FILES_AFTER_TEST);
         Tracer2.shutdown(DELETE_LOG_FILES_AFTER_TEST);
     }
 
     @Test
-    public void testSingleton() throws Exception {
+    void testSingleton() throws Exception {
 
         // HINTS:
         // * set the log-level in logback.xml to DEBUG to see SINGLETON details.
@@ -107,7 +108,7 @@ public class SingletonTest {
     }
 
     @Test
-    public void testSingleton2() throws Exception {
+    void testSingleton2() throws Exception {
 
         LOGGER.info("Test Singleton2 ...");
         long startTimeNanos = System.nanoTime();
@@ -155,7 +156,7 @@ public class SingletonTest {
     }
 
     @Test
-    public void testSingleton3() throws Exception {
+    void testSingleton3() throws Exception {
         LOGGER.info("Test Singleton3 ...");
         long startTimeNanos = System.nanoTime();
 

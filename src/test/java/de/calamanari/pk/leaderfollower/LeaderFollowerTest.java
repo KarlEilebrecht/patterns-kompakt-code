@@ -19,7 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.leaderfollower;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -32,7 +32,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ import de.calamanari.pk.util.itfa.ItfaConfiguration;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-@SuppressWarnings("resource")
+@SuppressWarnings({ "resource", "java:S5786" })
 public class LeaderFollowerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LeaderFollowerTest.class);
@@ -70,7 +70,7 @@ public class LeaderFollowerTest {
      * Number of characters in the palindrome
      */
     @SuppressWarnings("java:S125")
-    private static final int PALINDROME_SIZE = 1_111_111; // 1 GB = 1_073_741_824;
+    private static final int PALINDROME_SIZE = 1_073_741_824; // 1 GB
 
     /**
      * number of followers (worker threads)
@@ -95,7 +95,7 @@ public class LeaderFollowerTest {
             MAX_NUMBER_OF_CHAR_INDEX_ENTRIES);
 
     @Test
-    public void testLeaderFollowerPalindrome() throws Exception {
+    void testLeaderFollowerPalindrome() throws Exception {
 
         // HINTS:
         // * Adjust the log-level in logback.xml to DEBUG to see the LEADER FOLLOWER working
@@ -162,7 +162,7 @@ public class LeaderFollowerTest {
     }
 
     @Test
-    public void testLeaderFollowerNonPalindrome() throws Exception {
+    void testLeaderFollowerNonPalindrome() throws Exception {
 
         int errorPositionLeft = (PALINDROME_SIZE / 4);
         int errorPositionRight = (PALINDROME_SIZE - 1) - errorPositionLeft;
@@ -238,7 +238,7 @@ public class LeaderFollowerTest {
             try {
                 executorService.shutdown();
             }
-            catch (Exception ex) {
+            catch (Exception _) {
                 // ignore
             }
         }

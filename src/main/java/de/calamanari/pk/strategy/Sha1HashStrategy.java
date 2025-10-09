@@ -72,7 +72,7 @@ public class Sha1HashStrategy extends HashStrategy {
      */
     private String computeSecureHash(String text) {
         String result = "";
-        if (text != null && text.length() > 0) {
+        if (text != null && !text.isEmpty()) {
             try {
                 MessageDigest md = MessageDigest.getInstance("SHA-1");
                 md.reset();

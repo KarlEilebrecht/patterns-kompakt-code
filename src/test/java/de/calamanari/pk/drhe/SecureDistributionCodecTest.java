@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +34,13 @@ import de.calamanari.pk.drhe.util.BitUtils;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class SecureDistributionCodecTest {
 
     static final Logger LOGGER = LoggerFactory.getLogger(SecureDistributionCodecTest.class);
 
     @Test
-    public void testSecureEncode() {
+    void testSecureEncode() {
 
         for (int i = 0; i < 65536; i++) {
             String input = "" + i;
@@ -58,7 +59,7 @@ public class SecureDistributionCodecTest {
     }
 
     @Test
-    public void testRandomPatternFromEncryption() {
+    void testRandomPatternFromEncryption() {
 
         // We create a very repetitive input document by concatenating the same sentence over and over again.
         // Then we encode (encrypt) it using our codec to create a bit sequence so we can perform tests

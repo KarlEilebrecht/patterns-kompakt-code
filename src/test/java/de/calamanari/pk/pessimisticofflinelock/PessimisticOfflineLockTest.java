@@ -19,16 +19,16 @@
 //@formatter:on
 package de.calamanari.pk.pessimisticofflinelock;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +39,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class PessimisticOfflineLockTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PessimisticOfflineLockTest.class);
@@ -55,15 +56,15 @@ public class PessimisticOfflineLockTest {
 
     private final AtomicReference<String> firstError = new AtomicReference<>();
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         customerDb.clear();
         customerDb.put("4711", new Customer("4711", "Jack", "Miller", "17, Citrus Ave", "286736", "Lemon Village"));
         firstError.set(null);
     }
 
     @Test
-    public void testPessimisticOfflineLock() throws Exception {
+    void testPessimisticOfflineLock() throws Exception {
 
         // Hints: - Adjust the log-level in lockback.xml to DEBUG to see the PESSIMISTIC OFFLINE LOCK working
         //

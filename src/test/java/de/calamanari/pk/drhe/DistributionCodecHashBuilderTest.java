@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,13 +37,14 @@ import de.calamanari.pk.drhe.util.GenStats;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class DistributionCodecHashBuilderTest {
 
     static final Logger LOGGER = LoggerFactory.getLogger(DistributionCodecHashBuilderTest.class);
 
     @Test
-    @Ignore("Long running, just to gather some stats")
-    public void testHash() {
+    @Disabled("Long running, just to gather some stats")
+    void testHash() {
 
         GenStats stats = new GenStats();
 
@@ -97,7 +98,7 @@ public class DistributionCodecHashBuilderTest {
     }
 
     @Test
-    public void testRandomPatternFromHash() {
+    void testRandomPatternFromHash() {
 
         // In this simulation we take a very short sentence as a basis.
         // Because a single hash value won't be long enough

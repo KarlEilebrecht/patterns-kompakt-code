@@ -271,7 +271,7 @@ public class BoundedOr {
         try {
             return Math.max(Integer.parseInt(text), 0);
         }
-        catch (InvalidBoundsException ex) {
+        catch (InvalidBoundsException _) {
             throw new InvalidBoundsException(BbxMessage.ERR_QUERY_SYNTAX_BOUNDS
                     .format(String.format("Syntax error at '%s', bounds must be integer values, found: '%s'", debugInfo, text)));
         }

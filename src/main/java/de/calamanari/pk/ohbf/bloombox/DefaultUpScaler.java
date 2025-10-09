@@ -223,7 +223,7 @@ public class DefaultUpScaler implements UpScaler {
      * @return combined leverage
      */
     private Leverage computeLeverage(AndExpression expression) {
-        return leverageCache.computeIfAbsent(expression.getExpressionId(), key -> computeLeverageForAND(expression));
+        return leverageCache.computeIfAbsent(expression.getExpressionId(), _ -> computeLeverageForAND(expression));
     }
 
     /**
@@ -234,7 +234,7 @@ public class DefaultUpScaler implements UpScaler {
      */
     private Leverage computeLeverage(OrExpression expression) {
         return leverageCache.computeIfAbsent(expression.getExpressionId(),
-                key -> computeWeightedLeverageForOR(getSourceCount(expression), expression.getChildExpressions()));
+                _ -> computeWeightedLeverageForOR(getSourceCount(expression), expression.getChildExpressions()));
     }
 
     /**
@@ -242,7 +242,7 @@ public class DefaultUpScaler implements UpScaler {
      * @return substitute average leverage (extrapolatesource matches to population)
      */
     private Leverage computeLeverage(BbqBooleanLiteral expression) {
-        return leverageCache.computeIfAbsent(expression.getExpressionId(), key -> defaultMaximumLeverage);
+        return leverageCache.computeIfAbsent(expression.getExpressionId(), _ -> defaultMaximumLeverage);
     }
 
     /**
@@ -250,7 +250,7 @@ public class DefaultUpScaler implements UpScaler {
      * @return complement leverage of the expression inside the negation
      */
     private Leverage computeLeverage(NegationExpression expression) {
-        return leverageCache.computeIfAbsent(expression.getExpressionId(), key -> getCachedLeverage(expression.getChildExpressions().get(0)).negate());
+        return leverageCache.computeIfAbsent(expression.getExpressionId(), _ -> getCachedLeverage(expression.getChildExpressions().get(0)).negate());
     }
 
     /**
@@ -258,7 +258,7 @@ public class DefaultUpScaler implements UpScaler {
      * @return leverage for this leave expression
      */
     private Leverage computeLeverage(BinaryMatchExpression expression) {
-        return leverageCache.computeIfAbsent(expression.getExpressionId(), key -> computeBaseLeverage(expression));
+        return leverageCache.computeIfAbsent(expression.getExpressionId(), _ -> computeBaseLeverage(expression));
     }
 
     /**

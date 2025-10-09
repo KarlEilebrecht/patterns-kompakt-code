@@ -19,14 +19,14 @@
 //@formatter:on
 package de.calamanari.pk.gateway;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.concurrent.TimeUnit;
 
 import org.awaitility.Awaitility;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +40,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class GatewayTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GatewayTest.class);
@@ -49,8 +50,8 @@ public class GatewayTest {
      */
     private static final int NUMBER_OF_RUNS = 500;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
 
         // an external java-process mocks the legacy api
         ExternalProcessManager.getInstance().startExternal(SecuMangaServerMock.class, LOGGER);
@@ -64,8 +65,8 @@ public class GatewayTest {
 
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    @AfterAll
+    static void tearDownAfterClass() throws Exception {
         // stop the SecuMangaServerMock
         ExternalProcessManager.getInstance().stopExternal(SecuMangaServerMock.class, "q", 5000);
 
@@ -74,7 +75,7 @@ public class GatewayTest {
     }
 
     @Test
-    public void test() {
+    void test() {
 
         LOGGER.info("Test gateway ...");
         long startTimeNanos = System.nanoTime();

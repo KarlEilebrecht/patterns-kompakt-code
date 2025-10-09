@@ -108,7 +108,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
         int i = 0;
         for (String line : lines) {
             line = line.trim();
-            if (line.length() > 0 && !line.startsWith("#")) {
+            if (!line.isEmpty() && !line.startsWith("#")) {
                 LOGGER.debug("Script line: {}", line);
             }
             else {
@@ -184,11 +184,11 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
         int closePos = expression.indexOf(')');
         if (openPos > 0 && closePos > 0 && closePos > openPos) {
             macroName = expression.substring(0, openPos).trim();
-            if (macroName.length() == 0) {
+            if (macroName.isEmpty()) {
                 throw new ExampleScriptingFrameworkException(ERROR_IN_LINE + (lineNumber + 1) + ": no expression (expected x=macro(y,..))");
             }
             String argumentString = expression.substring(openPos + 1, closePos).trim();
-            if (argumentString.length() > 0) {
+            if (!argumentString.isEmpty()) {
                 argumentNames = argumentString.split(",");
             }
         }
@@ -216,7 +216,7 @@ public class ExampleScriptingFramework implements MacroPluginFramework {
             if (isPropertyAvailable(argumentName)) {
                 arg = getProperty(argumentName);
             }
-            if (arg == null && argumentName.length() > 0) {
+            if (arg == null && !argumentName.isEmpty()) {
                 if (argumentName.startsWith("\"")) {
                     argumentName = argumentName.substring(1);
                 }

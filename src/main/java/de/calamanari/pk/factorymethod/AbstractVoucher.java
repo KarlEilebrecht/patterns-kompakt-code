@@ -54,7 +54,7 @@ public abstract class AbstractVoucher {
      * @param value the vouchers value
      */
     protected AbstractVoucher(String firstName, String lastName, double value) {
-        if (firstName == null || firstName.trim().length() == 0 || lastName == null || lastName.trim().length() == 0 || value <= 0) {
+        if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty() || value <= 0) {
             throw new IllegalArgumentException("Arguments first name and last name " + "must be specified, value must be > 0 (given: firstName=" + firstName
                     + ", lastName=" + lastName + ", value=" + value + ").");
         }

@@ -19,18 +19,18 @@
 //@formatter:on
 package de.calamanari.pk.datatransferobject;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.concurrent.TimeUnit;
 
 import org.awaitility.Awaitility;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +43,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class DataTransferObjectTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataTransferObjectTest.class);
@@ -62,8 +63,8 @@ public class DataTransferObjectTest {
      */
     private CustomerManager customerManager;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
         ExternalProcessManager.getInstance().startExternal(CustomerManagerServer.class, LOGGER, "" + REGISTRY_PORT);
 
         // to be sure the server is up, wait 8 seconds
@@ -71,21 +72,21 @@ public class DataTransferObjectTest {
 
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    @AfterAll
+    static void tearDownAfterClass() throws Exception {
         // stop the product manager server
         ExternalProcessManager.getInstance().stopExternal(CustomerManagerServer.class, "q", 5000);
     }
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
         customerManager = (CustomerManager) registry.lookup("CustomerManager");
         customerManager.addCustomer("ID0001", "Boy", "John", "Ponderosa Ave", "9183722", "Nirvana Lake");
     }
 
     @Test
-    public void testWithoutDataTransferObject() throws Exception {
+    void testWithoutDataTransferObject() throws Exception {
 
         // HINTS:
         // * Adjust the log-level in logback.xml to DEBUG to see the DATA TRANSFER OBJECT working
@@ -109,7 +110,7 @@ public class DataTransferObjectTest {
     }
 
     @Test
-    public void testWithDataTransferObject() throws Exception {
+    void testWithDataTransferObject() throws Exception {
 
         LOGGER.info("Test with data transfer object  ...");
         long startTimeNanos = System.nanoTime();

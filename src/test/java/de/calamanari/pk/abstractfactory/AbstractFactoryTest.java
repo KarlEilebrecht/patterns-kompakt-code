@@ -19,14 +19,14 @@
 //@formatter:on
 package de.calamanari.pk.abstractfactory;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.util.HashMap;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +38,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class AbstractFactoryTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractFactoryTest.class);
@@ -76,14 +77,14 @@ public class AbstractFactoryTest {
      */
     private static final boolean KEEP_FILES_AFTER_TEST = false;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws RuntimeException {
+    @BeforeAll
+    static void setUpBeforeClass() throws RuntimeException {
         SYSTEM_REGISTRY.put(CONFIG_KEY1, new PlainFileDataManager());
         SYSTEM_REGISTRY.put(CONFIG_KEY2, new SecureFileDataManager());
     }
 
-    @AfterClass
-    public static void setUpAfterClass() throws RuntimeException {
+    @AfterAll
+    static void setUpAfterClass() throws RuntimeException {
         if (!KEEP_FILES_AFTER_TEST) {
             File file1 = new File(FileUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".txt");
             File file2 = new File(FileUtils.getHomeDirectory(), FUNNY_TEXT_FILE_NAME + ".sec");
@@ -97,7 +98,7 @@ public class AbstractFactoryTest {
     }
 
     @Test
-    public void testWithConfig1() {
+    void testWithConfig1() {
 
         // Adjust the log-level in logback.xml to DEBUG to see the ABSTRACT FACTORY working
 
@@ -109,7 +110,7 @@ public class AbstractFactoryTest {
     }
 
     @Test
-    public void testWithConfig2() {
+    void testWithConfig2() {
         LOGGER.info("Performing test with configuration 2 ...");
         long startTimeNanos = System.nanoTime();
         commonTestInternal(CONFIG_KEY2, FUNNY_TEXT);

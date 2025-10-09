@@ -19,15 +19,15 @@
 //@formatter:on
 package de.calamanari.pk.strategy;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +38,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class StrategyTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StrategyTest.class);
@@ -47,8 +48,8 @@ public class StrategyTest {
      */
     private static final Context CONTEXT = new Context();
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         CONTEXT.clear();
         HashStrategy hashStrategyCrc32 = new Crc32HashStrategy();
         CONTEXT.putHashStrategy(hashStrategyCrc32.getName(), hashStrategyCrc32);
@@ -57,7 +58,7 @@ public class StrategyTest {
     }
 
     @Test
-    public void testStrategy() {
+    void testStrategy() {
 
         // hint: adjust the log-level in logback.xml to DEBUG to see STRATEGY working
 

@@ -19,16 +19,16 @@
 //@formatter:on
 package de.calamanari.pk.ohbf;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.stream.LongStream;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +41,13 @@ import de.calamanari.pk.util.TimeUtils;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class GenericOHBFTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericOHBFTest.class);
 
     @Test
-    public void testEstimation() {
+    void testEstimation() {
 
         assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 1, 1));
         assertEquals(0, GenericOHBF.computeEstimatedNumberOfElementsInserted(0, 0, 1));
@@ -63,7 +64,7 @@ public class GenericOHBFTest {
     }
 
     @Test
-    public void testVectorPositionComputation() {
+    void testVectorPositionComputation() {
         byte[] hashBytes = new byte[8];
 
         long pos = GenericOHBF.fetchBitPosition(hashBytes, 0, 9);
@@ -98,7 +99,7 @@ public class GenericOHBFTest {
     }
 
     @Test
-    public void testBasics() {
+    void testBasics() {
 
         BloomFilterConfig config = new BloomFilterConfig(100, 0.0001d);
 
@@ -148,7 +149,7 @@ public class GenericOHBFTest {
     }
 
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
 
         BloomFilterConfig config = new BloomFilterConfig(100, 0.0001d);
 
@@ -191,8 +192,8 @@ public class GenericOHBFTest {
     }
 
     @Test
-    @Ignore("Long-running test")
-    public void testAscendingSetups() {
+    @Disabled("Long-running test")
+    void testAscendingSetups() {
 
         // This test configures and fills the filter with n elements and performs contains-checks until n * 1000 elements.
 
@@ -283,8 +284,8 @@ public class GenericOHBFTest {
     }
 
     @Test
-    @Ignore("Long running test")
-    public void testManyElementsAtLowFalsePositiveRate() {
+    @Disabled("Long running test")
+    void testManyElementsAtLowFalsePositiveRate() {
         BloomFilterConfig config = new BloomFilterConfig(10_000_000, 0.000001d);
 
         GenericOHBF bloom = new GenericOHBF(config);
@@ -327,8 +328,8 @@ public class GenericOHBFTest {
     }
 
     @Test
-    @Ignore("Long running test")
-    public void testModerateNumberOfElementsAtLowFalsePositiveRate() {
+    @Disabled("Long running test")
+    void testModerateNumberOfElementsAtLowFalsePositiveRate() {
 
         BloomFilterConfig config = new BloomFilterConfig(100000, 0.0000001d);
 
@@ -375,8 +376,8 @@ public class GenericOHBFTest {
     }
 
     @Test
-    @Ignore("Takes time")
-    public void testReduction() {
+    @Disabled("Takes time")
+    void testReduction() {
 
         long startTimeNanos = System.nanoTime();
         long rangeUpperBound = 71;
@@ -411,8 +412,8 @@ public class GenericOHBFTest {
     }
 
     @Test
-    @Ignore("Long running")
-    public void testModulo() {
+    @Disabled("Long running")
+    void testModulo() {
 
         long startTimeNanos = System.nanoTime();
         long rangeUpperBound = 71;

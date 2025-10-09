@@ -19,17 +19,17 @@
 //@formatter:on
 package de.calamanari.pk.combinedmethod;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.concurrent.TimeUnit;
 
 import org.awaitility.Awaitility;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +42,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class CombinedMethodTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CombinedMethodTest.class);
@@ -51,8 +52,9 @@ public class CombinedMethodTest {
      */
     private static final int REGISTRY_PORT = ProductManagerServer.DEFAULT_REGISTRY_PORT;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
+
         // an external java-process, the product manager server
         ExternalProcessManager.getInstance().startExternal(ProductManagerServer.class, LOGGER, "" + REGISTRY_PORT);
 
@@ -61,14 +63,14 @@ public class CombinedMethodTest {
 
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    @AfterAll
+    static void tearDownAfterClass() throws Exception {
         // stop the product manager server
         ExternalProcessManager.getInstance().stopExternal(ProductManagerServer.class, "q", 5000);
     }
 
     @Test
-    public void testWithoutCombinedMethod() throws Exception {
+    void testWithoutCombinedMethod() throws Exception {
 
         LOGGER.info("Test without combined method  ...");
         long startTimeNanos = System.nanoTime();
@@ -115,7 +117,7 @@ public class CombinedMethodTest {
     }
 
     @Test
-    public void testWithCombinedMethod() throws Exception {
+    void testWithCombinedMethod() throws Exception {
 
         // Adjust the log-level in logback.xml to DEBUG to see the COMBINED METHOD working
 

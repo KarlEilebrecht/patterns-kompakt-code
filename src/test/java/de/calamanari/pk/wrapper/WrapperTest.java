@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.wrapper;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +35,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class WrapperTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WrapperTest.class);
@@ -44,8 +45,8 @@ public class WrapperTest {
      */
     private LegacyCustomerInfoProvider legacyCustomerInfoProvider = null;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         OldSysCustomerMgrMock testCustomerManager = null;
         OldSysHistoryMgrMock testHistoryManager = null;
 
@@ -73,7 +74,7 @@ public class WrapperTest {
     }
 
     @Test
-    public void testWrapper() {
+    void testWrapper() {
 
         // hint: adjust the log-level in lockback.xml to DEBUG to see the Wrapper working
 

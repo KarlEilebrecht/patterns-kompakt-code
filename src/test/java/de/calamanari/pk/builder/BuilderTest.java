@@ -19,14 +19,14 @@
 //@formatter:on
 package de.calamanari.pk.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +37,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class BuilderTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BuilderTest.class);
@@ -46,13 +47,13 @@ public class BuilderTest {
      */
     private ChecksumHelper checksumHelper = null;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         checksumHelper = new ChecksumHelper(new Crc32ChecksumBuilder());
     }
 
     @Test
-    public void testBuilder() {
+    void testBuilder() {
 
         // hint: adjust the log-levels in logback.xml to DEBUG to see BUILDER working
 

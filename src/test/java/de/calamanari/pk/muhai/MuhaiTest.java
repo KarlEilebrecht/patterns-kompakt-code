@@ -35,9 +35,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +53,11 @@ import de.calamanari.pk.muhai.collider.KeyCollisionTest;
 
 /**
  * MUHAI Test: demonstrates the creation of Mostly Unique Hashed Attributes Identifiers (MUHAI)
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class MuhaiTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MuhaiTest.class);
@@ -79,8 +81,8 @@ public class MuhaiTest {
 
     private static File tempDirectory;
 
-    @BeforeClass
-    public static void beforeAllTests() {
+    @BeforeAll
+    static void beforeAllTests() {
         try {
             tempDirectory = Files.createTempDirectory(KeyCollisionTest.class.getSimpleName() + "_").toFile();
         }
@@ -91,7 +93,7 @@ public class MuhaiTest {
     }
 
     @Test
-    public void testMuhaiCreation() {
+    void testMuhaiCreation() {
 
         // HINTS:
         // * Adjust the log-level in logback.xml to DEBUG to see more details
@@ -135,13 +137,18 @@ public class MuhaiTest {
     }
 
     private Map<List<Object>, List<Record>> groupRecordsBySourceFields(List<Record> records) {
-        Map<List<Object>, List<Record>> groupedByAreaAndTenantAndLevelAndPxdAndProvider = records.stream()
-                .collect(Collectors.groupingBy(mRecord -> Arrays.asList(mRecord.areaCode, mRecord.tenant, mRecord.level, mRecord.pxdCode, mRecord.provider)));
-        return groupedByAreaAndTenantAndLevelAndPxdAndProvider;
+        // @formatter:off
+        return records.stream()
+                      .collect(Collectors.groupingBy(mRecord -> Arrays.asList(mRecord.areaCode, 
+                                                                              mRecord.tenant, 
+                                                                              mRecord.level, 
+                                                                              mRecord.pxdCode, 
+                                                                              mRecord.provider)));
+        // @formatter:on
     }
 
     @Test
-    public void testRecordGenerator() {
+    void testRecordGenerator() {
 
         int numberOfRecords = 10_000;
         Map<Long, List<Record>> groupedRecords = Stream.generate(new RecordGenerator(LongPrefix.DEFAULT)).limit(numberOfRecords)
@@ -155,11 +162,11 @@ public class MuhaiTest {
     }
 
     @Test
-    @Ignore("""
+    @Disabled("""
             - Generates 1_000_000 keys in a 32-bit keyspace
             - Disabled, because it takes a while
             """)
-    public void testCollisionsInSmallKeySpace() throws Exception {
+    void testCollisionsInSmallKeySpace() throws Exception {
 
         // No surprise, we will see a couple of collisions, even rather early
 
@@ -179,11 +186,11 @@ public class MuhaiTest {
     }
 
     @Test
-    @Ignore("""
+    @Disabled("""
             - Generates 1_000_000 keys in a 62-bit keyspace
             - Disabled, because it takes a while
             """)
-    public void testCollisionsInLongKeySpace() throws Exception {
+    void testCollisionsInLongKeySpace() throws Exception {
 
         // No collision expected
 
@@ -313,7 +320,7 @@ public class MuhaiTest {
             mRecord.opcode = Integer.parseInt(sVal);
         }),
         
-        FABRIC((sVal, mRecord) -> {
+        FABRIC((_, _) -> {
             // unused, ignore
         }),
         
@@ -334,6 +341,7 @@ public class MuhaiTest {
 
         /**
          * Creates a new Record from the given fields in expected order
+         * 
          * @param row (from file)
          * @return new record
          */

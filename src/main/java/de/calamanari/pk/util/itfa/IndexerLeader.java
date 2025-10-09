@@ -200,10 +200,10 @@ final class IndexerLeader {
                 executorService.shutdown();
                 executorService.awaitTermination(5, TimeUnit.SECONDS);
             }
-            catch (InterruptedException ex) {
+            catch (InterruptedException _) {
                 Thread.currentThread().interrupt();
             }
-            catch (RuntimeException ex) {
+            catch (RuntimeException _) {
                 // ignore
             }
             CloseUtils.closeResourceCatch(leaderStream);

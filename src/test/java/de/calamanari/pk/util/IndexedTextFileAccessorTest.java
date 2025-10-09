@@ -19,8 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,9 +33,9 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.awaitility.Awaitility;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ import de.calamanari.pk.util.itfa.IndexedTextFileAccessor;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-@SuppressWarnings("resource")
+@SuppressWarnings({ "resource", "java:S5786" })
 public class IndexedTextFileAccessorTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexedTextFileAccessorTest.class);
@@ -146,8 +146,8 @@ public class IndexedTextFileAccessorTest {
      */
     private static final String HUGE_LINE_BASE = " --------> \u00C4\u00D6\u00DC!01234567890123456789";
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
 
         emptyFile = createTextFile("emptyFile_" + CHARSET_NAME + ".txt", null, CHARSET_NAME);
         onlyEmptyLines3File = createTextFile("onlyEmptyLines3File_" + CHARSET_NAME + ".txt", Arrays.asList(new String[] { "", "\r" }), CHARSET_NAME);
@@ -186,8 +186,8 @@ public class IndexedTextFileAccessorTest {
 
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+    @AfterAll
+    static void tearDownAfterClass() {
         emptyFile.delete();
         onlyEmptyLines3File.delete();
         singleCharFile.delete();
@@ -210,7 +210,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testEmptyFile() throws Exception {
+    void testEmptyFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(emptyFile, CHARSET_NAME);
         assertEquals(0, ifa.getFileSize());
         assertEquals(0, ifa.getNumberOfCharacters());
@@ -220,7 +220,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testOnlyEmptyLines3File() throws Exception {
+    void testOnlyEmptyLines3File() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(onlyEmptyLines3File, CHARSET_NAME);
         assertEquals(2, ifa.getFileSize());
         assertEquals(2, ifa.getNumberOfCharacters());
@@ -234,7 +234,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testSingleCharFile() throws Exception {
+    void testSingleCharFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(singleCharFile, CHARSET_NAME);
         assertEquals(2, ifa.getFileSize());
         assertEquals(1, ifa.getNumberOfCharacters());
@@ -245,7 +245,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testSingleLineFile() throws Exception {
+    void testSingleLineFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(singleLineFile, CHARSET_NAME);
         assertEquals(22, ifa.getFileSize());
         assertEquals(21, ifa.getNumberOfCharacters());
@@ -255,7 +255,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testSingleLinePlusNewLineFile() throws Exception {
+    void testSingleLinePlusNewLineFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(singleLinePlusNewLineFile, CHARSET_NAME);
         assertEquals(23, ifa.getFileSize());
         assertEquals(22, ifa.getNumberOfCharacters());
@@ -265,7 +265,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testOddChar3NumFile() throws Exception {
+    void testOddChar3NumFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(oddChar3NumFile, CHARSET_NAME);
         assertEquals(6, ifa.getFileSize());
         assertEquals(3, ifa.getNumberOfCharacters());
@@ -275,7 +275,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testEvenChar4NumFile() throws Exception {
+    void testEvenChar4NumFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(evenChar4NumFile, CHARSET_NAME);
         assertEquals(7, ifa.getFileSize());
         assertEquals(4, ifa.getNumberOfCharacters());
@@ -285,7 +285,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testOddLine3NumFile() throws Exception {
+    void testOddLine3NumFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(oddLine3NumFile, CHARSET_NAME);
         assertEquals(68, ifa.getFileSize());
         assertEquals(65, ifa.getNumberOfCharacters());
@@ -295,7 +295,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testEvenLine4NumFile() throws Exception {
+    void testEvenLine4NumFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(evenLine4NumFile, CHARSET_NAME);
         assertEquals(81, ifa.getFileSize()); // 3
         assertEquals(78, ifa.getNumberOfCharacters());
@@ -305,7 +305,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testSurrogatePairFile() throws Exception {
+    void testSurrogatePairFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(surrogatePairFile, "UTF-8");
         assertEquals(4, ifa.getFileSize());
         assertEquals(2, ifa.getNumberOfCharacters());
@@ -317,7 +317,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testLeadingSurrogatePairFile() throws Exception {
+    void testLeadingSurrogatePairFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(leadingSurrogatePairFile, "UTF-8");
         assertEquals(7, ifa.getFileSize());
         assertEquals(5, ifa.getNumberOfCharacters());
@@ -331,7 +331,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testTrailingSurrogatePairFile() throws Exception {
+    void testTrailingSurrogatePairFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(trailingSurrogatePairFile, "UTF-8");
         assertEquals(7, ifa.getFileSize());
         assertEquals(5, ifa.getNumberOfCharacters());
@@ -344,7 +344,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testMiscSurrogatePairFile() throws Exception {
+    void testMiscSurrogatePairFile() throws Exception {
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(miscSurrogatePairFile, "UTF-8");
         assertEquals(17, ifa.getFileSize());
         assertEquals(11, ifa.getNumberOfCharacters());
@@ -359,7 +359,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void testMultiLines1000File() throws Exception {
+    void testMultiLines1000File() throws Exception {
         // use a too small index
         IndexedTextFileAccessor ifa = new IndexedTextFileAccessor(multiLines1000File, CHARSET_NAME, 250, 250, 0);
         assertEquals(17889, ifa.getFileSize());
@@ -377,7 +377,7 @@ public class IndexedTextFileAccessorTest {
     }
 
     @Test
-    public void test1000000LinesFile() throws Exception {
+    void test1000000LinesFile() throws Exception {
         if (HUGE_TEST_ALLOWED) {
             long startTimeNanos = System.nanoTime();
             LOGGER.info("Creating IndexedTextFileAccessor ... ");

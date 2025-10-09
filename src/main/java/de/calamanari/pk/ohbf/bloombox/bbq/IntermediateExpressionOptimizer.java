@@ -381,7 +381,7 @@ public class IntermediateExpressionOptimizer {
     private void sortAndDedup(List<IntermediateExpression> subExpressions) {
 
         TreeMap<String, IntermediateExpression> alphaOrderedAndUnique = new TreeMap<>(
-                subExpressions.stream().collect(Collectors.toMap(IntermediateExpression::toString, Function.identity(), (existing, replacement) -> existing)));
+                subExpressions.stream().collect(Collectors.toMap(IntermediateExpression::toString, Function.identity(), (existing, _) -> existing)));
 
         subExpressions.clear();
 

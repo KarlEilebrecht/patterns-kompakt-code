@@ -20,23 +20,24 @@
 package de.calamanari.pk.drhe;
 
 import static de.calamanari.pk.drhe.util.BitUtils.binStr;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.calamanari.pk.drhe.util.GenStats;
 
+@SuppressWarnings("java:S5786")
 public class DistributionCodecTest {
 
     static final Logger LOGGER = LoggerFactory.getLogger(DistributionCodecTest.class);
 
     @Test
-    public void testByteCodecFull() {
+    void testByteCodecFull() {
 
         GenStats stats = new GenStats(false);
 
@@ -61,7 +62,7 @@ public class DistributionCodecTest {
     }
 
     @Test
-    public void testByteCodecPreserveSignFull() {
+    void testByteCodecPreserveSignFull() {
 
         GenStats stats = new GenStats(true);
 
@@ -88,7 +89,7 @@ public class DistributionCodecTest {
     }
 
     @Test
-    public void testShortCodecFull() {
+    void testShortCodecFull() {
 
         GenStats stats = new GenStats(false);
 
@@ -113,7 +114,7 @@ public class DistributionCodecTest {
     }
 
     @Test
-    public void testShortCodecPreserveSignFull() {
+    void testShortCodecPreserveSignFull() {
 
         GenStats stats = new GenStats(true);
 
@@ -140,8 +141,8 @@ public class DistributionCodecTest {
     }
 
     @Test
-    @Ignore("Long running test")
-    public void testIntCodecFull() {
+    @Disabled("Long running test")
+    void testIntCodecFull() {
 
         GenStats stats = new GenStats(false);
 
@@ -170,8 +171,8 @@ public class DistributionCodecTest {
     }
 
     @Test
-    @Ignore("Long running test")
-    public void testIntCodecPreserveSignFull() {
+    @Disabled("Long running test")
+    void testIntCodecPreserveSignFull() {
 
         GenStats stats = new GenStats(true);
 
@@ -202,7 +203,7 @@ public class DistributionCodecTest {
     }
 
     @Test
-    public void testIntDistPattern() {
+    void testIntDistPattern() {
 
         // This test case creates the input of 1 million digits to be tested with the NIST test suite
 
@@ -228,8 +229,8 @@ public class DistributionCodecTest {
     }
 
     @Test
-    @Ignore("Long running test")
-    public void testLongCodec() {
+    @Disabled("Long running test")
+    void testLongCodec() {
 
         GenStats stats = new GenStats();
 
@@ -265,8 +266,8 @@ public class DistributionCodecTest {
     }
 
     @Test
-    @Ignore("Even longer running test")
-    public void testLongCodecPreserveSign() {
+    @Disabled("Even longer running test")
+    void testLongCodecPreserveSign() {
 
         GenStats stats = new GenStats(true);
 
@@ -303,7 +304,7 @@ public class DistributionCodecTest {
     }
 
     @Test
-    public void testLongDistPattern() {
+    void testLongDistPattern() {
 
         // This test case creates the input of 1 million digits to be tested with the NIST test suite
 

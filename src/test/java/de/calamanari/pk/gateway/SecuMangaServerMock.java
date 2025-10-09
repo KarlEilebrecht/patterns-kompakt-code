@@ -69,8 +69,7 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
 
     /**
      * Creates new mock without starting it yet.<br>
-     * We want to focus on the fictional legacy API, the most of the server/request stuff you'll find in the super
-     * classes.
+     * We want to focus on the fictional legacy API, the most of the server/request stuff you'll find in the super classes.
      */
     public SecuMangaServerMock() {
         super(SecuMangaServerMock.class.getSimpleName());
@@ -90,14 +89,14 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
             String content = sbContent.toString();
 
             content = content.replace(END_OF_TRANSMISSION_REPLACEMENT, END_OF_TRANSMISSION);
-            if (commandName.length() > 0 && content.length() > 0) {
+            if (!commandName.isEmpty() && !content.isEmpty()) {
                 String result = processText(commandName, content);
                 bw.write(result);
                 bw.write("\n" + END_OF_TRANSMISSION + "\n");
             }
             else {
                 LOGGER.warn("Illegal call: '{}' / {}", commandName, content);
-                bw.write("ERR! command '" + commandName + "'" + (content.length() > 0 ? "" : " MISSING CONTENT"));
+                bw.write("ERR! command '" + commandName + "'" + (!content.isEmpty() ? "" : " MISSING CONTENT"));
             }
             bw.flush();
         }
@@ -129,7 +128,7 @@ public class SecuMangaServerMock extends AbstractThreadedSocketServer {
                     inputLine = inputLine.substring(1);
 
                 }
-                if (sbCommandName.length() == 0) {
+                if (sbCommandName.isEmpty()) {
                     sbCommandName.append(inputLine.trim());
                 }
                 else {

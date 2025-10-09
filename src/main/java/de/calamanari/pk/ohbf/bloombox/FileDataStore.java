@@ -193,7 +193,7 @@ public class FileDataStore implements BloomBoxDataStore {
             try (FileOutputStream fos = new FileOutputStream(fileDataStore.file);
                     BufferedOutputStream bos = new BufferedOutputStream(fos, fileDataStore.bufferSize);
                     BufferedInputStream bis = new BufferedInputStream(is, inputBufferSize)) {
-                bis.transferTo(fos);
+                bis.transferTo(bos);
             }
             LOGGER.info("Data store file restored.");
         }

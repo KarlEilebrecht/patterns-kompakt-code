@@ -210,7 +210,7 @@ public final class ComponentFramework {
         try {
             return cl.getConstructor(PrintService.class);
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             // ignore here
         }
         return null;
@@ -226,7 +226,7 @@ public final class ComponentFramework {
         try {
             return cl.getMethod("setPrintService", PrintService.class);
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             // ignore here
         }
         return null;
@@ -250,7 +250,7 @@ public final class ComponentFramework {
                 }
             }
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             // ignore here
         }
         return null;

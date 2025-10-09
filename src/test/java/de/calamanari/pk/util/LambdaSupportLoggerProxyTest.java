@@ -19,19 +19,19 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.function.Supplier;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +49,11 @@ import org.slf4j.spi.LoggingEventBuilder;
 // is also confusing. It is not the first time I scratched my head because I FORGOT an eq(), thus I prefer
 // to consequently write eq() when using Mockito
 // S3457 is ignored because the test does not need to include format specifiers
-@SuppressWarnings({ "java:S6068", "java:S3457" })
+@SuppressWarnings({ "java:S6068", "java:S3457", "java:S5786" })
 public class LambdaSupportLoggerProxyTest {
 
     @Test
-    public void testDefer() {
+    void testDefer() {
 
         assertNull(LambdaSupportLoggerProxy.defer(null));
         Supplier<?> supplier = () -> "something";
@@ -62,7 +62,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testEval() {
+    void testEval() {
 
         LambdaSupportLoggerProxy logger = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(LambdaSupportLoggerProxyTest.class));
 
@@ -83,7 +83,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testEvalArray() {
+    void testEvalArray() {
 
         LambdaSupportLoggerProxy logger = LambdaSupportLoggerProxy.wrap(LoggerFactory.getLogger(LambdaSupportLoggerProxyTest.class));
 
@@ -105,7 +105,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testBasicDelegateGets() {
+    void testBasicDelegateGets() {
         Logger loggerMock;
         Logger logger;
 
@@ -147,7 +147,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testErrorPassThrough() {
+    void testErrorPassThrough() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -194,7 +194,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testWarnPassThrough() {
+    void testWarnPassThrough() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -241,7 +241,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testInfoPassThrough() {
+    void testInfoPassThrough() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -288,7 +288,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testDebugPassThrough() {
+    void testDebugPassThrough() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -335,7 +335,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testTracePassThrough() {
+    void testTracePassThrough() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -382,7 +382,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testErrorEval() {
+    void testErrorEval() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -457,7 +457,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testWarnEval() {
+    void testWarnEval() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -532,7 +532,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testInfoEval() {
+    void testInfoEval() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -607,7 +607,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testDebugEval() {
+    void testDebugEval() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 
@@ -682,7 +682,7 @@ public class LambdaSupportLoggerProxyTest {
     }
 
     @Test
-    public void testTraceEval() {
+    void testTraceEval() {
 
         // we just expect the exact same arguments to be passed to the underlying logger
 

@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.visitor;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +35,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class VisitorTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VisitorTest.class);
 
     @Test
-    public void testVisitor() {
+    void testVisitor() {
 
         // HINT: Adjust the log-level in lockback.xml to DEBUG to see the VISITOR working
 

@@ -42,7 +42,7 @@ public class OldSysCustomerMgrMock extends OldSysCustomerMgr {
      * New mock
      */
     public OldSysCustomerMgrMock() {
-
+        // empty by intention
     }
 
     /**

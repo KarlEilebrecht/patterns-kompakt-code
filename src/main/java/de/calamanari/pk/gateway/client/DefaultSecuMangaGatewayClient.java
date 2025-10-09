@@ -78,7 +78,7 @@ public class DefaultSecuMangaGatewayClient implements SecuMangaGatewayClient {
             sUrl = "http://" + hostName + ":" + port + "/SecuMangaWebService?wsdl";
             url = new URI(sUrl).toURL();
         }
-        catch (URISyntaxException | MalformedURLException ex) {
+        catch (URISyntaxException | MalformedURLException _) {
             LOGGER.error("Could not create URL({})!", sUrl);
         }
         return url;

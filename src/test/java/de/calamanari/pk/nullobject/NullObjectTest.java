@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.nullobject;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,12 +36,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class NullObjectTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NullObjectTest.class);
 
     @Test
-    public void testNullObject() throws Exception {
+    void testNullObject() throws Exception {
 
         // Adjust the log-level in logback.xml to DEBUG to see NULL OBJECT working
 
@@ -98,7 +99,7 @@ public class NullObjectTest {
     private static String concatNames(Iterable<String> nameData) {
         StringBuilder sb = new StringBuilder();
         for (String name : nameData) {
-            if (sb.length() > 0) {
+            if (!sb.isEmpty()) {
                 sb.append(", ");
             }
             sb.append(name);

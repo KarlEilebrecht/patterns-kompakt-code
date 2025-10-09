@@ -19,13 +19,13 @@
 //@formatter:on
 package de.calamanari.pk.facade;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +40,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class FacadeTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FacadeTest.class);
@@ -59,8 +60,8 @@ public class FacadeTest {
      */
     ArticleViewFacade articleViewfacade = null;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         articleManager = new ArticleManager();
         articleHistory = new ArticleHistory();
         articleManager.storeArticle(new Article("0815", "Pencil \"Golden Delicious\"", 7.50));
@@ -72,7 +73,7 @@ public class FacadeTest {
     }
 
     @Test
-    public void testFacade() {
+    void testFacade() {
 
         // Hint: set the log-level in logback.xml to DEBUG to watch FACADE working.
 

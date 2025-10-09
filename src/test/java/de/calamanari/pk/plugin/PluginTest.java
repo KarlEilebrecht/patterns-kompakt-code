@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.plugin;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +36,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class PluginTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginTest.class);
@@ -45,8 +46,8 @@ public class PluginTest {
      */
     private static final boolean KEEP_FILES_AFTER_TEST = false;
 
-    @AfterClass
-    public static void setUpAfterClass() {
+    @AfterAll
+    static void setUpAfterClass() {
         if (!KEEP_FILES_AFTER_TEST) {
             File file1 = new File(FileUtils.getHomeDirectory(), "plugin-test-script.out");
             File file2 = new File(FileUtils.getHomeDirectory(), "plugin-test-script2.out");
@@ -60,7 +61,7 @@ public class PluginTest {
     }
 
     @Test
-    public void testPlugin() {
+    void testPlugin() {
 
         // Hint: set the log-level in logback.xml to DEBUG to watch PLUGIN working.
 

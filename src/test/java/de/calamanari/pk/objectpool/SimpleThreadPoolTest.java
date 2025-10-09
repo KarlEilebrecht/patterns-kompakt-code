@@ -19,15 +19,15 @@
 //@formatter:on
 package de.calamanari.pk.objectpool;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +38,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class SimpleThreadPoolTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleThreadPoolTest.class);
@@ -76,8 +77,8 @@ public class SimpleThreadPoolTest {
         }
     };
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         LOGGER.info("Test setup ... ");
         doneCount = new CountDownLatch(NUMBER_OF_RUNS);
         THREAD_NO.set(0);
@@ -90,7 +91,7 @@ public class SimpleThreadPoolTest {
      * @throws Exception on any error
      */
     @Test
-    public void testWithoutPool() throws Exception {
+    void testWithoutPool() throws Exception {
 
         LOGGER.info("Test without pool started ...");
         long startTimeNanos = System.nanoTime();
@@ -114,7 +115,7 @@ public class SimpleThreadPoolTest {
      * @throws Exception on any error
      */
     @Test
-    public void testWithEmptyGrowingPool() throws Exception {
+    void testWithEmptyGrowingPool() throws Exception {
         SimpleThreadPool growingPool = new SimpleThreadPool(0, NUMBER_OF_RUNS, 5, false);
 
         LOGGER.info("Test with empty growing pool started ...");
@@ -154,7 +155,7 @@ public class SimpleThreadPoolTest {
      * @throws Exception on any error
      */
     @Test
-    public void testWithSmallPool() throws Exception {
+    void testWithSmallPool() throws Exception {
         SimpleThreadPool smallPool = new SimpleThreadPool(5, 25, 5, true);
 
         LOGGER.info("Test with small restricted pool started ...");
@@ -186,7 +187,7 @@ public class SimpleThreadPoolTest {
      * @throws Exception on any error
      */
     @Test
-    public void testWithLargePool() throws Exception {
+    void testWithLargePool() throws Exception {
         SimpleThreadPool largeWarmPool = new SimpleThreadPool(NUMBER_OF_RUNS, NUMBER_OF_RUNS, 0, true);
 
         LOGGER.info("Test with large pool started ...");

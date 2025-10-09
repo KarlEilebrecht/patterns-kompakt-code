@@ -19,9 +19,9 @@
 //@formatter:on
 package de.calamanari.pk.dependencyinjection;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +32,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class DependencyInjectionTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DependencyInjectionTest.class);
 
     @Test
-    public void testDependencyInjection() throws Exception {
+    void testDependencyInjection() throws Exception {
 
         // Hint: set the log-level in logback.xml to DEBUG to see DEPENDENCY INJECTION working.
 

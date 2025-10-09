@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.composite;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +35,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class CompositeTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompositeTest.class);
@@ -44,8 +45,8 @@ public class CompositeTest {
      */
     private ArrayList<EnterpriseNode> testNodes = new ArrayList<>();
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         testNodes.clear();
 
         StaffMember staffMember = new StaffMember("Jack", "Miller", "General Manager");
@@ -67,7 +68,7 @@ public class CompositeTest {
     }
 
     @Test
-    public void testComposite() {
+    void testComposite() {
 
         // hint: set the log-level in logback.xml to DEBUG to watch COMPOSITE working.
 

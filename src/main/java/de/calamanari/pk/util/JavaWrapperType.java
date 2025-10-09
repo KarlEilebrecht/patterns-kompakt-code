@@ -27,6 +27,7 @@ import java.util.function.Function;
 
 /**
  * This enum contains the known java primitives and their wrapper types as an easy lookup.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
@@ -76,7 +77,7 @@ public enum JavaWrapperType {
     /**
      * void vs. Void
      */
-    VOID(void.class, Void.class, false, array -> "[]");
+    VOID(void.class, Void.class, false, _ -> "[]");
 
     //@formatter:on
 
@@ -125,6 +126,7 @@ public enum JavaWrapperType {
 
     /**
      * Returns the {@link JavaWrapperType} instance if the given class is either a primitive or a wrapper type.
+     * 
      * @param clazz primitive class or wrapper type (i.e. int.class or Integer.class)
      * @return wrappable type instance or null if the given class is not supported
      */
@@ -134,6 +136,7 @@ public enum JavaWrapperType {
 
     /**
      * Provides a convenient method to print an array, no matter whether it is primitive or not.
+     * 
      * @param array source object, which must be an array or null (returns <code>"null"</code>)
      * @return the corresponding Arrays.toString() result for primitives arrays or any Object[]
      * @throws IllegalArgumentException if the given array's component type is neither the primitive nor the wrapper type
@@ -158,6 +161,7 @@ public enum JavaWrapperType {
 
     /**
      * For debugging (can't overwrite toString() of an enum)
+     * 
      * @return description
      */
     public String getDescription() {

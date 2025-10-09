@@ -19,19 +19,20 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("java:S5786")
 public class BoxingUtilsTest {
 
     private static final List<TestInput> TEST_INPUTS_POSITIVE;
@@ -130,7 +131,7 @@ public class BoxingUtilsTest {
     }
 
     @Test
-    public void testFailingBidiConversions() {
+    void testFailingBidiConversions() {
         for (TestInput testInput : TEST_INPUTS_NEGATIVE) {
             Throwable expectedException = null;
             try {
@@ -150,7 +151,7 @@ public class BoxingUtilsTest {
     }
 
     @Test
-    public void testSuccessfulBidiConversions() {
+    void testSuccessfulBidiConversions() {
         for (TestInput testInput : TEST_INPUTS_POSITIVE) {
             Object input = testInput.input;
 
@@ -197,13 +198,13 @@ public class BoxingUtilsTest {
     }
 
     @Test
-    public void testNull() {
+    void testNull() {
         assertNull(BoxingUtils.boxArray(null));
         assertNull(BoxingUtils.unboxArray(null));
     }
 
     @Test
-    public void testPassThrough() {
+    void testPassThrough() {
 
         int[] input = new int[] { 7, 8, 3, 1 };
         assertSame(input, BoxingUtils.unboxArray(input));

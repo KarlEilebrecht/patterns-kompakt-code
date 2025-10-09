@@ -194,9 +194,9 @@ public class SimpleQueryDelegate implements QueryDelegate<SimpleQueryDelegate> {
             if (subQueryCounts != null) {
                 for (int k = 0; k < subQueryCounts.length; k++) {
                     sb.setLength(0);
-                    sb.append("RESULT: sub query '" + result.getSubQueryLabels()[k] + "': " + subQueryCounts[k]);
+                    sb.append("RESULT: sub query '").append(result.getSubQueryLabels()[k]).append("': ").append(subQueryCounts[k]);
                     if (result.getProbabilityResult() != null) {
-                        sb.append(" (" + result.getProbabilityResult().getSubQuerySums()[k] + ")");
+                        sb.append(" (").append(result.getProbabilityResult().getSubQuerySums()[k]).append(")");
                     }
                     result.logProtocolMessage(sb.toString());
                 }

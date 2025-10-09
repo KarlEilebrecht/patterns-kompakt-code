@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +41,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class UUIDTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UUIDTest.class);
@@ -51,7 +52,7 @@ public class UUIDTest {
     private static final int NUMBER_OF_RUNS = 25;
 
     @Test
-    public void testUUID() {
+    void testUUID() {
 
         LOGGER.info("Test UUID ...");
         long startTimeNanos = System.nanoTime();

@@ -39,6 +39,7 @@ import org.slf4j.event.Level;
 import de.calamanari.pk.datatransferobject.Customer;
 import de.calamanari.pk.datatransferobject.CustomerManager;
 import de.calamanari.pk.util.AbstractConsoleServer;
+import de.calamanari.pk.util.ExternalConsoleHandlerThread;
 import de.calamanari.pk.util.TimeUtils;
 
 /**
@@ -106,7 +107,7 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
             try {
                 UnicastRemoteObject.unexportObject(entityExist, true);
             }
-            catch (NoSuchObjectException ex) {
+            catch (NoSuchObjectException _) {
                 // we can ignore that
             }
         }
@@ -142,12 +143,12 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
 
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.environment().put("CLASSPATH", System.getProperties().getProperty("java.class.path", null));
+        pb.environment().put("JAVA_HOME", System.getProperties().getProperty("java.home", null));
         try {
             LOGGER.info("Starting private RMI-Registry on port {} ...", this.registryPort);
             rmiRegistryProcess = pb.start();
             // give the registry some time to get ready
             Thread.sleep(REGISTRY_STARTUP_MILLIS);
-            LOGGER.info("RMI-Registry ready.");
         }
         catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
@@ -157,6 +158,22 @@ public class CustomerManagerServer extends AbstractConsoleServer implements Cust
         catch (IOException | RuntimeException ex) {
             throw new CustomerManagerServerException(
                     String.format("Unexpected communication exception (could not start RMI-Registry on port %d)!", this.registryPort), ex);
+        }
+        assertRmiRegistryProcessAlive();
+    }
+
+    /**
+     * verifies the process has been started and still exists
+     */
+    @SuppressWarnings("resource")
+    private void assertRmiRegistryProcessAlive() {
+        if (!rmiRegistryProcess.isAlive()) {
+            (new ExternalConsoleHandlerThread(CustomerManagerServer.class.getSimpleName() + " rmiregistry", rmiRegistryProcess.getErrorStream(), LOGGER,
+                    Level.ERROR)).start();
+            throw new CustomerManagerServerException(String.format("RMI-Registry startup failed on on port %d! (process died)", this.registryPort));
+        }
+        else {
+            LOGGER.info("RMI-Registry ready.");
         }
     }
 

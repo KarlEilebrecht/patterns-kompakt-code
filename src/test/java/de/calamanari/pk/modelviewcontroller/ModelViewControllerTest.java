@@ -19,9 +19,9 @@
 //@formatter:on
 package de.calamanari.pk.modelviewcontroller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.awt.GraphicsEnvironment;
 import java.util.concurrent.TimeUnit;
@@ -31,8 +31,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.awaitility.Awaitility;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,12 +43,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class ModelViewControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelViewControllerTest.class);
 
-    @Before
-    public void beforeMethod() {
+    @BeforeEach
+    void beforeMethod() {
         boolean headless = GraphicsEnvironment.isHeadless();
         if (headless) {
             LOGGER.warn("Headless mode detected: Skipping UI-test!");
@@ -57,7 +58,7 @@ public class ModelViewControllerTest {
     }
 
     @Test
-    public void testModelViewController() {
+    void testModelViewController() {
 
         // In this example we have an application for team management (some sports).
         // A team can have at most 6 members.
@@ -94,7 +95,9 @@ public class ModelViewControllerTest {
 
         TeamController controller = new TeamController(model, view);
 
-        LOGGER.debug("Controller {} connected, application ready to use.", controller.getClass().getSimpleName());
+        controller.initialize();
+
+        LOGGER.debug("Controller {} initialized, application ready to use.", controller.getClass().getSimpleName());
 
         assertEquals(0, model.size());
 

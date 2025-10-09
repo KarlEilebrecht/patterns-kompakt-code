@@ -1,6 +1,6 @@
 //@formatter:off
 /*
- * All Tests - Test suite for all pattern tests.
+ * PkTestSuite - Test suite for all pattern tests.
  * Code-Beispiel zum Buch Patterns Kompakt, Verlag Springer Vieweg
  * Copyright 2014 Karl Eilebrecht
  * 
@@ -19,11 +19,11 @@
 //@formatter:on
 package de.calamanari.pk;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.platform.suite.api.AfterSuite;
+import org.junit.platform.suite.api.BeforeSuite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,17 +77,21 @@ import de.calamanari.pk.visitor.VisitorTest;
 import de.calamanari.pk.wrapper.WrapperTest;
 
 /**
- * All Tests - Test suite for all pattern tests.
- * <p/>
- * This is a selection out of all available tests. <br/>
- * To run also the others, first disable the suite using the Ignore annotation on this class. <br/>
+ * PkTestSuite - Test suite for all pattern tests.
+ * <p>
+ * This is a selection out of all available tests. <br>
+ * To run also the others, first disable the suite using the Ignore annotation on this class. <br>
  * Then open the pom.xml and remove the sure-fire plugin configuration that limits the test execution to this suite.
- * 
+ * <p>
+ * Note: On the JUnit-testcases you will see a <code>&#64;SuppressedWarning("java:S5786")</code> annotation. The problem is that JUnit5 tests should be
+ * package-protected rather than public. But this rule unfortunately makes it impossible to use the <code>&#64;SelectClasses</code> annotation below because the
+ * tests come from various packages. Hence, the suite member classes are declared public.
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-@RunWith(Suite.class)
-@SuiteClasses({
+@Suite
+@SuiteDisplayName("Patterns Kompakt Test Suite")
+@SelectClasses({
 //@formatter:off
 	AbstractFactoryTest.class,
 	ActiveObjectTest.class,
@@ -138,9 +142,9 @@ import de.calamanari.pk.wrapper.WrapperTest;
 	WrapperTest.class
 	//@formatter:on
 })
-public final class AllTests {
+final class PkTestSuite {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AllTests.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PkTestSuite.class);
 
     /**
      * Time tests began
@@ -150,26 +154,26 @@ public final class AllTests {
     /**
      * No instance required
      */
-    private AllTests() {
+    private PkTestSuite() {
         // not required
     }
 
     /**
      * configure loggers before tests
      */
-    @BeforeClass
-    public static void beforeAll() {
+    @BeforeSuite
+    static void beforeSuite() {
         startTimeNanos = System.nanoTime();
-        LOGGER.info("Running AllTests ...");
+        LOGGER.info("Running Patterns Kompakt Test Suite ...");
     }
 
     /**
      * write finish message after tests
      */
-    @AfterClass
-    public static void afterAll() {
+    @AfterSuite
+    static void afterSuite() {
         String elapsedTimeString = TimeUtils.formatNanosAsSeconds(System.nanoTime() - startTimeNanos);
-        LOGGER.info("AllTests completed. Elapsed time: {} s", elapsedTimeString);
+        LOGGER.info("Patterns Kompakt Test Suite completed. Elapsed time: {} s", elapsedTimeString);
     }
 
 }

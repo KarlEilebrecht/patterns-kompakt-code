@@ -40,7 +40,7 @@ public class OldSysHistoryMgrMock extends OldSysHistoryMgr {
      * New mock
      */
     public OldSysHistoryMgrMock() {
-
+        // empty by intention
     }
 
     /**

@@ -611,7 +611,7 @@ public final class LockManager {
         if (recordData != null) {
             LockType lockType = LockType.valueOf(recordData[0]);
             List<String> lockOwnerIds = Collections.emptyList();
-            if (recordData[1].length() > 0) {
+            if (!recordData[1].isEmpty()) {
                 lockOwnerIds = Arrays.asList(recordData[1].split(","));
             }
             long version = 0;

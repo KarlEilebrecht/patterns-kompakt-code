@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apfloat.Apfloat;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,17 +49,19 @@ import de.calamanari.pk.muhai.collider.KeyCollisionProcessor.SummaryBuilder;
 
 /**
  * MUHAI Key Collision Test - here we demonstrate the collision behavior by creating large amount of keys and detecting collisions.
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class KeyCollisionTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyCollisionTest.class);
 
     private static File tempDirectory;
 
-    @BeforeClass
-    public static void beforeAllTests() {
+    @BeforeAll
+    static void beforeAllTests() {
         try {
             tempDirectory = Files.createTempDirectory(KeyCollisionTest.class.getSimpleName() + "_").toFile();
         }
@@ -70,7 +72,7 @@ public class KeyCollisionTest {
     }
 
     @Test
-    public void testApfloatComputation() {
+    void testApfloatComputation() {
 
         Apfloat value = KeyCollisionProcessor.val(Long.MAX_VALUE);
 
@@ -83,7 +85,7 @@ public class KeyCollisionTest {
     }
 
     @Test
-    public void testUtilityMethods() {
+    void testUtilityMethods() {
 
         assertEquals(Long.toUnsignedString(0), KeyCollisionProcessor.toUnsignedBigInteger(0).toString());
         assertEquals(Long.toUnsignedString(1), KeyCollisionProcessor.toUnsignedBigInteger(1).toString());
@@ -93,8 +95,8 @@ public class KeyCollisionTest {
         assertEquals(Long.toUnsignedString(-1L), KeyCollisionProcessor.toUnsignedBigInteger(-1L).toString());
 
         // 0.01 percent * 10_000 > Long.MAX_VALE
-        long perc0_01 = Long.MAX_VALUE / 8_000L;
-        long total = perc0_01 * 10_000L;
+        long perc0p01 = Long.MAX_VALUE / 8_000L;
+        long total = perc0p01 * 10_000L;
 
         NumberFormat nf = NumberFormat.getInstance(Locale.US);
         nf.setMinimumFractionDigits(2);
@@ -102,14 +104,14 @@ public class KeyCollisionTest {
         double perc = 0.0;
         for (int i = 1; i < 10_001; i++) {
             perc = perc + 0.01;
-            double percComputed = KeyCollisionProcessor.computePercentage(perc0_01 * i, total);
+            double percComputed = KeyCollisionProcessor.computePercentage(perc0p01 * i, total);
             assertEquals(nf.format(perc), KeyCollisionProcessor.formatPercentage(percComputed));
         }
 
     }
 
     @Test
-    public void testSummary() throws Exception {
+    void testSummary() throws Exception {
         SummaryBuilder summaryBuilder = KeyCollisionProcessor.SummaryBuilder.forKeyspaceSizeAndNumberOfKeysGenerated(1024, 50);
 
         summaryBuilder.addCollision(new TrackingKeyCollision(34, 17, 30));
@@ -147,13 +149,13 @@ public class KeyCollisionTest {
     }
 
     @Test
-    public void testNoCollisionAtAll() throws Exception {
+    void testNoCollisionAtAll() throws Exception {
 
         AtomicLong sequence = new AtomicLong();
 
         KeyCollisionProcessor<?> proc = KeyCollisionProcessor.createDefaultProcessor(tempDirectory);
 
-        KeyCollisionSummary summary = proc.process(() -> sequence.incrementAndGet(), 100, 100_000);
+        KeyCollisionSummary summary = proc.process(sequence::incrementAndGet, 100, 100_000);
 
         assertEquals(0L, summary.getNumberOfCollidedKeys());
         assertEquals(0L, summary.getNumberOfCollisions());
@@ -161,7 +163,7 @@ public class KeyCollisionTest {
     }
 
     @Test
-    public void testAlwaysTheSameKey() throws Exception {
+    void testAlwaysTheSameKey() throws Exception {
 
         KeyCollisionProcessor<?> proc = KeyCollisionProcessor.createDefaultProcessor(tempDirectory);
 
@@ -173,8 +175,8 @@ public class KeyCollisionTest {
     }
 
     @Test
-    @Ignore("takes a while, shows that 16 bits are definitely not enough for MUHAIs")
-    public void testWith16BitsKeyspace() throws Exception {
+    @Disabled("takes a while, shows that 16 bits are definitely not enough for MUHAIs")
+    void testWith16BitsKeyspace() throws Exception {
         LongPrefix prefix48 = LongPrefix.fromBinaryString(Stream.generate(() -> "0").limit(48).collect(Collectors.joining()));
 
         assertEquals((int) Math.pow(2, 16), prefix48.getSizeOfKeyspace().intValue());
@@ -193,12 +195,12 @@ public class KeyCollisionTest {
     }
 
     @Test
-    @Ignore("""
+    @Disabled("""
             - Generates 2^32 = 4_294_967_296 keys in a 32-bit keyspace
             - runs very long and temporarily consumes more than 50 GB of disk space
             - Hint: You should specify -Xmx to limit the total memory consumption of the process
             """)
-    public void testWith32BitsKeyspaceFullInteger32() throws Exception {
+    void testWith32BitsKeyspaceFullInteger32() throws Exception {
 
         LongPrefix prefix32 = LongPrefix.fromBinaryString(Stream.generate(() -> "0").limit(32).collect(Collectors.joining()));
 
@@ -221,12 +223,12 @@ public class KeyCollisionTest {
     }
 
     @Test
-    @Ignore("""
+    @Disabled("""
             - Generates 2^32 = 4_294_967_296 keys in a 64-bit keyspace
             - runs very long and temporarily consumes more than 50 GB of disk space
             - Hint: You should specify -Xmx to limit the total memory consumption of the process
             """)
-    public void testWith62BitsKeyspaceFullInteger32() throws Exception {
+    void testWith62BitsKeyspaceFullInteger32() throws Exception {
 
         LongPrefix prefix = LongPrefix.DEFAULT;
         MuhaiGenerator generator = new MuhaiGenerator(prefix);

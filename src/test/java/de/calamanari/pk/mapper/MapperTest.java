@@ -19,10 +19,10 @@
 //@formatter:on
 package de.calamanari.pk.mapper;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +36,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class MapperTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapperTest.class);
@@ -45,8 +46,8 @@ public class MapperTest {
      */
     private DataManager dataManager = null;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         dataManager = new DataManager();
         Person person1 = new Person("1", "Rudy", "Rubbish", "2001-08-17");
         Address address1 = new Address("1", "Laurel-Street 16", "71627", "Sucksburg");
@@ -57,7 +58,7 @@ public class MapperTest {
     }
 
     @Test
-    public void testMapper() {
+    void testMapper() {
 
         // Adjust the log-level in logback.xml to DEBUG to see the MAPPER working
 

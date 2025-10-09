@@ -19,16 +19,16 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.Random;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test coverage for the bit vector
@@ -36,10 +36,11 @@ import org.junit.Test;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class SimpleFixedLengthBitVectorTest {
 
     @Test
-    public void testConstruction() {
+    void testConstruction() {
 
         assertThrows(IllegalArgumentException.class, () -> new SimpleFixedLengthBitVector(-1));
         assertThrows(IllegalArgumentException.class, () -> new SimpleFixedLengthBitVector(0));
@@ -55,7 +56,7 @@ public class SimpleFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
         SimpleFixedLengthBitVector vector = new SimpleFixedLengthBitVector(1273);
 
         Random rand = new Random(82636);
@@ -77,7 +78,7 @@ public class SimpleFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testBasics() {
+    void testBasics() {
         SimpleFixedLengthBitVector vector = new SimpleFixedLengthBitVector(128);
         assertAllBits(0, vector);
 
@@ -169,7 +170,7 @@ public class SimpleFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testPresenceCheck() {
+    void testPresenceCheck() {
         SimpleFixedLengthBitVector vector = new SimpleFixedLengthBitVector(128);
 
         assertTrue(vector.setBitIfNotPresent(1));
@@ -184,7 +185,7 @@ public class SimpleFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testFlipBit() {
+    void testFlipBit() {
         SimpleFixedLengthBitVector vector = new SimpleFixedLengthBitVector(128);
         assertAllBits(0, vector);
 
@@ -229,7 +230,7 @@ public class SimpleFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testCountNumberOfBitsSet() {
+    void testCountNumberOfBitsSet() {
         SimpleFixedLengthBitVector vector = new SimpleFixedLengthBitVector(128);
 
         for (int i = 0; i < 100; i++) {
@@ -240,7 +241,7 @@ public class SimpleFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testCompareAND() throws IOException {
+    void testCompareAND() throws IOException {
 
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> SimpleFixedLengthBitVector.compareAND(null, -1, null, 0, 0));
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> SimpleFixedLengthBitVector.compareAND(null, 0, null, -1, 0));

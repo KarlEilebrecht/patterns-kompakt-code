@@ -10,8 +10,8 @@ The repository contains Java code and runs as a [Maven](https://maven.apache.org
 
 Besides a working git installation for cloning the repository you need:
 
-* Java JDK 21 (e.g., [OpenJDK](https://openjdk.java.net/))
-* [Maven](https://maven.apache.org/download.cgi) 3.8 (older versions may work as well)
+* Java JDK 25 (e.g., [OpenJDK](https://openjdk.java.net/))
+* [Maven](https://maven.apache.org/download.cgi) 3.9.11 (older versions may work as well)
 
 Once done with the preparation simply run `mvn clean install`. This will run tests for all patterns with minimal logging. The first time it may take a while to download the maven artifacts the project depends on.
 
@@ -19,9 +19,9 @@ Once done with the preparation simply run `mvn clean install`. This will run tes
 ### Recommendations
 
 * Install any IDE (e.g., [Eclipse](https://www.eclipse.org/downloads/) or [Visual Studio Code](https://code.visualstudio.com/)) for easier coding and better overview.
-* [SonarLint](https://www.sonarlint.org/) can help preventing bugs, and due to its built-in documentation it gives valuable insights about the programming language. At least I learned a lot by reviewing the reasoning behind the SonarLint rules.
-* At the time of writing I am using [Linux MINT](https://linuxmint.com/) inside a [Virtual Box](https://www.virtualbox.org/). This way, you don't need to worry about ruining your local installation with a different JDK, IDE or Maven.
-* [Markdown](https://guides.github.com/features/mastering-markdown/) is a light-weight way to do necessary documentation _along with your code_. For editing on Linux I use [Ghostwriter](https://ghostwriter.kde.org/de/), which I found easy to install and pretty intuitive. On MacOS I use [MacDown](https://macdown.uranusjr.com/). There are also excellent Markdown plugins available for [Visual Studio Code](https://code.visualstudio.com/).
+* [SonarLint](https://www.sonarsource.com/products/sonarlint/) can help preventing bugs, and due to its built-in documentation it gives valuable insights about the programming language. At least I learned a lot by reviewing the reasoning behind the SonarLint rules.
+* Besides macOS I am using [Linux MINT](https://linuxmint.com/) inside a [Virtual Box](https://www.virtualbox.org/). This way, you don't need to worry about ruining your local installation with a different JDK, IDE or Maven.
+* [Markdown](https://guides.github.com/features/mastering-markdown/) is a light-weight way to do necessary documentation _along with your code_. For editing on Linux I use [Ghostwriter](https://ghostwriter.kde.org/de/), which I found easy to install and pretty intuitive. On macOS I use [MacDown](https://macdown.uranusjr.com/). There are also excellent Markdown plugins available for [Visual Studio Code](https://code.visualstudio.com/).
 * In this project I use a minimalistic template to introduce each scenario and describe a particular pattern. For lean documention of real projects I recommend taking a look at [arc42](https://docs.arc42.org/home/).
 
 ## Package Structure

@@ -19,8 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.sequenceblock;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -32,9 +32,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -47,6 +47,7 @@ import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class SequenceBlockTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SequenceBlockTest.class);
@@ -157,8 +158,8 @@ public class SequenceBlockTest {
         }
     }
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
         LOGGER.info("Database setup ... ");
@@ -168,7 +169,7 @@ public class SequenceBlockTest {
             // However, the cleaner way was using DatabaseMetaData to check for existence in advance.
             stmt.executeUpdate("drop table SEQUENCE_TABLE");
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             // ignore (first time the table is not there
         }
 
@@ -179,8 +180,8 @@ public class SequenceBlockTest {
         globalCache = new SequenceBlockCache(dataSource);
     }
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         LOGGER.info("Test setup ... ");
         doneCount = new CountDownLatch(NUMBER_OF_RUNS);
         THREAD_NO.set(0);
@@ -189,7 +190,7 @@ public class SequenceBlockTest {
     }
 
     @Test
-    public void testGlobalSequenceBlockCache() throws Exception {
+    void testGlobalSequenceBlockCache() throws Exception {
 
         // Hints: - set the log-level in logback.xml to DEBUG or TRACE to watch SEQUENCE BLOCK working.
         // before, you should redirect console output to a file, it's a lot of stuff ...
@@ -217,7 +218,7 @@ public class SequenceBlockTest {
     }
 
     @Test
-    public void testLocalSequenceBlockCache() throws Exception {
+    void testLocalSequenceBlockCache() throws Exception {
         LOGGER.info("Test with local sequence block caches (but common database) ...");
         long startTimeNanos = System.nanoTime();
         for (int i = 0; i < NUMBER_OF_RUNS; i++) {

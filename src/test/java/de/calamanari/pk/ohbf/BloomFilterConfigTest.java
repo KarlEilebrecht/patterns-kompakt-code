@@ -21,7 +21,7 @@ package de.calamanari.pk.ohbf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test coverage for the bloom filter configuration and estimation
@@ -29,10 +29,11 @@ import org.junit.Test;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class BloomFilterConfigTest {
 
     @Test
-    public void testWithNandM() {
+    void testWithNandM() {
         BloomFilterConfig config = new BloomFilterConfig(10000000, 600000);
 
         assertEquals(600000, config.getNumberOfInsertedElementsN());
@@ -43,7 +44,7 @@ public class BloomFilterConfigTest {
     }
 
     @Test
-    public void testWithNandEpsilon() {
+    void testWithNandEpsilon() {
         BloomFilterConfig config = new BloomFilterConfig(600000, 0.0003329393d);
 
         assertEquals(600000, config.getNumberOfInsertedElementsN());
@@ -75,7 +76,7 @@ public class BloomFilterConfigTest {
     }
 
     @Test
-    public void testWithEpsilonAndM() {
+    void testWithEpsilonAndM() {
         BloomFilterConfig config = new BloomFilterConfig(0.0003329393d, 10000000);
 
         assertEquals(600000, config.getNumberOfInsertedElementsN());

@@ -69,6 +69,12 @@ public class TeamController {
         this.model = teamModel;
         this.view = teamView;
 
+    }
+
+    /**
+     * Initializes the controller by binding it to the model and the view.
+     */
+    public void initialize() {
         registerCloseButtonActionListener();
         registerAddButtonActionListener();
         registerRemoveButtonActionListener();
@@ -82,7 +88,6 @@ public class TeamController {
 
         // initialize view status
         SwingUtilities.invokeLater(updateViewTask);
-
     }
 
     /**
@@ -100,7 +105,7 @@ public class TeamController {
      * Creates a new ChangeListener and registers it at all the radio button controls.
      */
     private void registerRadioButtonChangeListener() {
-        ChangeListener selectionListener = (ChangeEvent e) -> {
+        ChangeListener selectionListener = (ChangeEvent _) -> {
             LOGGER.debug("{} - selection changed, updating view.", TeamController.class.getSimpleName());
             updateView();
         };
@@ -118,7 +123,7 @@ public class TeamController {
      * The remove action removes the selected element (if any) and clears the selection.
      */
     private void registerRemoveButtonActionListener() {
-        view.btnRemove.addActionListener((ActionEvent e) -> {
+        view.btnRemove.addActionListener((ActionEvent _) -> {
             LOGGER.debug("{} - [Remove] clicked.", TeamController.class.getSimpleName());
             int radioButtonIndex = 0;
             int selectedIdx = -1;
@@ -146,11 +151,11 @@ public class TeamController {
      * The add-action adds a new element to the model.
      */
     private void registerAddButtonActionListener() {
-        view.btnAdd.addActionListener((ActionEvent e) -> {
+        view.btnAdd.addActionListener((ActionEvent _) -> {
             LOGGER.debug("{} - [Add] clicked.", TeamController.class.getSimpleName());
             String newMember = view.txtInput.getText().trim();
             view.txtInput.setText("");
-            if (newMember.length() > 0) {
+            if (!newMember.isEmpty()) {
                 LOGGER.debug("Adding member to model");
                 model.add(newMember);
             }
@@ -164,7 +169,7 @@ public class TeamController {
      * Adds a new action listener to the close-button.
      */
     private void registerCloseButtonActionListener() {
-        view.btnClose.addActionListener((ActionEvent e) -> {
+        view.btnClose.addActionListener((ActionEvent _) -> {
             LOGGER.debug("{} - [Close] clicked.", TeamController.class.getSimpleName());
             shutDown();
         });

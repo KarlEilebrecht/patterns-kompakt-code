@@ -86,7 +86,7 @@ public class TeamModel {
      */
     public void add(String member) {
         LOGGER.debug("{}.add('{}') called", this.getClass().getSimpleName(), member);
-        if (member != null && member.trim().length() > 0 && !members.contains(member)) {
+        if (member != null && !member.trim().isEmpty() && !members.contains(member)) {
             if (members.size() > MAX_NUMBER_OF_MEMBERS) {
                 throw new IndexOutOfBoundsException("Only 5 members allowed.");
             }

@@ -72,7 +72,7 @@ public class AccountManager {
      */
     public Account createAccount(String firstName, String lastName, String street, String zipCode, String city) throws AccountValidationException {
         LOGGER.debug("{}.createAccount('{}', '{}', '{}', '{}', '{}') called ...", this.getClass().getSimpleName(), firstName, lastName, street, zipCode, city);
-        if (firstName == null || firstName.trim().length() == 0 || lastName == null || lastName.trim().length() == 0) {
+        if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty()) {
             throw new AccountValidationException("Could not create account, invalid name.");
         }
         LOGGER.debug("Validating address ...");

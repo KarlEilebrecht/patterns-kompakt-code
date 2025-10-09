@@ -19,7 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.lazyload;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,8 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +40,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class LazyLoadTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LazyLoadTest.class);
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
+    @BeforeAll
+    static void setUpBeforeClass() {
         PersistenceSession.addInvoice("INV-001", "154.23", "Charly Brown", "Dogstreet 12", "64354", "Pumpkin Lake");
         PersistenceSession.addInvoice("INV-002", "623.98", "Sandy Bridge", "Paganini Pines 1", "44323", "Lost Hills");
         PersistenceSession.addInvoice("INV-003", "788.11", "Song Lan Yi", "Subway 7", "72632", "Shocking");
@@ -60,7 +61,7 @@ public class LazyLoadTest {
     }
 
     @Test
-    public void testLazyLoad() {
+    void testLazyLoad() {
         // Adjust the log-level in logback.xml to DEBUG to see LAZY LOAD working
 
         LOGGER.info("Test Lazy Load ...");
@@ -85,7 +86,7 @@ public class LazyLoadTest {
 
     @Test
     @SuppressWarnings("java:S125")
-    public void testLazyLoadShowRippleEffect() {
+    void testLazyLoadShowRippleEffect() {
 
         LOGGER.info("Test Lazy Load Show Ripple Effect ...");
         long startTimeNanos = System.nanoTime();
@@ -114,7 +115,7 @@ public class LazyLoadTest {
     }
 
     @Test
-    public void testLazyLoadShowClosedSessionEffect() {
+    void testLazyLoadShowClosedSessionEffect() {
 
         LOGGER.info("Test Lazy Load Show Closed Session Effect ...");
         long startTimeNanos = System.nanoTime();
@@ -148,7 +149,7 @@ public class LazyLoadTest {
     }
 
     @Test
-    public void testLazyLoadShowLostSessionEffect() throws Exception {
+    void testLazyLoadShowLostSessionEffect() throws Exception {
 
         LOGGER.info("Test Lazy Load Show Lost Session Effect ...");
         long startTimeNanos = System.nanoTime();

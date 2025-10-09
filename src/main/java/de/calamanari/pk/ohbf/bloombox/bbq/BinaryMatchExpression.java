@@ -112,7 +112,7 @@ public class BinaryMatchExpression implements BbqExpression, PbDpavDictionaryAwa
     @Override
     public boolean match(long[] source, int startPos, Map<Long, Boolean> resultCache) {
         return resultCache.computeIfAbsent(this.expressionId,
-                key -> SimpleFixedLengthBitVector.compareAND(source, startPos, this.pattern, 0, this.pattern.length));
+                _ -> SimpleFixedLengthBitVector.compareAND(source, startPos, this.pattern, 0, this.pattern.length));
     }
 
     @Override

@@ -19,10 +19,10 @@
 //@formatter:on
 package de.calamanari.pk.money;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,7 +30,7 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +41,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class MoneyTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTest.class);
 
     @Test
-    public void testMoneyTechBasics() {
+    void testMoneyTechBasics() {
 
         LOGGER.info("Test Money Technical Basics ...");
         long startTimeNanos = System.nanoTime();
@@ -182,7 +183,7 @@ public class MoneyTest {
     }
 
     @Test
-    public void testMoney() {
+    void testMoney() {
         LOGGER.info("Test Money ...");
         long startTimeNanos = System.nanoTime();
 

@@ -24,17 +24,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Random;
 import java.util.function.Function;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test coverage for the MuhaiUtils
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class MuhaiUtilsTest {
 
     @Test
-    public void testForwardBackwardConversion() {
+    void testForwardBackwardConversion() {
         assertFromToXString(MuhaiUtils::toIntString, MuhaiUtils::fromIntString);
         assertFromToXString(MuhaiUtils::toBinaryString, MuhaiUtils::fromBinaryString);
         assertFromToXString(MuhaiUtils::toHexString, MuhaiUtils::fromHexString);
@@ -58,7 +60,7 @@ public class MuhaiUtilsTest {
     }
 
     @Test
-    public void testPaddedIntString() {
+    void testPaddedIntString() {
 
         assertEquals("09223372036854775808", MuhaiUtils.toPaddedIntString(Long.MIN_VALUE));
         assertEquals("09223372036854775807", MuhaiUtils.toPaddedIntString(Long.MAX_VALUE));

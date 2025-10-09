@@ -50,7 +50,7 @@ public class Crc32HashStrategy extends HashStrategy {
     public String computeHash(String text) {
         LOGGER.debug("Concrete Strategy {} computes hash ...", STRATEGY_NAME);
         long crc32Value = 0L;
-        if (text != null && text.length() > 0) {
+        if (text != null && !text.isEmpty()) {
             CRC32 crc32 = new CRC32();
             crc32.update(String.valueOf(text).getBytes(StandardCharsets.UTF_8));
             crc32Value = crc32.getValue();

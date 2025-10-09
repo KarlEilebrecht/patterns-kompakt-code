@@ -46,7 +46,7 @@ public class PlainFileDataManager extends AbstractDataManager {
     @Override
     public PlainFileDataWriter createDataWriter(String itemName) {
         LOGGER.debug("{}.createDataWriter() called.", this.getClass().getSimpleName());
-        if (itemName == null || (itemName.trim().length() == 0)) {
+        if (itemName == null || (itemName.trim().isEmpty())) {
             // to be honest, the rule is not strict enough :-)
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }
@@ -56,7 +56,7 @@ public class PlainFileDataManager extends AbstractDataManager {
 
     @Override
     public PlainFileDataReader createDataReader(String itemName) {
-        if (itemName == null || (itemName.trim().length() == 0)) {
+        if (itemName == null || (itemName.trim().isEmpty())) {
             // to be honest, the rule is not strict enough :-)
             throw new IllegalArgumentException("Argument itemName must not be null or empty.");
         }

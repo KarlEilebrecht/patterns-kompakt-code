@@ -19,13 +19,13 @@
 //@formatter:on
 package de.calamanari.pk.drhe.util;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigInteger;
 import java.util.Random;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +33,13 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class GenStatsTest {
 
     static final Logger LOGGER = LoggerFactory.getLogger(GenStatsTest.class);
 
     @Test
-    public void testDist64() {
+    void testDist64() {
 
         testDist64(Long.MIN_VALUE, Long.MAX_VALUE);
         testDist64(Long.MAX_VALUE, Long.MIN_VALUE);
@@ -73,7 +74,7 @@ public class GenStatsTest {
     }
 
     @Test
-    public void testCompare() {
+    void testCompare() {
         testCompareDist64(Long.MIN_VALUE + 1, Long.MAX_VALUE, true);
         testCompareDist64(Long.MIN_VALUE + 1, Long.MAX_VALUE, false);
         testCompareDist64(Long.MIN_VALUE + 2, Long.MAX_VALUE, true);
@@ -99,7 +100,7 @@ public class GenStatsTest {
     }
 
     @Test
-    public void testFormatHandleOverflow() {
+    void testFormatHandleOverflow() {
 
         assertEquals("0", GenStats.formatHandleOverflow(0, false));
         assertEquals("9223372036854775808", GenStats.formatHandleOverflow(0, true));
@@ -116,7 +117,7 @@ public class GenStatsTest {
     }
 
     @Test
-    public void testBasics1() {
+    void testBasics1() {
 
         GenStats stats = new GenStats();
 
@@ -142,7 +143,7 @@ public class GenStatsTest {
     }
 
     @Test
-    public void testBasics2() {
+    void testBasics2() {
 
         GenStats stats = new GenStats();
 
@@ -171,7 +172,7 @@ public class GenStatsTest {
     }
 
     @Test
-    public void testAverageMinMaxDist() {
+    void testAverageMinMaxDist() {
         GenStats stats = new GenStats();
 
         Random rand = new Random(92834726331L);
@@ -244,7 +245,7 @@ public class GenStatsTest {
     }
 
     @Test
-    public void testNegativePositiveTransition() {
+    void testNegativePositiveTransition() {
         GenStats stats = new GenStats(false);
 
         stats.consume(-100, -99);

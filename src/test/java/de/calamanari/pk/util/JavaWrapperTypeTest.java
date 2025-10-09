@@ -19,18 +19,19 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("java:S5786")
 public class JavaWrapperTypeTest {
 
     private static final List<TestEntry<?, ?>> TEST_ENTRIES;
@@ -51,7 +52,7 @@ public class JavaWrapperTypeTest {
     }
 
     @Test
-    public void testBasics() {
+    void testBasics() {
         for (TestEntry<?, ?> entry : TEST_ENTRIES) {
             assertValidType(entry.primitiveType, entry.wrapperType, entry.primitiveArraySupportExpected);
         }
@@ -61,7 +62,7 @@ public class JavaWrapperTypeTest {
     }
 
     @Test
-    public void testArrayToString() {
+    void testArrayToString() {
         for (TestEntry<?, ?> entry : TEST_ENTRIES) {
             String expectedArrayAsString = entry.primitiveArraySupportExpected ? entry.expectedArrayAsString : "null";
             assertEquals(expectedArrayAsString, JavaWrapperType.forClass(entry.primitiveType).arrayToString(entry.primitiveArray));

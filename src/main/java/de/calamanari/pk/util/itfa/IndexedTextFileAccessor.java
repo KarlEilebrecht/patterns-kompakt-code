@@ -405,7 +405,7 @@ public class IndexedTextFileAccessor {
             res = indexHit.longValue();
         }
         else {
-            try (Reader isr = createInputStreamReaderAtChar(charNumber)) {
+            try (var _ = createInputStreamReaderAtChar(charNumber)) {
                 res = getLastKnownFilePosition();
             }
         }
@@ -428,7 +428,7 @@ public class IndexedTextFileAccessor {
             res = indexHit.longValue();
         }
         else {
-            try (Reader isr = createInputStreamReaderAtLine(lineNumber)) {
+            try (var _ = createInputStreamReaderAtLine(lineNumber)) {
                 res = getLastKnownFilePosition();
             }
         }

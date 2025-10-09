@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import de.calamanari.pk.util.AbstractConsoleServer;
+import de.calamanari.pk.util.ExternalConsoleHandlerThread;
 import de.calamanari.pk.util.TimeUtils;
 
 /**
@@ -206,12 +207,13 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
         args.add("" + this.registryPort);
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.environment().put("CLASSPATH", System.getProperties().getProperty("java.class.path", null));
+        pb.environment().put("JAVA_HOME", System.getProperties().getProperty("java.home", null));
+
         try {
             LOGGER.info("Starting private RMI-Registry on port {} ...", this.registryPort);
             rmiRegistryProcess = pb.start();
             // give the registry some time to get ready
             Thread.sleep(REGISTRY_STARTUP_MILLIS);
-            LOGGER.info("RMI-Registry ready.");
         }
         catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
@@ -221,6 +223,22 @@ public class ProductManagerServer extends AbstractConsoleServer implements Produ
         catch (IOException | RuntimeException ex) {
             throw new ProductManagerServerException(
                     String.format("Unexpected communication exception (could not start RMI-Registry on port %d)!", this.registryPort), ex);
+        }
+        assertRmiRegistryProcessAlive();
+    }
+
+    /**
+     * verifies the process has been started and still exists
+     */
+    @SuppressWarnings("resource")
+    private void assertRmiRegistryProcessAlive() {
+        if (!rmiRegistryProcess.isAlive()) {
+            (new ExternalConsoleHandlerThread(ProductManagerServer.class.getSimpleName() + " rmiregistry", rmiRegistryProcess.getErrorStream(), LOGGER,
+                    Level.ERROR)).start();
+            throw new ProductManagerServerException(String.format("RMI-Registry startup failed on on port %d! (process died)", this.registryPort));
+        }
+        else {
+            LOGGER.info("RMI-Registry ready.");
         }
     }
 

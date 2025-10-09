@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.registry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Properties;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +35,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class RegistryTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistryTest.class);
 
     @Test
-    public void testRegistry() {
+    void testRegistry() {
 
         // Hint: set the log-level in logback.xml to DEBUG to watch REGISTRY working.
 

@@ -77,7 +77,7 @@ public class LegacyCustomerInfoProvider {
             try {
                 legacyId = Integer.parseInt(id);
             }
-            catch (Exception ex) {
+            catch (Exception _) {
                 throw new IllegalArgumentException("Unable to parse the given ID!");
             }
             LOGGER.debug("calling Legacy API ...");

@@ -168,7 +168,7 @@ public final class ExternalProcessManager {
             maxWaitAttempts = 1;
         }
 
-        if (stopCommand != null && stopCommand.trim().length() > 0) {
+        if (stopCommand != null && !stopCommand.trim().isEmpty()) {
             PrintWriter pw = new PrintWriter(externalServerProcess.getOutputStream());
             pw.println(stopCommand.trim());
             pw.flush();
@@ -184,7 +184,7 @@ public final class ExternalProcessManager {
 
             }
         }
-        if (stopCommand == null || stopCommand.trim().length() > 0 || waitAttempts >= maxWaitAttempts) {
+        if (stopCommand == null || !stopCommand.trim().isEmpty() || waitAttempts >= maxWaitAttempts) {
             externalServerProcess.destroy();
             if (waitAttempts >= maxWaitAttempts) {
                 LOGGER.warn("Forcibly terminated external process {}.", mainClass.getSimpleName());

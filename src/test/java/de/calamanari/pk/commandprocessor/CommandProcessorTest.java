@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.commandprocessor;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,12 +39,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class CommandProcessorTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandProcessorTest.class);
 
     @Test
-    public void testCommandProcessor() {
+    void testCommandProcessor() {
 
         // hint: set the log-level in logback.xml to DEBUG to watch COMMAND PROCESSOR working.
 

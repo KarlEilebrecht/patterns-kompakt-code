@@ -19,7 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.observer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ import de.calamanari.pk.util.tpl.ThroughputListener;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-@SuppressWarnings("resource")
+@SuppressWarnings({ "resource", "java:S5786" })
 public class ObserverTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ObserverTest.class);
@@ -79,7 +79,7 @@ public class ObserverTest {
     private final AtomicInteger observedCallDeniedCounter = new AtomicInteger();
 
     @Test
-    public void testObserver() {
+    void testObserver() {
 
         // Hint: set the log-level in logback.xml to DEBUG to watch OBSERVER working.
 
@@ -112,7 +112,7 @@ public class ObserverTest {
     }
 
     @Test
-    public void testWithAsyncObserver() throws Exception {
+    void testWithAsyncObserver() throws Exception {
 
         LOGGER.info("Test with asynchronous Observer ...");
         long startTimeNanos = System.nanoTime();
@@ -236,7 +236,7 @@ public class ObserverTest {
                 try {
                     Thread.sleep(0, 1);
                 }
-                catch (InterruptedException ex) {
+                catch (InterruptedException _) {
                     LOGGER.error("Worker thread interrupted!");
                     Thread.currentThread().interrupt();
                     break;

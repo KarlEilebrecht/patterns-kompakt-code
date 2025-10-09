@@ -99,7 +99,7 @@ public class CounterFlyweightFactory {
             // Note: I forbear from synchronizing the block, because creating a duplicate
             // flyweight (rare case) does not matter but synchronization on the other hand
             // is expensive
-            res = pool.computeIfAbsent(c, k -> {
+            res = pool.computeIfAbsent(c, _ -> {
                 CounterFlyweight newFlyweight = new ConcreteCounterFlyweight(c, workload);
                 createdCounter.incrementAndGet();
                 return newFlyweight;

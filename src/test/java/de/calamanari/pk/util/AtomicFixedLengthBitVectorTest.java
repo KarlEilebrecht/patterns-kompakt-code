@@ -19,24 +19,26 @@
 //@formatter:on
 package de.calamanari.pk.util;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test coverage for the bit vector
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class AtomicFixedLengthBitVectorTest {
 
     @Test
-    public void testConstruction() {
+    void testConstruction() {
 
         assertThrows(IllegalArgumentException.class, () -> new AtomicFixedLengthBitVector(-1));
         assertThrows(IllegalArgumentException.class, () -> new AtomicFixedLengthBitVector(0));
@@ -52,7 +54,7 @@ public class AtomicFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
         AtomicFixedLengthBitVector vector = new AtomicFixedLengthBitVector(1273);
 
         Random rand = new Random(82636);
@@ -74,7 +76,7 @@ public class AtomicFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testBasics() {
+    void testBasics() {
         AtomicFixedLengthBitVector vector = new AtomicFixedLengthBitVector(128);
         assertAllBits(0, vector);
 
@@ -166,7 +168,7 @@ public class AtomicFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testPresenceCheck() {
+    void testPresenceCheck() {
         AtomicFixedLengthBitVector vector = new AtomicFixedLengthBitVector(128);
 
         assertTrue(vector.setBitIfNotPresent(1));
@@ -181,7 +183,7 @@ public class AtomicFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testFlipBit() {
+    void testFlipBit() {
         AtomicFixedLengthBitVector vector = new AtomicFixedLengthBitVector(128);
         assertAllBits(0, vector);
 
@@ -226,7 +228,7 @@ public class AtomicFixedLengthBitVectorTest {
     }
 
     @Test
-    public void testCountNumberOfBitsSet() {
+    void testCountNumberOfBitsSet() {
         AtomicFixedLengthBitVector vector = new AtomicFixedLengthBitVector(128);
 
         for (int i = 0; i < 100; i++) {

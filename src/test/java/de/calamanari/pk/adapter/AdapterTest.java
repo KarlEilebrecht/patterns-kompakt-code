@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.adapter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +35,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class AdapterTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdapterTest.class);
@@ -44,13 +45,13 @@ public class AdapterTest {
      */
     private SourceSystemPersonView sourceSystemPersonViewInstance;
 
-    @Before
-    public void setUp() throws RuntimeException {
+    @BeforeEach
+    void setUp() throws RuntimeException {
         sourceSystemPersonViewInstance = new SourceSystemPersonView(12345, "Jack", "Miller", "Special Agent, works for Secret Shopper Service");
     }
 
     @Test
-    public void testProperties() {
+    void testProperties() {
 
         // Adjust the log-level in logback.xml to DEBUG to see the ADAPTER working
 
@@ -78,7 +79,7 @@ public class AdapterTest {
     }
 
     @Test
-    public void testOperations() {
+    void testOperations() {
         LOGGER.info("Test Adapter modify ...");
         long startTimeNanos = System.nanoTime();
         PersonViewAdapter personViewAdapter = new PersonViewAdapter(sourceSystemPersonViewInstance);

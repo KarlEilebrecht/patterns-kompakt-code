@@ -23,8 +23,8 @@ import static de.calamanari.pk.drhe.util.BitUtils.binStr;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,13 +35,14 @@ import de.calamanari.pk.drhe.util.GenStats;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class DistributionCodecRandomGeneratorTest {
 
     static final Logger LOGGER = LoggerFactory.getLogger(DistributionCodecRandomGeneratorTest.class);
 
     @Test
-    @Ignore("Long running test to gather some stats")
-    public void testRandom() {
+    @Disabled("Long running test to gather some stats")
+    void testRandom() {
 
         GenStats stats = new GenStats();
 
@@ -69,7 +70,7 @@ public class DistributionCodecRandomGeneratorTest {
     }
 
     @Test
-    public void testRandomPattern() {
+    void testRandomPattern() {
 
         // This test case creates the input of 1 million digits to be tested with the NIST test suite
 

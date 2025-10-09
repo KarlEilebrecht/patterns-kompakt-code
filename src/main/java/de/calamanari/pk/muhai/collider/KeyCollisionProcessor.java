@@ -309,7 +309,7 @@ public class KeyCollisionProcessor<K extends KeyCollision<K>> {
         try {
             Files.delete(chunkFile.toPath());
         }
-        catch (IOException ex) {
+        catch (IOException _) {
             LOGGER.error("Unable to delete chunk file {}", chunkFile);
         }
     }

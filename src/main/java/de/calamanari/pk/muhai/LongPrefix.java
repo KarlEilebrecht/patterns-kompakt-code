@@ -29,6 +29,7 @@ import java.util.Map;
  * The {@link LongPrefix} is a VALUE-object that represents a <i>valid</i> prefix sequence for a long value to define a keyspace. The size of the prefix can be
  * up to 63 bits. 64 bits is invalid because it would create a <i>strange keyspace</i> that has a single member (the prefix itself) but cannot contain any keys.
  * A valid special case is an empty prefix (2^64 keys).
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
@@ -112,6 +113,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     /**
      * Returns the {@link LongPrefix} instance for the given prefix string, each character ('0' or '1') stands for a bit.
+     * 
      * @param prefixString composed of '0's and '1's, supports leading zeros, length in range [0 .. 63], empty String is valid, NOT NULL.
      * @return prefix instance
      * @throws InvalidPrefixException if the given prefix cannot be used
@@ -126,6 +128,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     /**
      * Creates a custom prefix from the given bit vector.
+     * 
      * @param prefix composed of 0s and 1s, length in range [0 .. 63], empty String is valid, NOT NULL.
      * @throws InvalidPrefixException if the given prefix cannot be used
      */
@@ -156,6 +159,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     /**
      * Returns the string representation of this prefix (provided at construction time), a character (0, 1) per bit.
+     * 
      * @return prefix as a binary string, may have leading zeros
      */
     public String toBinaryString() {
@@ -171,6 +175,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     /**
      * Returns the size of the keyspace with a maximum value of <code>2^64 = 18_446_744_073_709_551_616</code> keys (empty prefix).<br />
+     * 
      * @return number of unique keys in this sub-keyspace of long defined by this prefix
      */
     public BigInteger getSizeOfKeyspace() {
@@ -179,6 +184,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     /**
      * Checks whether the given key is prefixed with <b>this</b> prefix. The <i>empty prefix</i> matches all keys.
+     * 
      * @param key to be tested
      * @return true if the leading bits from the left of the given long value match this prefix
      */
@@ -189,12 +195,13 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
     /**
      * Returns a new long value where the leading bits (length of prefix) have been <b>replaced</b> with the bits of the prefix. Trailing bits will remain
      * unchanged.
+     * 
      * @param key source bits
      * @return value with the leading prefix
      */
     public long applyTo(long key) {
         long res = key;
-        if (prefixString.length() > 0) {
+        if (!prefixString.isEmpty()) {
             res = ((key << prefixString.length()) >>> prefixString.length()) | prefixWithTrailingZeros;
         }
         return res;
@@ -235,6 +242,7 @@ public final class LongPrefix implements Serializable, Comparable<LongPrefix> {
 
     /**
      * Replaces the instance during deserialization with, so that serialization won't create duplicates in the same VM.
+     * 
      * @return generator instance
      */
     Object readResolve() {

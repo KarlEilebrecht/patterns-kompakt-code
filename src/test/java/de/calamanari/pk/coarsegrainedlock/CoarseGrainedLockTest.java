@@ -19,8 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.coarsegrainedlock;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,8 +29,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
-@SuppressWarnings("resource")
+@SuppressWarnings({ "resource", "java:S5786" })
 public class CoarseGrainedLockTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoarseGrainedLockTest.class);
@@ -73,8 +73,8 @@ public class CoarseGrainedLockTest {
 
     private final AtomicReference<String> firstError = new AtomicReference<>();
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         customerDb.clear();
         addressDb.clear();
         orderDb.clear();
@@ -85,7 +85,7 @@ public class CoarseGrainedLockTest {
     }
 
     @Test
-    public void testCoarseGrainedLock() throws Exception {
+    void testCoarseGrainedLock() throws Exception {
 
         // we lock always on customer level regardless
         // of which part of the information structure to be displayed
@@ -127,7 +127,7 @@ public class CoarseGrainedLockTest {
     }
 
     @Test
-    public void testLockStress() throws Exception {
+    void testLockStress() throws Exception {
         if (STRESS_TEST) {
             LOGGER.info("Test Lock Stress ...");
             long startTimeNanos = System.nanoTime();

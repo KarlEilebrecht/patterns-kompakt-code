@@ -19,7 +19,7 @@
 //@formatter:on
 package de.calamanari.pk.templatemethod;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -27,9 +27,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +41,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class TemplateMethodTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateMethodTest.class);
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
 
         // an external java-process for the EchoServer
         ExternalProcessManager.getInstance().startExternal(EchoServer.class, LOGGER);
@@ -55,14 +56,14 @@ public class TemplateMethodTest {
         TimeUtils.sleepThrowRuntimeException(3000);
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    @AfterAll
+    static void tearDownAfterClass() throws Exception {
         // stop the server process
         ExternalProcessManager.getInstance().stopExternal(EchoServer.class, "q", 5000);
     }
 
     @Test
-    public void testExample() {
+    void testExample() {
 
         // Hint: set the log level in logback.xml to DEBUG to see TEMPLATE METHODs at work.
 
@@ -85,7 +86,7 @@ public class TemplateMethodTest {
     }
 
     @Test
-    public void testEchoServer() throws Exception {
+    void testEchoServer() throws Exception {
         LOGGER.info("Test EchoServer ...");
         long startTimeNanos = System.nanoTime();
 

@@ -19,8 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.optimisticofflinelock;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -30,9 +30,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -45,6 +45,7 @@ import de.calamanari.pk.util.db.EmbeddedJavaDbDataSource;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class OptimisticOfflineLockTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptimisticOfflineLockTest.class);
@@ -61,8 +62,8 @@ public class OptimisticOfflineLockTest {
 
     private AtomicBoolean expectedExceptionCaught = new AtomicBoolean(false);
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
         LOGGER.info("Database setup ... ");
@@ -72,7 +73,7 @@ public class OptimisticOfflineLockTest {
             // However, the cleaner way would be using DatabaseMetaData to check for existence in advance.
             stmt.executeUpdate("drop table CUSTOMER");
         }
-        catch (Exception ex) {
+        catch (Exception _) {
             // ignore (first time the table is not there
         }
 
@@ -86,13 +87,13 @@ public class OptimisticOfflineLockTest {
         dataManager.addCustomer(4711, "Jack", "Miller", "17, Citrus Ave", "286736", "Lemon Village");
     }
 
-    @Before
-    public void beforeTest() {
+    @BeforeEach
+    void beforeTest() {
         expectedExceptionCaught.set(false);
     }
 
     @Test
-    public void testOptimisticOfflineLock() throws Exception {
+    void testOptimisticOfflineLock() throws Exception {
 
         // Hints: - Adjust the log-level in logback.xml to DEBUG to see the OPTIMISTIC OFFLINE LOCK working
         //

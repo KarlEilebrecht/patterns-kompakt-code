@@ -114,7 +114,7 @@ public abstract class AbstractConsoleServer {
                         monitor.wait();
                     }
                 }
-                catch (InterruptedException ex) {
+                catch (InterruptedException _) {
                     Thread.currentThread().interrupt();
                     LOGGER.warn("Unexpected interruption during startup - server {} up?!", this.getServerName());
                 }
@@ -162,7 +162,7 @@ public abstract class AbstractConsoleServer {
                         monitor.wait();
                     }
                 }
-                catch (InterruptedException ex) {
+                catch (InterruptedException _) {
                     Thread.currentThread().interrupt();
                     LOGGER.warn("Unexpected interruption during shutdown - server {} down?!", this.getServerName());
                 }

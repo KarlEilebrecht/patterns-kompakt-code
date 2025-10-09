@@ -19,11 +19,11 @@
 //@formatter:on
 package de.calamanari.pk.servicestub;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +34,13 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class ServiceStubTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceStubTest.class);
 
     @Test
-    public void testServiceStub() throws Exception {
+    void testServiceStub() throws Exception {
 
         // Hint: set the log-level in logback.xml to DEBUG to watch SERVICE STUB working.
 

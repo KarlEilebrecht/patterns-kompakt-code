@@ -529,7 +529,7 @@ public final class ParallelFileInputStream extends InputStream {
         try {
             readerThread.requestStopReading();
         }
-        catch (RuntimeException ex) {
+        catch (RuntimeException _) {
             // ignore
         }
 
@@ -538,12 +538,12 @@ public final class ParallelFileInputStream extends InputStream {
             bufferEvent.eventType = BufferEventType.SHUTDOWN;
             bufferRequestQueue.put(bufferEvent);
         }
-        catch (InterruptedException ex) {
+        catch (InterruptedException _) {
             // try it by interrupt
             readerThread.interrupt();
             Thread.currentThread().interrupt();
         }
-        catch (RuntimeException ex) {
+        catch (RuntimeException _) {
             // try it by interrupt
             readerThread.interrupt();
         }

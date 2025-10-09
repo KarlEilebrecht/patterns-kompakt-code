@@ -19,8 +19,8 @@
 //@formatter:on
 package de.calamanari.pk.objectpool;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.awaitility.Awaitility;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ import de.calamanari.pk.util.TimeUtils;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  * 
  */
-@SuppressWarnings("resource")
+@SuppressWarnings({ "resource", "java:S5786" })
 public class ObjectPoolTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectPoolTest.class);
@@ -50,7 +50,7 @@ public class ObjectPoolTest {
      * This one shows the result without pooling.
      */
     @Test
-    public void testWithoutPool() {
+    void testWithoutPool() {
 
         // HINTS:
         // * adjust the log-level in logback.xml to DEBUG and see OBJECT POOL working
@@ -100,7 +100,7 @@ public class ObjectPoolTest {
      * This one shows the result with pooling, starting with an empty pool.
      */
     @Test
-    public void testWithPoolNoWarmUp() {
+    void testWithPoolNoWarmUp() {
 
         LOGGER.info("Test with pool (no warm-up) started ... ");
 
@@ -154,7 +154,7 @@ public class ObjectPoolTest {
      * This one shows the result with pooling, starting with a filled pool.
      */
     @Test
-    public void testWithPoolWarmUp() {
+    void testWithPoolWarmUp() {
 
         ExampleObjectPool warmPool = new ExampleObjectPool();
         ExampleReusableObject warmUpInstance = warmPool.acquireInstance();
@@ -216,7 +216,7 @@ public class ObjectPoolTest {
      */
     @Test
     @SuppressWarnings("java:S125")
-    public void testWithPoolConcurrent() throws Exception {
+    void testWithPoolConcurrent() throws Exception {
 
         // Have a look on the runtime of the concurrent test:
         // Here we create ExampleObjectPool.MAX_POOL_SIZE instances.

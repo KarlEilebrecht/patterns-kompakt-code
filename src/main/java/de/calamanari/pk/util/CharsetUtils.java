@@ -133,7 +133,7 @@ public final class CharsetUtils {
      * @return number of bytes
      */
     public static final byte detectSurrogatePairLength(Charset charset) {
-        return SURROGATE_PAIR_LENGTH_REGISTRY.computeIfAbsent(charset, k -> {
+        return SURROGATE_PAIR_LENGTH_REGISTRY.computeIfAbsent(charset, _ -> {
             CharBuffer charBuffer = CharBuffer.allocate(2);
             ByteBuffer byteBuffer = ByteBuffer.allocate(CHARACTER_BUFFER_BYTES);
             CharsetEncoder encoder = charset.newEncoder();
@@ -159,7 +159,7 @@ public final class CharsetUtils {
      * @return byte array with length per code for all 65536 char-values
      */
     public static final byte[] createCharLengthLookup(String charsetName) {
-        return CHAR_LENGTH_LOOKUP_REGISTRY.computeIfAbsent(charsetName, k -> {
+        return CHAR_LENGTH_LOOKUP_REGISTRY.computeIfAbsent(charsetName, _ -> {
             byte[] charLengthLookup = new byte[Character.MAX_VALUE + 1];
             CharBuffer charBuffer = CharBuffer.allocate(1);
             ByteBuffer byteBuffer = ByteBuffer.allocate(CHARACTER_BUFFER_BYTES);

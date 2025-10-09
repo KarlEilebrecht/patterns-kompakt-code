@@ -32,8 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class XoRotUtilsTest {
 
     static final Logger LOGGER = LoggerFactory.getLogger(XoRotUtilsTest.class);
@@ -75,7 +76,7 @@ public class XoRotUtilsTest {
     private static final long[] LONG_PATTERNS = new long[] { LONG_PATTERN1, LONG_PATTERN2, LONG_PATTERN3, LONG_PATTERN4, LONG_PATTERN5 };
 
     @Test
-    public void testEncodeDecodeByte() {
+    void testEncodeDecodeByte() {
 
         for (int i = Byte.MIN_VALUE; i <= Byte.MAX_VALUE; i++) {
 
@@ -91,7 +92,7 @@ public class XoRotUtilsTest {
     }
 
     @Test
-    public void testEncodeDecodeShort() {
+    void testEncodeDecodeShort() {
 
         for (int i = Short.MIN_VALUE; i <= Short.MAX_VALUE; i++) {
 
@@ -108,8 +109,8 @@ public class XoRotUtilsTest {
     }
 
     @Test
-    @Ignore("Slow test of all possible integers")
-    public void testEncodeDecodeIntFull() {
+    @Disabled("Slow test of all possible integers")
+    void testEncodeDecodeIntFull() {
 
         GenStats stats = new GenStats();
         GenStats statsP = new GenStats(true);
@@ -140,7 +141,7 @@ public class XoRotUtilsTest {
     }
 
     @Test
-    public void testEncodeDecodeIntSample() {
+    void testEncodeDecodeIntSample() {
 
         int[] sampleEdgeCases = new int[] { Integer.MIN_VALUE, Integer.MIN_VALUE + 1, -2, -1, 0, 1, 2, Integer.MAX_VALUE - 1, Integer.MAX_VALUE };
 
@@ -161,7 +162,7 @@ public class XoRotUtilsTest {
     }
 
     @Test
-    public void testEncodeDecodeLongSample() {
+    void testEncodeDecodeLongSample() {
 
         long[] sampleEdgeCases = new long[] { Long.MIN_VALUE, Long.MIN_VALUE + 1L, -2L, -1L, 0L, 1L, 2L, Long.MAX_VALUE - 1L, Long.MAX_VALUE };
 

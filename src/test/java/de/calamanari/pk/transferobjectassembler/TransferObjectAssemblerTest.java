@@ -19,13 +19,13 @@
 //@formatter:on
 package de.calamanari.pk.transferobjectassembler;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +36,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class TransferObjectAssemblerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransferObjectAssemblerTest.class);
@@ -45,8 +46,8 @@ public class TransferObjectAssemblerTest {
      */
     private CustomerService customerService = new CustomerService();
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
+    @BeforeAll
+    static void setUpBeforeClass() {
 
         // @formatter:off
 
@@ -142,7 +143,7 @@ public class TransferObjectAssemblerTest {
     }
 
     @Test
-    public void testWithoutTransferObjectAssembler() {
+    void testWithoutTransferObjectAssembler() {
 
         LOGGER.info("Test without transfer object assembler ...");
         long startTimeNanos = System.nanoTime();
@@ -176,7 +177,7 @@ public class TransferObjectAssemblerTest {
     }
 
     @Test
-    public void testWithTransferObjectAssembler() {
+    void testWithTransferObjectAssembler() {
 
         // HINTS:
         // * Adjust the log-level in logback.xml to DEBUG to see TRANSFER OBJECT ASSEMBLER working

@@ -19,12 +19,12 @@
 //@formatter:on
 package de.calamanari.pk.iterator;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Iterator;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +35,7 @@ import de.calamanari.pk.util.TimeUtils;
  * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  */
+@SuppressWarnings("java:S5786")
 public class IteratorTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IteratorTest.class);
@@ -44,7 +45,7 @@ public class IteratorTest {
      */
     private AbstractWorker rootWorker = null;
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
         Worker mary = new Worker("Mary");
@@ -64,7 +65,7 @@ public class IteratorTest {
     }
 
     @Test
-    public void testIterator() {
+    void testIterator() {
         LOGGER.info("Test Iterator ...");
         long startTimeNanos = System.nanoTime();
 
@@ -73,7 +74,7 @@ public class IteratorTest {
         while (iterator.hasNext()) {
             AbstractWorker worker = iterator.next();
             LOGGER.info("--> {}", worker);
-            if (sb.length() > 0) {
+            if (!sb.isEmpty()) {
                 sb.append(", ");
             }
             sb.append(worker.getName());

@@ -19,17 +19,17 @@
 //@formatter:on
 package de.calamanari.pk.ohbf;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.calamanari.pk.ohbf.HashGenerators.CompositeHashGenerator;
 import de.calamanari.pk.ohbf.HashGenerators.DefaultHashGenerator;
@@ -37,13 +37,15 @@ import de.calamanari.pk.util.CloneUtils;
 
 /**
  * Test coverage for hash generator creation
+ * 
  * @author <a href="mailto:Karl.Eilebrecht(a/t)calamanari.de">Karl Eilebrecht</a>
  *
  */
+@SuppressWarnings("java:S5786")
 public class HashGeneratorTest {
 
     @Test
-    public void testBasics() throws Exception {
+    void testBasics() throws Exception {
         HashGenerator generator1 = HashGenerators.createInstance(1);
         HashGenerator generator160 = HashGenerators.createInstance(160);
 
